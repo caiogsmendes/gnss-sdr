@@ -76,7 +76,7 @@ int main(int argc, char** argv)
         "Copyright (C) 2010-2019 (see AUTHORS file for a list of contributors)\n" +
         "This program comes with ABSOLUTELY NO WARRANTY;\n" +
         "See COPYING file to see a copy of the General Public License\n \n");
-
+    try{
             const std::string gnss_sdr_version(GNSS_SDR_VERSION);
             gflags::SetUsageMessage(intro_help);
             gflags::SetVersionString(gnss_sdr_version);
