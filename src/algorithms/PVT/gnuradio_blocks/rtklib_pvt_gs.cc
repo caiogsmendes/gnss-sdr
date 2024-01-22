@@ -108,6 +108,9 @@ namespace wht = boost;
 namespace wht = std;
 #endif
 
+//Caio
+#include "HEtechSerial.h"
+
 rtklib_pvt_gs_sptr rtklib_make_pvt_gs(uint32_t nchannels,
     const Pvt_Conf& conf_,
     const rtk_t& rtk)
@@ -1794,6 +1797,7 @@ bool rtklib_pvt_gs::get_latest_PVT(double* longitude_deg,
     double* course_over_ground_deg,
     time_t* UTC_time) const
 {
+    char buff[400];
     if (d_enable_rx_clock_correction == true)
         {
             if (d_user_pvt_solver->is_valid_position())
@@ -1804,7 +1808,8 @@ bool rtklib_pvt_gs::get_latest_PVT(double* longitude_deg,
                     *ground_speed_kmh = d_user_pvt_solver->get_speed_over_ground() * 3600.0 / 1000.0;
                     *course_over_ground_deg = d_user_pvt_solver->get_course_over_ground();
                     *UTC_time = convert_to_time_t(d_user_pvt_solver->get_position_UTC_time());
-
+                    sprintf(buff,"1=%lf|2=%lf|3=%lf|4=%lf|5=%lf|6=%lf",*latitude_deg, *longitude_deg, *height_m, *ground_speed_kmh, *course_over_ground_deg, *UTC_time);
+                    serial4send(&buff[0]);
                     return true;
                 }
         }
@@ -1818,7 +1823,8 @@ bool rtklib_pvt_gs::get_latest_PVT(double* longitude_deg,
                     *ground_speed_kmh = d_internal_pvt_solver->get_speed_over_ground() * 3600.0 / 1000.0;
                     *course_over_ground_deg = d_internal_pvt_solver->get_course_over_ground();
                     *UTC_time = convert_to_time_t(d_internal_pvt_solver->get_position_UTC_time());
-
+                    sprintf(buff,"1=%lf|2=%lf|3=%lf|4=%lf|5=%lf|6=%lf",*latitude_deg, *longitude_deg, *height_m, *ground_speed_kmh, *course_over_ground_deg, *UTC_time);
+                    serial4send(&buff[0]);
                     return true;
                 }
         }
