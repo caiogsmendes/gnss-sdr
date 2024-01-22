@@ -40,9 +40,9 @@
 #define DEVICE CL_DEVICE_TYPE_GPU
 #endif
 
-#include "err_code.h"
-#include "cl.hpp"
-#include "util.hpp"  // utility library
+// #include "err_code.h"
+// #include "cl.hpp"
+// #include "util.hpp"  // utility library
 
 
 using namespace std::chrono;
