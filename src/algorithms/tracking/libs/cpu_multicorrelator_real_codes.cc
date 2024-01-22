@@ -187,15 +187,15 @@ bool Cpu_Multicorrelator_Real_Codes::Carrier_wipeoff_multicorrelator_resampler(
     // contador++;
     // std::fstream sampler;
     // sampler.open("Sampler_comparador_GPU_SIMD.txt",std::ios::out|std::ios::app);
-    GPU_multicorrelator(
-        d_corr_out,
-        d_sig_in,
-        phase_step_rad,
-        phase_rate_step_rad,
-        rem_carrier_phase_in_rad,
-        const_cast<const float**>(d_local_codes_resampled),
-        d_n_correlators,
-        signal_length_samples);
+    // GPU_multicorrelator(
+    //     d_corr_out,
+    //     d_sig_in,
+    //     phase_step_rad,
+    //     phase_rate_step_rad,
+    //     rem_carrier_phase_in_rad,
+    //     const_cast<const float**>(d_local_codes_resampled),
+    //     d_n_correlators,
+    //     signal_length_samples);
     // sampler<<*d_corr_out<<"\n";
     if (d_use_high_dynamics_resampler)
         {
@@ -292,157 +292,157 @@ void Cpu_Multicorrelator_Real_Codes::set_high_dynamics_resampler(
     d_use_high_dynamics_resampler = use_high_dynamics_resampler;
 }
 
-void Cpu_Multicorrelator_Real_Codes::GPU_multicorrelator(
-    std::complex<float>* h_corr_out,
-    const std::complex<float>* d_sig_in,
-    float phase_step_rad,
-    float phase_step_rad_inc,
-    float rem_carrier_phase_in_rad,  // No lugar de float* phase_offset,
-    const float** d_local_codes_resampled,
-    int n_correlators,
-    int signal_length_samples)
-{
-    int first = 0;
-    int last = signal_length_samples;
-    std::vector<float> h_local_codes_resampled_early(last);
-    std::vector<float> h_local_codes_resampled_prompt(last);
-    std::vector<float> h_local_codes_resampled_late(last);
-    // std::fstream sampling;
-    // sampling.open("sampling_GPU.txt",std::ios::out|std::ios::app);
+// void Cpu_Multicorrelator_Real_Codes::GPU_multicorrelator(
+//     std::complex<float>* h_corr_out,
+//     const std::complex<float>* d_sig_in,
+//     float phase_step_rad,
+//     float phase_step_rad_inc,
+//     float rem_carrier_phase_in_rad,  // No lugar de float* phase_offset,
+//     const float** d_local_codes_resampled,
+//     int n_correlators,
+//     int signal_length_samples)
+// {
+//     int first = 0;
+//     int last = signal_length_samples;
+//     std::vector<float> h_local_codes_resampled_early(last);
+//     std::vector<float> h_local_codes_resampled_prompt(last);
+//     std::vector<float> h_local_codes_resampled_late(last);
+//     // std::fstream sampling;
+//     // sampling.open("sampling_GPU.txt",std::ios::out|std::ios::app);
 
-    // Preparo de dados de entrada
-    float h_sig_in_real[last];
-    float h_sig_in_imag[last];
-    // for (int j = 0; j < 3; j++)
-        // {
-            for (int i = first; i < last; i++)
-                {
-                    h_sig_in_real[i] = d_sig_in->real();
-                    h_sig_in_imag[i] = d_sig_in->imag();
-                    d_sig_in++;
-                    h_local_codes_resampled_early[i] = d_local_codes_resampled[0][i];
-                    h_local_codes_resampled_prompt[i] = d_local_codes_resampled[1][i];
-                    h_local_codes_resampled_late[i] = d_local_codes_resampled[2][i];
-                    // sampling<<d_local_codes_resampled[0][i]<<" "<<d_local_codes_resampled[1][i]<<" "<<d_local_codes_resampled[2][i]<<"\n";
-                }
-        // }
-    // sampling.close();
+//     // Preparo de dados de entrada
+//     float h_sig_in_real[last];
+//     float h_sig_in_imag[last];
+//     // for (int j = 0; j < 3; j++)
+//         // {
+//             for (int i = first; i < last; i++)
+//                 {
+//                     h_sig_in_real[i] = d_sig_in->real();
+//                     h_sig_in_imag[i] = d_sig_in->imag();
+//                     d_sig_in++;
+//                     h_local_codes_resampled_early[i] = d_local_codes_resampled[0][i];
+//                     h_local_codes_resampled_prompt[i] = d_local_codes_resampled[1][i];
+//                     h_local_codes_resampled_late[i] = d_local_codes_resampled[2][i];
+//                     // sampling<<d_local_codes_resampled[0][i]<<" "<<d_local_codes_resampled[1][i]<<" "<<d_local_codes_resampled[2][i]<<"\n";
+//                 }
+//         // }
+//     // sampling.close();
 
-    // ############## Passar um program de Exemplo pra testar a GPU da Colibri ################
-    //  Pegar plataforma genérica
-    std::vector<cl::Platform> all_platforms;
-    cl::Platform::get(&all_platforms);
-    cl::Platform default_platform = all_platforms[0];
-    std::vector<cl::Device> all_devices;
-    default_platform.getDevices(CL_DEVICE_TYPE_GPU, &all_devices);
-    cl::Device default_device = all_devices[0];
+//     // ############## Passar um program de Exemplo pra testar a GPU da Colibri ################
+//     //  Pegar plataforma genérica
+//     std::vector<cl::Platform> all_platforms;
+//     cl::Platform::get(&all_platforms);
+//     cl::Platform default_platform = all_platforms[0];
+//     std::vector<cl::Device> all_devices;
+//     default_platform.getDevices(CL_DEVICE_TYPE_GPU, &all_devices);
+//     cl::Device default_device = all_devices[0];
 
-    // build program
-    // Kernel com Multicorrelator (Sequencial)
-    cl::Context context({default_device});
-    cl::Program::Sources sources;
-    std::string kernel_code =
-        "void complex_mult(float *sig_in_A_real, float *sig_in_A_imag,float *sig_in_B_real, float *sig_in_B_imag,float *sig_out_real,float *sig_out_imag){*sig_out_real=(*sig_in_A_real)*(*sig_in_B_real)-(*sig_in_B_imag)*(*sig_in_A_imag);*sig_out_imag=(*sig_in_A_real) * (*sig_in_B_imag) + (*sig_in_A_imag) * (*sig_in_B_real);}"
-        "__kernel void multicorr("
-        "__global float *corr_out_real,"
-        "__global float *corr_out_imag,"
-        "__global float *sig_in_real,"
-        "__global float *sig_in_imag,"
-        "float phase_step_rad,"
-        "float phase_step_rad_inc,"
-        "float phase_offset_real,"
-        "float phase_offset_imag,"
-        "__global float *local_code_resampled_early,"
-        "__global float *local_code_resampled_prompt,"
-        "__global float *local_code_resampled_late,"
-        "int n_correlators,"
-        "int n_sample){"
-        "int i = get_global_id(0);"
-        "float tmp32_1_real[get_global_size(0)];"
-        "float tmp32_1_imag = 0;"
-        "float phase_doppler_rate_real = 0;"
-        "float phase_doppler_rate_imag = 0;"
-        "float phase_doppler_real = 0;"
-        "float phase_doppler_imag = 0;"
-        "float phase_inc_real = 1;"
-        "float phase_inc_imag = phase_step_rad;"
-        "float phase_inc_rate_real = 1;"
-        "float phase_inc_rate_imag = phase_step_rad_inc;"
-        "int n_vec;"
-        "unsigned int n;"
-        "phase_doppler_real = phase_offset_real;"
-        "phase_doppler_imag = phase_offset_imag;"
-        "float arga = atan(phase_step_rad_inc / 1.0);"
-        "for (n = 1; n < n_sample; n++)"
-        "{"
-        "complex_mult(sig_in_real++, sig_in_imag++, &phase_doppler_real, &phase_doppler_imag, &tmp32_1_real, &tmp32_1_imag);"
-        "complex_mult(&phase_doppler_real, &phase_doppler_imag, &phase_inc_real, &phase_inc_imag, &phase_doppler_real, &phase_doppler_imag);"
-        "const float theta = (float)(n * n) * arga;"
-        "phase_doppler_rate_real = cos(theta); phase_doppler_rate_imag = sin(theta);"
-        "complex_mult(&phase_doppler_real, &phase_doppler_imag, &phase_doppler_rate_real, &phase_doppler_rate_imag, &phase_offset_real, &phase_offset_imag);"
-        "corr_out_real[n] = corr_out_real[n-1]+tmp32_1_real*local_code_resampled_early[n]+tmp32_1_real*local_code_resampled_prompt[n]+tmp32_1_real*local_code_resampled_late[n];"
-        "corr_out_imag[n] = corr_out_imag[n-1]+tmp32_1_imag*local_code_resampled_early[n]+tmp32_1_imag*local_code_resampled_prompt[n]+tmp32_1_imag*local_code_resampled_late[n];"
-        "}"
-        "}";
-    sources.push_back({kernel_code.c_str(), kernel_code.length()});
-    cl::Program program(context, sources);
-    try
-        {
-            program.build({default_device});
-        }
-    catch (cl::Error err)
-        {
-            std::cout << "Error building: " << program.getBuildInfo<CL_PROGRAM_BUILD_LOG>({default_device}) << "\n";
-            exit(1);
-        }
+//     // build program
+//     // Kernel com Multicorrelator (Sequencial)
+//     cl::Context context({default_device});
+//     cl::Program::Sources sources;
+//     std::string kernel_code =
+//         "void complex_mult(float *sig_in_A_real, float *sig_in_A_imag,float *sig_in_B_real, float *sig_in_B_imag,float *sig_out_real,float *sig_out_imag){*sig_out_real=(*sig_in_A_real)*(*sig_in_B_real)-(*sig_in_B_imag)*(*sig_in_A_imag);*sig_out_imag=(*sig_in_A_real) * (*sig_in_B_imag) + (*sig_in_A_imag) * (*sig_in_B_real);}"
+//         "__kernel void multicorr("
+//         "__global float *corr_out_real,"
+//         "__global float *corr_out_imag,"
+//         "__global float *sig_in_real,"
+//         "__global float *sig_in_imag,"
+//         "float phase_step_rad,"
+//         "float phase_step_rad_inc,"
+//         "float phase_offset_real,"
+//         "float phase_offset_imag,"
+//         "__global float *local_code_resampled_early,"
+//         "__global float *local_code_resampled_prompt,"
+//         "__global float *local_code_resampled_late,"
+//         "int n_correlators,"
+//         "int n_sample){"
+//         "int i = get_global_id(0);"
+//         "float tmp32_1_real[get_global_size(0)];"
+//         "float tmp32_1_imag = 0;"
+//         "float phase_doppler_rate_real = 0;"
+//         "float phase_doppler_rate_imag = 0;"
+//         "float phase_doppler_real = 0;"
+//         "float phase_doppler_imag = 0;"
+//         "float phase_inc_real = 1;"
+//         "float phase_inc_imag = phase_step_rad;"
+//         "float phase_inc_rate_real = 1;"
+//         "float phase_inc_rate_imag = phase_step_rad_inc;"
+//         "int n_vec;"
+//         "unsigned int n;"
+//         "phase_doppler_real = phase_offset_real;"
+//         "phase_doppler_imag = phase_offset_imag;"
+//         "float arga = atan(phase_step_rad_inc / 1.0);"
+//         "for (n = 1; n < n_sample; n++)"
+//         "{"
+//         "complex_mult(sig_in_real++, sig_in_imag++, &phase_doppler_real, &phase_doppler_imag, &tmp32_1_real, &tmp32_1_imag);"
+//         "complex_mult(&phase_doppler_real, &phase_doppler_imag, &phase_inc_real, &phase_inc_imag, &phase_doppler_real, &phase_doppler_imag);"
+//         "const float theta = (float)(n * n) * arga;"
+//         "phase_doppler_rate_real = cos(theta); phase_doppler_rate_imag = sin(theta);"
+//         "complex_mult(&phase_doppler_real, &phase_doppler_imag, &phase_doppler_rate_real, &phase_doppler_rate_imag, &phase_offset_real, &phase_offset_imag);"
+//         "corr_out_real[n] = corr_out_real[n-1]+tmp32_1_real*local_code_resampled_early[n]+tmp32_1_real*local_code_resampled_prompt[n]+tmp32_1_real*local_code_resampled_late[n];"
+//         "corr_out_imag[n] = corr_out_imag[n-1]+tmp32_1_imag*local_code_resampled_early[n]+tmp32_1_imag*local_code_resampled_prompt[n]+tmp32_1_imag*local_code_resampled_late[n];"
+//         "}"
+//         "}";
+//     sources.push_back({kernel_code.c_str(), kernel_code.length()});
+//     cl::Program program(context, sources);
+//     try
+//         {
+//             program.build({default_device});
+//         }
+//     catch (cl::Error err)
+//         {
+//             std::cout << "Error building: " << program.getBuildInfo<CL_PROGRAM_BUILD_LOG>({default_device}) << "\n";
+//             exit(1);
+//         }
 
-    // Buffers e Copy memory
-    // Buffers e Const de Entrada
-    cl::Buffer d_sig_in_real(context, CL_MEM_READ_WRITE, sizeof(float) * signal_length_samples);
-    cl::Buffer d_sig_in_imag(context, CL_MEM_READ_WRITE, sizeof(float) * signal_length_samples);
-    // cl::Buffer d_local_codes_resampled = cl::Buffer(context, h_local_codes_resampled.begin(), h_local_codes_resampled.end(), true);
-    cl::Buffer d_local_codes_resampled_early = cl::Buffer(context, h_local_codes_resampled_early.begin(), h_local_codes_resampled_early.end(), true);
-    cl::Buffer d_local_codes_resampled_prompt = cl::Buffer(context, h_local_codes_resampled_prompt.begin(), h_local_codes_resampled_prompt.end(), true);
-    cl::Buffer d_local_codes_resampled_late = cl::Buffer(context, h_local_codes_resampled_late.begin(), h_local_codes_resampled_late.end(), true);
+//     // Buffers e Copy memory
+//     // Buffers e Const de Entrada
+//     cl::Buffer d_sig_in_real(context, CL_MEM_READ_WRITE, sizeof(float) * signal_length_samples);
+//     cl::Buffer d_sig_in_imag(context, CL_MEM_READ_WRITE, sizeof(float) * signal_length_samples);
+//     // cl::Buffer d_local_codes_resampled = cl::Buffer(context, h_local_codes_resampled.begin(), h_local_codes_resampled.end(), true);
+//     cl::Buffer d_local_codes_resampled_early = cl::Buffer(context, h_local_codes_resampled_early.begin(), h_local_codes_resampled_early.end(), true);
+//     cl::Buffer d_local_codes_resampled_prompt = cl::Buffer(context, h_local_codes_resampled_prompt.begin(), h_local_codes_resampled_prompt.end(), true);
+//     cl::Buffer d_local_codes_resampled_late = cl::Buffer(context, h_local_codes_resampled_late.begin(), h_local_codes_resampled_late.end(), true);
 
-    // Buffers de Saída
-    cl::Buffer d_corr_out_real(context, CL_MEM_READ_WRITE, sizeof(float) * signal_length_samples);
-    cl::Buffer d_corr_out_imag(context, CL_MEM_READ_WRITE, sizeof(float) * signal_length_samples);
+//     // Buffers de Saída
+//     cl::Buffer d_corr_out_real(context, CL_MEM_READ_WRITE, sizeof(float) * signal_length_samples);
+//     cl::Buffer d_corr_out_imag(context, CL_MEM_READ_WRITE, sizeof(float) * signal_length_samples);
 
-    cl::CommandQueue queue(context, default_device);
-    queue.enqueueWriteBuffer(d_sig_in_real, CL_TRUE, 0, sizeof(float) * signal_length_samples, h_sig_in_real);
-    queue.enqueueWriteBuffer(d_sig_in_imag, CL_TRUE, 0, sizeof(float) * signal_length_samples, h_sig_in_imag);
+//     cl::CommandQueue queue(context, default_device);
+//     queue.enqueueWriteBuffer(d_sig_in_real, CL_TRUE, 0, sizeof(float) * signal_length_samples, h_sig_in_real);
+//     queue.enqueueWriteBuffer(d_sig_in_imag, CL_TRUE, 0, sizeof(float) * signal_length_samples, h_sig_in_imag);
 
-    // Execute Kernel e Retrieve
-    cl::Kernel kernel(program, "multicorr");
-    kernel.setArg(0, d_corr_out_real);
-    kernel.setArg(1, d_corr_out_imag);
-    kernel.setArg(2, d_sig_in_real);
-    kernel.setArg(3, d_sig_in_imag);
-    kernel.setArg(4, phase_step_rad);
-    kernel.setArg(5, phase_step_rad_inc);
-    kernel.setArg(6, std::cos(rem_carrier_phase_in_rad));
-    kernel.setArg(7, -std::sin(rem_carrier_phase_in_rad));
-    kernel.setArg(8, d_local_codes_resampled_early);
-    kernel.setArg(9, d_local_codes_resampled_prompt);
-    kernel.setArg(10, d_local_codes_resampled_late);
-    kernel.setArg(11, n_correlators);
-    kernel.setArg(12, signal_length_samples);
+//     // Execute Kernel e Retrieve
+//     cl::Kernel kernel(program, "multicorr");
+//     kernel.setArg(0, d_corr_out_real);
+//     kernel.setArg(1, d_corr_out_imag);
+//     kernel.setArg(2, d_sig_in_real);
+//     kernel.setArg(3, d_sig_in_imag);
+//     kernel.setArg(4, phase_step_rad);
+//     kernel.setArg(5, phase_step_rad_inc);
+//     kernel.setArg(6, std::cos(rem_carrier_phase_in_rad));
+//     kernel.setArg(7, -std::sin(rem_carrier_phase_in_rad));
+//     kernel.setArg(8, d_local_codes_resampled_early);
+//     kernel.setArg(9, d_local_codes_resampled_prompt);
+//     kernel.setArg(10, d_local_codes_resampled_late);
+//     kernel.setArg(11, n_correlators);
+//     kernel.setArg(12, signal_length_samples);
 
-    queue.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(signal_length_samples), cl::NullRange);
-    float h_corr_out_real[signal_length_samples];
-    float h_corr_out_imag[signal_length_samples];
-    queue.enqueueReadBuffer(d_corr_out_real, CL_TRUE, 0, sizeof(float) * signal_length_samples, h_corr_out_real);
-    queue.enqueueReadBuffer(d_corr_out_imag, CL_TRUE, 0, sizeof(float) * signal_length_samples, h_corr_out_imag);
-    queue.finish();
+//     queue.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(signal_length_samples), cl::NullRange);
+//     float h_corr_out_real[signal_length_samples];
+//     float h_corr_out_imag[signal_length_samples];
+//     queue.enqueueReadBuffer(d_corr_out_real, CL_TRUE, 0, sizeof(float) * signal_length_samples, h_corr_out_real);
+//     queue.enqueueReadBuffer(d_corr_out_imag, CL_TRUE, 0, sizeof(float) * signal_length_samples, h_corr_out_imag);
+//     queue.finish();
 
-    // std::cout << "result: \n";
-    for (int i = first; i < last; i++)
-        {
-            *h_corr_out = lv_cmake(h_corr_out_real[i], h_corr_out_imag[i]);
-            h_corr_out++;
-        }
-    // std::cout << "\n";
-}
+//     // std::cout << "result: \n";
+//     for (int i = first; i < last; i++)
+//         {
+//             *h_corr_out = lv_cmake(h_corr_out_real[i], h_corr_out_imag[i]);
+//             h_corr_out++;
+//         }
+//     // std::cout << "\n";
+// }
 // ########################################################################################
 // }
