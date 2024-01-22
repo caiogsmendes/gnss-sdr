@@ -70,22 +70,12 @@ Concurrent_Map<Gps_Acq_Assist> global_gps_acq_assist_map;
 
 int main(int argc, char** argv)
 {
-<<<<<<< HEAD
     frontend_init();
     const std::string intro_help(
         std::string("\nGNSS-SDR is an Open Source GNSS Software Defined Receiver\n") +
         "Copyright (C) 2010-2019 (see AUTHORS file for a list of contributors)\n" +
         "This program comes with ABSOLUTELY NO WARRANTY;\n" +
         "See COPYING file to see a copy of the General Public License\n \n");
-=======
-    try
-        {
-            const std::string intro_help(
-                std::string("\nGNSS-SDR is an Open Source GNSS Software Defined Receiver\n") +
-                "Copyright (C) 2010-2023 (see AUTHORS file for a list of contributors)\n" +
-                "This program comes with ABSOLUTELY NO WARRANTY;\n" +
-                "See COPYING file to see a copy of the General Public License\n \n");
->>>>>>> saturno
 
             const std::string gnss_sdr_version(GNSS_SDR_VERSION);
             gflags::SetUsageMessage(intro_help);

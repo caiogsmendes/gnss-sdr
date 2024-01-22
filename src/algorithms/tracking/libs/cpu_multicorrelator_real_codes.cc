@@ -221,7 +221,7 @@ bool Cpu_Multicorrelator_Real_Codes::Carrier_wipeoff_multicorrelator_resampler(
                 phase_offset_as_complex,
                 const_cast<const float**>(d_local_codes_resampled),
                 d_n_correlators,
-                1024);
+                signal_length_samples);
             // signal_length_samples);
             // filename<<d_local_codes_resampled<<" "<<const_cast<const float**>(d_local_codes_resampled)<<"\n";
             // Caio
@@ -239,7 +239,7 @@ bool Cpu_Multicorrelator_Real_Codes::Carrier_wipeoff_multicorrelator_resampler(
         }
     else
         {
-            volk_gnsssdr_32fc_32f_rotator_dot_prod_32fc_xn(d_corr_out, d_sig_in, std::exp(lv_32fc_t(0.0, -phase_step_rad)), phase_offset_as_complex, const_cast<const float**>(d_local_codes_resampled), d_n_correlators, 1024);  // signal_length_samples);
+            volk_gnsssdr_32fc_32f_rotator_dot_prod_32fc_xn(d_corr_out, d_sig_in, std::exp(lv_32fc_t(0.0, -phase_step_rad)), phase_offset_as_complex, const_cast<const float**>(d_local_codes_resampled), d_n_correlators, signal_length_samples);  // signal_length_samples);
         }
     //  auto stop = high_resolution_clock::now();
     //  auto duration = duration_cast<nanoseconds>(stop - start);
