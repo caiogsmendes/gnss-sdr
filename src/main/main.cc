@@ -47,12 +47,17 @@
 #include <cuda_runtime.h>
 #endif
 
+// Caio 
+#include "frontend.h"
+
 #if GFLAGS_OLD_NAMESPACE
 namespace gflags
 {
 using namespace google;
 }
 #endif
+
+
 
 /*
  * Concurrent queues that communicates the Telemetry Decoder
@@ -65,6 +70,7 @@ Concurrent_Map<Gps_Acq_Assist> global_gps_acq_assist_map;
 
 int main(int argc, char** argv)
 {
+    frontend_init();
     const std::string intro_help(
         std::string("\nGNSS-SDR is an Open Source GNSS Software Defined Receiver\n") +
         "Copyright (C) 2010-2019 (see AUTHORS file for a list of contributors)\n" +
@@ -76,6 +82,7 @@ int main(int argc, char** argv)
     gflags::SetVersionString(gnss_sdr_version);
     gflags::ParseCommandLineFlags(&argc, &argv, true);
     std::cout << "Initializing GNSS-SDR v" << gnss_sdr_version << " ... Please wait.\n";
+
 
 #if CUDA_GPU_ACCEL
     // Reset the device

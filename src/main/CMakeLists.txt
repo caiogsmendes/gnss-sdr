@@ -12,6 +12,8 @@ else()
     add_executable(gnss-sdr main.cc)
 endif()
 
+add_library(caio-mod frontend.cc)
+
 target_link_libraries(gnss-sdr
     PRIVATE
         algorithms_libs
@@ -21,6 +23,8 @@ target_link_libraries(gnss-sdr
         Gflags::gflags
         Glog::glog
         Threads::Threads
+        caio-mod
+        gpiod
 )
 
 target_compile_definitions(gnss-sdr PRIVATE -DGNSS_SDR_VERSION="${VERSION}")

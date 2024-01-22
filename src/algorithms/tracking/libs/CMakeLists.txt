@@ -38,6 +38,10 @@ set(TRACKING_LIB_HEADERS
     kf_conf.h
     bayesian_estimation.h
     exponential_smoother.h
+        # Caio's Mod.
+        cl.hpp
+        err_code.h
+        util.hpp
 )
 
 if(ENABLE_CUDA)
@@ -86,10 +90,12 @@ target_link_libraries(tracking_libs
         Volkgnsssdr::volkgnsssdr
         core_system_parameters
         algorithms_libs
+        OpenCL::OpenCL
     PRIVATE
         gnss_sdr_flags
         Glog::glog
         Gnuradio::runtime
+        OpenCL::OpenCL
 )
 
 if(ENABLE_CUDA)
