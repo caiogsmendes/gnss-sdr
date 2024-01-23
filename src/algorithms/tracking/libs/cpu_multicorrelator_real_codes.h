@@ -46,7 +46,7 @@ public:
     void update_local_code(int correlator_length_samples, float rem_code_phase_chips, float code_phase_step_chips, float code_phase_rate_step_chips = 0.0);
     bool Carrier_wipeoff_multicorrelator_resampler(float rem_carrier_phase_in_rad, float phase_step_rad, float phase_rate_step_rad, float rem_code_phase_chips, float code_phase_step_chips, float code_phase_rate_step_chips, int signal_length_samples);
     bool Carrier_wipeoff_multicorrelator_resampler(float rem_carrier_phase_in_rad, float phase_step_rad, float rem_code_phase_chips, float code_phase_step_chips, float code_phase_rate_step_chips, int signal_length_samples);
-    // void GPU_multicorrelator(std::complex<float>*,const std::complex<float>*, float, float, float, const float**, int, int);
+    void GPU_multicorrelator(std::complex<float>*,const std::complex<float>*, float, float, float, const float**, int, int);
     bool free();
 
 private:
