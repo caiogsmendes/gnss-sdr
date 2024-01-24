@@ -187,6 +187,8 @@ bool Cpu_Multicorrelator_Real_Codes::Carrier_wipeoff_multicorrelator_resampler(
     // contador++;
     // std::fstream sampler;
     // sampler.open("Sampler_comparador_GPU_SIMD.txt",std::ios::out|std::ios::app);
+    
+    
     // GPU_multicorrelator(
     //     d_corr_out,
     //     d_sig_in,
