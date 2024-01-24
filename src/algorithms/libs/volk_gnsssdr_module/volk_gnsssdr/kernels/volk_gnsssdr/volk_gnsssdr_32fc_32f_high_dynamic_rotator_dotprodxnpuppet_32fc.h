@@ -56,6 +56,7 @@ static inline void volk_gnsssdr_32fc_32f_high_dynamic_rotator_dotprodxnpuppet_32
             volk_gnsssdr_free(in_a[n]);
         }
     volk_gnsssdr_free(in_a);
+    printf("volk_gnsssdr_32fc_32f_high_dynamic_rotator_dotprodxnpuppet_32fc 001\n");
 }
 #endif  // Generic
 
@@ -87,6 +88,7 @@ static inline void volk_gnsssdr_32fc_32f_high_dynamic_rotator_dotprodxnpuppet_32
             volk_gnsssdr_free(in_a[n]);
         }
     volk_gnsssdr_free(in_a);
+    printf("volk_gnsssdr_32fc_32f_high_dynamic_rotator_dotprodxnpuppet_32fc 002\n");
 }
 #endif  // Generic
 

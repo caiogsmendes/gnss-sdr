@@ -29,6 +29,7 @@ void frontend_init(void)
     offset = SODIMM127;
     gpiod_ctxless_set_value(chip, offset, line_value, false, "gpio-toggle", NULL, NULL);  // Lower the hackRF RST_pin
 }
+
 void frontend_rst(void)
 {
     int line_value = 0;

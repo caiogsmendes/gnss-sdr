@@ -870,8 +870,8 @@ void dll_pll_veml_tracking::start_tracking()
     d_code_loop_filter.initialize();                                                 // initialize the code filter
 
     // DEBUG OUTPUT
-    std::cout << "Tracking of " << d_systemName << " " << d_signal_pretty_name << " signal started on channel " << d_channel << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
-    DLOG(INFO) << "Starting tracking of satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << " on channel " << d_channel;
+    // std::cout << "Tracking of " << d_systemName << " " << d_signal_pretty_name << " signal started on channel " << d_channel << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
+    // DLOG(INFO) << "Starting tracking of satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << " on channel " << d_channel;
 
     // enable tracking pull-in
     d_state = 1;
@@ -1860,8 +1860,8 @@ int dll_pll_veml_tracking::general_work(int noutput_items __attribute__((unused)
                                                     {
                                                         LOG(INFO) << d_systemName << " " << d_signal_pretty_name << " tracking bit synchronization locked in channel " << d_channel
                                                                   << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
-                                                        std::cout << d_systemName << " " << d_signal_pretty_name << " tracking bit synchronization locked in channel " << d_channel
-                                                                  << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
+                                                        // std::cout << d_systemName << " " << d_signal_pretty_name << " tracking bit synchronization locked in channel " << d_channel
+                                                        //           << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
                                                     }
                                             }
                                     }

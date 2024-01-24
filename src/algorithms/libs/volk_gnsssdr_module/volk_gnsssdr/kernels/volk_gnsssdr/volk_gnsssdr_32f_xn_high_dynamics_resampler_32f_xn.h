@@ -88,6 +88,7 @@ static inline void volk_gnsssdr_32f_xn_high_dynamics_resampler_32f_xn_generic(fl
             memcpy(&result[current_correlator_tap][0], &result[0][shift_samples], (num_points - shift_samples) * sizeof(float));
             memcpy(&result[current_correlator_tap][num_points - shift_samples], &result[0][0], shift_samples * sizeof(float));
         }
+    printf("volk_gnsssdr_32f_xn_high_dynamics_resampler_32f_xn 001\n");
 }
 
 #endif /*LV_HAVE_GENERIC*/

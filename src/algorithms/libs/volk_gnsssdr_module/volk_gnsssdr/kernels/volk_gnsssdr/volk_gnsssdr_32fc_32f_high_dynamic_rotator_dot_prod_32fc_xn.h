@@ -106,6 +106,7 @@ static inline void volk_gnsssdr_32fc_32f_high_dynamic_rotator_dot_prod_32fc_xn_g
                     result[n_vec] += (tmp32_1 * in_a[n_vec][n]);
                 }
         }
+        printf("volk_gnsssdr_32fc_32f_high_dynamic_rotator_dot_prod_32fc_xn 001\n");
 }
 #endif
 
@@ -113,6 +114,7 @@ static inline void volk_gnsssdr_32fc_32f_high_dynamic_rotator_dot_prod_32fc_xn_g
 #ifdef LV_HAVE_GENERIC
 static inline void volk_gnsssdr_32fc_32f_high_dynamic_rotator_dot_prod_32fc_xn_generic_arg(lv_32fc_t* result, const lv_32fc_t* in_common, const lv_32fc_t phase_inc, const lv_32fc_t phase_inc_rate, lv_32fc_t* phase, const float** in_a, int num_a_vectors, unsigned int num_points)
 {
+    printf("\nvolk_gnsssdr_32fc_32f_high_dynamic_rotator_dot_prod_32fc_xn  002\n");
     lv_32fc_t tmp32_1;
     lv_32fc_t phase_doppler_rate = lv_cmake(1.0f, 0.0f);
     lv_32fc_t phase_doppler = (*phase);
