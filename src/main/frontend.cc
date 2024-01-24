@@ -10,7 +10,7 @@ void frontend_init(void)
     // Obs: 2 gpio's
     // SODIMM 127 ------> Reset
     // SODIMM 129 ------> Power UP
-    int line_value = 0;
+    int line_value = 1;
     int line;
     int ret;
     char chip[10];
