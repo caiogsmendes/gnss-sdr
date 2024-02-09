@@ -141,9 +141,13 @@ option(ENABLE_ORC "Use (if available) the Optimized Inner Loop Runtime Compiler 
 option(ENABLE_UART "Habilita a comunicação Serial" OFF)
 
 option(ENABLE_CONSOLE_OUTPUT "Habilita print de msg do bloco de TRK e PVT no console" OFF)
+
 if(ENABLE_CONSOLE_OUTPUT)
     add_definitions(-DEN_CONSOLE_OUTPUT=TRUE)
     message(STATUS "Console output ENABLED")
+else()
+    add_definitions(-DEN_CONSOLE_OUTPUT=FALSE)
+    message(STATUS "Console output DISABLED")
 endif()
 ################################################################################
 # GNSS-SDR version information

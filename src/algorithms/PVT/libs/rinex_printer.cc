@@ -4893,7 +4893,9 @@ void Rinex_Printer::update_nav_header(std::fstream& out, const Beidou_Dnav_Utc_M
     out.close();
     out.open(navfilename, std::ios::out | std::ios::app);
     out.seekp(pos);
+#ifdef EN_CONSOLE_OUTPUT
     std::cout << "The RINEX Navigation file header has been updated with UTC and IONO info.\n";
+#endif
 }
 
 

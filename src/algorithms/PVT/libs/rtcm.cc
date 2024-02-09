@@ -72,7 +72,9 @@ Rtcm::~Rtcm()
 // *****************************************************************************************************
 void Rtcm::run_server()
 {
+    #ifdef EN_CONSOLE_OUTPUT
     std::cout << "Starting a TCP/IP server of RTCM messages on port " << RTCM_port << '\n';
+    #endif
     try
         {
             tq = std::thread([&] { std::make_shared<Queue_Reader>(io_context, rtcm_message_queue, RTCM_port)->do_read_queue(); });
@@ -94,7 +96,9 @@ void Rtcm::stop_service()
 
 void Rtcm::stop_server()
 {
+    #ifdef EN_CONSOLE_OUTPUT
     std::cout << "Stopping TCP/IP server on port " << RTCM_port << '\n';
+    #endif
     Rtcm::stop_service();
     servers.front().close_server();
     rtcm_message_queue->push("Goodbye");  // this terminates tq

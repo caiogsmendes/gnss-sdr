@@ -2417,25 +2417,27 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                             std::cout.setf(std::ios::fixed, std::ios::floatfield);
                             auto* facet = new boost::posix_time::time_facet("%Y-%b-%d %H:%M:%S.%f %z");
                             std::cout.imbue(std::locale(std::cout.getloc(), facet));
-                            // std::cout
-                            //     << TEXT_BOLD_GREEN
-                            //     << "Position at " << time_solution << UTC_solution_str
-                            //     << " using " << d_user_pvt_solver->get_num_valid_observations()
-                            //     << std::fixed << std::setprecision(9)
-                            //     << " observations is Lat = " << d_user_pvt_solver->get_latitude() << " [deg], Long = " << d_user_pvt_solver->get_longitude()
-                            //     << std::fixed << std::setprecision(3)
-                            //     << " [deg], Height = " << d_user_pvt_solver->get_height() << " [m]" << TEXT_RESET << '\n';
+#ifdef EN_CONSOLE_OUTPUT
+                            std::cout
+                                << TEXT_BOLD_GREEN
+                                << "Position at " << time_solution << UTC_solution_str
+                                << " using " << d_user_pvt_solver->get_num_valid_observations()
+                                << std::fixed << std::setprecision(9)
+                                << " observations is Lat = " << d_user_pvt_solver->get_latitude() << " [deg], Long = " << d_user_pvt_solver->get_longitude()
+                                << std::fixed << std::setprecision(3)
+                                << " [deg], Height = " << d_user_pvt_solver->get_height() << " [m]" << TEXT_RESET << '\n';
 
-                            // std::cout << std::setprecision(ss);
+                            std::cout << std::setprecision(ss);
+#endif
                             DLOG(INFO) << "RX clock offset: " << d_user_pvt_solver->get_time_offset_s() << "[s]";
-
-                            // std::cout
-                            //     << TEXT_BOLD_GREEN
-                            //     << "Velocity: " << std::fixed << std::setprecision(3)
-                            //     << "East: " << d_user_pvt_solver->get_rx_vel()[0] << " [m/s], North: " << d_user_pvt_solver->get_rx_vel()[1]
-                            //     << " [m/s], Up = " << d_user_pvt_solver->get_rx_vel()[2] << " [m/s]" << TEXT_RESET << '\n';
-
-                            // std::cout << std::setprecision(ss);
+#ifdef EN_CONSOLE_OUTPUT
+                            std::cout
+                                << TEXT_BOLD_GREEN
+                                << "Velocity: " << std::fixed << std::setprecision(3)
+                                << "East: " << d_user_pvt_solver->get_rx_vel()[0] << " [m/s], North: " << d_user_pvt_solver->get_rx_vel()[1]
+                                << " [m/s], Up = " << d_user_pvt_solver->get_rx_vel()[2] << " [m/s]" << TEXT_RESET << '\n';
+                            std::cout << std::setprecision(ss);
+#endif
                             DLOG(INFO) << "RX clock drift: " << d_user_pvt_solver->get_clock_drift_ppm() << " [ppm]";
 
                             // boost::posix_time::ptime p_time;

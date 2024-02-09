@@ -1,0 +1,2 @@
+/usr/bin/ar qc libcaio-mod.a CMakeFiles/caio-mod.dir/frontend.cc.o
+/usr/bin/ranlib libcaio-mod.a

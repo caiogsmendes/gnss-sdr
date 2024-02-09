@@ -937,12 +937,16 @@ private:
                     {
                         if (first_client)
                             {
+                                #ifdef EN_CONSOLE_OUTPUT
                                 std::cout << "The TCP/IP server of RTCM messages is up and running. Accepting connections ...\n";
+                                #endif
                                 first_client = false;
                             }
                         else
                             {
+                                #ifdef EN_CONSOLE_OUTPUT
                                 std::cout << "Starting RTCM TCP/IP server session...\n";
+                                #endif
                                 boost::system::error_code ec2;
                                 boost::asio::ip::tcp::endpoint endpoint = socket_.remote_endpoint(ec2);
                                 if (ec2)
