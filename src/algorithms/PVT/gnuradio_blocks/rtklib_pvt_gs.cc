@@ -2322,14 +2322,21 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                             if (d_show_local_time_zone)
                                                 {
                                                     const boost::posix_time::ptime time_first_solution = d_user_pvt_solver->get_position_UTC_time() + d_utc_diff_time;
+#ifdef EN_CONSOLE_OUTPUT
                                                     std::cout << "First position fix at " << time_first_solution << d_local_time_str;
+#endif
                                                 }
                                             else
                                                 {
+#ifdef EN_CONSOLE_OUTPUT
                                                     std::cout << "First position fix at " << d_user_pvt_solver->get_position_UTC_time() << " UTC";
+#endif
                                                 }
+#ifdef EN_CONSOLE_OUTPUT
+
                                             std::cout << " is Lat = " << d_user_pvt_solver->get_latitude() << " [deg], Long = " << d_user_pvt_solver->get_longitude()
                                                       << " [deg], Height= " << d_user_pvt_solver->get_height() << " [m]\n";
+#endif
                                             d_ttff_msgbuf ttff;
                                             ttff.mtype = 1;
                                             d_end = std::chrono::system_clock::now();

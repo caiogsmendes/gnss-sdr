@@ -137,6 +137,14 @@ option(ENABLE_EXTERNAL_MATHJAX "Use MathJax from an external CDN in HTML docs" O
 
 option(ENABLE_ORC "Use (if available) the Optimized Inner Loop Runtime Compiler (ORC)" OFF)
 
+# Caio
+option(ENABLE_UART "Habilita a comunicação Serial" OFF)
+
+option(ENABLE_CONSOLE_OUTPUT "Habilita print de msg do bloco de TRK e PVT no console" OFF)
+if(ENABLE_CONSOLE_OUTPUT)
+    add_definitions(-DEN_CONSOLE_OUTPUT=TRUE)
+    message(STATUS "Console output ENABLED")
+endif()
 ################################################################################
 # GNSS-SDR version information
 ################################################################################
@@ -3434,6 +3442,11 @@ add_feature_info(ENABLE_BENCHMARKS ENABLE_BENCHMARKS "Enables building of code s
 add_feature_info(ENABLE_EXTERNAL_MATHJAX ENABLE_EXTERNAL_MATHJAX "Use MathJax from an external CDN in HTML docs when doing '${CMAKE_MAKE_PROGRAM_PRETTY_NAME} doc'.")
 add_feature_info(ENABLE_CPUFEATURES ENABLE_CPUFEATURES "Make use of the cpu_features library.")
 add_feature_info(Boost_USE_STATIC_LIBS Boost_USE_STATIC_LIBS "Use Boost static libraries.")
+
+# Caio
+add_feature_info(ENABLE_UART ENABLE_UART "Habilita o uso da porta serial para envio das msg PVT")
+add_feature_info(ENABLE_CONSOLE_OUTPUT ENABLE_CONSOLE_OUTPUT "Habilita o print de msg do TRK E PVT")
+
 
 message(STATUS "")
 message(STATUS "***************************************")
