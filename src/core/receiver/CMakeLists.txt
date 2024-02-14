@@ -12,6 +12,7 @@ set(GNSS_RECEIVER_SOURCES
     gnss_flowgraph.cc
     in_memory_configuration.cc
     tcp_cmd_interface.cc
+    serial_cmd_interface.cc
 )
 
 set(GNSS_RECEIVER_HEADERS
@@ -23,6 +24,7 @@ set(GNSS_RECEIVER_HEADERS
     tcp_cmd_interface.h
     concurrent_map.h
     concurrent_queue.h
+    serial_cmd_interface.h
 )
 
 list(SORT GNSS_RECEIVER_HEADERS)
@@ -176,6 +178,7 @@ target_link_libraries(core_receiver
         Gflags::gflags
         Glog::glog
         Armadillo::armadillo
+        pvt_libs
 )
 
 if(ENABLE_ARMA_NO_DEBUG)

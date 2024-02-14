@@ -65,6 +65,9 @@
 #include <sys/ipc.h>               // for IPC_CREAT
 #include <sys/msg.h>               // for msgctl, msgget
 
+//Caio
+#include "serial_cmd_interface.h"
+
 #ifdef ENABLE_FPGA
 #include <boost/chrono.hpp>  // for steady_clock
 #endif
@@ -263,6 +266,12 @@ ControlThread::~ControlThread()  // NOLINT(modernize-use-equals-default)
         {
             cmd_interface_thread_.join();
         }
+
+    // Caio
+    if (serial_cmd_interface_thread_.joinable())
+    {
+        serial_cmd_interface_thread_.join();
+    }
 }
 
 
@@ -273,6 +282,14 @@ void ControlThread::telecommand_listener()
             const int tcp_cmd_port = configuration_->property("GNSS-SDR.telecommand_tcp_port", 3333);
             cmd_interface_.run_cmd_server(tcp_cmd_port);
         }
+}
+
+void ControlThread::serialcmd_listener()
+{
+    if(serialcmd_enabled_)
+    {
+
+    }
 }
 
 
@@ -385,6 +402,13 @@ int ControlThread::run()
     cmd_interface_.set_pvt(flowgraph_->get_pvt());
     cmd_interface_thread_ = std::thread(&ControlThread::telecommand_listener, this);
 
+    // Caio
+    // Fazer um listener thread para Serial Cmd
+    serial_cmd_interface_.set_pvt(flowgraph_->get_pvt());
+    serial_cmd_interface_thread_ = std::thread(&ControlThread::serialcmd_listener, this);
+    // Cria uma thread para isso, mas é necessário fechar com .join()
+    // na função dos destructors
+
 #ifdef ENABLE_FPGA
     // Create a task for the acquisition such that id doesn't block the flow of the control thread
     fpga_helper_thread_ = boost::thread(&GNSSFlowgraph::start_acquisition_helper,
@@ -437,6 +461,15 @@ int ControlThread::run()
 #endif
         }
 
+    //Caio
+    // A thread precisa ser finalizada
+    if(serialcmd_enabled_)
+    {
+        pthread_t id3 = serial_cmd_interface_thread_.native_handle();
+        serial_cmd_interface_thread_.detach();
+        pthread_cancel(id3);
+    }
+
     LOG(INFO) << "Flowgraph stopped";
 
     if (restart_)
@@ -457,6 +490,10 @@ void ControlThread::set_control_queue(std::shared_ptr<Concurrent_Queue<pmt::pmt_
         }
     control_queue_ = std::move(control_queue);
     cmd_interface_.set_msg_queue(control_queue_);
+
+    //Caio
+    serial_control_queue_ = std::move(control_queue);
+    serial_cmd_interface_.set_msg_queue(serial_control_queue_);
 }
 
 

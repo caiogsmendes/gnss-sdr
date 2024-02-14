@@ -38,6 +38,9 @@
 #include <utility>   // for pair
 #include <vector>    // for vector
 
+//Caio
+#include "serial_cmd_interface.h"
+
 #ifdef ENABLE_FPGA
 #include <boost/thread.hpp>  // for boost::thread
 #endif
@@ -151,6 +154,10 @@ private:
     void assist_GNSS();
 
     void telecommand_listener();
+
+    //Caio
+    void serialcmd_listener();
+
     void keyboard_listener();
     void sysv_queue_listener();
     void print_help_at_exit() const;
@@ -176,9 +183,17 @@ private:
 
     std::shared_ptr<ConfigurationInterface> configuration_;
     std::shared_ptr<Concurrent_Queue<pmt::pmt_t>> control_queue_;
+    
+    //Caio
+    std::shared_ptr<Concurrent_Queue<pmt::pmt_t>> serial_control_queue_;
+
     std::shared_ptr<GNSSFlowgraph> flowgraph_;
 
     std::thread cmd_interface_thread_;
+    
+    //Caio
+    std::thread serial_cmd_interface_thread_;
+
     std::thread keyboard_thread_;
     std::thread sysv_queue_thread_;
     std::thread gps_acq_assist_data_collector_thread_;
@@ -188,6 +203,9 @@ private:
 #endif
 
     TcpCmdInterface cmd_interface_;
+    
+    // Caio
+    SerialCmdInterface serial_cmd_interface_;
 
     // SUPL assistance classes
     Gnss_Sdr_Supl_Client supl_client_acquisition_;
@@ -214,6 +232,10 @@ private:
     bool stop_;
     bool restart_;
     bool telecommand_enabled_;
+
+    //Caio
+    bool serialcmd_enabled_;
+
     bool pre_2009_file_;  // to override the system time to postprocess old gnss records and avoid wrong week rollover
 };
 

@@ -142,10 +142,10 @@ option(ENABLE_UART "Habilita a comunicação Serial" OFF)
 
 option(ENABLE_CONSOLE_OUTPUT "Habilita print de msg do bloco de TRK e PVT no console" OFF)
 
-if(ENABLE_CONSOLE_OUTPUT)
+if(ENABLE_CONSOLE_OUTPUT=ON)
     add_definitions(-DEN_CONSOLE_OUTPUT=TRUE)
     message(STATUS "Console output ENABLED")
-else()
+else(ENABLE_CONSOLE_OUTPUT=OFF)
     add_definitions(-DEN_CONSOLE_OUTPUT=FALSE)
     message(STATUS "Console output DISABLED")
 endif()
