@@ -19,6 +19,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include "HEtechSerial.h"
+
 class PvtInterface;
 
 class SerialCmdInterface
@@ -34,21 +36,24 @@ class SerialCmdInterface
 
        void set_pvt(std::shared_ptr<PvtInterface> PVT_sptr);
        void set_msg_queue(std::shared_ptr<Concurrent_Queue<pmt::pmt_t>> control_queue);
-       void CmdParser(char cmd);
+       void run_serial_listener(char*);
+       void CmdParser(char* cmd);
        void serial_get_pvt(void);
        void serial_status(void);
-    private:
+       void serial_reset(void);
 
+       std::shared_ptr<Concurrent_Queue<pmt::pmt_t>> control_queue_;
+
+   private:
        void register_functions();
 
-        std::unordered_map<std::string, std::function<std::string(const std::vector<std::string> &)>>
-        functions_;
-        std::string serial_get_pvt(const std::vector<std::string> &commandLine);
-        // std::string serial_status(void);
-        std::shared_ptr<PvtInterface> PVT_sptr_;
-        std::shared_ptr<Concurrent_Queue<pmt::pmt_t>> control_queue_;
+       std::unordered_map<std::string, std::function<std::string(const std::vector<std::string> &)>>
+           functions_;
+    //    std::string serial_get_pvt(const std::vector<std::string> &commandLine);
+       // std::string serial_status(void);
+       std::shared_ptr<PvtInterface> PVT_sptr_;
 
-        bool keep_running_;
+       bool keep_running_;
 };
 
 #endif

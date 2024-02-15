@@ -47,9 +47,11 @@ extern "C" {
 struct serial_s HEserial_connect(const char*, int);
 int HEserial_envio(serial_s*, char*);
 int HEserial_leitura(serial_s*, char*);
+char HEserial_leitura_byte(serial_s*, char*);
 void HEserial_disconnect(serial_s*);
 int serial4send(char*);
 int serial4read(char*);
+void serial4readByte(char*);
 int enviaar(char *msg);
 
 #ifdef __cplusplus

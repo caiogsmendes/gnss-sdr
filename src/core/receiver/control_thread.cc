@@ -153,6 +153,12 @@ void ControlThread::init()
     // Instantiates a control queue, a GNSS flowgraph, and a control message factory
     control_queue_ = std::make_shared<Concurrent_Queue<pmt::pmt_t>>();
     cmd_interface_.set_msg_queue(control_queue_);  // set also the queue pointer for the telecommand thread
+    /**-------------------------------------------------------------------------
+     * Caio -> copiei para a função de cmd serial.
+    */
+//    serial_control_queue_ = std::make_shared<Concurrent_Queue<pmt::pmt_t>>();
+   serial_cmd_interface_.set_msg_queue(control_queue_);
+    // ---------------------------------------------------------------------------
     if (well_formatted_configuration_)
         {
             try
@@ -256,18 +262,15 @@ ControlThread::~ControlThread()  // NOLINT(modernize-use-equals-default)
         {
             msgctl(msqid_, IPC_RMID, nullptr);
         }
-
     if (sysv_queue_thread_.joinable())
         {
             sysv_queue_thread_.join();
         }
-
     if (cmd_interface_thread_.joinable())
         {
             cmd_interface_thread_.join();
         }
-
-    // Caio
+    // Caio - ControlThread Destructor -> fecha as threads
     if (serial_cmd_interface_thread_.joinable())
     {
         serial_cmd_interface_thread_.join();
@@ -288,7 +291,9 @@ void ControlThread::serialcmd_listener()
 {
     if(serialcmd_enabled_)
     {
-
+        //Caio
+        char input = 0;
+        serial_cmd_interface_.run_serial_listener(&input);
     }
 }
 
@@ -1003,6 +1008,11 @@ void ControlThread::apply_action(unsigned int what)
             flowgraph_->priorize_satellites(visible_satellites);
             // start again the satellite acquisitions
             receiver_on_standby_ = false;
+            break;
+        // Caio
+        case 14:
+            LOG(INFO) << "NavComp. Request PVT";
+            serial_cmd_interface_.serial_get_pvt();
             break;
         default:
             LOG(INFO) << "Unrecognized action.";

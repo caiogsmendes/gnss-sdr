@@ -45,7 +45,9 @@ extern "C"
         int running;
         int flags;
         char txbuff[BUFF_SIZE];
+        char bufftx;
         char rxbuff[BUFF_SIZE];
+        char buffrx;
         int start, end;
         pthread_t rx_thread;
         pthread_t tx_thread;
@@ -338,6 +340,17 @@ extern "C"
         return bytes;
     }
 
+    void serial4readByte(char *data)
+    {
+        // Configs de Leitura UART
+        const char *device = "/dev/colibri-uartc";
+        int flags = O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK;
+        struct serial_s comm = HEserial_connect(device, flags);
+        *data = HEserial_leitura_byte(&comm, data);
+        HEserial_disconnect(&comm);
+        // return byte;
+    }
+
     // ####### New Functions ##########
 
     // struct serial_s HEserial_init(const char *device, int flags) // Não usar
@@ -424,6 +437,23 @@ extern "C"
             }
         }
         return result;
+    }
+
+    char HEserial_leitura_byte(serial_s *comm, char *msg)
+    {
+        // Limpar o buffer se characteres espúrios
+        // memset(comm->rxbuff, '\0', sizeof(comm->rxbuff));
+        int result = 0;
+        comm->ufds.events = POLLIN;
+        if (poll(&comm->ufds, 1, -1) > 0)
+        {
+            if (comm->ufds.revents & POLLIN)
+            {
+                result = read(comm->fd, &comm->buffrx, sizeof(comm->buffrx));
+                memcpy(msg, &comm->buffrx, sizeof(comm->buffrx)); // Está Redundante ??
+            }
+        }
+        return comm->buffrx;
     }
 
     void HEserial_disconnect(serial_s *comm)
