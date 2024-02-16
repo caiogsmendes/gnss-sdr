@@ -343,7 +343,7 @@ extern "C"
     void serial4readByte(char *data)
     {
         // Configs de Leitura UART
-        const char *device = "/dev/colibri-uartc";
+        const char *device = "/dev/colibri-uartb";
         int flags = O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK;
         struct serial_s comm = HEserial_connect(device, flags);
         *data = HEserial_leitura_byte(&comm, data);
