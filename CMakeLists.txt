@@ -30,7 +30,7 @@ list(APPEND CMAKE_MODULE_PATH ${GNSSSDR_SOURCE_DIR}/cmake/Modules)
 include(FeatureSummary)
 
 # Support of optional RF front-ends
-option(ENABLE_UHD "Enable the use of UHD (driver for all USRP devices)" ON)
+option(ENABLE_UHD "Enable the use of UHD (driver for all USRP devices)" OFF)
 
 option(ENABLE_OSMOSDR "Enable the use of OsmoSDR and other front-ends (RTL-based dongles, HackRF, bladeRF, etc.) as signal source" OFF)
 
@@ -48,7 +48,7 @@ option(ENABLE_FLEXIBAND "Enable the use of the signal source adater for the Tele
 
 option(ENABLE_ARRAY "Enable the use of CTTC's antenna array front-end as signal source (experimental)" OFF)
 
-option(ENABLE_ZMQ "Enable GNU Radio ZeroMQ Messaging, requires gr-zeromq" ON)
+option(ENABLE_ZMQ "Enable GNU Radio ZeroMQ Messaging, requires gr-zeromq" OFF)
 
 # Performance analysis tools
 option(ENABLE_GPERFTOOLS "Enable linking to Gperftools libraries (tcmalloc and profiler)" OFF)
@@ -89,7 +89,7 @@ if(ENABLE_PACKAGING)
 endif()
 
 # Testing
-option(ENABLE_UNIT_TESTING "Build unit tests" ON)
+option(ENABLE_UNIT_TESTING "Build unit tests" OFF)
 
 option(ENABLE_UNIT_TESTING_MINIMAL "Build a minimal set of unit tests" OFF)
 
@@ -99,7 +99,7 @@ option(ENABLE_SYSTEM_TESTING "Build system tests" OFF)
 
 option(ENABLE_SYSTEM_TESTING_EXTRA "Download external tools and build extra system tests" OFF)
 
-option(ENABLE_GNSS_SIM_INSTALL "Enable the installation of gnss_sim on the fly" ON)
+option(ENABLE_GNSS_SIM_INSTALL "Enable the installation of gnss_sim on the fly" OFF)
 
 option(ENABLE_CPUFEATURES "Make use of the cpu_features library" ON)
 
@@ -133,7 +133,7 @@ if(CMAKE_VERSION VERSION_LESS 3.16.3)
     set(ENABLE_BENCHMARKS OFF)
 endif()
 
-option(ENABLE_EXTERNAL_MATHJAX "Use MathJax from an external CDN in HTML docs" ON)
+option(ENABLE_EXTERNAL_MATHJAX "Use MathJax from an external CDN in HTML docs" OFF)
 
 option(ENABLE_ORC "Use (if available) the Optimized Inner Loop Runtime Compiler (ORC)" OFF)
 
