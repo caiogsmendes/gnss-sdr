@@ -366,8 +366,8 @@ extern "C"
         struct serial_s comm;
         comm.fd = open(device, flags); // cria file para IO
         tcgetattr(comm.fd, &comm.tty); // pega atributos e cria struct termios(termios.h)
-        cfsetispeed(&comm.tty, B921600);
-        cfsetospeed(&comm.tty, B921600);
+        cfsetispeed(&comm.tty, B115200);
+        cfsetospeed(&comm.tty, B115200);
         comm.tty.c_cflag &= ~PARENB;   // Disable geração/check de Bit de pariedade
         comm.tty.c_cflag &= ~CSTOPB;   // set 1 Stop Bit
         comm.tty.c_cflag |= CREAD | CLOCAL;
