@@ -164,6 +164,7 @@ void ControlThread::init()
             try
                 {
                     flowgraph_ = std::make_shared<GNSSFlowgraph>(configuration_, control_queue_);
+                    serial_cmd_flowgraph_ = std::make_shared<GNSSFlowgraph>(configuration_, control_queue_);
                 }
             catch (const boost::bad_lexical_cast &e)
                 {
@@ -294,6 +295,7 @@ void ControlThread::serialcmd_listener()
         //Caio
         char input = 0;
         serial_cmd_interface_.run_serial_listener(&input);
+        // serial_cmd_interface_.applicar((int)input);
     }
 }
 

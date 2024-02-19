@@ -2322,21 +2322,21 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                             if (d_show_local_time_zone)
                                                 {
                                                     const boost::posix_time::ptime time_first_solution = d_user_pvt_solver->get_position_UTC_time() + d_utc_diff_time;
-#ifdef EN_CONSOLE_OUTPUT
+// #ifdef EN_CONSOLE_OUTPUT
                                                     std::cout << "First position fix at " << time_first_solution << d_local_time_str;
-#endif
+// #endif
                                                 }
                                             else
                                                 {
-#ifdef EN_CONSOLE_OUTPUT
+// #ifdef EN_CONSOLE_OUTPUT
                                                     std::cout << "First position fix at " << d_user_pvt_solver->get_position_UTC_time() << " UTC";
-#endif
+// #endif
                                                 }
-#ifdef EN_CONSOLE_OUTPUT
+// #ifdef EN_CONSOLE_OUTPUT
 
                                             std::cout << " is Lat = " << d_user_pvt_solver->get_latitude() << " [deg], Long = " << d_user_pvt_solver->get_longitude()
                                                       << " [deg], Height= " << d_user_pvt_solver->get_height() << " [m]\n";
-#endif
+// #endif
                                             d_ttff_msgbuf ttff;
                                             ttff.mtype = 1;
                                             d_end = std::chrono::system_clock::now();
@@ -2417,7 +2417,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                             std::cout.setf(std::ios::fixed, std::ios::floatfield);
                             auto* facet = new boost::posix_time::time_facet("%Y-%b-%d %H:%M:%S.%f %z");
                             std::cout.imbue(std::locale(std::cout.getloc(), facet));
-#ifdef EN_CONSOLE_OUTPUT
+// #ifdef EN_CONSOLE_OUTPUT
                             std::cout
                                 << TEXT_BOLD_GREEN
                                 << "Position at " << time_solution << UTC_solution_str
@@ -2428,16 +2428,16 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                 << " [deg], Height = " << d_user_pvt_solver->get_height() << " [m]" << TEXT_RESET << '\n';
 
                             std::cout << std::setprecision(ss);
-#endif
+// #endif
                             DLOG(INFO) << "RX clock offset: " << d_user_pvt_solver->get_time_offset_s() << "[s]";
-#ifdef EN_CONSOLE_OUTPUT
+// #ifdef EN_CONSOLE_OUTPUT
                             std::cout
                                 << TEXT_BOLD_GREEN
                                 << "Velocity: " << std::fixed << std::setprecision(3)
                                 << "East: " << d_user_pvt_solver->get_rx_vel()[0] << " [m/s], North: " << d_user_pvt_solver->get_rx_vel()[1]
                                 << " [m/s], Up = " << d_user_pvt_solver->get_rx_vel()[2] << " [m/s]" << TEXT_RESET << '\n';
                             std::cout << std::setprecision(ss);
-#endif
+// #endif
                             DLOG(INFO) << "RX clock drift: " << d_user_pvt_solver->get_clock_drift_ppm() << " [ppm]";
 
                             // boost::posix_time::ptime p_time;

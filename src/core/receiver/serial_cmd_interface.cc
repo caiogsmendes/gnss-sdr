@@ -27,8 +27,9 @@ void SerialCmdInterface::run_serial_listener(char* input)
             // CmdParser(input); // Melhor remover essa função e apply action lá na control_thread
             if (control_queue_ != nullptr)
             {
-                const command_event_sptr new_evnt = command_event_make(300,14); 
+                const command_event_sptr new_evnt = command_event_make(300,(int)(*input)); 
                 control_queue_->push(pmt::make_any(new_evnt));
+                // flowgraph->apply_action((int*)input);
             }
         }
 }

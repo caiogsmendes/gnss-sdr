@@ -18,6 +18,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include "gnss_flowgraph.h"
 
 #include "HEtechSerial.h"
 
@@ -41,6 +42,7 @@ class SerialCmdInterface
        void serial_get_pvt(void);
        void serial_status(void);
        void serial_reset(void);
+    //    void applicar(int);
 
        std::shared_ptr<Concurrent_Queue<pmt::pmt_t>> control_queue_;
 

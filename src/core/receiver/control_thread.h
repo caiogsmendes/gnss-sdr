@@ -189,6 +189,9 @@ private:
 
     std::shared_ptr<GNSSFlowgraph> flowgraph_;
 
+    //Caio
+    std::shared_ptr<GNSSFlowgraph> serial_cmd_flowgraph_;
+
     std::thread cmd_interface_thread_;
     
     //Caio
