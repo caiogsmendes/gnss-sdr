@@ -25,6 +25,7 @@ target_link_libraries(gnss-sdr
         Threads::Threads
         caio-mod
         gpiod
+        pvt_libs
 )
 
 target_compile_definitions(gnss-sdr PRIVATE -DGNSS_SDR_VERSION="${VERSION}")

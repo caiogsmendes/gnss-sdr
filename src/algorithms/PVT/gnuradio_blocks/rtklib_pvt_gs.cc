@@ -1810,6 +1810,7 @@ bool rtklib_pvt_gs::get_latest_PVT(double* longitude_deg,
                     *UTC_time = convert_to_time_t(d_user_pvt_solver->get_position_UTC_time());
                     sprintf(buff,"1=%lf|2=%lf|3=%lf|4=%lf|5=%lf|6=%lf",*latitude_deg, *longitude_deg, *height_m, *ground_speed_kmh, *course_over_ground_deg, *UTC_time);
                     serial4send(&buff[0]);
+                    printf("caio_debug: d_user_pvt_solver->is_valid_position()");
                     return true;
                 }
         }
@@ -1825,6 +1826,7 @@ bool rtklib_pvt_gs::get_latest_PVT(double* longitude_deg,
                     *UTC_time = convert_to_time_t(d_internal_pvt_solver->get_position_UTC_time());
                     sprintf(buff,"1=%lf|2=%lf|3=%lf|4=%lf|5=%lf|6=%lf",*latitude_deg, *longitude_deg, *height_m, *ground_speed_kmh, *course_over_ground_deg, *UTC_time);
                     serial4send(&buff[0]);
+                    printf("caio_debug: d_inter_pvt_solver->is_valid_position()");
                     return true;
                 }
         }
