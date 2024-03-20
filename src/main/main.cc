@@ -148,13 +148,14 @@ int main(int argc, char** argv)
     std::chrono::time_point<std::chrono::system_clock> end;
     start = std::chrono::system_clock::now();
     int return_code = 0;
-    char buff[100] = "Main: Main Thread Initiated";
+    char buff[100] = "Main: Main Thread Initiated\n";
+    serial4send(&buff[0]);
     try
         {
             auto control_thread = std::make_unique<ControlThread>();
             // record startup time
             start = std::chrono::system_clock::now();
-            serial4send(&buff[0]);
+            // std::cout<<"Main: thread Initiated"<<"\n";
             return_code = control_thread->run();
         }
     catch (const boost::thread_resource_error& e)

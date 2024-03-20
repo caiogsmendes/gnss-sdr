@@ -67,6 +67,7 @@
 
 //Caio
 #include "serial_cmd_interface.h"
+#include "display.h"
 
 #ifdef ENABLE_FPGA
 #include <boost/chrono.hpp>  // for steady_clock
@@ -148,6 +149,7 @@ ControlThread::ControlThread(std::shared_ptr<ConfigurationInterface> configurati
 void ControlThread::init()
 {
     telecommand_enabled_ = configuration_->property("GNSS-SDR.telecommand_enabled", false);
+    serialcmd_enabled_ = configuration_->property("GNSS-SDR.serial_cmd_enabled", true); // Caio: Default seria off, mas pra teste, true.
     // OPTIONAL: specify a custom year to override the system time in order to postprocess old gnss records and avoid wrong week rollover
     pre_2009_file_ = configuration_->property("GNSS-SDR.pre_2009_file", false);
     // Instantiates a control queue, a GNSS flowgraph, and a control message factory
@@ -155,16 +157,19 @@ void ControlThread::init()
     cmd_interface_.set_msg_queue(control_queue_);  // set also the queue pointer for the telecommand thread
     /**-------------------------------------------------------------------------
      * Caio -> copiei para a função de cmd serial.
-    */
-//    serial_control_queue_ = std::make_shared<Concurrent_Queue<pmt::pmt_t>>();
-   serial_cmd_interface_.set_msg_queue(control_queue_);
+     */
+    //    serial_control_queue_ = std::make_shared<Concurrent_Queue<pmt::pmt_t>>();
+    std::cout <<TEXT_BOLD_BLUE<< "Caio: Control Thread Init()" <<TEXT_RESET
+              << "\n";
+    serial_cmd_interface_.set_msg_queue(control_queue_);
     // ---------------------------------------------------------------------------
     if (well_formatted_configuration_)
         {
             try
                 {
                     flowgraph_ = std::make_shared<GNSSFlowgraph>(configuration_, control_queue_);
-                    serial_cmd_flowgraph_ = std::make_shared<GNSSFlowgraph>(configuration_, control_queue_);
+                    // Isso cria uma redundancia e uma concorrencia pelo msm recurso (port)
+                    // serial_cmd_flowgraph_ = std::make_shared<GNSSFlowgraph>(configuration_, control_queue_);
                 }
             catch (const boost::bad_lexical_cast &e)
                 {
@@ -274,6 +279,7 @@ ControlThread::~ControlThread()  // NOLINT(modernize-use-equals-default)
     // Caio - ControlThread Destructor -> fecha as threads
     if (serial_cmd_interface_thread_.joinable())
     {
+        std::cout<<TEXT_BOLD_BLUE<<"Caio: Thread join()"<<TEXT_RESET<<"\n";
         serial_cmd_interface_thread_.join();
     }
 }
@@ -288,15 +294,53 @@ void ControlThread::telecommand_listener()
         }
 }
 
-void ControlThread::serialcmd_listener()
+void ControlThread::serialcmd_listener(void)
 {
-    if(serialcmd_enabled_)
-    {
-        //Caio
-        char input = 0;
-        serial_cmd_interface_.run_serial_listener(&input);
-        // serial_cmd_interface_.applicar((int)input);
-    }
+    // if(serialcmd_enabled_)
+    // {
+    std::cout <<TEXT_BOLD_BLUE<< "Caio Debug: Serial thread Listener..."<<TEXT_RESET
+              << "\n";
+    char buff;
+    char device[] = "/dev/ttyUSB0";
+    serial_cmd_interface_.run_serial_listener(&device[0], &buff, flowgraph_);
+    // while (serialcmd_enabled_)
+    //     {
+    //         serial4readByte(&buff);
+    //         // Caio
+    //         //  const std::string input = configuration_->property("GNSS-SDR.serial_cmd_device","/dev/ttyUSB0");
+    //         //  serial_cmd_interface_.run_serial_listener(input);
+    //         //  // serial_cmd_interface_.applicar((int)input);
+
+    //         switch ((int)buff)
+    //             {
+    //             case 0x3e:
+    //                 {
+    //                     std::cout << buff << "\n";
+    //                     break;
+    //                 }
+    //             case 0xAF:
+    //                 {
+    //                     flowgraph_->apply_action(300,5);
+    //                 }
+    //             case 0x42:
+    //                 {
+    //                     std::cout << buff << "\n";
+    //                     std::cout <<TEXT_BOLD_BLUE<< "GNSS Desligado"<<TEXT_RESET
+    //                               << "\n";
+    //                     // flowgraph_->apply_action(300, 10);
+    //                     apply_action(1);
+    //                     char buffRX[] = "GNSS Desligado";
+    //                     serial4send(&buffRX[0]);
+    //                     break;
+    //                 }
+    //             default:
+    //                 {
+    //                     // std::cout << "\nCommando Invalido\n"
+    //                     //           << "\n";
+    //                 }
+    //             }
+    //     }
+    // }
 }
 
 
@@ -411,7 +455,10 @@ int ControlThread::run()
 
     // Caio
     // Fazer um listener thread para Serial Cmd
+    std::cout<<TEXT_BOLD_BLUE<<"Caio: Listener Thread Serial Cmd"<<TEXT_RESET<<"\n";
     serial_cmd_interface_.set_pvt(flowgraph_->get_pvt());
+    serial_cmd_interface_.set_Acq(flowgraph_->get_Acq());
+    serial_cmd_interface_.set_Trk(flowgraph_->get_Trk());
     serial_cmd_interface_thread_ = std::thread(&ControlThread::serialcmd_listener, this);
     // Cria uma thread para isso, mas é necessário fechar com .join()
     // na função dos destructors
@@ -472,6 +519,7 @@ int ControlThread::run()
     // A thread precisa ser finalizada
     if(serialcmd_enabled_)
     {
+        std::cout<<"Caio: Finalizada a Serial Thread"<<"\n";
         pthread_t id3 = serial_cmd_interface_thread_.native_handle();
         serial_cmd_interface_thread_.detach();
         pthread_cancel(id3);
@@ -499,6 +547,7 @@ void ControlThread::set_control_queue(std::shared_ptr<Concurrent_Queue<pmt::pmt_
     cmd_interface_.set_msg_queue(control_queue_);
 
     //Caio
+    std::cout<<"Caio: set_control_queue"<<"\n";
     serial_control_queue_ = std::move(control_queue);
     serial_cmd_interface_.set_msg_queue(serial_control_queue_);
 }
@@ -970,10 +1019,13 @@ void ControlThread::apply_action(unsigned int what)
             stop_ = true;
             break;
         case 1:
+            {char messg[] = "Caio: Receiver Restart\n";
+            serial4send(&messg[0]);
+            std::cout<<TEXT_BOLD_BLUE<<"Caio: Receiver Restart"<<TEXT_RESET<<"\n";
             LOG(INFO) << "Received action RESTART";
             stop_ = true;
             restart_ = true;
-            break;
+            break;}
         case 10:  // request standby mode
             LOG(INFO) << "TC request standby mode";
             receiver_on_standby_ = true;
@@ -1013,12 +1065,50 @@ void ControlThread::apply_action(unsigned int what)
             break;
         // Caio
         case 14:
+            std::cout<<"Caio: Apply_action()"<<"\n";
             LOG(INFO) << "NavComp. Request PVT";
             serial_cmd_interface_.serial_get_pvt();
             break;
-        default:
-            LOG(INFO) << "Unrecognized action.";
-            break;
+        case 15:
+            {
+                std::cout << TEXT_BOLD_BLUE << "Caio: ControlThread::apply_action(15)" << TEXT_RESET << "\n";
+                char buf[] = "Caio: ControlThread::apply_action(15)";
+                serial4send(&buf[0]);
+                break;
+            }
+        case 16:
+            {
+                std::cout << TEXT_BOLD_BLUE << "Front-End Reset " << TEXT_RESET << "\n";
+                char buff[] = "Front-End Reset";
+                serial4send(&buff[0]);
+                break;
+            }
+        case 17:
+            {
+                std::cout << TEXT_BOLD_BLUE << "Request Status" << TEXT_RESET << "\n";
+                char buff[] = "Status Requested\n";
+                serial4send(&buff[0]);
+                // serial_status();
+                break;
+            }
+        case 18:
+            {
+                std::cout << TEXT_BOLD_BLUE << "Request Satellites Ephemeris" << TEXT_RESET << "\n";
+                char buff[] = "Satellites Ephemeris Requested\n";
+                serial4send(&buff[0]);
+                break;
+            }
+        case 19:
+            {
+                serial_cmd_interface_.DersoProtocol();
+                // serial4send();
+                break;
+            }
+            // default:
+            //     {
+            //         LOG(INFO) << "Unrecognized action.";
+            //         break;
+            //     }
         }
 }
 

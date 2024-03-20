@@ -82,6 +82,12 @@
 #include <typeinfo>                     // for std::type_info, typeid
 #include <utility>                      // for pair
 
+//Caio
+#include "HEtechSerial.h"
+#include <cstdio>
+
+char buffer[400];
+
 #if HAS_GENERIC_LAMBDA
 #else
 #include <boost/bind/bind.hpp>
@@ -107,9 +113,6 @@ namespace wht = boost;
 #include <any>
 namespace wht = std;
 #endif
-
-//Caio
-#include "HEtechSerial.h"
 
 rtklib_pvt_gs_sptr rtklib_make_pvt_gs(uint32_t nchannels,
     const Pvt_Conf& conf_,
@@ -256,150 +259,150 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
                 }
         }
 
-    // initialize kml_printer
-    const std::string kml_dump_filename = d_dump_filename;
-    if (d_kml_rate_ms == 0)
-        {
-            d_kml_output_enabled = false;
-        }
-    if (d_kml_output_enabled)
-        {
-            d_kml_dump = std::make_unique<Kml_Printer>(conf_.kml_output_path);
-            d_kml_dump->set_headers(kml_dump_filename);
-        }
-    else
-        {
-            d_kml_dump = nullptr;
-        }
+    // // initialize kml_printer
+    // const std::string kml_dump_filename = d_dump_filename;
+    // if (d_kml_rate_ms == 0)
+    //     {
+    //         d_kml_output_enabled = false;
+    //     }
+    // if (d_kml_output_enabled)
+    //     {
+    //         d_kml_dump = std::make_unique<Kml_Printer>(conf_.kml_output_path);
+    //         d_kml_dump->set_headers(kml_dump_filename);
+    //     }
+    // else
+    //     {
+    //         d_kml_dump = nullptr;
+    //     }
 
-    // initialize gpx_printer
-    const std::string gpx_dump_filename = d_dump_filename;
-    if (d_gpx_rate_ms == 0)
-        {
-            d_gpx_output_enabled = false;
-        }
-    if (d_gpx_output_enabled)
-        {
-            d_gpx_dump = std::make_unique<Gpx_Printer>(conf_.gpx_output_path);
-            d_gpx_dump->set_headers(gpx_dump_filename);
-        }
-    else
-        {
-            d_gpx_dump = nullptr;
-        }
+    // // initialize gpx_printer
+    // const std::string gpx_dump_filename = d_dump_filename;
+    // if (d_gpx_rate_ms == 0)
+    //     {
+    //         d_gpx_output_enabled = false;
+    //     }
+    // if (d_gpx_output_enabled)
+    //     {
+    //         d_gpx_dump = std::make_unique<Gpx_Printer>(conf_.gpx_output_path);
+    //         d_gpx_dump->set_headers(gpx_dump_filename);
+    //     }
+    // else
+    //     {
+    //         d_gpx_dump = nullptr;
+    //     }
 
-    // initialize geojson_printer
-    const std::string geojson_dump_filename = d_dump_filename;
-    if (d_geojson_rate_ms == 0)
-        {
-            d_geojson_output_enabled = false;
-        }
-    if (d_geojson_output_enabled)
-        {
-            d_geojson_printer = std::make_unique<GeoJSON_Printer>(conf_.geojson_output_path);
-            d_geojson_printer->set_headers(geojson_dump_filename);
-        }
-    else
-        {
-            d_geojson_printer = nullptr;
-        }
+    // // initialize geojson_printer
+    // const std::string geojson_dump_filename = d_dump_filename;
+    // if (d_geojson_rate_ms == 0)
+    //     {
+    //         d_geojson_output_enabled = false;
+    //     }
+    // if (d_geojson_output_enabled)
+    //     {
+    //         d_geojson_printer = std::make_unique<GeoJSON_Printer>(conf_.geojson_output_path);
+    //         d_geojson_printer->set_headers(geojson_dump_filename);
+    //     }
+    // else
+    //     {
+    //         d_geojson_printer = nullptr;
+    //     }
 
-    // initialize nmea_printer
-    if (d_nmea_rate_ms == 0)
-        {
-            d_nmea_output_file_enabled = false;
-        }
+    // // initialize nmea_printer
+    // if (d_nmea_rate_ms == 0)
+    //     {
+    //         d_nmea_output_file_enabled = false;
+    //     }
 
-    if (d_nmea_output_file_enabled)
-        {
-            d_nmea_printer = std::make_unique<Nmea_Printer>(conf_.nmea_dump_filename, conf_.nmea_output_file_enabled, conf_.flag_nmea_tty_port, conf_.nmea_dump_devname, conf_.nmea_output_file_path);
-        }
-    else
-        {
-            d_nmea_printer = nullptr;
-        }
+    // if (d_nmea_output_file_enabled)
+    //     {
+    //         d_nmea_printer = std::make_unique<Nmea_Printer>(conf_.nmea_dump_filename, conf_.nmea_output_file_enabled, conf_.flag_nmea_tty_port, conf_.nmea_dump_devname, conf_.nmea_output_file_path);
+    //     }
+    // else
+    //     {
+    //         d_nmea_printer = nullptr;
+    //     }
 
-    // initialize rtcm_printer
-    const std::string rtcm_dump_filename = d_dump_filename;
-    if (conf_.flag_rtcm_server || conf_.flag_rtcm_tty_port || conf_.rtcm_output_file_enabled)
-        {
-            d_rtcm_printer = std::make_unique<Rtcm_Printer>(rtcm_dump_filename, conf_.rtcm_output_file_enabled, conf_.flag_rtcm_server, conf_.flag_rtcm_tty_port, conf_.rtcm_tcp_port, conf_.rtcm_station_id, conf_.rtcm_dump_devname, true, conf_.rtcm_output_file_path);
-            std::map<int, int> rtcm_msg_rate_ms = conf_.rtcm_msg_rate_ms;
-            if (rtcm_msg_rate_ms.find(1019) != rtcm_msg_rate_ms.end())
-                {
-                    d_rtcm_MT1019_rate_ms = rtcm_msg_rate_ms[1019];
-                }
-            else
-                {
-                    d_rtcm_MT1019_rate_ms = bc::lcm(5000, d_output_rate_ms);  // default value if not set
-                }
-            if (rtcm_msg_rate_ms.find(1020) != rtcm_msg_rate_ms.end())
-                {
-                    d_rtcm_MT1020_rate_ms = rtcm_msg_rate_ms[1020];
-                }
-            else
-                {
-                    d_rtcm_MT1020_rate_ms = bc::lcm(5000, d_output_rate_ms);  // default value if not set
-                }
-            if (rtcm_msg_rate_ms.find(1045) != rtcm_msg_rate_ms.end())
-                {
-                    d_rtcm_MT1045_rate_ms = rtcm_msg_rate_ms[1045];
-                }
-            else
-                {
-                    d_rtcm_MT1045_rate_ms = bc::lcm(5000, d_output_rate_ms);  // default value if not set
-                }
-            if (rtcm_msg_rate_ms.find(1077) != rtcm_msg_rate_ms.end())  // whatever between 1071 and 1077
-                {
-                    d_rtcm_MT1077_rate_ms = rtcm_msg_rate_ms[1077];
-                }
-            else
-                {
-                    d_rtcm_MT1077_rate_ms = bc::lcm(1000, d_output_rate_ms);  // default value if not set
-                }
-            if (rtcm_msg_rate_ms.find(1087) != rtcm_msg_rate_ms.end())  // whatever between 1081 and 1087
-                {
-                    d_rtcm_MT1087_rate_ms = rtcm_msg_rate_ms[1087];
-                }
-            else
-                {
-                    d_rtcm_MT1087_rate_ms = bc::lcm(1000, d_output_rate_ms);  // default value if not set
-                }
-            if (rtcm_msg_rate_ms.find(1097) != rtcm_msg_rate_ms.end())  // whatever between 1091 and 1097
-                {
-                    d_rtcm_MT1097_rate_ms = rtcm_msg_rate_ms[1097];
-                    d_rtcm_MSM_rate_ms = rtcm_msg_rate_ms[1097];
-                }
-            else
-                {
-                    d_rtcm_MT1097_rate_ms = bc::lcm(1000, d_output_rate_ms);  // default value if not set
-                    d_rtcm_MSM_rate_ms = bc::lcm(1000, d_output_rate_ms);     // default value if not set
-                }
-            d_rtcm_enabled = true;
-        }
-    else
-        {
-            d_rtcm_MT1019_rate_ms = 0;
-            d_rtcm_MT1045_rate_ms = 0;
-            d_rtcm_MT1020_rate_ms = 0;
-            d_rtcm_MT1077_rate_ms = 0;
-            d_rtcm_MT1087_rate_ms = 0;
-            d_rtcm_MT1097_rate_ms = 0;
-            d_rtcm_MSM_rate_ms = 0;
-            d_rtcm_enabled = false;
-            d_rtcm_printer = nullptr;
-        }
+    // // initialize rtcm_printer
+    // const std::string rtcm_dump_filename = d_dump_filename;
+    // if (conf_.flag_rtcm_server || conf_.flag_rtcm_tty_port || conf_.rtcm_output_file_enabled)
+    //     {
+    //         d_rtcm_printer = std::make_unique<Rtcm_Printer>(rtcm_dump_filename, conf_.rtcm_output_file_enabled, conf_.flag_rtcm_server, conf_.flag_rtcm_tty_port, conf_.rtcm_tcp_port, conf_.rtcm_station_id, conf_.rtcm_dump_devname, true, conf_.rtcm_output_file_path);
+    //         std::map<int, int> rtcm_msg_rate_ms = conf_.rtcm_msg_rate_ms;
+    //         if (rtcm_msg_rate_ms.find(1019) != rtcm_msg_rate_ms.end())
+    //             {
+    //                 d_rtcm_MT1019_rate_ms = rtcm_msg_rate_ms[1019];
+    //             }
+    //         else
+    //             {
+    //                 d_rtcm_MT1019_rate_ms = bc::lcm(5000, d_output_rate_ms);  // default value if not set
+    //             }
+    //         if (rtcm_msg_rate_ms.find(1020) != rtcm_msg_rate_ms.end())
+    //             {
+    //                 d_rtcm_MT1020_rate_ms = rtcm_msg_rate_ms[1020];
+    //             }
+    //         else
+    //             {
+    //                 d_rtcm_MT1020_rate_ms = bc::lcm(5000, d_output_rate_ms);  // default value if not set
+    //             }
+    //         if (rtcm_msg_rate_ms.find(1045) != rtcm_msg_rate_ms.end())
+    //             {
+    //                 d_rtcm_MT1045_rate_ms = rtcm_msg_rate_ms[1045];
+    //             }
+    //         else
+    //             {
+    //                 d_rtcm_MT1045_rate_ms = bc::lcm(5000, d_output_rate_ms);  // default value if not set
+    //             }
+    //         if (rtcm_msg_rate_ms.find(1077) != rtcm_msg_rate_ms.end())  // whatever between 1071 and 1077
+    //             {
+    //                 d_rtcm_MT1077_rate_ms = rtcm_msg_rate_ms[1077];
+    //             }
+    //         else
+    //             {
+    //                 d_rtcm_MT1077_rate_ms = bc::lcm(1000, d_output_rate_ms);  // default value if not set
+    //             }
+    //         if (rtcm_msg_rate_ms.find(1087) != rtcm_msg_rate_ms.end())  // whatever between 1081 and 1087
+    //             {
+    //                 d_rtcm_MT1087_rate_ms = rtcm_msg_rate_ms[1087];
+    //             }
+    //         else
+    //             {
+    //                 d_rtcm_MT1087_rate_ms = bc::lcm(1000, d_output_rate_ms);  // default value if not set
+    //             }
+    //         if (rtcm_msg_rate_ms.find(1097) != rtcm_msg_rate_ms.end())  // whatever between 1091 and 1097
+    //             {
+    //                 d_rtcm_MT1097_rate_ms = rtcm_msg_rate_ms[1097];
+    //                 d_rtcm_MSM_rate_ms = rtcm_msg_rate_ms[1097];
+    //             }
+    //         else
+    //             {
+    //                 d_rtcm_MT1097_rate_ms = bc::lcm(1000, d_output_rate_ms);  // default value if not set
+    //                 d_rtcm_MSM_rate_ms = bc::lcm(1000, d_output_rate_ms);     // default value if not set
+    //             }
+    //         d_rtcm_enabled = true;
+    //     }
+    // else
+    //     {
+    //         d_rtcm_MT1019_rate_ms = 0;
+    //         d_rtcm_MT1045_rate_ms = 0;
+    //         d_rtcm_MT1020_rate_ms = 0;
+    //         d_rtcm_MT1077_rate_ms = 0;
+    //         d_rtcm_MT1087_rate_ms = 0;
+    //         d_rtcm_MT1097_rate_ms = 0;
+    //         d_rtcm_MSM_rate_ms = 0;
+    //         d_rtcm_enabled = false;
+    //         d_rtcm_printer = nullptr;
+    //     }
 
-    // initialize RINEX printer
-    if (d_rinex_output_enabled)
-        {
-            d_rp = std::make_unique<Rinex_Printer>(d_rinex_version, conf_.rinex_output_path, conf_.rinex_name);
-            d_rp->set_pre_2009_file(conf_.pre_2009_file);
-        }
-    else
-        {
-            d_rp = nullptr;
-        }
+    // // initialize RINEX printer
+    // if (d_rinex_output_enabled)
+    //     {
+    //         d_rp = std::make_unique<Rinex_Printer>(d_rinex_version, conf_.rinex_output_path, conf_.rinex_name);
+    //         d_rp->set_pre_2009_file(conf_.pre_2009_file);
+    //     }
+    // else
+    //     {
+    //         d_rp = nullptr;
+    //     }
 
     // XML printer
     if (d_xml_storage)
@@ -1170,29 +1173,29 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
                         {
                             d_eph_udp_sink_ptr->write_gps_ephemeris(gps_eph);
                         }
-                    // update/insert new ephemeris record to the global ephemeris map
-                    if (d_rinex_output_enabled && d_rp->is_rinex_header_written())  // The header is already written, we can now log the navigation message data
-                        {
-                            bool new_annotation = false;
-                            if (d_internal_pvt_solver->gps_ephemeris_map.find(gps_eph->PRN) == d_internal_pvt_solver->gps_ephemeris_map.cend())
-                                {
-                                    new_annotation = true;
-                                }
-                            else
-                                {
-                                    if (d_internal_pvt_solver->gps_ephemeris_map[gps_eph->PRN].toe != gps_eph->toe)
-                                        {
-                                            new_annotation = true;
-                                        }
-                                }
-                            if (new_annotation == true)
-                                {
-                                    // New record!
-                                    std::map<int32_t, Gps_Ephemeris> new_eph;
-                                    new_eph[gps_eph->PRN] = *gps_eph;
-                                    d_rp->log_rinex_nav_gps_nav(d_type_of_rx, new_eph);
-                                }
-                        }
+                    // // update/insert new ephemeris record to the global ephemeris map
+                    // if (d_rinex_output_enabled && d_rp->is_rinex_header_written())  // The header is already written, we can now log the navigation message data
+                    //     {
+                    //         bool new_annotation = false;
+                    //         if (d_internal_pvt_solver->gps_ephemeris_map.find(gps_eph->PRN) == d_internal_pvt_solver->gps_ephemeris_map.cend())
+                    //             {
+                    //                 new_annotation = true;
+                    //             }
+                    //         else
+                    //             {
+                    //                 if (d_internal_pvt_solver->gps_ephemeris_map[gps_eph->PRN].toe != gps_eph->toe)
+                    //                     {
+                    //                         new_annotation = true;
+                    //                     }
+                    //             }
+                    //         if (new_annotation == true)
+                    //             {
+                    //                 // New record!
+                    //                 std::map<int32_t, Gps_Ephemeris> new_eph;
+                    //                 new_eph[gps_eph->PRN] = *gps_eph;
+                    //                 d_rp->log_rinex_nav_gps_nav(d_type_of_rx, new_eph);
+                    //             }
+                    //     }
                     d_internal_pvt_solver->gps_ephemeris_map[gps_eph->PRN] = *gps_eph;
                     if (d_enable_rx_clock_correction == true)
                         {
@@ -1239,28 +1242,28 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
                     // ### GPS CNAV message ###
                     const auto gps_cnav_ephemeris = wht::any_cast<std::shared_ptr<Gps_CNAV_Ephemeris>>(pmt::any_ref(msg));
                     // update/insert new ephemeris record to the global ephemeris map
-                    if (d_rinex_output_enabled && d_rp->is_rinex_header_written())  // The header is already written, we can now log the navigation message data
-                        {
-                            bool new_annotation = false;
-                            if (d_internal_pvt_solver->gps_cnav_ephemeris_map.find(gps_cnav_ephemeris->PRN) == d_internal_pvt_solver->gps_cnav_ephemeris_map.cend())
-                                {
-                                    new_annotation = true;
-                                }
-                            else
-                                {
-                                    if (d_internal_pvt_solver->gps_cnav_ephemeris_map[gps_cnav_ephemeris->PRN].toe1 != gps_cnav_ephemeris->toe1)
-                                        {
-                                            new_annotation = true;
-                                        }
-                                }
-                            if (new_annotation == true)
-                                {
-                                    // New record!
-                                    std::map<int32_t, Gps_CNAV_Ephemeris> new_cnav_eph;
-                                    new_cnav_eph[gps_cnav_ephemeris->PRN] = *gps_cnav_ephemeris;
-                                    d_rp->log_rinex_nav_gps_cnav(d_type_of_rx, new_cnav_eph);
-                                }
-                        }
+                    // if (d_rinex_output_enabled && d_rp->is_rinex_header_written())  // The header is already written, we can now log the navigation message data
+                    //     {
+                    //         bool new_annotation = false;
+                    //         if (d_internal_pvt_solver->gps_cnav_ephemeris_map.find(gps_cnav_ephemeris->PRN) == d_internal_pvt_solver->gps_cnav_ephemeris_map.cend())
+                    //             {
+                    //                 new_annotation = true;
+                    //             }
+                    //         else
+                    //             {
+                    //                 if (d_internal_pvt_solver->gps_cnav_ephemeris_map[gps_cnav_ephemeris->PRN].toe1 != gps_cnav_ephemeris->toe1)
+                    //                     {
+                    //                         new_annotation = true;
+                    //                     }
+                    //             }
+                    //         if (new_annotation == true)
+                    //             {
+                    //                 // New record!
+                    //                 std::map<int32_t, Gps_CNAV_Ephemeris> new_cnav_eph;
+                    //                 new_cnav_eph[gps_cnav_ephemeris->PRN] = *gps_cnav_ephemeris;
+                    //                 d_rp->log_rinex_nav_gps_cnav(d_type_of_rx, new_cnav_eph);
+                    //             }
+                    //     }
                     d_internal_pvt_solver->gps_cnav_ephemeris_map[gps_cnav_ephemeris->PRN] = *gps_cnav_ephemeris;
                     if (d_enable_rx_clock_correction == true)
                         {
@@ -1331,28 +1334,28 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
                             d_eph_udp_sink_ptr->write_galileo_ephemeris(galileo_eph);
                         }
                     // update/insert new ephemeris record to the global ephemeris map
-                    if (d_rinex_output_enabled && d_rp->is_rinex_header_written())  // The header is already written, we can now log the navigation message data
-                        {
-                            bool new_annotation = false;
-                            if (d_internal_pvt_solver->galileo_ephemeris_map.find(galileo_eph->PRN) == d_internal_pvt_solver->galileo_ephemeris_map.cend())
-                                {
-                                    new_annotation = true;
-                                }
-                            else
-                                {
-                                    if (d_internal_pvt_solver->galileo_ephemeris_map[galileo_eph->PRN].toe != galileo_eph->toe)
-                                        {
-                                            new_annotation = true;
-                                        }
-                                }
-                            if (new_annotation == true)
-                                {
-                                    // New record!
-                                    std::map<int32_t, Galileo_Ephemeris> new_gal_eph;
-                                    new_gal_eph[galileo_eph->PRN] = *galileo_eph;
-                                    d_rp->log_rinex_nav_gal_nav(d_type_of_rx, new_gal_eph);
-                                }
-                        }
+                    // if (d_rinex_output_enabled && d_rp->is_rinex_header_written())  // The header is already written, we can now log the navigation message data
+                    //     {
+                    //         bool new_annotation = false;
+                    //         if (d_internal_pvt_solver->galileo_ephemeris_map.find(galileo_eph->PRN) == d_internal_pvt_solver->galileo_ephemeris_map.cend())
+                    //             {
+                    //                 new_annotation = true;
+                    //             }
+                    //         else
+                    //             {
+                    //                 if (d_internal_pvt_solver->galileo_ephemeris_map[galileo_eph->PRN].toe != galileo_eph->toe)
+                    //                     {
+                    //                         new_annotation = true;
+                    //                     }
+                    //             }
+                    //         if (new_annotation == true)
+                    //             {
+                    //                 // New record!
+                    //                 std::map<int32_t, Galileo_Ephemeris> new_gal_eph;
+                    //                 new_gal_eph[galileo_eph->PRN] = *galileo_eph;
+                    //                 d_rp->log_rinex_nav_gal_nav(d_type_of_rx, new_gal_eph);
+                    //             }
+                    //     }
                     d_internal_pvt_solver->galileo_ephemeris_map[galileo_eph->PRN] = *galileo_eph;
                     if (d_enable_rx_clock_correction == true)
                         {
@@ -1454,28 +1457,28 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
                                << " and Ephemeris IOD in UTC = " << glonass_gnav_eph->compute_GLONASS_time(glonass_gnav_eph->d_t_b)
                                << " from SV = " << glonass_gnav_eph->i_satellite_slot_number;
                     // update/insert new ephemeris record to the global ephemeris map
-                    if (d_rinex_output_enabled && d_rp->is_rinex_header_written())  // The header is already written, we can now log the navigation message data
-                        {
-                            bool new_annotation = false;
-                            if (d_internal_pvt_solver->glonass_gnav_ephemeris_map.find(glonass_gnav_eph->PRN) == d_internal_pvt_solver->glonass_gnav_ephemeris_map.cend())
-                                {
-                                    new_annotation = true;
-                                }
-                            else
-                                {
-                                    if (d_internal_pvt_solver->glonass_gnav_ephemeris_map[glonass_gnav_eph->PRN].d_t_b != glonass_gnav_eph->d_t_b)
-                                        {
-                                            new_annotation = true;
-                                        }
-                                }
-                            if (new_annotation == true)
-                                {
-                                    // New record!
-                                    std::map<int32_t, Glonass_Gnav_Ephemeris> new_glo_eph;
-                                    new_glo_eph[glonass_gnav_eph->PRN] = *glonass_gnav_eph;
-                                    d_rp->log_rinex_nav_glo_gnav(d_type_of_rx, new_glo_eph);
-                                }
-                        }
+                    // if (d_rinex_output_enabled && d_rp->is_rinex_header_written())  // The header is already written, we can now log the navigation message data
+                    //     {
+                    //         bool new_annotation = false;
+                    //         if (d_internal_pvt_solver->glonass_gnav_ephemeris_map.find(glonass_gnav_eph->PRN) == d_internal_pvt_solver->glonass_gnav_ephemeris_map.cend())
+                    //             {
+                    //                 new_annotation = true;
+                    //             }
+                    //         else
+                    //             {
+                    //                 if (d_internal_pvt_solver->glonass_gnav_ephemeris_map[glonass_gnav_eph->PRN].d_t_b != glonass_gnav_eph->d_t_b)
+                    //                     {
+                    //                         new_annotation = true;
+                    //                     }
+                    //             }
+                    //         if (new_annotation == true)
+                    //             {
+                    //                 // New record!
+                    //                 std::map<int32_t, Glonass_Gnav_Ephemeris> new_glo_eph;
+                    //                 new_glo_eph[glonass_gnav_eph->PRN] = *glonass_gnav_eph;
+                    //                 d_rp->log_rinex_nav_glo_gnav(d_type_of_rx, new_glo_eph);
+                    //             }
+                    //     }
                     d_internal_pvt_solver->glonass_gnav_ephemeris_map[glonass_gnav_eph->PRN] = *glonass_gnav_eph;
                     if (d_enable_rx_clock_correction == true)
                         {
@@ -1517,28 +1520,28 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
                                << "inserted with Toe=" << bds_dnav_eph->toe << " and BDS Week="
                                << bds_dnav_eph->WN;
                     // update/insert new ephemeris record to the global ephemeris map
-                    if (d_rinex_output_enabled && d_rp->is_rinex_header_written())  // The header is already written, we can now log the navigation message data
-                        {
-                            bool new_annotation = false;
-                            if (d_internal_pvt_solver->beidou_dnav_ephemeris_map.find(bds_dnav_eph->PRN) == d_internal_pvt_solver->beidou_dnav_ephemeris_map.cend())
-                                {
-                                    new_annotation = true;
-                                }
-                            else
-                                {
-                                    if (d_internal_pvt_solver->beidou_dnav_ephemeris_map[bds_dnav_eph->PRN].toc != bds_dnav_eph->toc)
-                                        {
-                                            new_annotation = true;
-                                        }
-                                }
-                            if (new_annotation == true)
-                                {
-                                    // New record!
-                                    std::map<int32_t, Beidou_Dnav_Ephemeris> new_bds_eph;
-                                    new_bds_eph[bds_dnav_eph->PRN] = *bds_dnav_eph;
-                                    d_rp->log_rinex_nav_bds_dnav(d_type_of_rx, new_bds_eph);
-                                }
-                        }
+                    // if (d_rinex_output_enabled && d_rp->is_rinex_header_written())  // The header is already written, we can now log the navigation message data
+                    //     {
+                    //         bool new_annotation = false;
+                    //         if (d_internal_pvt_solver->beidou_dnav_ephemeris_map.find(bds_dnav_eph->PRN) == d_internal_pvt_solver->beidou_dnav_ephemeris_map.cend())
+                    //             {
+                    //                 new_annotation = true;
+                    //             }
+                    //         else
+                    //             {
+                    //                 if (d_internal_pvt_solver->beidou_dnav_ephemeris_map[bds_dnav_eph->PRN].toc != bds_dnav_eph->toc)
+                    //                     {
+                    //                         new_annotation = true;
+                    //                     }
+                    //             }
+                    //         if (new_annotation == true)
+                    //             {
+                    //                 // New record!
+                    //                 std::map<int32_t, Beidou_Dnav_Ephemeris> new_bds_eph;
+                    //                 new_bds_eph[bds_dnav_eph->PRN] = *bds_dnav_eph;
+                    //                 d_rp->log_rinex_nav_bds_dnav(d_type_of_rx, new_bds_eph);
+                    //             }
+                    //     }
                     d_internal_pvt_solver->beidou_dnav_ephemeris_map[bds_dnav_eph->PRN] = *bds_dnav_eph;
                     if (d_enable_rx_clock_correction == true)
                         {
@@ -1619,14 +1622,14 @@ void rtklib_pvt_gs::msg_handler_has_data(const pmt::pmt_t& msg)
                                     d_user_pvt_solver->store_has_data(*has_data);
                                 }
                         }
-                    if (d_has_simple_printer)
-                        {
-                            d_has_simple_printer->print_message(has_data.get());
-                        }
-                    if (d_rtcm_printer && has_data->tow <= 604800)
-                        {
-                            d_rtcm_printer->Print_IGM_Messages(*has_data.get());
-                        }
+                    // if (d_has_simple_printer)
+                    //     {
+                    //         d_has_simple_printer->print_message(has_data.get());
+                    //     }
+                    // if (d_rtcm_printer && has_data->tow <= 604800)
+                    //     {
+                    //         d_rtcm_printer->Print_IGM_Messages(*has_data.get());
+                    //     }
                 }
         }
     catch (const wht::bad_any_cast& e)
@@ -1797,7 +1800,6 @@ bool rtklib_pvt_gs::get_latest_PVT(double* longitude_deg,
     double* course_over_ground_deg,
     time_t* UTC_time) const
 {
-    char buff[400];
     if (d_enable_rx_clock_correction == true)
         {
             if (d_user_pvt_solver->is_valid_position())
@@ -1808,9 +1810,7 @@ bool rtklib_pvt_gs::get_latest_PVT(double* longitude_deg,
                     *ground_speed_kmh = d_user_pvt_solver->get_speed_over_ground() * 3600.0 / 1000.0;
                     *course_over_ground_deg = d_user_pvt_solver->get_course_over_ground();
                     *UTC_time = convert_to_time_t(d_user_pvt_solver->get_position_UTC_time());
-                    sprintf(buff,"1=%lf|2=%lf|3=%lf|4=%lf|5=%lf|6=%lf",*latitude_deg, *longitude_deg, *height_m, *ground_speed_kmh, *course_over_ground_deg, *UTC_time);
-                    serial4send(&buff[0]);
-                    printf("caio_debug: d_user_pvt_solver->is_valid_position()");
+
                     return true;
                 }
         }
@@ -1824,9 +1824,7 @@ bool rtklib_pvt_gs::get_latest_PVT(double* longitude_deg,
                     *ground_speed_kmh = d_internal_pvt_solver->get_speed_over_ground() * 3600.0 / 1000.0;
                     *course_over_ground_deg = d_internal_pvt_solver->get_course_over_ground();
                     *UTC_time = convert_to_time_t(d_internal_pvt_solver->get_position_UTC_time());
-                    sprintf(buff,"1=%lf|2=%lf|3=%lf|4=%lf|5=%lf|6=%lf",*latitude_deg, *longitude_deg, *height_m, *ground_speed_kmh, *course_over_ground_deg, *UTC_time);
-                    serial4send(&buff[0]);
-                    printf("caio_debug: d_inter_pvt_solver->is_valid_position()");
+
                     return true;
                 }
         }
@@ -1977,11 +1975,11 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
         {
             bool flag_display_pvt = false;
             bool flag_compute_pvt_output = false;
-            bool flag_write_RTCM_1019_output = false;
-            bool flag_write_RTCM_1020_output = false;
-            bool flag_write_RTCM_1045_output = false;
-            bool flag_write_RTCM_MSM_output = false;
-            bool flag_write_RINEX_obs_output = false;
+            // bool flag_write_RTCM_1019_output = false;
+            // bool flag_write_RTCM_1020_output = false;
+            // bool flag_write_RTCM_1045_output = false;
+            // bool flag_write_RTCM_MSM_output = false;
+            // bool flag_write_RINEX_obs_output = false;
             d_local_counter_ms += static_cast<uint64_t>(d_observable_interval_ms);
 
             d_gnss_observables_map.clear();
@@ -2053,50 +2051,50 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                     d_gnss_observables_map.insert(std::pair<int, Gnss_Synchro>(i, in[i][epoch]));
                                 }
 
-                            if (d_rtcm_enabled)
-                                {
-                                    try
-                                        {
-                                            if (d_internal_pvt_solver->gps_ephemeris_map.empty() == false)
-                                                {
-                                                    if (tmp_eph_iter_gps != d_internal_pvt_solver->gps_ephemeris_map.cend())
-                                                        {
-                                                            d_rtcm_printer->lock_time(d_internal_pvt_solver->gps_ephemeris_map.find(in[i][epoch].PRN)->second, in[i][epoch].RX_time, in[i][epoch]);  // keep track of locking time
-                                                        }
-                                                }
-                                            if (d_internal_pvt_solver->galileo_ephemeris_map.empty() == false)
-                                                {
-                                                    if (tmp_eph_iter_gal != d_internal_pvt_solver->galileo_ephemeris_map.cend())
-                                                        {
-                                                            d_rtcm_printer->lock_time(d_internal_pvt_solver->galileo_ephemeris_map.find(in[i][epoch].PRN)->second, in[i][epoch].RX_time, in[i][epoch]);  // keep track of locking time
-                                                        }
-                                                }
-                                            if (d_internal_pvt_solver->gps_cnav_ephemeris_map.empty() == false)
-                                                {
-                                                    if (tmp_eph_iter_cnav != d_internal_pvt_solver->gps_cnav_ephemeris_map.cend())
-                                                        {
-                                                            d_rtcm_printer->lock_time(d_internal_pvt_solver->gps_cnav_ephemeris_map.find(in[i][epoch].PRN)->second, in[i][epoch].RX_time, in[i][epoch]);  // keep track of locking time
-                                                        }
-                                                }
-                                            if (d_internal_pvt_solver->glonass_gnav_ephemeris_map.empty() == false)
-                                                {
-                                                    if (tmp_eph_iter_glo_gnav != d_internal_pvt_solver->glonass_gnav_ephemeris_map.cend())
-                                                        {
-                                                            d_rtcm_printer->lock_time(d_internal_pvt_solver->glonass_gnav_ephemeris_map.find(in[i][epoch].PRN)->second, in[i][epoch].RX_time, in[i][epoch]);  // keep track of locking time
-                                                        }
-                                                }
-                                        }
-                                    catch (const boost::exception& ex)
-                                        {
-                                            std::cout << "RTCM boost exception: " << boost::diagnostic_information(ex) << '\n';
-                                            LOG(ERROR) << "RTCM boost exception: " << boost::diagnostic_information(ex);
-                                        }
-                                    catch (const std::exception& ex)
-                                        {
-                                            std::cout << "RTCM std exception: " << ex.what() << '\n';
-                                            LOG(ERROR) << "RTCM std exception: " << ex.what();
-                                        }
-                                }
+                            // if (d_rtcm_enabled)
+                            //     {
+                            //         try
+                            //             {
+                            //                 if (d_internal_pvt_solver->gps_ephemeris_map.empty() == false)
+                            //                     {
+                            //                         if (tmp_eph_iter_gps != d_internal_pvt_solver->gps_ephemeris_map.cend())
+                            //                             {
+                            //                                 d_rtcm_printer->lock_time(d_internal_pvt_solver->gps_ephemeris_map.find(in[i][epoch].PRN)->second, in[i][epoch].RX_time, in[i][epoch]);  // keep track of locking time
+                            //                             }
+                            //                     }
+                            //                 if (d_internal_pvt_solver->galileo_ephemeris_map.empty() == false)
+                            //                     {
+                            //                         if (tmp_eph_iter_gal != d_internal_pvt_solver->galileo_ephemeris_map.cend())
+                            //                             {
+                            //                                 d_rtcm_printer->lock_time(d_internal_pvt_solver->galileo_ephemeris_map.find(in[i][epoch].PRN)->second, in[i][epoch].RX_time, in[i][epoch]);  // keep track of locking time
+                            //                             }
+                            //                     }
+                            //                 if (d_internal_pvt_solver->gps_cnav_ephemeris_map.empty() == false)
+                            //                     {
+                            //                         if (tmp_eph_iter_cnav != d_internal_pvt_solver->gps_cnav_ephemeris_map.cend())
+                            //                             {
+                            //                                 d_rtcm_printer->lock_time(d_internal_pvt_solver->gps_cnav_ephemeris_map.find(in[i][epoch].PRN)->second, in[i][epoch].RX_time, in[i][epoch]);  // keep track of locking time
+                            //                             }
+                            //                     }
+                            //                 if (d_internal_pvt_solver->glonass_gnav_ephemeris_map.empty() == false)
+                            //                     {
+                            //                         if (tmp_eph_iter_glo_gnav != d_internal_pvt_solver->glonass_gnav_ephemeris_map.cend())
+                            //                             {
+                            //                                 d_rtcm_printer->lock_time(d_internal_pvt_solver->glonass_gnav_ephemeris_map.find(in[i][epoch].PRN)->second, in[i][epoch].RX_time, in[i][epoch]);  // keep track of locking time
+                            //                             }
+                            //                     }
+                            //             }
+                            //         catch (const boost::exception& ex)
+                            //             {
+                            //                 std::cout << "RTCM boost exception: " << boost::diagnostic_information(ex) << '\n';
+                            //                 LOG(ERROR) << "RTCM boost exception: " << boost::diagnostic_information(ex);
+                            //             }
+                            //         catch (const std::exception& ex)
+                            //             {
+                            //                 std::cout << "RTCM std exception: " << ex.what() << '\n';
+                            //                 LOG(ERROR) << "RTCM std exception: " << ex.what();
+                            //             }
+                            //     }
                         }
                     else
                         {
@@ -2270,27 +2268,27 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                     flag_display_pvt = true;
                                                 }
                                         }
-                                    if (d_rtcm_MT1019_rate_ms != 0)  // allows deactivating messages by setting rate = 0
-                                        {
-                                            if (current_RX_time_ms % d_rtcm_MT1019_rate_ms == 0)
-                                                {
-                                                    flag_write_RTCM_1019_output = true;
-                                                }
-                                        }
-                                    if (d_rtcm_MT1020_rate_ms != 0)  // allows deactivating messages by setting rate = 0
-                                        {
-                                            if (current_RX_time_ms % d_rtcm_MT1020_rate_ms == 0)
-                                                {
-                                                    flag_write_RTCM_1020_output = true;
-                                                }
-                                        }
-                                    if (d_rtcm_MT1045_rate_ms != 0)
-                                        {
-                                            if (current_RX_time_ms % d_rtcm_MT1045_rate_ms == 0)
-                                                {
-                                                    flag_write_RTCM_1045_output = true;
-                                                }
-                                        }
+                                    // if (d_rtcm_MT1019_rate_ms != 0)  // allows deactivating messages by setting rate = 0
+                                    //     {
+                                    //         if (current_RX_time_ms % d_rtcm_MT1019_rate_ms == 0)
+                                    //             {
+                                    //                 flag_write_RTCM_1019_output = true;
+                                    //             }
+                                    //     }
+                                    // if (d_rtcm_MT1020_rate_ms != 0)  // allows deactivating messages by setting rate = 0
+                                    //     {
+                                    //         if (current_RX_time_ms % d_rtcm_MT1020_rate_ms == 0)
+                                    //             {
+                                    //                 flag_write_RTCM_1020_output = true;
+                                    //             }
+                                    //     }
+                                    // if (d_rtcm_MT1045_rate_ms != 0)
+                                    //     {
+                                    //         if (current_RX_time_ms % d_rtcm_MT1045_rate_ms == 0)
+                                    //             {
+                                    //                 flag_write_RTCM_1045_output = true;
+                                    //             }
+                                    //     }
                                     // TODO: RTCM 1077, 1087 and 1097 are not used, so, disable the output rates
                                     // if (current_RX_time_ms % d_rtcm_MT1077_rate_ms==0 && d_rtcm_MT1077_rate_ms != 0)
                                     //     {
@@ -2304,41 +2302,34 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                     //     {
                                     //         last_RTCM_1097_output_time = current_RX_time;
                                     //     }
-                                    if (d_rtcm_MSM_rate_ms != 0)
-                                        {
-                                            if (current_RX_time_ms % d_rtcm_MSM_rate_ms == 0)
-                                                {
-                                                    flag_write_RTCM_MSM_output = true;
-                                                }
-                                        }
-                                    if (d_rinexobs_rate_ms != 0)
-                                        {
-                                            if (current_RX_time_ms % static_cast<uint32_t>(d_rinexobs_rate_ms) == 0)
-                                                {
-                                                    flag_write_RINEX_obs_output = true;
-                                                }
-                                        }
+                                    // if (d_rtcm_MSM_rate_ms != 0)
+                                    //     {
+                                    //         if (current_RX_time_ms % d_rtcm_MSM_rate_ms == 0)
+                                    //             {
+                                    //                 flag_write_RTCM_MSM_output = true;
+                                    //             }
+                                    //     }
+                                    // if (d_rinexobs_rate_ms != 0)
+                                    //     {
+                                    //         if (current_RX_time_ms % static_cast<uint32_t>(d_rinexobs_rate_ms) == 0)
+                                    //             {
+                                    //                 flag_write_RINEX_obs_output = true;
+                                    //             }
+                                    //     }
 
                                     if (d_first_fix == true)
                                         {
                                             if (d_show_local_time_zone)
                                                 {
                                                     const boost::posix_time::ptime time_first_solution = d_user_pvt_solver->get_position_UTC_time() + d_utc_diff_time;
-// #ifdef EN_CONSOLE_OUTPUT
                                                     std::cout << "First position fix at " << time_first_solution << d_local_time_str;
-// #endif
                                                 }
                                             else
                                                 {
-// #ifdef EN_CONSOLE_OUTPUT
                                                     std::cout << "First position fix at " << d_user_pvt_solver->get_position_UTC_time() << " UTC";
-// #endif
                                                 }
-// #ifdef EN_CONSOLE_OUTPUT
-
                                             std::cout << " is Lat = " << d_user_pvt_solver->get_latitude() << " [deg], Long = " << d_user_pvt_solver->get_longitude()
                                                       << " [deg], Height= " << d_user_pvt_solver->get_height() << " [m]\n";
-// #endif
                                             d_ttff_msgbuf ttff;
                                             ttff.mtype = 1;
                                             d_end = std::chrono::system_clock::now();
@@ -2347,56 +2338,56 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                             send_sys_v_ttff_msg(ttff);
                                             d_first_fix = false;
                                         }
-                                    if (d_kml_output_enabled)
-                                        {
-                                            if (current_RX_time_ms % d_kml_rate_ms == 0)
-                                                {
-                                                    d_kml_dump->print_position(d_user_pvt_solver.get(), false);
-                                                }
-                                        }
-                                    if (d_gpx_output_enabled)
-                                        {
-                                            if (current_RX_time_ms % d_gpx_rate_ms == 0)
-                                                {
-                                                    d_gpx_dump->print_position(d_user_pvt_solver.get(), false);
-                                                }
-                                        }
-                                    if (d_geojson_output_enabled)
-                                        {
-                                            if (current_RX_time_ms % d_geojson_rate_ms == 0)
-                                                {
-                                                    d_geojson_printer->print_position(d_user_pvt_solver.get(), false);
-                                                }
-                                        }
-                                    if (d_nmea_output_file_enabled)
-                                        {
-                                            if (current_RX_time_ms % d_nmea_rate_ms == 0)
-                                                {
-                                                    d_nmea_printer->Print_Nmea_Line(d_user_pvt_solver.get(), false);
-                                                }
-                                        }
-                                    if (d_rinex_output_enabled)
-                                        {
-                                            d_rp->print_rinex_annotation(d_user_pvt_solver.get(), d_gnss_observables_map, d_rx_time, d_type_of_rx, flag_write_RINEX_obs_output);
-                                        }
-                                    if (d_rtcm_enabled)
-                                        {
-                                            d_rtcm_printer->Print_Rtcm_Messages(d_user_pvt_solver.get(),
-                                                d_gnss_observables_map,
-                                                d_rx_time,
-                                                d_type_of_rx,
-                                                d_rtcm_MSM_rate_ms,
-                                                d_rtcm_MT1019_rate_ms,
-                                                d_rtcm_MT1020_rate_ms,
-                                                d_rtcm_MT1045_rate_ms,
-                                                d_rtcm_MT1077_rate_ms,
-                                                d_rtcm_MT1097_rate_ms,
-                                                flag_write_RTCM_MSM_output,
-                                                flag_write_RTCM_1019_output,
-                                                flag_write_RTCM_1020_output,
-                                                flag_write_RTCM_1045_output,
-                                                d_enable_rx_clock_correction);
-                                        }
+                                    // if (d_kml_output_enabled)
+                                    //     {
+                                    //         if (current_RX_time_ms % d_kml_rate_ms == 0)
+                                    //             {
+                                    //                 d_kml_dump->print_position(d_user_pvt_solver.get(), false);
+                                    //             }
+                                    //     }
+                                    // if (d_gpx_output_enabled)
+                                    //     {
+                                    //         if (current_RX_time_ms % d_gpx_rate_ms == 0)
+                                    //             {
+                                    //                 d_gpx_dump->print_position(d_user_pvt_solver.get(), false);
+                                    //             }
+                                    //     }
+                                    // if (d_geojson_output_enabled)
+                                    //     {
+                                    //         if (current_RX_time_ms % d_geojson_rate_ms == 0)
+                                    //             {
+                                    //                 d_geojson_printer->print_position(d_user_pvt_solver.get(), false);
+                                    //             }
+                                    //     }
+                                    // if (d_nmea_output_file_enabled)
+                                    //     {
+                                    //         if (current_RX_time_ms % d_nmea_rate_ms == 0)
+                                    //             {
+                                    //                 d_nmea_printer->Print_Nmea_Line(d_user_pvt_solver.get(), false);
+                                    //             }
+                                    //     }
+                                    // if (d_rinex_output_enabled)
+                                    //     {
+                                    //         d_rp->print_rinex_annotation(d_user_pvt_solver.get(), d_gnss_observables_map, d_rx_time, d_type_of_rx, flag_write_RINEX_obs_output);
+                                    //     }
+                                    // if (d_rtcm_enabled)
+                                    //     {
+                                    //         d_rtcm_printer->Print_Rtcm_Messages(d_user_pvt_solver.get(),
+                                    //             d_gnss_observables_map,
+                                    //             d_rx_time,
+                                    //             d_type_of_rx,
+                                    //             d_rtcm_MSM_rate_ms,
+                                    //             d_rtcm_MT1019_rate_ms,
+                                    //             d_rtcm_MT1020_rate_ms,
+                                    //             d_rtcm_MT1045_rate_ms,
+                                    //             d_rtcm_MT1077_rate_ms,
+                                    //             d_rtcm_MT1097_rate_ms,
+                                    //             flag_write_RTCM_MSM_output,
+                                    //             flag_write_RTCM_1019_output,
+                                    //             flag_write_RTCM_1020_output,
+                                    //             flag_write_RTCM_1045_output,
+                                    //             d_enable_rx_clock_correction);
+                                    //     }
                                 }
                         }
 
@@ -2415,11 +2406,10 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                     time_solution = d_user_pvt_solver->get_position_UTC_time();
                                     UTC_solution_str = " UTC";
                                 }
-                            std::streamsize ss = std::cout.precision();  // save current precision
+                            // std::streamsize ss = std::cout.precision();  // save current precision
                             std::cout.setf(std::ios::fixed, std::ios::floatfield);
                             auto* facet = new boost::posix_time::time_facet("%Y-%b-%d %H:%M:%S.%f %z");
                             std::cout.imbue(std::locale(std::cout.getloc(), facet));
-// #ifdef EN_CONSOLE_OUTPUT
                             std::cout
                                 << TEXT_BOLD_GREEN
                                 << "Position at " << time_solution << UTC_solution_str
@@ -2429,17 +2419,44 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                 << std::fixed << std::setprecision(3)
                                 << " [deg], Height = " << d_user_pvt_solver->get_height() << " [m]" << TEXT_RESET << '\n';
 
-                            std::cout << std::setprecision(ss);
-// #endif
+                            // std::cout << std::setprecision(ss);
                             DLOG(INFO) << "RX clock offset: " << d_user_pvt_solver->get_time_offset_s() << "[s]";
-// #ifdef EN_CONSOLE_OUTPUT
+
                             std::cout
                                 << TEXT_BOLD_GREEN
                                 << "Velocity: " << std::fixed << std::setprecision(3)
                                 << "East: " << d_user_pvt_solver->get_rx_vel()[0] << " [m/s], North: " << d_user_pvt_solver->get_rx_vel()[1]
                                 << " [m/s], Up = " << d_user_pvt_solver->get_rx_vel()[2] << " [m/s]" << TEXT_RESET << '\n';
-                            std::cout << std::setprecision(ss);
-// #endif
+
+                            // sprintf(&buffer[0],
+                            // "valid Observations: %i, lat: %lf, long: %lf, height: %lf\n",
+                            // d_user_pvt_solver->get_num_valid_observations(),
+                            // d_user_pvt_solver->get_latitude(),
+                            // d_user_pvt_solver->get_longitude(),
+                            // d_user_pvt_solver->get_height()
+                            // );
+
+                            // sprintf(&buffer[0],
+                            // "%d%lf%d%d%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf\n",
+                            // d_user_pvt_solver->get_gdop(),
+                            // d_user_pvt_solver->get_hdop(),
+                            // d_user_pvt_solver->get_vdop(),
+                            // d_user_pvt_solver->get_pdop(),
+                            // d_user_pvt_solver->get_latitude(),
+                            // d_user_pvt_solver->get_longitude(),
+                            // d_user_pvt_solver->get_height(),
+                            // d_user_pvt_solver->get_rx_pos()[0],
+                            // d_user_pvt_solver->get_rx_pos()[1],
+                            // d_user_pvt_solver->get_rx_pos()[2],
+                            // d_user_pvt_solver->get_rx_vel()[0],
+                            // d_user_pvt_solver->get_rx_vel()[1],
+                            // d_user_pvt_solver->get_rx_vel()[2]
+                            // );
+                            
+                            // serial4send(&buffer[0]);
+
+
+                            // std::cout << std::setprecision(ss);
                             DLOG(INFO) << "RX clock drift: " << d_user_pvt_solver->get_clock_drift_ppm() << " [ppm]";
 
                             // boost::posix_time::ptime p_time;
@@ -2474,13 +2491,13 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                 }
                         }
                 }
-            if (d_an_printer_enabled)
-                {
-                    if (d_local_counter_ms % static_cast<uint64_t>(d_an_rate_ms) == 0)
-                        {
-                            d_an_printer->print_packet(d_user_pvt_solver.get(), d_gnss_observables_map);
-                        }
-                }
+            // if (d_an_printer_enabled)
+            //     {
+            //         if (d_local_counter_ms % static_cast<uint64_t>(d_an_rate_ms) == 0)
+            //             {
+            //                 d_an_printer->print_packet(d_user_pvt_solver.get(), d_gnss_observables_map);
+            //             }
+            //     }
         }
 
     return noutput_items;

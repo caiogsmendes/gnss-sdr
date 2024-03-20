@@ -31,6 +31,12 @@
 #include "gnss_sdr_sample_counter.h"
 #include "gnss_signal.h"
 #include "pvt_interface.h"
+//Caio
+#include "serial_cmd_interface.h"
+//
+#include "acquisition_interface.h"
+#include "tracking_interface.h"
+
 #include <gnuradio/blocks/null_sink.h>  // for null_sink
 #include <gnuradio/runtime_types.h>     // for basic_block_sptr, top_block_sptr
 #include <pmt/pmt.h>                    // for pmt_t
@@ -56,6 +62,8 @@ class ConfigurationInterface;
 class GNSSBlockInterface;
 class Gnss_Satellite;
 class SignalSourceInterface;
+class SerialCmdInterface;
+
 
 /*! \brief This class represents a GNSS flow graph.
  *
@@ -150,7 +158,16 @@ public:
     {
         return std::dynamic_pointer_cast<PvtInterface>(pvt_);
     }
-
+    //Caio
+    std::shared_ptr<AcquisitionInterface> get_Acq()
+    {
+        return std::dynamic_pointer_cast<AcquisitionInterface>(Acq_);
+    }
+    std::shared_ptr<TrackingInterface> get_Trk()
+    {
+        return std::dynamic_pointer_cast<TrackingInterface>(Trk_);
+    }
+    //
     /*!
      * \brief Priorize visible satellites in the specified vector
      */
@@ -223,6 +240,13 @@ private:
     std::vector<std::shared_ptr<ChannelInterface>> channels_;
     std::shared_ptr<GNSSBlockInterface> observables_;
     std::shared_ptr<GNSSBlockInterface> pvt_;
+
+    //Caio
+    std::shared_ptr<GNSSBlockInterface> Acq_;
+    std::shared_ptr<GNSSBlockInterface> Trk_;
+    std::shared_ptr<SerialCmdInterface> SerialCmd_sptr_;
+
+    // SerialCmdInterface serial_interface_;
 
     std::map<std::string, gr::basic_block_sptr> acq_resamplers_;
     std::vector<gr::blocks::null_sink::sptr> null_sinks_;

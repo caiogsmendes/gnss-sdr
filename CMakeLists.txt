@@ -15,6 +15,7 @@ endif()
 # This has to come before project() which otherwise initializes it.
 # Build type can still be overridden by setting -DCMAKE_BUILD_TYPE=
 set(CMAKE_BUILD_TYPE "Release" CACHE STRING "")
+# set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "")
 
 cmake_minimum_required(VERSION 2.8.12...3.26)
 project(gnss-sdr CXX C)
@@ -32,7 +33,7 @@ include(FeatureSummary)
 # Support of optional RF front-ends
 option(ENABLE_UHD "Enable the use of UHD (driver for all USRP devices)" OFF)
 
-option(ENABLE_OSMOSDR "Enable the use of OsmoSDR and other front-ends (RTL-based dongles, HackRF, bladeRF, etc.) as signal source" OFF)
+option(ENABLE_OSMOSDR "Enable the use of OsmoSDR and other front-ends (RTL-based dongles, HackRF, bladeRF, etc.) as signal source" ON)
 
 option(ENABLE_LIMESDR "Enable the use of LimeSDR and Custom LimeSDR as signal source" OFF)
 
@@ -59,7 +60,7 @@ option(ENABLE_GPROF "Enable the use of the GNU profiler tool 'gprof'" OFF)
 option(ENABLE_CLANG_TIDY "Enable the use of clang-tidy when compiling" OFF)
 
 # Acceleration
-option(ENABLE_PROFILING "Enable execution of volk_gnsssdr_profile at the end of the building" OFF)
+option(ENABLE_PROFILING "Enable execution of volk_gnsssdr_profile at the end of the building" ON)
 
 option(ENABLE_OPENCL "Enable building of processing blocks implemented with OpenCL (experimental)" OFF)
 
@@ -74,7 +75,7 @@ option(ENABLE_OWN_GLOG "Download glog and link it to gflags" OFF)
 
 option(ENABLE_OWN_ARMADILLO "Download and build Armadillo locally" OFF)
 
-option(ENABLE_LOG "Enable logging" ON)
+option(ENABLE_LOG "Enable logging" OFF)
 
 option(ENABLE_ARMA_NO_DEBUG OFF)
 

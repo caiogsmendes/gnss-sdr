@@ -156,7 +156,7 @@ private:
     void telecommand_listener();
 
     //Caio
-    void serialcmd_listener();
+    void serialcmd_listener(void);
 
     void keyboard_listener();
     void sysv_queue_listener();
@@ -183,19 +183,14 @@ private:
 
     std::shared_ptr<ConfigurationInterface> configuration_;
     std::shared_ptr<Concurrent_Queue<pmt::pmt_t>> control_queue_;
-    
-    //Caio
-    std::shared_ptr<Concurrent_Queue<pmt::pmt_t>> serial_control_queue_;
-
     std::shared_ptr<GNSSFlowgraph> flowgraph_;
-
-    //Caio
-    std::shared_ptr<GNSSFlowgraph> serial_cmd_flowgraph_;
-
     std::thread cmd_interface_thread_;
     
     //Caio
     std::thread serial_cmd_interface_thread_;
+    std::shared_ptr<GNSSFlowgraph> serial_cmd_flowgraph_;
+    std::shared_ptr<Concurrent_Queue<pmt::pmt_t>> serial_control_queue_;
+
 
     std::thread keyboard_thread_;
     std::thread sysv_queue_thread_;

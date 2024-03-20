@@ -66,6 +66,12 @@
 #endif
 
 
+//Caio
+#include "display.h"
+
+//
+
+
 #define GNSS_SDR_ARRAY_SIGNAL_CONDITIONER_CHANNELS 8
 
 
@@ -1902,6 +1908,7 @@ void GNSSFlowgraph::acquisition_manager(unsigned int who)
  */
 void GNSSFlowgraph::apply_action(unsigned int who, unsigned int what)
 {
+    // set_SerialCmd();
     // todo: the acquisition events are initiated from the acquisition success or failure queued msg. If the acquisition is disabled for non-assisted secondary freq channels, the engine stops..
     std::lock_guard<std::mutex> lock(signal_list_mutex_);
     DLOG(INFO) << "Received " << what << " from " << who;
@@ -1987,6 +1994,9 @@ void GNSSFlowgraph::apply_action(unsigned int who, unsigned int what)
                         }
                 }
             break;
+        case 5:
+            std::cout<<TEXT_BOLD_BLUE<< "Caio Debug: Case 5 dentro do block FlowGraph"<<TEXT_RESET<<"\n";
+            break;
         case 10:  // request standby mode
             for (size_t n = 0; n < channels_.size(); n++)
                 {
@@ -2002,6 +2012,14 @@ void GNSSFlowgraph::apply_action(unsigned int who, unsigned int what)
                 }
             acq_channels_count_ = 0;  // all channels are in standby now and no new acquisition should be started
             break;
+        case 19:
+            {
+                char buff[] = "_Gnss_Flowgraph\n";
+                serial4send(&buff[0]);
+                SerialCmd_sptr_->DersoProtocol();
+                // serial_interface_.DersoProtocol();
+                break;
+            }
         default:
             break;
         }
@@ -2863,3 +2881,8 @@ Gnss_Signal GNSSFlowgraph::search_next_signal(const std::string& searched_signal
         }
     return result;
 }
+
+// void GNSSFlowgraph::set_SerialCmd(std::shared_ptr<SerialCmdInterface> SerialCmd_sptr)
+// {
+//     SerialCmd_sptr=std::move(SerialCmd_sptr);
+// }

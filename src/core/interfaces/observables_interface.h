@@ -34,7 +34,7 @@
 /*!
  * \brief This abstract class represents an interface to an observables block.
  *
- * Abstract class for pseudorange_intefaces, derived from GNSSBlockInterface.
+ * Abstract class for pseudorange_interfaces, derived from GNSSBlockInterface.
  * Since all its methods are virtual,
  * this class cannot be instantiated directly, and a subclass can only be
  * instantiated directly if all inherited pure virtual methods have been

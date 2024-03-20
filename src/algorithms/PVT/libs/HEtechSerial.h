@@ -19,6 +19,47 @@ extern "C" {
 #include <signal.h>
 #include <sys/poll.h>
 
+#define BUFF_SIZE 2048
+#define POLL_TIMEOUT 200
+
+
+    struct serial_s
+    {
+        int fd;
+        int state;
+        int running;
+        int flags;
+        char txbuff[BUFF_SIZE];
+        char bufftx;
+        char rxbuff[BUFF_SIZE];
+        char buffrx;
+        int start, end;
+        pthread_t rx_thread;
+        pthread_t tx_thread;
+        struct termios tty;
+        struct pollfd ufds;
+    };
+
+
+struct serial_s HEserial_connect(const char*, int);
+int HEserial_envio(serial_s*, char*);
+int HEserial_leitura(serial_s*, char*);
+char HEserial_leitura_byte(serial_s*, char*);
+void HEserial_disconnect(serial_s*);
+int serial4send(char*);
+int serial4read(char*);
+void serial4readByte(char*);
+int enviaar(char *msg);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
+
+
+
+
     // void serial_envio(const char *device, int flags, char *msg); 
     // void serial_envioByte(const char *device, int flags, double *msg);
     // int serial_leitura(/*int fd2/*const char* device2,*/ unsigned char *msg);
@@ -42,20 +83,3 @@ extern "C" {
     //  void HEserial_buffer_get();
     //  void HEserial_buffer_set();
     //  void HE_serial_buffer_available();
-
-
-struct serial_s HEserial_connect(const char*, int);
-int HEserial_envio(serial_s*, char*);
-int HEserial_leitura(serial_s*, char*);
-char HEserial_leitura_byte(serial_s*, char*);
-void HEserial_disconnect(serial_s*);
-int serial4send(char*);
-int serial4read(char*);
-void serial4readByte(char*);
-int enviaar(char *msg);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif

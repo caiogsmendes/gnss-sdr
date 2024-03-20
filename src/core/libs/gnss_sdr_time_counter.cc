@@ -85,31 +85,31 @@ int gnss_sdr_time_counter::general_work(int noutput_items __attribute__((unused)
                         {
                             day = " days ";
                         }
-#ifdef EN_CONSOLE_OUTPUT
+// #ifdef EN_CONSOLE_OUTPUT
                     std::cout << "Current receiver time: " << current_days << day << current_h << " h " << current_m << " min " << current_s << " s\n";
-#endif
+// #endif
                 }
             else
                 {
                     if (flag_h)
                         {
-#ifdef EN_CONSOLE_OUTPUT
+// #ifdef EN_CONSOLE_OUTPUT
                             std::cout << "Current receiver time: " << current_h << " h " << current_m << " min " << current_s << " s\n";
-#endif
+// #endif
                         }
                     else
                         {
                             if (flag_m)
                                 {
-#ifdef EN_CONSOLE_OUTPUT
+// #ifdef EN_CONSOLE_OUTPUT
                                     std::cout << "Current receiver time: " << current_m << " min " << current_s << " s\n";
-#endif
+// #endif
                                 }
                             else
                                 {
-#ifdef EN_CONSOLE_OUTPUT
+// #ifdef EN_CONSOLE_OUTPUT
                                     std::cout << "Current receiver time: " << current_s << " s\n";
-#endif
+// #endif
                                 }
                         }
                 }

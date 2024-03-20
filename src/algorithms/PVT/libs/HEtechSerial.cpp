@@ -30,6 +30,7 @@ extern "C"
 #include <poll.h>
 #include <termios.h>
 #include <unistd.h>
+#include <stdint.h>
 // #include "intercept.h"
 
 
@@ -38,22 +39,6 @@ extern "C"
 
     // ######### Experimental #########
 
-    struct serial_s
-    {
-        int fd;
-        int state;
-        int running;
-        int flags;
-        char txbuff[BUFF_SIZE];
-        char bufftx;
-        char rxbuff[BUFF_SIZE];
-        char buffrx;
-        int start, end;
-        pthread_t rx_thread;
-        pthread_t tx_thread;
-        struct termios tty;
-        struct pollfd ufds;
-    };
     // ################################
 
     // struct pollfd ufds;
@@ -240,91 +225,21 @@ extern "C"
             close(fd3);
         }
 
-    //     void serial_leitura(/*int fd2/*const char* device2,*/ unsigned char* msg)
-    // {
-    //     // Polling
-    //     int res = 0, err = 0;
-    //     struct pollfd ufds;
-    //     /**
-    //      * Função para envio de um valor apenas
-    //      */
-    //     char buf_rx[2000];
-    //     memset(buf_rx, '\0', sizeof(buf_rx));
-    //     struct termios tty;
-    //     int fd2 = open("/dev/colibri-uartb", O_RDWR);
-    //     ufds.fd = fd2;
-    //     ufds.events = POLLIN; // set events to notify on.
-    //     if (fd2 == -1)
-    //     {
-    //         printf("Falha em abrir port UART\n");
-    //         return -1;
-    //     }
-    //     tty.c_cflag &= ~PARENB;        // Clear parity bit, disabling parity (most common)
-    //     tty.c_cflag &= ~CSTOPB;        // Clear stop field, only one stop bit used in communication (most common)
-    //     tty.c_cflag &= ~CSIZE;         // Clear all bits that set the data size
-    //     tty.c_cflag |= CS8;            // 8 bits per byte (most common)
-    //     tty.c_cflag &= ~CRTSCTS;       // Disable RTS/CTS hardware flow control (most common)
-    //     tty.c_cflag |= CREAD | CLOCAL; // Turn on READ & ignore ctrl lines (CLOCAL = 1)
-    //     tty.c_lflag &= ~ICANON;
-    //     tty.c_lflag &= ~ECHO;                                                        // Disable echo
-    //     tty.c_lflag &= ~ECHOE;                                                       // Disable erasure
-    //     tty.c_lflag &= ~ECHONL;                                                      // Disable new-line echo
-    //     tty.c_lflag &= ~ISIG;                                                        // Disable interpretation of INTR, QUIT and SUSP
-    //     tty.c_iflag &= ~(IXON | IXOFF | IXANY);                                      // Turn off s/w flow ctrl
-    //     tty.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL); // Disable any special handling of received bytes
-    //     tty.c_oflag &= ~OPOST; // Prevent special interpretation of output bytes (e.g. newline chars)
-    //     tty.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
-    //     tty.c_cc[VTIME] = 0;
-    //     tty.c_cc[VMIN] = 232;
-    //     // Set in/out baud rate to be 9600
-    //     cfsetispeed(&tty, B921600);
-    //     cfsetospeed(&tty, B921600);
-    //     if (tcsetattr(fd2, TCSANOW, &tty) != 0)
-    //     {
-    //         printf("Error %i from tcsetattr: %s\n", errno, strerror(errno));
-    //         return 1;
-    //     }
-    //     tcflush(fd2, TCIFLUSH);
-    //     // memcpy(buf_tx, msg, sizeof(buf_tx));
-    //     if (poll(&ufds, 1, POLL_TIMEOUT) > 0)
-    //     {
-    //         int result = read(fd2, &buf_rx, sizeof(buf_rx));
-    //         memcpy(msg, &buf_rx, sizeof(buf_rx));
-    //     }
-    //     // if (result == -1)
-    //     // {
-    //     //     printf("Erro: %s\n", strerror(errno));
-    //     //     return -1;
-    //     // }else if (result == 0){
-    //     //   printf("Nenhum byte para receber.\n");
-    //     //   usleep(1000);
-    //     //   return -1;
-    //     // }
-    //     close(fd2);
-    //     return 0;
-    // }
-
     int serial4send(char *data)
     {
         // Configs de Escrita UART
-        const char *device = "/dev/colibri-uartc";
+        // const char *device = "/dev/colibri-uartc";
+        const char *device = "/dev/ttyUSB0";
         int flags = O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK; //Tirei o NonBlock pro poll bloquear a escrita
         //
         struct serial_s comm = HEserial_connect(device, flags);
         //
         int bytes = HEserial_envio(&comm, data);
         //
+        printf("%d bytes enviados\n",bytes);
         HEserial_disconnect(&comm);
         return bytes;
     }
-
-    // void serial4send(char* data)
-    // {
-    //     // Configs de Envio UART
-    //     const char* device = "/dev/colibri-uartb";
-    //     int flags = O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK;
-    //     serial_envio(device, flags, data); 
-    // }
 
     int serial4read(char *data)
     {
@@ -343,7 +258,7 @@ extern "C"
     void serial4readByte(char *data)
     {
         // Configs de Leitura UART
-        const char *device = "/dev/colibri-uartb";
+        const char *device = "/dev/ttyUSB0";
         int flags = O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK;
         struct serial_s comm = HEserial_connect(device, flags);
         *data = HEserial_leitura_byte(&comm, data);
@@ -443,13 +358,13 @@ extern "C"
     {
         // Limpar o buffer se characteres espúrios
         // memset(comm->rxbuff, '\0', sizeof(comm->rxbuff));
-        int result = 0;
         comm->ufds.events = POLLIN;
         if (poll(&comm->ufds, 1, -1) > 0)
         {
             if (comm->ufds.revents & POLLIN)
             {
-                result = read(comm->fd, &comm->buffrx, sizeof(comm->buffrx));
+                printf("Alguma coisa foi lida na HEserial_leitura_byte\n");
+                int result = read(comm->fd, &comm->buffrx, sizeof(comm->buffrx));
                 memcpy(msg, &comm->buffrx, sizeof(comm->buffrx)); // Está Redundante ??
             }
         }
@@ -460,4 +375,9 @@ extern "C"
     {
         close(comm->fd);
     }
+
+    // void doubletoHex(double* input, uint8_t* output)
+    // {
+
+    // }
 }
