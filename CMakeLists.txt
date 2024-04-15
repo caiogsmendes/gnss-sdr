@@ -14,8 +14,8 @@ endif()
 # Select the release build type by default to get optimization flags.
 # This has to come before project() which otherwise initializes it.
 # Build type can still be overridden by setting -DCMAKE_BUILD_TYPE=
-set(CMAKE_BUILD_TYPE "Release" CACHE STRING "")
-# set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "")
+# set(CMAKE_BUILD_TYPE "Release" CACHE STRING "")
+set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "")
 
 cmake_minimum_required(VERSION 2.8.12...3.26)
 project(gnss-sdr CXX C)
@@ -60,7 +60,7 @@ option(ENABLE_GPROF "Enable the use of the GNU profiler tool 'gprof'" OFF)
 option(ENABLE_CLANG_TIDY "Enable the use of clang-tidy when compiling" OFF)
 
 # Acceleration
-option(ENABLE_PROFILING "Enable execution of volk_gnsssdr_profile at the end of the building" ON)
+option(ENABLE_PROFILING "Enable execution of volk_gnsssdr_profile at the end of the building" OFF)
 
 option(ENABLE_OPENCL "Enable building of processing blocks implemented with OpenCL (experimental)" OFF)
 

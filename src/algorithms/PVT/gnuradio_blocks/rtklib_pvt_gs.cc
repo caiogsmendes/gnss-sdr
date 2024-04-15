@@ -1838,7 +1838,7 @@ void rtklib_pvt_gs::apply_rx_clock_offset(std::map<int, Gnss_Synchro>& observabl
 {
     // apply corrections according to Rinex 3.04, Table 1: Observation Corrections for Receiver Clock Offset
     std::map<int, Gnss_Synchro>::iterator observables_iter;
-
+    
     for (observables_iter = observables_map.begin(); observables_iter != observables_map.end(); observables_iter++)
         {
             // all observables in the map are valid
@@ -1942,6 +1942,9 @@ void rtklib_pvt_gs::update_HAS_corrections()
 int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_items,
     gr_vector_void_star& output_items __attribute__((unused)))
 {
+    //Caio
+    std::fstream fileRx("Rx_sampled.txt", std::ios::in|std::ios::app|std::ios::ate);
+
     // *************** time tags ****************
     if (d_enable_rx_clock_correction == false)  // todo: currently only works if clock correction is disabled
         {
@@ -2409,8 +2412,17 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                             // std::streamsize ss = std::cout.precision();  // save current precision
                             std::cout.setf(std::ios::fixed, std::ios::floatfield);
                             auto* facet = new boost::posix_time::time_facet("%Y-%b-%d %H:%M:%S.%f %z");
-                            std::cout.imbue(std::locale(std::cout.getloc(), facet));
+                            std::cout.imbue(std::locale(std::cout.getloc(), facet)); 
+                            //Caio
+                            fileRx << std::fixed << std::setprecision(24)
+                            << contadorrx << " "
+                            << d_user_pvt_solver->get_time_offset_s() << "  "
+                            << d_user_pvt_solver->get_clock_drift_ppm() << "\n";
+                            contadorrx++;
                             std::cout
+                                << TEXT_BOLD_YELLOW << std::fixed << std::setprecision(24)
+                                << " Time Offset: "<<d_user_pvt_solver->get_time_offset_s() << "[s]" 
+                                << " User Clock Drift[ppm]: "<< d_user_pvt_solver->get_clock_drift_ppm()<< TEXT_RESET <<"\n"
                                 << TEXT_BOLD_GREEN
                                 << "Position at " << time_solution << UTC_solution_str
                                 << " using " << d_user_pvt_solver->get_num_valid_observations()
@@ -2452,7 +2464,6 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                             // d_user_pvt_solver->get_rx_vel()[1],
                             // d_user_pvt_solver->get_rx_vel()[2]
                             // );
-                            
                             // serial4send(&buffer[0]);
 
 

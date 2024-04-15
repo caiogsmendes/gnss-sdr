@@ -279,6 +279,9 @@ private:
     bool d_use_e6_for_pvt;
     bool d_use_has_corrections;
     bool d_use_unhealthy_sats;
+
+    // caio
+    int contadorrx = 0;
 };
 
 
