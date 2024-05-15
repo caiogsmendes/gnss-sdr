@@ -68,6 +68,7 @@
 //Caio
 #include "serial_cmd_interface.h"
 #include "display.h"
+#include <string.h>
 
 #ifdef ENABLE_FPGA
 #include <boost/chrono.hpp>  // for steady_clock
@@ -155,14 +156,19 @@ void ControlThread::init()
     // Instantiates a control queue, a GNSS flowgraph, and a control message factory
     control_queue_ = std::make_shared<Concurrent_Queue<pmt::pmt_t>>();
     cmd_interface_.set_msg_queue(control_queue_);  // set also the queue pointer for the telecommand thread
-    /**-------------------------------------------------------------------------
+    
+    /** ###########################################################################
      * Caio -> copiei para a função de cmd serial.
      */
     //    serial_control_queue_ = std::make_shared<Concurrent_Queue<pmt::pmt_t>>();
     std::cout <<TEXT_BOLD_BLUE<< "Caio: Control Thread Init()" <<TEXT_RESET
               << "\n";
+
     serial_cmd_interface_.set_msg_queue(control_queue_);
-    // ---------------------------------------------------------------------------
+    // serial_cmd_interface_.set_channels(flowgraph_->get_channels());
+    // serial_synchro_interface_.set_channels(channel_status_->get_current_status_map());
+    // ###########################################################################
+    
     if (well_formatted_configuration_)
         {
             try
@@ -303,6 +309,7 @@ void ControlThread::serialcmd_listener(void)
     char buff;
     char device[] = "/dev/ttyUSB0";
     serial_cmd_interface_.run_serial_listener(&device[0], &buff, flowgraph_);
+
     // while (serialcmd_enabled_)
     //     {
     //         serial4readByte(&buff);
@@ -341,6 +348,30 @@ void ControlThread::serialcmd_listener(void)
     //             }
     //     }
     // }
+}
+
+void ControlThread::serialcmd_timer(void)
+{
+    auto tStartSteady = std::chrono::steady_clock::now();
+    int count = 0;
+    char buff[20];
+    // std::time_t startWallTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    while (serialcmd_enabled_)
+        {
+            auto tEndSteady = std::chrono::steady_clock::now();
+            std::chrono::nanoseconds diff = tEndSteady - tStartSteady;
+            float tempo = diff.count();
+            // std::time_t endWallTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+            if (tempo >= 1000000000)
+                {
+                    // std::cout<< "tempo: "<<std::ctime(&endWallTime)<<"\n";
+                    // std::cout<< diff.count()/1000000<<"\n";
+                    // sprintf(&buff[0],"Flag 1s, Count:%d \n",count++);
+                    // serial4send(&buff[0]);
+                    std::cout<<"Flag 1s: "<<count++<<"\n";
+                    tStartSteady = std::chrono::steady_clock::now();
+                }
+        }
 }
 
 
@@ -406,6 +437,7 @@ void ControlThread::event_dispatcher(bool &valid_event, pmt::pmt_t &msg)
  */
 int ControlThread::run()
 {
+    auto tStartSteady = std::chrono::steady_clock::now();
     // Connect the flowgraph
     if (!flowgraph_)
         {
@@ -456,12 +488,18 @@ int ControlThread::run()
     // Caio
     // Fazer um listener thread para Serial Cmd
     std::cout<<TEXT_BOLD_BLUE<<"Caio: Listener Thread Serial Cmd"<<TEXT_RESET<<"\n";
-    serial_cmd_interface_.set_pvt(flowgraph_->get_pvt());
-    serial_cmd_interface_.set_Acq(flowgraph_->get_Acq());
-    serial_cmd_interface_.set_Trk(flowgraph_->get_Trk());
+    serial_cmd_interface_pvt_.set_pvt(flowgraph_->get_pvt());
+    serial_cmd_interface_Acq_.set_Acq(flowgraph_->get_Acq());
+    serial_cmd_interface_Trk_.set_Trk(flowgraph_->get_Trk());
+    // serial_cmd_interface_Sync_.set_Sync(flowgraph_->get_SerialSync());
+    serial_cmd_interface_.set_channels(flowgraph_->get_channels());
     serial_cmd_interface_thread_ = std::thread(&ControlThread::serialcmd_listener, this);
     // Cria uma thread para isso, mas é necessário fechar com .join()
-    // na função dos destructors
+    // na função dos destructors 
+    
+
+    // Caio - timers
+    serial_timer_function_ = std::thread(&ControlThread::serialcmd_timer, this);
 
 #ifdef ENABLE_FPGA
     // Create a task for the acquisition such that id doesn't block the flow of the control thread
@@ -523,6 +561,10 @@ int ControlThread::run()
         pthread_t id3 = serial_cmd_interface_thread_.native_handle();
         serial_cmd_interface_thread_.detach();
         pthread_cancel(id3);
+
+        pthread_t id4 = serial_timer_function_.native_handle();
+        serial_timer_function_.detach();
+        pthread_cancel(id4);
     }
 
     LOG(INFO) << "Flowgraph stopped";

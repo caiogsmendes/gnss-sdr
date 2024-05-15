@@ -116,6 +116,10 @@ public:
      */
     void clear_ephemeris();
 
+    // Caio: 
+    std::map<int, Gnss_Synchro> get_observables_map() const;
+
+
     /*!
      * \brief Get the latest Position WGS84 [deg], Ground Velocity, Course over Ground, and UTC Time, if available
      */
@@ -172,6 +176,7 @@ private:
     bool save_gnss_synchro_map_xml(const std::string& file_name);  // debug helper function
     bool load_gnss_synchro_map_xml(const std::string& file_name);  // debug helper function
 
+    //Caio:
     std::fstream d_log_timetag_file;
 
     std::shared_ptr<Rtklib_Solver> d_internal_pvt_solver;

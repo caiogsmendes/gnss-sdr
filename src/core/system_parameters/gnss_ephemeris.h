@@ -108,7 +108,7 @@ public:
     double satvel_Y{};  //!< Earth-fixed velocity coordinate y of the satellite [m]
     double satvel_Z{};  //!< Earth-fixed velocity coordinate z of the satellite [m]
 
-protected:
+// protected:
     char System{};  //!< Character ID of the GNSS system. 'G': GPS.  'E': Galileo.  'B': BeiDou
 
 private:

@@ -158,6 +158,7 @@ public:
     {
         return std::dynamic_pointer_cast<PvtInterface>(pvt_);
     }
+
     //Caio
     std::shared_ptr<AcquisitionInterface> get_Acq()
     {
@@ -167,10 +168,15 @@ public:
     {
         return std::dynamic_pointer_cast<TrackingInterface>(Trk_);
     }
+    std::shared_ptr<std::vector<std::shared_ptr<ChannelInterface>>> get_channels()
+    {
+        return std::make_shared<std::vector<std::shared_ptr<ChannelInterface>>> (channels_);
+    }
+
     //
     /*!
      * \brief Priorize visible satellites in the specified vector
-     */
+     */ 
     void priorize_satellites(const std::vector<std::pair<int, Gnss_Satellite>>& visible_satellites);
 
 #if ENABLE_FPGA
@@ -210,6 +216,8 @@ private:
     int assign_channels();
     void check_signal_conditioners();
 
+    // void get_SerialSync(std::shared_ptr<SerialCmdInterface> SerialCmd_sptr);
+
     void set_signals_list();
     void set_channels_state();  // Initializes the channels state (start acquisition or keep standby)
                                 // using the configuration parameters (number of channels and max channels in acquisition)
@@ -245,6 +253,7 @@ private:
     std::shared_ptr<GNSSBlockInterface> Acq_;
     std::shared_ptr<GNSSBlockInterface> Trk_;
     std::shared_ptr<SerialCmdInterface> SerialCmd_sptr_;
+    channel_status_msg_receiver_sptr serial_channels_status_;
 
     // SerialCmdInterface serial_interface_;
 

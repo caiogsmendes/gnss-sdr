@@ -531,6 +531,8 @@ void hybrid_observables_gs::update_TOW(const std::vector<Gnss_Synchro> &data)
 
 void hybrid_observables_gs::compute_pranges(std::vector<Gnss_Synchro> &data) const
 {
+    // Caio: Check
+
     // std::cout.precision(17);
     // std::cout << " d_T_rx_TOW_ms: " << static_cast<double>(d_T_rx_TOW_ms) << '\n';
     std::vector<Gnss_Synchro>::iterator it;
@@ -541,10 +543,18 @@ void hybrid_observables_gs::compute_pranges(std::vector<Gnss_Synchro> &data) con
             if (it->Flag_valid_word)
                 {
                     double traveltime_ms = current_T_rx_TOW_ms - it->interp_TOW_ms;
+
                     if (fabs(traveltime_ms) > 302400)  // check TOW roll over
                         {
                             traveltime_ms = 604800000.0 + current_T_rx_TOW_ms - it->interp_TOW_ms;
                         }
+                    // Caio Mod.:
+                    it->transmTime_ms = 604800000.0 + it->interp_TOW_ms;
+                    it->traveltempo_ms = traveltime_ms;
+                    it->transmitTime_ms_somado = current_T_rx_TOW_ms - it->interp_TOW_ms;
+                    it->transmitTime_ms_sub_ = current_T_rx_TOW_ms - it->interp_TOW_ms;
+
+
                     it->RX_time = current_T_rx_TOW_s;
                     it->Pseudorange_m = traveltime_ms * SPEED_OF_LIGHT_M_MS;
                     it->Flag_valid_pseudorange = true;

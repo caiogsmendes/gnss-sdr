@@ -25,6 +25,7 @@
 #include <vector>
 
 
+
 double Gnss_Ephemeris::sv_clock_drift(double transmitTime)
 {
     const double dt = check_t(transmitTime - this->toc);

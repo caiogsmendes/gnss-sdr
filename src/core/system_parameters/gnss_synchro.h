@@ -80,6 +80,12 @@ public:
     bool Flag_valid_pseudorange{};         //!< Set by Observables processing block
     bool Flag_PLL_180_deg_phase_locked{};  //!< Set by Telemetry Decoder processing block
 
+    // Caio Mod: Tentativa de pegar o tempo de transmissão
+    double transmTime_ms{}; //Tempo de Transmissão
+    double traveltempo_ms{}; // Travel time
+    double transmitTime_ms_somado{}; // é o traveltime só que somado e n subtraido
+    double transmitTime_ms_sub_{};
+
     /// Copy constructor
     Gnss_Synchro(const Gnss_Synchro& other) noexcept = default;
 

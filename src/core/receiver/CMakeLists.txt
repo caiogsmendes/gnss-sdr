@@ -160,6 +160,7 @@ endif()
 target_link_libraries(core_receiver
     PUBLIC
         core_libs
+        channel_adapters
     PRIVATE
         algorithms_libs
         core_monitor
@@ -179,6 +180,7 @@ target_link_libraries(core_receiver
         Glog::glog
         Armadillo::armadillo
         pvt_libs
+        curses
 )
 
 if(ENABLE_ARMA_NO_DEBUG)

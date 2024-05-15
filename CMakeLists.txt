@@ -152,6 +152,8 @@ option(ENABLE_CONSOLE_OUTPUT "Habilita print de msg do bloco de TRK e PVT no con
 #     message(STATUS "Console output DISABLED")
 # endif()
 # add_definitions(-DEN_CONSOLE_OUTPUT=FALSE)
+
+
 ################################################################################
 # GNSS-SDR version information
 ################################################################################

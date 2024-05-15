@@ -43,6 +43,7 @@ endif()
 
 target_link_libraries(core_monitor
     PUBLIC
+        core_receiver
         Boost::headers
         Boost::system
         Gnuradio::runtime

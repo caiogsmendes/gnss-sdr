@@ -196,6 +196,7 @@ public:
     std::map<int, Galileo_Ephemeris> get_galileo_ephemeris() const override;
     std::map<int, Gps_Almanac> get_gps_almanac() const override;
     std::map<int, Galileo_Almanac> get_galileo_almanac() const override;
+    std::map<int, Gnss_Synchro> get_gnss_observables() const override;
 
     void connect(gr::top_block_sptr top_block) override;
     void disconnect(gr::top_block_sptr top_block) override;

@@ -948,6 +948,12 @@ std::map<int, Galileo_Almanac> Rtklib_Pvt::get_galileo_almanac() const
     return pvt_->get_galileo_almanac_map();
 }
 
+//Caio
+std::map<int, Gnss_Synchro> Rtklib_Pvt::get_gnss_observables() const
+{
+    return pvt_->get_observables_map();
+}
+
 
 void Rtklib_Pvt::connect(gr::top_block_sptr top_block)
 {

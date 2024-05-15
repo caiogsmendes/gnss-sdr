@@ -24,17 +24,20 @@
 #include <utility>
 
 
+
 gnss_synchro_monitor_sptr gnss_synchro_make_monitor(int n_channels,
     int decimation_factor,
     int udp_port,
     const std::vector<std::string>& udp_addresses,
-    bool enable_protobuf)
+    bool enable_protobuf,
+    std::shared_ptr<SerialCmdInterface> SerialCmd_sptr_)
 {
     return gnss_synchro_monitor_sptr(new gnss_synchro_monitor(n_channels,
         decimation_factor,
         udp_port,
         udp_addresses,
-        enable_protobuf));
+        enable_protobuf,
+        SerialCmd_sptr_));
 }
 
 
@@ -42,7 +45,8 @@ gnss_synchro_monitor::gnss_synchro_monitor(int n_channels,
     int decimation_factor,
     int udp_port,
     const std::vector<std::string>& udp_addresses,
-    bool enable_protobuf)
+    bool enable_protobuf,
+    std::shared_ptr<SerialCmdInterface> SerialCmd_sptr_)
     : gr::block("gnss_synchro_monitor",
           gr::io_signature::make(n_channels, n_channels, sizeof(Gnss_Synchro)),
           gr::io_signature::make(0, 0, 0)),
@@ -50,7 +54,13 @@ gnss_synchro_monitor::gnss_synchro_monitor(int n_channels,
       d_decimation_factor(decimation_factor)
 {
     udp_sink_ptr = std::make_unique<Gnss_Synchro_Udp_Sink>(udp_addresses, udp_port, enable_protobuf);
+    serial_sink_ptr = std::move(SerialCmd_sptr_);
 }
+
+// void gnss_synchro_monitor::get_monitor(std::vector<std::shared_ptr<Gnss_Synchro>> gnss_synchro_monitor_sptr)
+// {
+//     synchro_monitor_sptr_ = std::move(gnss_synchro_monitor_sptr);
+// }
 
 
 void gnss_synchro_monitor::forecast(int noutput_items __attribute__((unused)), gr_vector_int& ninput_items_required)
@@ -69,6 +79,11 @@ int gnss_synchro_monitor::general_work(int noutput_items __attribute__((unused))
     // Get the input buffer pointer
     const auto** in = reinterpret_cast<const Gnss_Synchro**>(&input_items[0]);
 
+    // Caio: Essa declaração do stocks estava dentro dos 2 for's
+    //  Convert to a vector and write to the UDP sink
+    std::vector<Gnss_Synchro> stocks;
+
+
     // Loop through each input stream channel
     for (int channel_index = 0; channel_index < d_nchannels; channel_index++)
         {
@@ -80,18 +95,22 @@ int gnss_synchro_monitor::general_work(int noutput_items __attribute__((unused))
                     count++;
                     if (count >= d_decimation_factor)
                         {
-                            // Convert to a vector and write to the UDP sink
-                            std::vector<Gnss_Synchro> stocks;
                             stocks.push_back(in[channel_index][item_index]);
                             udp_sink_ptr->write_gnss_synchro(stocks);
+                            // X serial_sink_ptr->sats = serial_sink_ptr->Update_Synchro_Internals(stocks, d_nchannels);
+                            // X serial_sink_ptr->sats.push_back(in[channel_index][item_index]);
+                            // X serial_sink_ptr->num_channel = d_nchannels;
+                            // X serial_sink_ptr->sats[channel_index];
                             // Reset count variable
                             count = 0;
+                            // serial_sink_ptr->sats[item_index].Channel_ID = stocks[item_index].Channel_ID;
                             // Consume the number of items for the input stream channel
                             consume(channel_index, ninput_items[channel_index]);
                         }
                 }
         }
-
+    // Caio: Inserir aqui uma função que escreva em vector do tipo gnss_synchro da msm forma que o stocks
+    // serial_sink_ptr->Update_Synchro_Internals(stocks, d_nchannels);
     // Not producing any outputs
     return 0;
 }

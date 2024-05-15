@@ -157,6 +157,8 @@ private:
 
     //Caio
     void serialcmd_listener(void);
+    void serialcmd_timer(void);
+    //
 
     void keyboard_listener();
     void sysv_queue_listener();
@@ -188,9 +190,10 @@ private:
     
     //Caio
     std::thread serial_cmd_interface_thread_;
+    std::thread serial_timer_function_;
     std::shared_ptr<GNSSFlowgraph> serial_cmd_flowgraph_;
     std::shared_ptr<Concurrent_Queue<pmt::pmt_t>> serial_control_queue_;
-
+    
 
     std::thread keyboard_thread_;
     std::thread sysv_queue_thread_;
@@ -204,6 +207,10 @@ private:
     
     // Caio
     SerialCmdInterface serial_cmd_interface_;
+    SerialCmdInterface serial_cmd_interface_Sync_;
+    SerialCmdInterface serial_cmd_interface_pvt_;
+    SerialCmdInterface serial_cmd_interface_Acq_;
+    SerialCmdInterface serial_cmd_interface_Trk_;
 
     // SUPL assistance classes
     Gnss_Sdr_Supl_Client supl_client_acquisition_;

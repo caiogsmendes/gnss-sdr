@@ -236,7 +236,7 @@ extern "C"
         //
         int bytes = HEserial_envio(&comm, data);
         //
-        printf("%d bytes enviados\n",bytes);
+        // printf("%d bytes enviados\n",bytes);
         HEserial_disconnect(&comm);
         return bytes;
     }
@@ -244,7 +244,8 @@ extern "C"
     int serial4read(char *data)
     {
         // Configs de Leitura UART
-        const char *device = "/dev/colibri-uartc";
+        // const char *device = "/dev/colibri-uartc";
+        const char *device = "/dev/ttyUSB0";
         int flags = O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK;
 
         struct serial_s comm = HEserial_connect(device, flags);
@@ -255,13 +256,14 @@ extern "C"
         return bytes;
     }
 
-    void serial4readByte(char *data)
+    void serial4readByte(char *dados)
     {
         // Configs de Leitura UART
         const char *device = "/dev/ttyUSB0";
+        // const char *device = "/dev/colibri-uartc";
         int flags = O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK;
         struct serial_s comm = HEserial_connect(device, flags);
-        *data = HEserial_leitura_byte(&comm, data);
+        *dados = HEserial_leitura_byte(&comm, dados);
         HEserial_disconnect(&comm);
         // return byte;
     }
@@ -302,7 +304,7 @@ extern "C"
         // comm.tty.c_cc[VTIME] = 0;
         // comm.tty.c_cc[VMIN] = 232; // É bom revisar esses números, n sei se leitura e escrita usariam os mesmos parâmetros.
         
-
+        // cfmakeraw(&comm.tty);
         
         tcsetattr(comm.fd, TCSANOW, &comm.tty);
         
@@ -363,9 +365,9 @@ extern "C"
         {
             if (comm->ufds.revents & POLLIN)
             {
-                printf("Alguma coisa foi lida na HEserial_leitura_byte\n");
+                // printf("Alguma coisa foi lida na HEserial_leitura_byte\n");
                 int result = read(comm->fd, &comm->buffrx, sizeof(comm->buffrx));
-                memcpy(msg, &comm->buffrx, sizeof(comm->buffrx)); // Está Redundante ??
+                // memcpy(msg, &comm->buffrx, sizeof(comm->buffrx)); // Está Redundante ??
             }
         }
         return comm->buffrx;

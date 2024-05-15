@@ -107,6 +107,7 @@ void GNSSFlowgraph::init()
     auto block_factory = std::make_unique<GNSSBlockFactory>();
 
     channels_status_ = channel_status_msg_receiver_make();
+    serial_channels_status_ = channel_status_msg_receiver_make();
 
     if (configuration_->property("Channels_E6.count", 0) > 0)
         {
@@ -163,7 +164,7 @@ void GNSSFlowgraph::init()
         }
 
     observables_ = block_factory->GetObservables(configuration_.get());
-
+    
     pvt_ = block_factory->GetPVT(configuration_.get());
 
     auto channels = block_factory->GetChannels(configuration_.get(), queue_.get());
@@ -215,8 +216,10 @@ void GNSSFlowgraph::init()
             GnssSynchroMonitor_ = gnss_synchro_make_monitor(channels_count_,
                 configuration_->property("Monitor.decimation_factor", 1),
                 configuration_->property("Monitor.udp_port", 1234),
-                udp_addr_vec, enable_protobuf);
+                udp_addr_vec, enable_protobuf,
+                 SerialCmd_sptr_);
         }
+
 
     /*
      * Instantiate the receiver acquisition monitor block, if required
@@ -238,7 +241,8 @@ void GNSSFlowgraph::init()
             GnssSynchroAcquisitionMonitor_ = gnss_synchro_make_monitor(channels_count_,
                 configuration_->property("AcquisitionMonitor.decimation_factor", 1),
                 configuration_->property("AcquisitionMonitor.udp_port", 1235),
-                udp_addr_vec, enable_protobuf);
+                udp_addr_vec, enable_protobuf,
+                SerialCmd_sptr_);
         }
 
     /*
@@ -261,7 +265,8 @@ void GNSSFlowgraph::init()
             GnssSynchroTrackingMonitor_ = gnss_synchro_make_monitor(channels_count_,
                 configuration_->property("TrackingMonitor.decimation_factor", 1),
                 configuration_->property("TrackingMonitor.udp_port", 1236),
-                udp_addr_vec, enable_protobuf);
+                udp_addr_vec, enable_protobuf,
+                SerialCmd_sptr_);
         }
 
     /*
@@ -2016,13 +2021,14 @@ void GNSSFlowgraph::apply_action(unsigned int who, unsigned int what)
             {
                 char buff[] = "_Gnss_Flowgraph\n";
                 serial4send(&buff[0]);
-                SerialCmd_sptr_->DersoProtocol();
+                // SerialCmd_sptr_->DersoProtocol();
                 // serial_interface_.DersoProtocol();
                 break;
             }
         default:
             break;
         }
+    
 }
 
 
@@ -2882,7 +2888,12 @@ Gnss_Signal GNSSFlowgraph::search_next_signal(const std::string& searched_signal
     return result;
 }
 
-// void GNSSFlowgraph::set_SerialCmd(std::shared_ptr<SerialCmdInterface> SerialCmd_sptr)
+// void GNSSFlowgraph::get_SerialSync(std::shared_ptr<SerialCmdInterface> SerialCmd_sptr)
 // {
-//     SerialCmd_sptr=std::move(SerialCmd_sptr);
+//     SerialCmd_sptr_=std::move(SerialCmd_sptr);
+// }
+
+// void GNSSFlowgraph::get_channels(std::shared_ptr<std::vector<std::shared_ptr<<<ChannelInterface>>> channel_sptr)
+// {
+//     channels_sptr_=std::move(channel_sptr);
 // }

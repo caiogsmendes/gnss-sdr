@@ -65,6 +65,7 @@
 #include <map>
 #include <string>
 #include <utility>
+#include "gps_ephemeris.h"
 
 /** \addtogroup PVT
  * \{ */
@@ -105,6 +106,11 @@ public:
     std::map<int, Gps_CNAV_Ephemeris> gps_cnav_ephemeris_map;          //!< Map storing new GPS_CNAV_Ephemeris
     std::map<int, Glonass_Gnav_Ephemeris> glonass_gnav_ephemeris_map;  //!< Map storing new GLONASS GNAV Ephemeris
     std::map<int, Beidou_Dnav_Ephemeris> beidou_dnav_ephemeris_map;    //!< Map storing new BeiDou DNAV Ephmeris
+
+    //Caio:
+    std::map<int, Gnss_Synchro> gnss_observables_map; // With Hope, a Map storing new Synchro Data
+    std::map<int, Gnss_Ephemeris> Gnss_Ephem_map;
+    std::map<int, Gps_Ephemeris> Gps_Ephem_map;
 
     Galileo_Utc_Model galileo_utc_model;
     Galileo_Iono galileo_iono;

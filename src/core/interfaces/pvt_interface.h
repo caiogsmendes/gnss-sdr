@@ -28,6 +28,7 @@
 #include "gnss_block_interface.h"
 #include "gps_almanac.h"
 #include "gps_ephemeris.h"
+#include "gnss_synchro.h"
 #include <map>
 
 /** \addtogroup Core
@@ -54,6 +55,9 @@ public:
     virtual std::map<int, Galileo_Ephemeris> get_galileo_ephemeris() const = 0;
     virtual std::map<int, Gps_Almanac> get_gps_almanac() const = 0;
     virtual std::map<int, Galileo_Almanac> get_galileo_almanac() const = 0;
+    // Caio:
+    virtual std::map<int, Gnss_Synchro> get_gnss_observables() const = 0;
+    // virtual std::map<int, Gnss_Ephemeris> get_gnss_ephemeris() const = 0;
 
     virtual bool get_latest_PVT(double* longitude_deg,
         double* latitude_deg,
