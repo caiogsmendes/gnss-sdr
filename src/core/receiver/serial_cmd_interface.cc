@@ -8,7 +8,8 @@
 #include "display.h"
 #include "gnss_synchro_monitor.h"
 #include "rtklib_pvt_gs.h"
-#include <ncurses.h>
+// #include <ncurses.h>
+
 
 // #include <map>
 
