@@ -89,7 +89,6 @@
 #include <cstdio>
 
 
-char buffer[400];
 
 #if HAS_GENERIC_LAMBDA
 #else
@@ -454,15 +453,15 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
             d_has_simple_printer = nullptr;
         }
 
-    // Initialize AN printer
-    if (d_an_printer_enabled)
-        {
-            d_an_printer = std::make_unique<An_Packet_Printer>(conf_.an_dump_devname);
-        }
-    else
-        {
-            d_an_printer = nullptr;
-        }
+    // // Initialize AN printer
+    // if (d_an_printer_enabled)
+    //     {
+    //         d_an_printer = std::make_unique<An_Packet_Printer>(conf_.an_dump_devname);
+    //     }
+    // else
+    //     {
+    //         d_an_printer = nullptr;
+    //     }
 
     // PVT MONITOR
     if (d_flag_monitor_pvt_enabled)
@@ -1448,155 +1447,155 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
                         }
                 }
 
-            // **************** GLONASS GNAV Telemetry *************************
-            else if (msg_type_hash_code == d_glonass_gnav_ephemeris_sptr_type_hash_code)
-                {
-                    // ### GLONASS GNAV EPHEMERIS ###
-                    const auto glonass_gnav_eph = wht::any_cast<std::shared_ptr<Glonass_Gnav_Ephemeris>>(pmt::any_ref(msg));
-                    // TODO Add GLONASS with gps week number and tow,
-                    // insert new ephemeris record
-                    DLOG(INFO) << "GLONASS GNAV New Ephemeris record inserted in global map with TOW =" << glonass_gnav_eph->d_TOW
-                               << ", Week Number =" << glonass_gnav_eph->d_WN
-                               << " and Ephemeris IOD in UTC = " << glonass_gnav_eph->compute_GLONASS_time(glonass_gnav_eph->d_t_b)
-                               << " from SV = " << glonass_gnav_eph->i_satellite_slot_number;
-                    // update/insert new ephemeris record to the global ephemeris map
-                    // if (d_rinex_output_enabled && d_rp->is_rinex_header_written())  // The header is already written, we can now log the navigation message data
-                    //     {
-                    //         bool new_annotation = false;
-                    //         if (d_internal_pvt_solver->glonass_gnav_ephemeris_map.find(glonass_gnav_eph->PRN) == d_internal_pvt_solver->glonass_gnav_ephemeris_map.cend())
-                    //             {
-                    //                 new_annotation = true;
-                    //             }
-                    //         else
-                    //             {
-                    //                 if (d_internal_pvt_solver->glonass_gnav_ephemeris_map[glonass_gnav_eph->PRN].d_t_b != glonass_gnav_eph->d_t_b)
-                    //                     {
-                    //                         new_annotation = true;
-                    //                     }
-                    //             }
-                    //         if (new_annotation == true)
-                    //             {
-                    //                 // New record!
-                    //                 std::map<int32_t, Glonass_Gnav_Ephemeris> new_glo_eph;
-                    //                 new_glo_eph[glonass_gnav_eph->PRN] = *glonass_gnav_eph;
-                    //                 d_rp->log_rinex_nav_glo_gnav(d_type_of_rx, new_glo_eph);
-                    //             }
-                    //     }
-                    d_internal_pvt_solver->glonass_gnav_ephemeris_map[glonass_gnav_eph->PRN] = *glonass_gnav_eph;
-                    if (d_enable_rx_clock_correction == true)
-                        {
-                            d_user_pvt_solver->glonass_gnav_ephemeris_map[glonass_gnav_eph->PRN] = *glonass_gnav_eph;
-                        }
-                }
-            else if (msg_type_hash_code == d_glonass_gnav_utc_model_sptr_type_hash_code)
-                {
-                    // ### GLONASS GNAV UTC MODEL ###
-                    const auto glonass_gnav_utc_model = wht::any_cast<std::shared_ptr<Glonass_Gnav_Utc_Model>>(pmt::any_ref(msg));
-                    d_internal_pvt_solver->glonass_gnav_utc_model = *glonass_gnav_utc_model;
-                    if (d_enable_rx_clock_correction == true)
-                        {
-                            d_user_pvt_solver->glonass_gnav_utc_model = *glonass_gnav_utc_model;
-                        }
-                    DLOG(INFO) << "New GLONASS GNAV UTC record has arrived";
-                }
-            else if (msg_type_hash_code == d_glonass_gnav_almanac_sptr_type_hash_code)
-                {
-                    // ### GLONASS GNAV Almanac ###
-                    const auto glonass_gnav_almanac = wht::any_cast<std::shared_ptr<Glonass_Gnav_Almanac>>(pmt::any_ref(msg));
-                    d_internal_pvt_solver->glonass_gnav_almanac = *glonass_gnav_almanac;
-                    if (d_enable_rx_clock_correction == true)
-                        {
-                            d_user_pvt_solver->glonass_gnav_almanac = *glonass_gnav_almanac;
-                        }
-                    DLOG(INFO) << "New GLONASS GNAV Almanac has arrived"
-                               << ", GLONASS GNAV Slot Number =" << glonass_gnav_almanac->d_n_A;
-                }
+            // // **************** GLONASS GNAV Telemetry *************************
+            // else if (msg_type_hash_code == d_glonass_gnav_ephemeris_sptr_type_hash_code)
+            //     {
+            //         // ### GLONASS GNAV EPHEMERIS ###
+            //         const auto glonass_gnav_eph = wht::any_cast<std::shared_ptr<Glonass_Gnav_Ephemeris>>(pmt::any_ref(msg));
+            //         // TODO Add GLONASS with gps week number and tow,
+            //         // insert new ephemeris record
+            //         DLOG(INFO) << "GLONASS GNAV New Ephemeris record inserted in global map with TOW =" << glonass_gnav_eph->d_TOW
+            //                    << ", Week Number =" << glonass_gnav_eph->d_WN
+            //                    << " and Ephemeris IOD in UTC = " << glonass_gnav_eph->compute_GLONASS_time(glonass_gnav_eph->d_t_b)
+            //                    << " from SV = " << glonass_gnav_eph->i_satellite_slot_number;
+            //         // update/insert new ephemeris record to the global ephemeris map
+            //         // if (d_rinex_output_enabled && d_rp->is_rinex_header_written())  // The header is already written, we can now log the navigation message data
+            //         //     {
+            //         //         bool new_annotation = false;
+            //         //         if (d_internal_pvt_solver->glonass_gnav_ephemeris_map.find(glonass_gnav_eph->PRN) == d_internal_pvt_solver->glonass_gnav_ephemeris_map.cend())
+            //         //             {
+            //         //                 new_annotation = true;
+            //         //             }
+            //         //         else
+            //         //             {
+            //         //                 if (d_internal_pvt_solver->glonass_gnav_ephemeris_map[glonass_gnav_eph->PRN].d_t_b != glonass_gnav_eph->d_t_b)
+            //         //                     {
+            //         //                         new_annotation = true;
+            //         //                     }
+            //         //             }
+            //         //         if (new_annotation == true)
+            //         //             {
+            //         //                 // New record!
+            //         //                 std::map<int32_t, Glonass_Gnav_Ephemeris> new_glo_eph;
+            //         //                 new_glo_eph[glonass_gnav_eph->PRN] = *glonass_gnav_eph;
+            //         //                 d_rp->log_rinex_nav_glo_gnav(d_type_of_rx, new_glo_eph);
+            //         //             }
+            //         //     }
+            //         d_internal_pvt_solver->glonass_gnav_ephemeris_map[glonass_gnav_eph->PRN] = *glonass_gnav_eph;
+            //         if (d_enable_rx_clock_correction == true)
+            //             {
+            //                 d_user_pvt_solver->glonass_gnav_ephemeris_map[glonass_gnav_eph->PRN] = *glonass_gnav_eph;
+            //             }
+            //     }
+            // else if (msg_type_hash_code == d_glonass_gnav_utc_model_sptr_type_hash_code)
+            //     {
+            //         // ### GLONASS GNAV UTC MODEL ###
+            //         const auto glonass_gnav_utc_model = wht::any_cast<std::shared_ptr<Glonass_Gnav_Utc_Model>>(pmt::any_ref(msg));
+            //         d_internal_pvt_solver->glonass_gnav_utc_model = *glonass_gnav_utc_model;
+            //         if (d_enable_rx_clock_correction == true)
+            //             {
+            //                 d_user_pvt_solver->glonass_gnav_utc_model = *glonass_gnav_utc_model;
+            //             }
+            //         DLOG(INFO) << "New GLONASS GNAV UTC record has arrived";
+            //     }
+            // else if (msg_type_hash_code == d_glonass_gnav_almanac_sptr_type_hash_code)
+            //     {
+            //         // ### GLONASS GNAV Almanac ###
+            //         const auto glonass_gnav_almanac = wht::any_cast<std::shared_ptr<Glonass_Gnav_Almanac>>(pmt::any_ref(msg));
+            //         d_internal_pvt_solver->glonass_gnav_almanac = *glonass_gnav_almanac;
+            //         if (d_enable_rx_clock_correction == true)
+            //             {
+            //                 d_user_pvt_solver->glonass_gnav_almanac = *glonass_gnav_almanac;
+            //             }
+            //         DLOG(INFO) << "New GLONASS GNAV Almanac has arrived"
+            //                    << ", GLONASS GNAV Slot Number =" << glonass_gnav_almanac->d_n_A;
+            //     }
 
-            // *********************** BeiDou telemetry ************************
-            else if (msg_type_hash_code == d_beidou_dnav_ephemeris_sptr_type_hash_code)
-                {
-                    // ### Beidou EPHEMERIS ###
-                    const auto bds_dnav_eph = wht::any_cast<std::shared_ptr<Beidou_Dnav_Ephemeris>>(pmt::any_ref(msg));
-                    DLOG(INFO) << "Ephemeris record has arrived from SAT ID "
-                               << bds_dnav_eph->PRN << " (Block "
-                               << bds_dnav_eph->satelliteBlock[bds_dnav_eph->PRN] << ")"
-                               << "inserted with Toe=" << bds_dnav_eph->toe << " and BDS Week="
-                               << bds_dnav_eph->WN;
-                    // update/insert new ephemeris record to the global ephemeris map
-                    // if (d_rinex_output_enabled && d_rp->is_rinex_header_written())  // The header is already written, we can now log the navigation message data
-                    //     {
-                    //         bool new_annotation = false;
-                    //         if (d_internal_pvt_solver->beidou_dnav_ephemeris_map.find(bds_dnav_eph->PRN) == d_internal_pvt_solver->beidou_dnav_ephemeris_map.cend())
-                    //             {
-                    //                 new_annotation = true;
-                    //             }
-                    //         else
-                    //             {
-                    //                 if (d_internal_pvt_solver->beidou_dnav_ephemeris_map[bds_dnav_eph->PRN].toc != bds_dnav_eph->toc)
-                    //                     {
-                    //                         new_annotation = true;
-                    //                     }
-                    //             }
-                    //         if (new_annotation == true)
-                    //             {
-                    //                 // New record!
-                    //                 std::map<int32_t, Beidou_Dnav_Ephemeris> new_bds_eph;
-                    //                 new_bds_eph[bds_dnav_eph->PRN] = *bds_dnav_eph;
-                    //                 d_rp->log_rinex_nav_bds_dnav(d_type_of_rx, new_bds_eph);
-                    //             }
-                    //     }
-                    d_internal_pvt_solver->beidou_dnav_ephemeris_map[bds_dnav_eph->PRN] = *bds_dnav_eph;
-                    if (d_enable_rx_clock_correction == true)
-                        {
-                            d_user_pvt_solver->beidou_dnav_ephemeris_map[bds_dnav_eph->PRN] = *bds_dnav_eph;
-                        }
-                    if (bds_dnav_eph->SV_health != 0)
-                        {
-                            std::cout << TEXT_RED << "Satellite " << Gnss_Satellite(std::string("Beidou"), bds_dnav_eph->PRN)
-                                      << " reports an unhealthy status,";
-                            if (d_use_unhealthy_sats)
-                                {
-                                    std::cout << " use PVT solutions at your own risk" << TEXT_RESET << '\n';
-                                }
-                            else
-                                {
-                                    std::cout << " not used for navigation" << TEXT_RESET << '\n';
-                                }
-                        }
-                }
-            else if (msg_type_hash_code == d_beidou_dnav_iono_sptr_type_hash_code)
-                {
-                    // ### BeiDou IONO ###
-                    const auto bds_dnav_iono = wht::any_cast<std::shared_ptr<Beidou_Dnav_Iono>>(pmt::any_ref(msg));
-                    d_internal_pvt_solver->beidou_dnav_iono = *bds_dnav_iono;
-                    if (d_enable_rx_clock_correction == true)
-                        {
-                            d_user_pvt_solver->beidou_dnav_iono = *bds_dnav_iono;
-                        }
-                    DLOG(INFO) << "New BeiDou DNAV IONO record has arrived";
-                }
-            else if (msg_type_hash_code == d_beidou_dnav_utc_model_sptr_type_hash_code)
-                {
-                    // ### BeiDou UTC MODEL ###
-                    const auto bds_dnav_utc_model = wht::any_cast<std::shared_ptr<Beidou_Dnav_Utc_Model>>(pmt::any_ref(msg));
-                    d_internal_pvt_solver->beidou_dnav_utc_model = *bds_dnav_utc_model;
-                    if (d_enable_rx_clock_correction == true)
-                        {
-                            d_user_pvt_solver->beidou_dnav_utc_model = *bds_dnav_utc_model;
-                        }
-                    DLOG(INFO) << "New BeiDou DNAV UTC record has arrived";
-                }
-            else if (msg_type_hash_code == d_beidou_dnav_almanac_sptr_type_hash_code)
-                {
-                    // ### BeiDou ALMANAC ###
-                    const auto bds_dnav_almanac = wht::any_cast<std::shared_ptr<Beidou_Dnav_Almanac>>(pmt::any_ref(msg));
-                    d_internal_pvt_solver->beidou_dnav_almanac_map[bds_dnav_almanac->PRN] = *bds_dnav_almanac;
-                    if (d_enable_rx_clock_correction == true)
-                        {
-                            d_user_pvt_solver->beidou_dnav_almanac_map[bds_dnav_almanac->PRN] = *bds_dnav_almanac;
-                        }
-                    DLOG(INFO) << "New BeiDou DNAV almanac record has arrived";
-                }
+            // // *********************** BeiDou telemetry ************************
+            // else if (msg_type_hash_code == d_beidou_dnav_ephemeris_sptr_type_hash_code)
+            //     {
+            //         // ### Beidou EPHEMERIS ###
+            //         const auto bds_dnav_eph = wht::any_cast<std::shared_ptr<Beidou_Dnav_Ephemeris>>(pmt::any_ref(msg));
+            //         DLOG(INFO) << "Ephemeris record has arrived from SAT ID "
+            //                    << bds_dnav_eph->PRN << " (Block "
+            //                    << bds_dnav_eph->satelliteBlock[bds_dnav_eph->PRN] << ")"
+            //                    << "inserted with Toe=" << bds_dnav_eph->toe << " and BDS Week="
+            //                    << bds_dnav_eph->WN;
+            //         // update/insert new ephemeris record to the global ephemeris map
+            //         // if (d_rinex_output_enabled && d_rp->is_rinex_header_written())  // The header is already written, we can now log the navigation message data
+            //         //     {
+            //         //         bool new_annotation = false;
+            //         //         if (d_internal_pvt_solver->beidou_dnav_ephemeris_map.find(bds_dnav_eph->PRN) == d_internal_pvt_solver->beidou_dnav_ephemeris_map.cend())
+            //         //             {
+            //         //                 new_annotation = true;
+            //         //             }
+            //         //         else
+            //         //             {
+            //         //                 if (d_internal_pvt_solver->beidou_dnav_ephemeris_map[bds_dnav_eph->PRN].toc != bds_dnav_eph->toc)
+            //         //                     {
+            //         //                         new_annotation = true;
+            //         //                     }
+            //         //             }
+            //         //         if (new_annotation == true)
+            //         //             {
+            //         //                 // New record!
+            //         //                 std::map<int32_t, Beidou_Dnav_Ephemeris> new_bds_eph;
+            //         //                 new_bds_eph[bds_dnav_eph->PRN] = *bds_dnav_eph;
+            //         //                 d_rp->log_rinex_nav_bds_dnav(d_type_of_rx, new_bds_eph);
+            //         //             }
+            //         //     }
+            //         d_internal_pvt_solver->beidou_dnav_ephemeris_map[bds_dnav_eph->PRN] = *bds_dnav_eph;
+            //         if (d_enable_rx_clock_correction == true)
+            //             {
+            //                 d_user_pvt_solver->beidou_dnav_ephemeris_map[bds_dnav_eph->PRN] = *bds_dnav_eph;
+            //             }
+            //         if (bds_dnav_eph->SV_health != 0)
+            //             {
+            //                 std::cout << TEXT_RED << "Satellite " << Gnss_Satellite(std::string("Beidou"), bds_dnav_eph->PRN)
+            //                           << " reports an unhealthy status,";
+            //                 if (d_use_unhealthy_sats)
+            //                     {
+            //                         std::cout << " use PVT solutions at your own risk" << TEXT_RESET << '\n';
+            //                     }
+            //                 else
+            //                     {
+            //                         std::cout << " not used for navigation" << TEXT_RESET << '\n';
+            //                     }
+            //             }
+            //     }
+            // else if (msg_type_hash_code == d_beidou_dnav_iono_sptr_type_hash_code)
+            //     {
+            //         // ### BeiDou IONO ###
+            //         const auto bds_dnav_iono = wht::any_cast<std::shared_ptr<Beidou_Dnav_Iono>>(pmt::any_ref(msg));
+            //         d_internal_pvt_solver->beidou_dnav_iono = *bds_dnav_iono;
+            //         if (d_enable_rx_clock_correction == true)
+            //             {
+            //                 d_user_pvt_solver->beidou_dnav_iono = *bds_dnav_iono;
+            //             }
+            //         DLOG(INFO) << "New BeiDou DNAV IONO record has arrived";
+            //     }
+            // else if (msg_type_hash_code == d_beidou_dnav_utc_model_sptr_type_hash_code)
+            //     {
+            //         // ### BeiDou UTC MODEL ###
+            //         const auto bds_dnav_utc_model = wht::any_cast<std::shared_ptr<Beidou_Dnav_Utc_Model>>(pmt::any_ref(msg));
+            //         d_internal_pvt_solver->beidou_dnav_utc_model = *bds_dnav_utc_model;
+            //         if (d_enable_rx_clock_correction == true)
+            //             {
+            //                 d_user_pvt_solver->beidou_dnav_utc_model = *bds_dnav_utc_model;
+            //             }
+            //         DLOG(INFO) << "New BeiDou DNAV UTC record has arrived";
+            //     }
+            // else if (msg_type_hash_code == d_beidou_dnav_almanac_sptr_type_hash_code)
+            //     {
+            //         // ### BeiDou ALMANAC ###
+            //         const auto bds_dnav_almanac = wht::any_cast<std::shared_ptr<Beidou_Dnav_Almanac>>(pmt::any_ref(msg));
+            //         d_internal_pvt_solver->beidou_dnav_almanac_map[bds_dnav_almanac->PRN] = *bds_dnav_almanac;
+            //         if (d_enable_rx_clock_correction == true)
+            //             {
+            //                 d_user_pvt_solver->beidou_dnav_almanac_map[bds_dnav_almanac->PRN] = *bds_dnav_almanac;
+            //             }
+            //         DLOG(INFO) << "New BeiDou DNAV almanac record has arrived";
+            //     }
             else
                 {
                     LOG(WARNING) << "msg_handler_telemetry unknown object type!";
@@ -1667,10 +1666,10 @@ std::map<int, Galileo_Almanac> rtklib_pvt_gs::get_galileo_almanac_map() const
 }
 
 
-std::map<int, Beidou_Dnav_Ephemeris> rtklib_pvt_gs::get_beidou_dnav_ephemeris_map() const
-{
-    return d_internal_pvt_solver->beidou_dnav_ephemeris_map;
-}
+// std::map<int, Beidou_Dnav_Ephemeris> rtklib_pvt_gs::get_beidou_dnav_ephemeris_map() const
+// {
+//     return d_internal_pvt_solver->beidou_dnav_ephemeris_map;
+// }
 
 
 std::map<int, Gnss_Synchro> rtklib_pvt_gs::get_observables_map() const
@@ -2473,7 +2472,16 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                             // uint32_t last_tow = 0;
                             // double last_interp_TOW_ms = 0;
                             double last_RX_time = 0;
+                            char buffer[1000];
+
                             // uint32_t last_TOW_at_current_symbol_ms = 0;
+                            memset(&buffer, '\0', sizeof(buffer));
+                            int msg = 0xd4;
+                            int tam = 4;
+                            char tmp[200];
+                            memset(tmp, '\0', sizeof(char));
+                            sprintf(&buffer[0], "%d", msg);
+                            int sizemsg=0;
                             for (const auto& y : get_observables_map())
                                 {
                                     // for (const auto& x : get_gps_ephemeris_map())
@@ -2496,7 +2504,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                             double delta_tempo;
                                                             double nvotempo;
                                                             double limiar = 0.2;
-                                                            int iter = 0;
+                                                            // int iter = 0;
                                                             std::vector<double> LastSatPos(3);
                                                             // gps_ephem.at(x.first).satellitePosition(y.second.RX_time);
                                                             // while(limiar<diffSATSAT)
@@ -2531,19 +2539,20 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                             variavelTempo = nvotempo - d_user_pvt_solver->get_time_offset_s();
                                                             gps_ephem.at(x.first).satellitePosition(variavelTempo);
                                                             // ###############################
-                                                            // memset(&buffer,'\0',sizeof(buffer));
-                                                            // sprintf(&buffer[0],
-                                                            // "0x4d%d%lf%lf%lf%lf%lf%lf%lf%lf\n",
-                                                            // x.second.PRN,
-                                                            // y.second.Pseudorange_m,
-                                                            // y.second.Pseudorange_m,
-                                                            // x.second.satpos_X,
-                                                            // x.second.satpos_Y,
-                                                            // x.second.satpos_Z,
-                                                            // x.second.satvel_X,
-                                                            // x.second.satvel_Y,
-                                                            // x.second.satvel_Z);
-                                                            // serial4send(&buffer[0]);
+                                                            memset(tmp,'\0',sizeof(tmp));
+                                                            sizemsg=sprintf(&tmp[0],
+                                                            "%d%lf%lf%lf%lf%lf%lf%lf%lf",
+                                                            x.second.PRN,
+                                                            y.second.Pseudorange_m,
+                                                            y.second.Pseudorange_m,
+                                                            x.second.satpos_X,
+                                                            x.second.satpos_Y,
+                                                            x.second.satpos_Z,
+                                                            x.second.satvel_X,
+                                                            x.second.satvel_Y,
+                                                            x.second.satvel_Z);
+                                                            strcat(buffer,tmp);
+                                                            //  tam+=31;
                                                             // ###############################
                                                             // gps_ephem.at(x.first).satellitePosition(y.second.transmTime_ms/1000.0);
                                                             // gps_ephem.at(x.first).satellitePosition(y.second.transmitTime_ms_somado/1000.0);
@@ -2670,7 +2679,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                         }
                                 }
                             // fileRx << "\n";
-                            
+                            // serial4send(&buffer[0]);
                             // filePosRecp
                             //     << " "
                             //     << d_internal_pvt_solver->get_rx_pos()[0]
@@ -2709,7 +2718,23 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                             //     << " "
                             //     << d_internal_pvt_solver->get_rx_vel()[2]
                             //     << "\n";
-                            // Salvar Dados para Teste
+                            // ##################################################
+                            serial4send(&buffer[0]);
+                            memset(&buffer, '\0', sizeof(buffer));
+                            int msg2 = 0xd5;
+                            sprintf(&buffer[0],
+                                "%d%lf%lf%lf%lf%lf%lf%lf",
+                                msg2,
+                                d_internal_pvt_solver->get_rx_pos()[0],
+                                d_internal_pvt_solver->get_rx_pos()[1],
+                                d_internal_pvt_solver->get_rx_pos()[2],
+                                d_internal_pvt_solver->get_rx_vel()[0],
+                                d_internal_pvt_solver->get_rx_vel()[1],
+                                d_internal_pvt_solver->get_rx_vel()[2],
+                                last_RX_time);
+                            serial4send(&buffer[0]);
+                            // ##################################################
+                            //  Salvar Dados para Teste
                             DLOG(INFO) << "RX clock offset: " << d_user_pvt_solver->get_time_offset_s() << "[s]";
 
                             // std::cout

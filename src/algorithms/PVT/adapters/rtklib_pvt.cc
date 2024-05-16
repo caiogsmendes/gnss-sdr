@@ -830,6 +830,8 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
 
     rtkinit(&rtk, &rtklib_configuration_options);
 
+
+    // Caio : Eu comentei os outputs kml/geojson/gpx/xml/nmea/rtcm
     // Outputs
     const bool default_output_enabled = configuration->property(role + ".output_enabled", true);
     pvt_output_parameters.output_enabled = default_output_enabled;

@@ -48,7 +48,7 @@
 #endif
 
 // Caio 
-#include "frontend.h"
+// #include "frontend.h"
 #include "HEtechSerial.h"
 // #include "RGL.h"
 
@@ -59,7 +59,7 @@ using namespace google;
 }
 #endif
 
-internals GNSS_internals[48];
+// internals GNSS_internals[48];
 
 /*
  * Concurrent queues that communicates the Telemetry Decoder
@@ -73,8 +73,8 @@ Concurrent_Map<Gps_Acq_Assist> global_gps_acq_assist_map;
 
 int main(int argc, char** argv)
 {
-    frontend_rst();
-    frontend_init();
+    // frontend_rst();
+    // frontend_init();
     
     const std::string intro_help(
         std::string("\nGNSS-SDR is an Open Source GNSS Software Defined Receiver\n") +
@@ -151,8 +151,8 @@ int main(int argc, char** argv)
     std::chrono::time_point<std::chrono::system_clock> end;
     start = std::chrono::system_clock::now();
     int return_code = 0;
-    char buff[100] = "Main: Main Thread Initiated\n";
-    serial4send(&buff[0]);
+    // char buff[100] = "Main: Main Thread Initiated\n";
+    // serial4send(&buff[0]);
  
     try
         {

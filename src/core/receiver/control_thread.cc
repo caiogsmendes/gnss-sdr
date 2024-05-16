@@ -353,7 +353,7 @@ void ControlThread::serialcmd_listener(void)
 void ControlThread::serialcmd_timer(void)
 {
     auto tStartSteady = std::chrono::steady_clock::now();
-    int count = 0;
+    int count = 1;
     char buff[20];
     // std::time_t startWallTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     while (serialcmd_enabled_)
@@ -368,7 +368,7 @@ void ControlThread::serialcmd_timer(void)
                     // std::cout<< diff.count()/1000000<<"\n";
                     // sprintf(&buff[0],"Flag 1s, Count:%d \n",count++);
                     // serial4send(&buff[0]);
-                    std::cout<<"Flag 1s: "<<count++<<"\n";
+                    std::cout<<"Flag_1s_count: "<<count++<<"\n";
                     tStartSteady = std::chrono::steady_clock::now();
                 }
         }

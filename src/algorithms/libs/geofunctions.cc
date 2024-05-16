@@ -530,7 +530,7 @@ void cart2utm(const arma::vec &r_eb_e, int zone, arma::vec &r_enu)
             iterations = iterations + 1;
             if (iterations > 100)
                 {
-                    std::cout << "Failed to approximate U with desired precision. U - oldU: " << U - oldU << '\n';
+                    // std::cout << "Failed to approximate U with desired precision. U - oldU: " << U - oldU << '\n';
                     break;
                 }
         }

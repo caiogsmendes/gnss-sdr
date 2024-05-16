@@ -229,7 +229,8 @@ extern "C"
     {
         // Configs de Escrita UART
         // const char *device = "/dev/colibri-uartc";
-        const char *device = "/dev/ttyUSB0";
+        const char *device = "/dev/ttyLP2";
+        // const char *device = "/dev/ttyUSB0";
         int flags = O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK; //Tirei o NonBlock pro poll bloquear a escrita
         //
         struct serial_s comm = HEserial_connect(device, flags);
@@ -245,7 +246,8 @@ extern "C"
     {
         // Configs de Leitura UART
         // const char *device = "/dev/colibri-uartc";
-        const char *device = "/dev/ttyUSB0";
+        const char *device = "/dev/ttyLP2";
+        // const char *device = "/dev/ttyUSB0";
         int flags = O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK;
 
         struct serial_s comm = HEserial_connect(device, flags);
@@ -259,7 +261,8 @@ extern "C"
     void serial4readByte(char *dados)
     {
         // Configs de Leitura UART
-        const char *device = "/dev/ttyUSB0";
+        // const char *device = "/dev/ttyUSB0";
+        const char *device = "/dev/ttyLP2";
         // const char *device = "/dev/colibri-uartc";
         int flags = O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK;
         struct serial_s comm = HEserial_connect(device, flags);
@@ -304,7 +307,7 @@ extern "C"
         // comm.tty.c_cc[VTIME] = 0;
         // comm.tty.c_cc[VMIN] = 232; // É bom revisar esses números, n sei se leitura e escrita usariam os mesmos parâmetros.
         
-        // cfmakeraw(&comm.tty);
+        cfmakeraw(&comm.tty);
         
         tcsetattr(comm.fd, TCSANOW, &comm.tty);
         
