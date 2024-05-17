@@ -180,7 +180,7 @@ target_link_libraries(core_receiver
         Glog::glog
         Armadillo::armadillo
         pvt_libs
-        curses
+        # curses
 )
 
 if(ENABLE_ARMA_NO_DEBUG)
