@@ -12,7 +12,7 @@ else()
     add_executable(gnss-sdr main.cc)
 endif()
 
-# add_library(caio-mod frontend.cc)
+add_library(caio-mod frontend.cc)
 
 target_link_libraries(gnss-sdr
     PRIVATE
@@ -23,7 +23,7 @@ target_link_libraries(gnss-sdr
         Gflags::gflags
         Glog::glog
         Threads::Threads
-        # caio-mod
+        caio-mod
         gpiod
         pvt_libs
 )

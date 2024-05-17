@@ -309,9 +309,41 @@ void ControlThread::serialcmd_listener(void)
     char buff;
     char device[] = "/dev/ttyUSB0";
     serial_cmd_interface_.run_serial_listener(&device[0], &buff, flowgraph_);
-
-    // while (serialcmd_enabled_)
-    //     {
+    int lastcmd = 0xFF;
+    while (serialcmd_enabled_)
+    {
+        // Seleção de Modos:
+        char msg=0;
+        serial4readByte(&msg);
+        switch ((int)msg)
+        {
+            case 0x00:
+            apply_action(0);
+            // char msgStop = 0xA;
+            // serial4send(&msg);
+            break;
+        case 0x02:
+            lastcmd = 0x02;
+            apply_action(1);
+            // char msgStandby = 0xB;
+            // serial4send(&msgStandby);
+            break;
+        case 0xd4:
+            /* code */
+            lastcmd = 0xd4;
+            break;
+        case 0xd5:
+            /* code */
+            lastcmd = 0xd5;
+            break;
+        case 0xd6:
+            // lastcmd = 0xd6;
+            break;
+        default:
+            //Standard Procedure
+            serial_cmd_interface_.DersoProtocol();
+            break;
+        }
     //         serial4readByte(&buff);
     //         // Caio
     //         //  const std::string input = configuration_->property("GNSS-SDR.serial_cmd_device","/dev/ttyUSB0");
@@ -347,18 +379,18 @@ void ControlThread::serialcmd_listener(void)
     //                 }
     //             }
     //     }
-    // }
+    }
 }
 
 void ControlThread::serialcmd_timer(void)
 {
-    auto tStartSteady = std::chrono::steady_clock::now();
+    auto tStartSteady = std::chrono::high_resolution_clock::now();
     int count = 1;
     char buff[20];
     // std::time_t startWallTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     while (serialcmd_enabled_)
         {
-            auto tEndSteady = std::chrono::steady_clock::now();
+            auto tEndSteady = std::chrono::high_resolution_clock::now();
             std::chrono::nanoseconds diff = tEndSteady - tStartSteady;
             float tempo = diff.count();
             // std::time_t endWallTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -369,7 +401,7 @@ void ControlThread::serialcmd_timer(void)
                     // sprintf(&buff[0],"Flag 1s, Count:%d \n",count++);
                     // serial4send(&buff[0]);
                     std::cout<<"Flag_1s_count: "<<count++<<"\n";
-                    tStartSteady = std::chrono::steady_clock::now();
+                    tStartSteady = std::chrono::high_resolution_clock::now();
                 }
         }
 }

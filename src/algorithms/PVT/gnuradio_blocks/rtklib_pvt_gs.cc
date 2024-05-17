@@ -2496,7 +2496,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                             // double variavel = (y.second.interp_TOW_ms / 1000.0) - y.second.Pseudorange_m / SPEED_OF_LIGHT_M_S;
                                                             // double variavel = (y.second.RX_time) - y.second.Pseudorange_m / SPEED_OF_LIGHT_M_S - x.second.af0;
                                                             // double variavel = (y.second.TOW_at_current_symbol_ms) - y.second.Pseudorange_m / SPEED_OF_LIGHT_M_S - x.second.af0;
-
+                                                            // y.second.TOW_at_current_symbol_ms
                                                             // Geometrical Approuch on time:
                                                             double tempoo = y.second.RX_time;
                                                             double variavelTempo;
