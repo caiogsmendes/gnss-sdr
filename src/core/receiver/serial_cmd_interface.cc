@@ -282,7 +282,7 @@ void SerialCmdInterface::CmdParser(char* cmd)
             }break;
         default:
             char buff = 0xFF;
-            int bytes = serial4send(&buff);
+            // int bytes = serial4send(&buff);
     }
 }
 
@@ -327,7 +327,7 @@ std::string SerialCmdInterface::serial_status(const std::vector<std::string> &co
     char buff[100];
     memset(buff,'\0',sizeof(buff));
     sprintf(buff, "Tá Rodando ...", NULL) ;
-    serial4send(&buff[0]);
+    // serial4send(&buff[0]);
 }
 
 // void SerialCmdInterface::serial_status(void)
@@ -376,7 +376,7 @@ int SerialCmdInterface::DersoProtocol(void)
                 longitude_deg,
                 height_m,
                 0xFF);
-            bytes = serial4send(&buff[0]);
+            // bytes = serial4send(&buff[0]);
         }
         // else{char buff_err = 0xE0; bytes = serial4send(&buff_err);}
 

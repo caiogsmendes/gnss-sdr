@@ -1,12 +1,13 @@
 //#include <string>
 #ifndef _HETECHSERIAL_H_
 #define _HETECHSERIAL_H_
-
+#include <cstdint>
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include <stdio.h>   // I/O definitions
+
 #include <unistd.h>  // Standart Symbolic Constants
 #include <fcntl.h>   // File Control Definitions
 #include <termios.h> // POSIX Terminal Control Definitions
@@ -42,18 +43,21 @@ extern "C" {
 
 
 struct serial_s HEserial_connect(const char*, int);
-int HEserial_envio(serial_s*, char*);
-int HEserial_leitura(serial_s*, char*);
-char HEserial_leitura_byte(serial_s*, char*);
+int HEserial_envio(serial_s*, uint8_t*);
+int HEserial_leitura(serial_s*, uint8_t*);
+char HEserial_leitura_byte(serial_s*, uint8_t*);
 void HEserial_disconnect(serial_s*);
-int serial4send(char*);
-int serial4read(char*);
-void serial4readByte(char*);
+int serial4send(uint8_t*);
+int serial4read(uint8_t*);
+void serial4readByte(uint8_t*);
 int enviaar(char *msg);
+
 
 #ifdef __cplusplus
 }
 #endif
+
+void Double2Hex(uint8_t* output, double* input);
 
 #endif
 

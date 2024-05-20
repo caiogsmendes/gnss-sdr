@@ -23,7 +23,7 @@ set(PVT_LIB_SOURCES
     monitor_ephemeris_udp_sink.cc
     has_simple_printer.cc
     geohash.cc
-    HEtechSerial.cpp
+    HEtechSerial.cc
 )
 
 set(PVT_LIB_HEADERS

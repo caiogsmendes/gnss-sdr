@@ -314,7 +314,7 @@ void ControlThread::serialcmd_listener(void)
     {
         // Seleção de Modos:
         char msg=0;
-        serial4readByte(&msg);
+        // serial4readByte(&msg);
         switch ((int)msg)
         {
             case 0x00:
@@ -1094,7 +1094,7 @@ void ControlThread::apply_action(unsigned int what)
             break;
         case 1:
             {char messg[] = "Caio: Receiver Restart\n";
-            serial4send(&messg[0]);
+            // serial4send(&messg[0]);
             std::cout<<TEXT_BOLD_BLUE<<"Caio: Receiver Restart"<<TEXT_RESET<<"\n";
             LOG(INFO) << "Received action RESTART";
             stop_ = true;
@@ -1147,21 +1147,21 @@ void ControlThread::apply_action(unsigned int what)
             {
                 std::cout << TEXT_BOLD_BLUE << "Caio: ControlThread::apply_action(15)" << TEXT_RESET << "\n";
                 char buf[] = "Caio: ControlThread::apply_action(15)";
-                serial4send(&buf[0]);
+                // serial4send(&buf[0]);
                 break;
             }
         case 16:
             {
                 std::cout << TEXT_BOLD_BLUE << "Front-End Reset " << TEXT_RESET << "\n";
                 char buff[] = "Front-End Reset";
-                serial4send(&buff[0]);
+                // serial4send(&buff[0]);
                 break;
             }
         case 17:
             {
                 std::cout << TEXT_BOLD_BLUE << "Request Status" << TEXT_RESET << "\n";
                 char buff[] = "Status Requested\n";
-                serial4send(&buff[0]);
+                // serial4send(&buff[0]);
                 // serial_status();
                 break;
             }
@@ -1169,7 +1169,7 @@ void ControlThread::apply_action(unsigned int what)
             {
                 std::cout << TEXT_BOLD_BLUE << "Request Satellites Ephemeris" << TEXT_RESET << "\n";
                 char buff[] = "Satellites Ephemeris Requested\n";
-                serial4send(&buff[0]);
+                // serial4send(&buff[0]);
                 break;
             }
         case 19:

@@ -2472,16 +2472,17 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                             // uint32_t last_tow = 0;
                             // double last_interp_TOW_ms = 0;
                             double last_RX_time = 0;
-                            char buffer[1000];
-
+                            uint8_t buffer[1000];
                             // uint32_t last_TOW_at_current_symbol_ms = 0;
                             memset(&buffer, '\0', sizeof(buffer));
                             int msg = 0xd4;
-                            int tam = 4;
+                            int tam = sizeof(double)*8;
                             char tmp[200];
+                            // uint8_t test[tam + sizeof(int)];
                             memset(tmp, '\0', sizeof(char));
-                            sprintf(&buffer[0], "%d", msg);
+                            // sprintf(&buffer[0], "%d", msg);
                             int sizemsg=0;
+                            uint8_t test[8];
                             for (const auto& y : get_observables_map())
                                 {
                                     // for (const auto& x : get_gps_ephemeris_map())
@@ -2540,25 +2541,21 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                             gps_ephem.at(x.first).satellitePosition(variavelTempo);
                                                             // ###############################
                                                             memset(tmp,'\0',sizeof(tmp));
-                                                            sizemsg=sprintf(&tmp[0],
-                                                            "%d%lf%lf%lf%lf%lf%lf%lf%lf",
-                                                            x.second.PRN,
-                                                            y.second.Pseudorange_m,
-                                                            y.second.Pseudorange_m,
-                                                            x.second.satpos_X,
-                                                            x.second.satpos_Y,
-                                                            x.second.satpos_Z,
-                                                            x.second.satvel_X,
-                                                            x.second.satvel_Y,
-                                                            x.second.satvel_Z);
-                                                            strcat(buffer,tmp);
-                                                            //  tam+=31;
+                                                            // sizemsg=sprintf(&tmp[0],
+                                                            // "%d%lf%lf%lf%lf%lf%lf%lf%lf",
+                                                            // x.second.PRN,
+                                                            // y.second.Pseudorange_m,
+                                                            // y.second.Pseudorange_m,
+                                                            double temp = x.second.satpos_X;
+                                                            Double2Hex(&test[0] , &temp);
+                                                            // x.second.satpos_Y,
+                                                            // x.second.satpos_Z,
+                                                            // x.second.satvel_X,
+                                                            // x.second.satvel_Y,
+                                                            // x.second.satvel_Z);
+                                                            // strcat(buffer,tmp);
+
                                                             // ###############################
-                                                            // gps_ephem.at(x.first).satellitePosition(y.second.transmTime_ms/1000.0);
-                                                            // gps_ephem.at(x.first).satellitePosition(y.second.transmitTime_ms_somado/1000.0);
-                                                            // gps_ephem.at(x.first).satellitePosition(y.second.transmitTime_ms_sub_);
-                                                            // gps_ephem.at(x.first).sat.satvel_Z * x.second.satvel_Z;
-                                                            // x.second.satellitePosition(x.second.toe);
                                                             // std::cout
                                                             // fileRx
                                                             //     // << TEXT_BOLD_CYAN
@@ -2719,20 +2716,20 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                             //     << d_internal_pvt_solver->get_rx_vel()[2]
                             //     << "\n";
                             // ##################################################
-                            serial4send(&buffer[0]);
-                            memset(&buffer, '\0', sizeof(buffer));
-                            int msg2 = 0xd5;
-                            sprintf(&buffer[0],
-                                "%d%lf%lf%lf%lf%lf%lf%lf",
-                                msg2,
-                                d_internal_pvt_solver->get_rx_pos()[0],
-                                d_internal_pvt_solver->get_rx_pos()[1],
-                                d_internal_pvt_solver->get_rx_pos()[2],
-                                d_internal_pvt_solver->get_rx_vel()[0],
-                                d_internal_pvt_solver->get_rx_vel()[1],
-                                d_internal_pvt_solver->get_rx_vel()[2],
-                                last_RX_time);
-                            serial4send(&buffer[0]);
+                            // serial4send(&buffer[0]);
+                            // memset(&buffer, '\0', sizeof(buffer));
+                            // int msg2 = 0xd5;
+                            // sprintf(&buffer[0],
+                            //     "%d%lf%lf%lf%lf%lf%lf%lf",
+                            //     msg2,
+                            //     d_internal_pvt_solver->get_rx_pos()[0],
+                            //     d_internal_pvt_solver->get_rx_pos()[1],
+                            //     d_internal_pvt_solver->get_rx_pos()[2],
+                            //     d_internal_pvt_solver->get_rx_vel()[0],
+                            //     d_internal_pvt_solver->get_rx_vel()[1],
+                            //     d_internal_pvt_solver->get_rx_vel()[2],
+                            //     last_RX_time);
+                            // serial4send(&buffer[0]);
                             // ##################################################
                             //  Salvar Dados para Teste
                             DLOG(INFO) << "RX clock offset: " << d_user_pvt_solver->get_time_offset_s() << "[s]";
@@ -2853,3 +2850,17 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
 //     int counter = 0;
 //     d_internal_pvt_solver->gps_ephemeris_map.at(counter).satellitePosition()
 // }
+
+void Double2Hex(uint8_t* output, double* input)
+{
+    // Output -> vetor de msg
+    // Input -> valor a ser compactado
+    // Saída deve ser um vetor com 
+    // Double has 8 Bytes.
+    int count = 7;
+    while (count <= 8)
+        {
+            *output = (uint8_t)(*input)>>(8-count); count++;
+        }
+    output++;
+}

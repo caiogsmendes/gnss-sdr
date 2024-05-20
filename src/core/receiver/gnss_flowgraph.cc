@@ -2020,7 +2020,7 @@ void GNSSFlowgraph::apply_action(unsigned int who, unsigned int what)
         case 19:
             {
                 char buff[] = "_Gnss_Flowgraph\n";
-                serial4send(&buff[0]);
+                // serial4send(&buff[0]);
                 // SerialCmd_sptr_->DersoProtocol();
                 // serial_interface_.DersoProtocol();
                 break;
