@@ -44,10 +44,10 @@ extern "C"
     // struct pollfd ufds;
 
     // void HEserial_connect();
-    // void HEserial_send();
+    // void HEserial_s_tend();
     // void HEserial_put();
     // void HEserial_get();
-    // void HEserial_set();
+    // void HEserial_s_tet();
     // void HEserial_available();
     // void HEserial_close();
 
@@ -225,22 +225,39 @@ extern "C"
             close(fd3);
         }
 
-    int serial4send(uint8_t *data)
+    int serial4send(uint8_t *data, int* tam)
     {
         // Configs de Escrita UART
         // const char *device = "/dev/colibri-uartc";
         // const char *device = "/dev/ttyLP2";
-        const char *device = "/dev/ttyUSB0";
+        const char *device = "/dev/ttyUSB1";
         int flags = O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK; //Tirei o NonBlock pro poll bloquear a escrita
         //
-        struct serial_s comm = HEserial_connect(device, flags);
+        serial_s_t comm = HEserial_connect(device, B115200, flags);
         //
-        int bytes = HEserial_envio(&comm, data);
-        //
+        int bytes = HEserial_envio(&comm, data, tam);
+        // int bytes = 0;
         // printf("%d bytes enviados\n",bytes);
         HEserial_disconnect(&comm);
         return bytes;
     }
+
+    // int serial4send(double *data)
+    // {
+    //     // Configs de Escrita UART
+    //     // const char *device = "/dev/colibri-uartc";
+    //     // const char *device = "/dev/ttyLP2";
+    //     const char *device = "/dev/ttyUSB0";
+    //     int flags = O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK; //Tirei o NonBlock pro poll bloquear a escrita
+    //     //
+    //     serial_s_t comm = HEserial_connect(device, flags);
+    //     //
+    //     int bytes = HEserial_envio(&comm, data);
+    //     //
+    //     // printf("%d bytes enviados\n",bytes);
+    //     HEserial_disconnect(&comm);
+    //     return bytes;
+    // }
 
     int serial4read(uint8_t *data)
     {
@@ -250,7 +267,7 @@ extern "C"
         const char *device = "/dev/ttyUSB0";
         int flags = O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK;
 
-        struct serial_s comm = HEserial_connect(device, flags);
+        serial_s_t comm = HEserial_connect(device, B115200, flags);
         
         int bytes = HEserial_leitura(&comm, data);
         
@@ -265,29 +282,30 @@ extern "C"
         // const char *device = "/dev/ttyLP2";
         // const char *device = "/dev/colibri-uartc";
         int flags = O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK;
-        struct serial_s comm = HEserial_connect(device, flags);
-        *dados = HEserial_leitura_byte(&comm, dados);
+        serial_s_t comm = HEserial_connect(device, B115200, flags);
+        // *dados = HEserial_leitura_byte(&comm, dados);
         HEserial_disconnect(&comm);
         // return byte;
     }
 
     // ####### New Functions ##########
 
-    // struct serial_s HEserial_init(const char *device, int flags) // Não usar
+    // struct serial_s_t HEserial_init(const char *device, int flags) // Não usar
     // {
-    //     struct serial_s comm;
+    //     struct serial_s_t comm;
     //     comm.fd = *device;
     //     comm.flags = flags;
     //     return comm;
     // }
 
-    struct serial_s HEserial_connect(const char *device, int flags)
+    serial_s_t HEserial_connect(const char *device, int baudrate, int flags)
     {
-        struct serial_s comm;
+        serial_s_t comm;
         comm.fd = open(device, flags); // cria file para IO
         tcgetattr(comm.fd, &comm.tty); // pega atributos e cria struct termios(termios.h)
-        cfsetispeed(&comm.tty, B115200);
-        cfsetospeed(&comm.tty, B115200);
+        // cfsetispeed(&comm.tty, B115200);
+        // cfsetospeed(&comm.tty, B115200);
+        cfsetspeed(&comm.tty, baudrate);
         comm.tty.c_cflag &= ~PARENB;   // Disable geração/check de Bit de pariedade
         comm.tty.c_cflag &= ~CSTOPB;   // set 1 Stop Bit
         comm.tty.c_cflag |= CREAD | CLOCAL;
@@ -301,22 +319,26 @@ extern "C"
         comm.tty.c_lflag &= ~ISIG;                                                        // Disable interpretation of INTR, QUIT and SUSP
         comm.tty.c_iflag &= ~(IXON | IXOFF | IXANY);                                      // Turn off s/w flow ctrl
         comm.tty.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL); // Disable any special handling of received bytes
-        // comm.tty.c_oflag &= ~OPOST; // Prevent special interpretation of output bytes (e.g. newline chars)
-        // comm.tty.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
-        
+        comm.tty.c_oflag &= ~OPOST; // Prevent special interpretation of output bytes (e.g. newline chars)
+        comm.tty.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
+
+
+
         // comm.tty.c_cc[VTIME] = 0;
-        // comm.tty.c_cc[VMIN] = 232; // É bom revisar esses números, n sei se leitura e escrita usariam os mesmos parâmetros.
-        
+        //comm.tty.c_cc[VMIN] = 314; // É bom revisar esses números, n sei se leitura e escrita usariam os mesmos parâmetros.
+        // comm.tty.c_cc[VMIN] = 1;
+
         cfmakeraw(&comm.tty);
         
         tcsetattr(comm.fd, TCSANOW, &comm.tty);
-        
-        tcflush(comm.fd, TCIFLUSH);
+        tcdrain(comm.fd);
+        tcflush(comm.fd, TCIOFLUSH);
         comm.ufds.fd = comm.fd;
         return comm;
     }
 
-    int HEserial_envio(serial_s* comm, uint8_t* msg)
+    // int HEserial_envio(serial_s_t* comm, uint8_t* msg)
+    int HEserial_envio(serial_s_t* comm, uint8_t* msg, int* tam)
     {
         /**
          * Precisa abrir um buff aqui. Do contrário a função write, envia apenas 1 byte.
@@ -332,18 +354,45 @@ extern "C"
         // memset(&msg, '\0', sizeof(msg));
         // memcpy(&buff,msg,sizeof(buff));
         int result = 0;
-        comm->ufds.events = POLLOUT;
-        if (poll(&comm->ufds, 1, -1) > 0)
-        {
-            if (comm->ufds.revents & POLLOUT)
-            {
-                result = write(comm->fd, &msg, sizeof(msg));
-            }
-        }
+        // comm->ufds.events = POLLOUT;
+        // if (poll(&comm->ufds, 1, -1) > 0)
+        // {
+            // if (comm->ufds.revents & POLLOUT)
+            // {
+                result = write(comm->fd, &msg[0], *tam);
+            // }
+        // }
         return result;
     }
 
-    int HEserial_leitura(serial_s *comm, uint8_t *msg)
+// int HEserial_envio(serial_s_t* comm, double* msg)
+//     {
+//         /**
+//          * Precisa abrir um buff aqui. Do contrário a função write, envia apenas 1 byte.
+//          * Como estava sendo anteriormente, os parametros da função write estavam com ponteiros e o sizeof() estava retornando 
+//          * o valor do tamanho do ponteiro e não do vetor char.
+//          * Então esse memcpy() vai ter que ficar.
+//         */
+
+//         // char buff[1000];
+//         // uint8_t buff[1000];
+
+//         // Limpar o buffer de caracteres espúrios
+//         // memset(&msg, '\0', sizeof(msg));
+//         // memcpy(&buff,msg,sizeof(buff));
+//         int result = 0;
+//         comm->ufds.events = POLLOUT;
+//         if (poll(&comm->ufds, 1, -1) > 0)
+//         {
+//             if (comm->ufds.revents & POLLOUT)
+//             {
+//                 result = write(comm->fd, &msg, sizeof(msg));
+//             }
+//         }
+//         return result;
+//     }
+
+    int HEserial_leitura(serial_s_t *comm, uint8_t *msg)
     {
         // Limpar o buffer se characteres espúrios
         memset(comm->rxbuff, '\0', sizeof(comm->rxbuff));
@@ -360,7 +409,8 @@ extern "C"
         return result;
     }
 
-    char HEserial_leitura_byte(serial_s *comm, uint8_t *msg)
+    // char HEserial_leitura_byte(serial_s_t *comm, char *msg)
+    char HEserial_leitura_byte(serial_s_t *comm)
     {
         // Limpar o buffer se characteres espúrios
         // memset(comm->rxbuff, '\0', sizeof(comm->rxbuff));
@@ -377,11 +427,127 @@ extern "C"
         return comm->buffrx;
     }
 
-    void HEserial_disconnect(serial_s *comm)
+    void HEserial_disconnect(serial_s_t *comm)
     {
         close(comm->fd);
     }
 
+    void Double2Hexx(uint8_t *output, double input)
+    { // Overloaded
+        // Output -> vetor de msg
+        // Input -> valor a ser compactado
+        for (int i = 0; i < 8; i++)
+            {
+                *output = *((uint8_t *)&input + i);
+                output = output + 1;
+            }
+    }
 
+    void Double2Hex(uint8_t *output, const double *input)
+    {
+        // Output -> vetor de msg
+        // Input -> valor a ser compactado
+        for (int i = 0; i < 8; i++)
+            {
+                *output = *((uint8_t *)input + i);
+                output = output + 1;
+            }
+    }
+
+    void Hex2Double(double *output, uint8_t *input)
+    {
+        for (int i = 0; i < 8; i++)
+            {
+                *((uint8_t *)output + i) = *input;
+                input++;
+            }
+    }
+
+    void Float2Hex(uint8_t *output, const float *input)
+    {
+        // Output -> vetor de msg
+        // Input -> valor a ser compactado
+        for (int i = 0; i < 4; i++)
+            {
+                *output = *((uint8_t *)input + i);
+                output = output + 1;
+            }
+    }
+
+    void Float2Hexx(uint8_t *output, float input)
+    {
+        // Output -> vetor de msg
+        // Input -> valor a ser compactado
+        for (int i = 0; i < 4; i++)
+            {
+                *output = *((uint8_t *)&input + i);
+                output = output + 1;
+            }
+    }
+
+    void Hex2Float(float *output, uint8_t *input)
+    {
+        for (int i = 0; i < 4; i++)
+            {
+                *((uint8_t *)output + i) = *input;
+                input++;
+            }
+    }
+
+    void Integer2Hex(uint8_t *output, const uint32_t *input)
+    {
+        // Output -> vetor de msg
+        // Input -> valor a ser compactado
+        for (int i = 0; i < 2; i++)
+            {
+                *output = *((uint8_t *)input + i);
+                output = output + 1;
+            }
+    }
+
+    void Integer2Hexx(uint8_t *output, const uint32_t input)
+    {
+        // Output -> vetor de msg
+        // Input -> valor a ser compactado
+        for (int i = 0; i < 2; i++)
+            {
+                *output = *((uint8_t *)&input + i);
+                output = output + 1;
+            }
+    }
+
+    void Hex2Integer(uint32_t *output, uint8_t *input)
+    {
+        for (int i = 0; i < 1; i++)
+            {
+                *((uint32_t *)output + i) = *input;
+                input++;
+            }
+    }
+
+    void char2Hex(uint8_t *output, const char *input)
+    {
+        // Output -> vetor de msg
+        // Input -> valor a ser compactado
+        for (int i = 0; i < 2; i++)
+            {
+                *output = *((uint8_t *)input + i);
+                output = output + 1;
+            }
+    }
+
+    void Hex2char(char *output, uint8_t *input)
+    {
+        for (int i = 0; i < 1; i++)
+            {
+                *((uint32_t *)output + i) = *input;
+                input++;
+            }
+    }
+
+    void msgPrep(uint8_t*, int)
+    {
+
+    }
 
 }

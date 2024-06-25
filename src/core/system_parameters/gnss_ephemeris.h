@@ -67,36 +67,36 @@ public:
 
     void satellitePosition(double transmitTime);  //!< Computes the ECEF SV coordinates and ECEF velocity
 
-    uint32_t PRN{};     //!< SV ID
-    double M_0{};       //!< Mean anomaly at reference time [rad]
-    double delta_n{};   //!< Mean motion difference from computed value [rad/sec]
-    double ecc{};       //!< Eccentricity
-    double sqrtA{};     //!< Square root of the semi-major axis [meters^1/2]
-    double OMEGA_0{};   //!< Longitude of ascending node of orbital plane at weekly epoch [rad]
-    double i_0{};       //!< Inclination angle at reference time [rad]
-    double omega{};     //!< Argument of perigee [rad]
-    double OMEGAdot{};  //!< Rate of right ascension [rad/sec]
-    double idot{};      //!< Rate of inclination angle [rad/sec]
-    double Cuc{};       //!< Amplitude of the cosine harmonic correction term to the argument of latitude [rad]
-    double Cus{};       //!< Amplitude of the sine harmonic correction term to the argument of latitude [rad]
-    double Crc{};       //!< Amplitude of the cosine harmonic correction term to the orbit radius [meters]
-    double Crs{};       //!< Amplitude of the sine harmonic correction term to the orbit radius [meters]
-    double Cic{};       //!< Amplitude of the cosine harmonic correction term to the angle of inclination [rad]
-    double Cis{};       //!< Amplitude of the sine harmonic correction term to the angle of inclination [rad]
-    int32_t toe{};      //!< Ephemeris reference time [s]
+        uint32_t PRN{};     //!< SV ID
+        double M_0{};       //!< Mean anomaly at reference time [rad]
+        double delta_n{};   //!< Mean motion difference from computed value [rad/sec]
+        double ecc{};       //!< Eccentricity
+        double sqrtA{};     //!< Square root of the semi-major axis [meters^1/2]
+        double OMEGA_0{};   //!< Longitude of ascending node of orbital plane at weekly epoch [rad]
+        double i_0{};       //!< Inclination angle at reference time [rad]
+        double omega{};     //!< Argument of perigee [rad]
+        double OMEGAdot{};  //!< Rate of right ascension [rad/sec]
+        double idot{};      //!< Rate of inclination angle [rad/sec]
+        double Cuc{};       //!< Amplitude of the cosine harmonic correction term to the argument of latitude [rad]
+        double Cus{};       //!< Amplitude of the sine harmonic correction term to the argument of latitude [rad]
+        double Crc{};       //!< Amplitude of the cosine harmonic correction term to the orbit radius [meters]
+        double Crs{};       //!< Amplitude of the sine harmonic correction term to the orbit radius [meters]
+        double Cic{};       //!< Amplitude of the cosine harmonic correction term to the angle of inclination [rad]
+        double Cis{};       //!< Amplitude of the sine harmonic correction term to the angle of inclination [rad]
+        int32_t toe{};      //!< Ephemeris reference time [s]
 
-    // Clock correction parameters
-    int32_t toc{};  //!< Clock correction data reference Time of Week [sec]
-    double af0{};   //!< SV clock bias correction coefficient [s]
-    double af1{};   //!< SV clock drift correction coefficient [s/s]
-    double af2{};   //!< SV clock drift rate correction coefficient [s/s^2]
+        // Clock correction parameters
+        int32_t toc{};  //!< Clock correction data reference Time of Week [sec]
+        double af0{};   //!< SV clock bias correction coefficient [s]
+        double af1{};   //!< SV clock drift correction coefficient [s/s]
+        double af2{};   //!< SV clock drift rate correction coefficient [s/s^2]
 
-    double satClkDrift{};  //!< SV clock drift
-    double dtr{};          //!< Relativistic clock correction term
+        double satClkDrift{};  //!< SV clock drift
+        double dtr{};          //!< Relativistic clock correction term
 
-    // Time
-    int32_t WN{};   //!< Week number
-    int32_t tow{};  //!< Time of Week
+        // Time
+        int32_t WN{};   //!< Week number
+        int32_t tow{};  //!< Time of Week
 
     // satellite positions
     double satpos_X{};  //!< Earth-fixed coordinate x of the satellite [m]. Intersection of the IERS Reference Meridian (IRM) and the plane passing through the origin and normal to the Z-axis.

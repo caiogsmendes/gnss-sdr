@@ -15,10 +15,41 @@
 //     }RGL_ctrl_handler;
 
 // }
+// class frontend{
 
-
+// public:
+// frontend();
+// ~frontend();
 void frontend_init(void);
-void frontend_rst(void);
+void frontend_SOFT_rst(void);
+void frontend_HARD_rst(void);
 
+// ##### GPIO #####
+// Obs: 2 gpio's
+// SODIMM 127 ------> Reset
+// SODIMM 129 ------> Power UP
+// int line_value = 0;
+// int line_value_pwr = 1;
+// int line;
+// int ret;
+// char chip[10];
+// unsigned int offset;
+// const char* gpiochip4 = "4";
+// const char* gpiochip5 = "5";
+// int SODIMM127 = 5;
+// int SODIMM129 = 3;
 
+// private:
+// int line_value;
+// int line_value_pwr;
+// int line;
+// int ret;
+// char chip[10];
+// unsigned int offset;
+// const char* gpiochip4;
+// const char* gpiochip5;
+// int SODIMM127;
+// int SODIMM129;
+
+// };
 #endif

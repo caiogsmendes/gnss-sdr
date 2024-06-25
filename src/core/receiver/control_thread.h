@@ -40,6 +40,7 @@
 
 //Caio
 #include "serial_cmd_interface.h"
+#include "HEtechSerial.h"
 
 #ifdef ENABLE_FPGA
 #include <boost/thread.hpp>  // for boost::thread
@@ -157,7 +158,10 @@ private:
 
     //Caio
     void serialcmd_listener(void);
+    // void serialcmd_printer(void);
     void serialcmd_timer(void);
+    // double deltaprangecomp(void);
+    void serial_sat_send(double*, double*, double*, double*, double*, double*);
     //
 
     void keyboard_listener();
@@ -190,7 +194,8 @@ private:
     
     //Caio
     std::thread serial_cmd_interface_thread_;
-    std::thread serial_timer_function_;
+    std::thread serial_cmd_interface_thread_w;
+    std::thread serial_timer_function_thread_;
     std::shared_ptr<GNSSFlowgraph> serial_cmd_flowgraph_;
     std::shared_ptr<Concurrent_Queue<pmt::pmt_t>> serial_control_queue_;
     
@@ -240,6 +245,9 @@ private:
 
     //Caio
     bool serialcmd_enabled_;
+    bool RGL_NavAux_enabled_;
+    serial_s_t comms;
+    uint16_t RGL_ctrl_{};
 
     bool pre_2009_file_;  // to override the system time to postprocess old gnss records and avoid wrong week rollover
 };

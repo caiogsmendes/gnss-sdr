@@ -212,6 +212,7 @@ void hybrid_observables_gs::msg_handler_pvt_to_observables(const pmt::pmt_t &msg
                         }
 
                     LOG(INFO) << "Corrected new RX Time offset: " << static_cast<int>(round(new_rx_clock_offset_s * 1000.0)) << "[ms]";
+                    rx_clk_offset_s = new_rx_clock_offset_s;
                 }
             if (pmt::any_ref(msg).type().hash_code() == d_int_type_hash_code)
                 {

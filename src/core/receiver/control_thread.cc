@@ -65,10 +65,11 @@
 #include <sys/ipc.h>               // for IPC_CREAT
 #include <sys/msg.h>               // for msgctl, msgget
 
-//Caio
-#include "serial_cmd_interface.h"
+// Caio
 #include "display.h"
+#include "serial_cmd_interface.h"
 #include <string.h>
+#include "HEtechSerial.h"
 
 #ifdef ENABLE_FPGA
 #include <boost/chrono.hpp>  // for steady_clock
@@ -150,25 +151,29 @@ ControlThread::ControlThread(std::shared_ptr<ConfigurationInterface> configurati
 void ControlThread::init()
 {
     telecommand_enabled_ = configuration_->property("GNSS-SDR.telecommand_enabled", false);
-    serialcmd_enabled_ = configuration_->property("GNSS-SDR.serial_cmd_enabled", true); // Caio: Default seria off, mas pra teste, true.
+    serialcmd_enabled_ = configuration_->property("GNSS-SDR.serial_cmd_enabled", true);  // Caio: Default seria off, mas pra teste, true.
     // OPTIONAL: specify a custom year to override the system time in order to postprocess old gnss records and avoid wrong week rollover
     pre_2009_file_ = configuration_->property("GNSS-SDR.pre_2009_file", false);
     // Instantiates a control queue, a GNSS flowgraph, and a control message factory
     control_queue_ = std::make_shared<Concurrent_Queue<pmt::pmt_t>>();
     cmd_interface_.set_msg_queue(control_queue_);  // set also the queue pointer for the telecommand thread
-    
+
     /** ###########################################################################
      * Caio -> copiei para a função de cmd serial.
      */
     //    serial_control_queue_ = std::make_shared<Concurrent_Queue<pmt::pmt_t>>();
-    std::cout <<TEXT_BOLD_BLUE<< "Caio: Control Thread Init()" <<TEXT_RESET
+    std::cout << TEXT_BOLD_BLUE << "Caio: Control Thread Init()" << TEXT_RESET
               << "\n";
 
     serial_cmd_interface_.set_msg_queue(control_queue_);
     // serial_cmd_interface_.set_channels(flowgraph_->get_channels());
     // serial_synchro_interface_.set_channels(channel_status_->get_current_status_map());
+    char device[] = {"/dev/ttyUSB0"};
+    /* | O_NOCTTY | O_NDELAY | O_NONBLOCK */
+    comms = HEserial_connect( &device[0], B115200, O_WRONLY );
+    // RGL_ctrl_
     // ###########################################################################
-    
+    // std::cout<<sizeof(uint16_t)<<"\n";
     if (well_formatted_configuration_)
         {
             try
@@ -284,10 +289,18 @@ ControlThread::~ControlThread()  // NOLINT(modernize-use-equals-default)
         }
     // Caio - ControlThread Destructor -> fecha as threads
     if (serial_cmd_interface_thread_.joinable())
-    {
-        std::cout<<TEXT_BOLD_BLUE<<"Caio: Thread join()"<<TEXT_RESET<<"\n";
-        serial_cmd_interface_thread_.join();
-    }
+        {
+            std::cout << TEXT_BOLD_BLUE << "Caio: Thread join()" << TEXT_RESET << "\n";
+            serial_cmd_interface_thread_.join();
+        }
+    // if (serial_cmd_interface_thread_w.joinable())
+    //     {
+    //         serial_cmd_interface_thread_w.join();
+    //     }
+    if (serial_timer_function_thread_.joinable())
+        {
+            serial_timer_function_thread_.join();
+        }
 }
 
 
@@ -302,110 +315,613 @@ void ControlThread::telecommand_listener()
 
 void ControlThread::serialcmd_listener(void)
 {
-    // if(serialcmd_enabled_)
-    // {
-    std::cout <<TEXT_BOLD_BLUE<< "Caio Debug: Serial thread Listener..."<<TEXT_RESET
-              << "\n";
-    char buff;
-    char device[] = "/dev/ttyUSB0";
-    serial_cmd_interface_.run_serial_listener(&device[0], &buff, flowgraph_);
-    int lastcmd = 0xFF;
-    while (serialcmd_enabled_)
-    {
-        // Seleção de Modos:
-        char msg=0;
-        // serial4readByte(&msg);
-        switch ((int)msg)
+    if (serialcmd_enabled_)
         {
-            case 0x00:
-            apply_action(0);
-            // char msgStop = 0xA;
-            // serial4send(&msg);
-            break;
-        case 0x02:
-            lastcmd = 0x02;
-            apply_action(1);
-            // char msgStandby = 0xB;
-            // serial4send(&msgStandby);
-            break;
-        case 0xd4:
-            /* code */
-            lastcmd = 0xd4;
-            break;
-        case 0xd5:
-            /* code */
-            lastcmd = 0xd5;
-            break;
-        case 0xd6:
-            // lastcmd = 0xd6;
-            break;
-        default:
-            //Standard Procedure
-            serial_cmd_interface_.DersoProtocol();
-            break;
-        }
-    //         serial4readByte(&buff);
-    //         // Caio
-    //         //  const std::string input = configuration_->property("GNSS-SDR.serial_cmd_device","/dev/ttyUSB0");
-    //         //  serial_cmd_interface_.run_serial_listener(input);
-    //         //  // serial_cmd_interface_.applicar((int)input);
+            std::cout << TEXT_BOLD_BLUE << "Caio Debug: Serial thread Listener..." << TEXT_RESET
+                      << "\n";
+            //  const char device = configuration_->property("GNSS-SDR.serial_device", "/dev/ttyUSB0");
+            // char device[] = {"/dev/ttyUSB0"};
+            // serial_s_t comms = HEserial_connect(&device[0], B115200, O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
+            // char buff;
+            // serial_cmd_interface_.run_serial_listener(&device[0], &buff, flowgraph_);
+    //         int lastcmd = 0xFF;
+    //         char test = 0x8d;
+            // tcflush(comms.fd, TCIFLUSH);
 
-    //         switch ((int)buff)
-    //             {
-    //             case 0x3e:
-    //                 {
-    //                     std::cout << buff << "\n";
-    //                     break;
-    //                 }
-    //             case 0xAF:
-    //                 {
-    //                     flowgraph_->apply_action(300,5);
-    //                 }
-    //             case 0x42:
-    //                 {
-    //                     std::cout << buff << "\n";
-    //                     std::cout <<TEXT_BOLD_BLUE<< "GNSS Desligado"<<TEXT_RESET
-    //                               << "\n";
-    //                     // flowgraph_->apply_action(300, 10);
-    //                     apply_action(1);
-    //                     char buffRX[] = "GNSS Desligado";
-    //                     serial4send(&buffRX[0]);
-    //                     break;
-    //                 }
-    //             default:
-    //                 {
-    //                     // std::cout << "\nCommando Invalido\n"
-    //                     //           << "\n";
-    //                 }
-    //             }
-    //     }
-    }
-}
-
-void ControlThread::serialcmd_timer(void)
-{
-    auto tStartSteady = std::chrono::high_resolution_clock::now();
-    int count = 1;
-    char buff[20];
-    // std::time_t startWallTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-    while (serialcmd_enabled_)
-        {
-            auto tEndSteady = std::chrono::high_resolution_clock::now();
-            std::chrono::nanoseconds diff = tEndSteady - tStartSteady;
-            float tempo = diff.count();
-            // std::time_t endWallTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-            if (tempo >= 1000000000)
+            while (serialcmd_enabled_)
                 {
-                    // std::cout<< "tempo: "<<std::ctime(&endWallTime)<<"\n";
-                    // std::cout<< diff.count()/1000000<<"\n";
-                    // sprintf(&buff[0],"Flag 1s, Count:%d \n",count++);
-                    // serial4send(&buff[0]);
-                    std::cout<<"Flag_1s_count: "<<count++<<"\n";
-                    tStartSteady = std::chrono::high_resolution_clock::now();
+    //                 std::shared_ptr<PvtInterface> pvt_ptr = flowgraph_->get_pvt();
+    //                 std::map<int, Gps_Ephemeris> gps_map = pvt_ptr->get_gps_ephemeris();
+    //                 std::map<int, Gnss_Synchro> gnss_synchro = pvt_ptr->get_gnss_observables();
+    //                 double last_RX_time;
+    //                 // #################################
+    //                 tcflush(comms.fd, TCIFLUSH);
+    //                 // int result = 0;
+    //                 // comms.ufds.events = POLLIN;
+    //                 // while (result<8)
+    //                 //     {
+    //                 //         if (poll(&comms.ufds, 1, -1) > 0)
+    //                 //             {
+    //                 //                 if (comms.ufds.revents & POLLIN)
+    //                 //                     {
+    //                 //                         // result += read(comms.fd, &comms.rxbuff[result], sizeof(comms.rxbuff));
+    //                 //                         result += read(comms.fd, &comms.rxbuff[result], 8);
+    //                 //                         // memcpy(msg, &comm->rxbuff, sizeof(comm->rxbuff));  // Está Redundante ??
+    //                 //                     }
+    //                 //             }
+    //                 //     }
+    //                 // uint8_t cmd = HEserial_leitura_byte(&comms);
+    //                 // uint8_t cmd = comms.rxbuff[1];
+    //                 // int result = select(comms.fd+1,,NULL,NULL,&(tout));
+    //                 uint8_t cmd = 0xd5;
+    //                 // ########################################
+    //                 double longitude_deg;
+    //                 double latitude_deg;
+    //                 double height_m;
+    //                 time_t UTC_time;
+    //                 lastcmd = 0xd5;
+    //                 double tempoo;
+    //                 double variavelTempo;
+    //                 double diffSATREC;
+    //                 double diffSATSAT = 1000;
+    //                 double delta_tempo;
+    //                 double nvotempo;
+    //                 double limiar = 0.2;
+    //                 double rx_posX, rx_posY, rx_posZ;
+    //                 double rx_velX, rx_velY, rx_velZ;
+    //                 double gps_time_offset;
+    //                 int index = 0;
+    //                 double deltaprange{};
+    //                 // int num_sat = d_user_pvt_solver->get_num_valid_observations();
+    //                 int num_sat = pvt_ptr->get_num_sat_observ();
+    //                 int tam = num_sat * 65;
+    //                 uint8_t msgVec[tam];
+    //                 // Seleção de Modos:
+    //                 switch (cmd)
+    //                     {
+    //                     case 0x01:
+    //                         {  // Modo: HotStart
+    //                             tcflush(comms.fd, TCIFLUSH);
+    //                             int result = 0;
+    //                             comms.ufds.events = POLLIN;
+    //                             while (result < 34)
+    //                                 {
+    //                                     if (poll(&comms.ufds, 1, -1) > 0)
+    //                                         {
+    //                                             if (comms.ufds.revents & POLLIN)
+    //                                                 {
+    //                                                     // result += read(comms.fd, &comms.rxbuff[result], sizeof(comms.rxbuff));
+    //                                                     result += read(comms.fd, &comms.rxbuff[result], 34);
+    //                                                     // memcpy(msg, &comm->rxbuff, sizeof(comm->rxbuff));  // Está Redundante ??
+    //                                                 }
+    //                                         }
+    //                                 }
+    //                             int check = 0;for(int i=0;i<33;i++){check ^= comms.rxbuff[i];}
+    //                             if(comms.rxbuff[34] != check){break;}
+    //                             Hex2Double(&latitude_deg, &comms.rxbuff[9]);
+    //                             Hex2Double(&longitude_deg, &comms.rxbuff[17]);
+    //                             Hex2Double(&height_m, &comms.rxbuff[25]);
+    //                             break;
+    //                         }
+    //                     case 0x02:
+    //                         { // Modo: NavAux
+    //                             this->RGL_NavAux_enabled_=true;
+
+    //                             break;
+    //                         }
+    //                     case 0xd4:
+    //                         {
+    //                             /* code */
+    //                             lastcmd = 0xd4;
+    //                             // HEserial_envio(&comms, (uint8_t *)(&lastcmd));
+    //                             break;
+    //                         }
+    //                     case 0xd5:
+    //                         {
+    //                             /* code */
+    //                             double last_RX_time;
+    //                             for (const auto &y : gnss_synchro)
+    //                                 {
+    //                                     for (const auto &x : gps_map)
+    //                                         {
+    //                                             if (y.second.System == 'G')
+    //                                                 {
+    //                                                     last_RX_time = y.second.RX_time;
+    //                                                     if (y.second.PRN == x.second.PRN)
+    //                                                         {
+    //                                                             lastcmd = 0xd5;
+    //                                                             tempoo = y.second.RX_time;
+    //                                                             std::vector<double> LastSatPos(3);
+    //                                                             gps_map.at(x.first).satellitePosition(tempoo);
+    //                                                             if ((pvt_ptr->get_latest_PVT_(&longitude_deg,
+    //                                                                      &latitude_deg,
+    //                                                                      &height_m,
+    //                                                                      &UTC_time,
+    //                                                                      &gps_time_offset,
+    //                                                                      &rx_posX,
+    //                                                                      &rx_posY,
+    //                                                                      &rx_posZ,
+    //                                                                      &rx_velX,
+    //                                                                      &rx_velY,
+    //                                                                      &rx_velZ) == true))
+    //                                                                 {
+    //                                                                     //  Step 1
+    //                                                                     LastSatPos[0] = x.second.satpos_X;
+    //                                                                     LastSatPos[1] = x.second.satpos_Y;
+    //                                                                     LastSatPos[2] = x.second.satpos_Z;
+
+    //                                                                     while (diffSATSAT > limiar)
+    //                                                                         {
+    //                                                                             //  Step 2
+    //                                                                             diffSATREC = sqrt(
+    //                                                                                 (rx_posX - LastSatPos[0])*(rx_posX - LastSatPos[0])+
+    //                                                                                 (rx_posY - LastSatPos[1])*(rx_posY - LastSatPos[1])+
+    //                                                                                 (rx_posZ - LastSatPos[2])*(rx_posZ - LastSatPos[2]));
+    //                                                                             delta_tempo = diffSATREC / SPEED_OF_LIGHT_M_S;
+    //                                                                             // Step 3
+    //                                                                             nvotempo = tempoo - delta_tempo;
+    //                                                                             gps_map.at(x.first).satellitePosition(nvotempo);
+    //                                                                             diffSATSAT = sqrt(
+    //                                                                                 (LastSatPos[0] - x.second.satpos_X) * (LastSatPos[0] - x.second.satpos_X) +
+    //                                                                                 (LastSatPos[1] - x.second.satpos_Y) * (LastSatPos[1] - x.second.satpos_Y) +
+    //                                                                                 (LastSatPos[2] - x.second.satpos_Z) * (LastSatPos[2] - x.second.satpos_Z));
+    //                                                                             LastSatPos[0] = x.second.satpos_X;
+    //                                                                             LastSatPos[1] = x.second.satpos_Y;
+    //                                                                             LastSatPos[2] = x.second.satpos_Z;
+    //                                                                         }
+    //                                                                     // Step 4
+    //                                                                     variavelTempo = nvotempo - gps_time_offset;
+    //                                                                     gps_map.at(x.first).satellitePosition(variavelTempo);
+    //                                                                 }
+    //                                                                 deltaprange = -SPEED_OF_LIGHT_M_S*(y.second.Carrier_Doppler_hz/1575420000);
+    //                                                         Integer2Hex(&msgVec[index+0], &x.second.PRN);
+    //                                                         Double2Hex(&msgVec[index+1], &y.second.Pseudorange_m);
+    //                                                         Double2Hex(&msgVec[index + 9], &deltaprange);
+    //                                                         Double2Hex(&msgVec[index + 17], &x.second.satpos_X);
+    //                                                         Double2Hex(&msgVec[index + 25], &x.second.satpos_Y);
+    //                                                         Double2Hex(&msgVec[index + 33], &x.second.satpos_Z);
+    //                                                         Double2Hex(&msgVec[index + 41], &x.second.satvel_X);
+    //                                                         Double2Hex(&msgVec[index + 49], &x.second.satvel_Y);
+    //                                                         Double2Hex(&msgVec[index + 57], &x.second.satvel_Z);
+    //                                                         index = index + 65;
+    //                                                         }
+    //                                                 }
+    //                                         }
+    //                                 }
+    //                             for (int i = 0; i < index; i++)
+    //                                 {
+    //                                     msgVec[index + 1] = msgVec[index + 1] ^ msgVec[i]; //CRC
+    //                                 }
+    //                             HEserial_envio(&comms, &msgVec[0], &tam);
+    //                         }
+    //                         break;
+    //                     default:
+    //                         {
+    //                             {
+    //                                 // Standard Procedure
+    //                                 // serial_cmd_interface_pvt_.DersoProtocol();
+
+    //                                 break;
+    //                             }
+    //                         }
+    //                     }
                 }
         }
 }
 
+void ControlThread::serialcmd_timer(void)
+{
+    std::shared_ptr<PvtInterface> pvt_ptr = flowgraph_->get_pvt();
+
+    auto tStartSteady = std::chrono::high_resolution_clock::now();
+    auto StartTime = tStartSteady;
+    int count = 1;
+    int contador{0};
+    double rx_posX, rx_posY, rx_posZ;
+    double rx_velX, rx_velY, rx_velZ;
+    time_t UTC_time;
+    double gdop, hdop, vdop, pdop;
+    int bytes;
+
+    int num_sat;
+    while (serialcmd_enabled_)
+        {
+            bytes = 0;
+            //             num_sat = pvt_ptr->get_num_sat_observ();
+            auto tEndSteady = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double, std::milli> tempo_ligado_ms = tEndSteady - tStartSteady;
+            //             // std::chrono::duration<double, std::micro> Uptempo1 = tEndSteady - tStartSteady;
+            //             // std::chrono::duration<double, std::nano> Uptempo2 = tEndSteady - tStartSteady;
+            //             double tempo_ligado_ms = Uptempo.count();
+            //             // double tempo_ligado1 = Uptempo1.count();
+            //             // double tempo_ligado2 = Uptempo2.count();
+            //             // std::cout<<std::setprecision(24)<< tempo_ligado_ms <<" ms || "<< tempo_ligado1 <<" us || "<<tempo_ligado2<<" ns"<<"\n";
+            std::chrono::nanoseconds diff = tEndSteady - tStartSteady;
+            float tempo = diff.count();
+            //             // std::time_t endWallTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+            if (tempo >= 1000000000)
+                            // if (diff.count() >= 1000000000)
+                {
+                    //                     // std::cout<< "tempo: "<<std::ctime(&endWallTime)<<"\n";
+                    //                     // std::cout<< diff.count()/1000000<<"\n";
+                    //                     // sprintf(&buff[0],"Flag 1s, Count:%d \n",count++);
+                    //                     // serial4send(&buff[0]);
+
+                    std::cout << "Flag_1s_count: " << count++ << "\n";
+                    tStartSteady = std::chrono::high_resolution_clock::now();
+                    //                     if (this->RGL_NavAux_enabled_ == true)
+                    //                         {
+                    if ((pvt_ptr->get_latest_PVT_2(&rx_posX,
+                             &rx_posY,
+                             &rx_posZ,
+                             &rx_velX,
+                             &rx_velY,
+                             &rx_velZ,
+                             &UTC_time,
+                             &gdop,
+                             &hdop,
+                             &vdop,
+                             &pdop) == true))
+                        {
+                            
+                            // #################################################################################################
+                            // #                               Só para efeitos de Debug                                        #
+                            // #################################################################################################
+                            std::shared_ptr<PvtInterface> pvt_ptr = flowgraph_->get_pvt();
+                            std::map<int, Gps_Ephemeris> gps_map = pvt_ptr->get_gps_ephemeris();
+                            std::map<int, Gnss_Synchro> gnss_synchro = pvt_ptr->get_gnss_observables();
+                            int num_sat = pvt_ptr->get_num_sat_observ();
+                            int tam = num_sat * 65 + 2;
+                            int msgSize = 52 + tam;
+                            uint8_t buff[msgSize]{0};
+                            // ############################    Primeira Msg - PVT (52 bytes Fixos)   ###########################
+                            buff[0] = 0xd5;                                    // ,
+                            Double2Hex(&buff[1], (double *)&tempo_ligado_ms);  // tem que ser em double
+                            //
+                            // Float2Hexx(&buff[9], 0x0000);   // modo
+                            // Float2Hexx(&buff[17], 0x0000);  // Estado
+                            //
+                            buff[9] = 0x00;
+                            buff[10] = 0x00;
+                            Float2Hex(&buff[11], (float *)&gdop);  // Colocar os dops como float
+                            Float2Hex(&buff[15], (float *)&hdop);
+                            Float2Hex(&buff[19], (float *)&vdop);
+                            Float2Hex(&buff[23], (float *)&pdop);
+                            Float2Hex(&buff[27], (float *)&rx_posX);
+                            Float2Hex(&buff[31], (float *)&rx_posY);
+                            Float2Hex(&buff[35], (float *)&rx_posZ);
+                            Float2Hex(&buff[39], (float *)&rx_velX);
+                            Float2Hex(&buff[43], (float *)&rx_velY);
+                            Float2Hex(&buff[47], (float *)&rx_velZ);
+                            for (int i = 0; i < 51; i++)
+                                {
+                                    buff[51] ^= buff[i];
+                                }
+                            //  #######################    Segunda Msg - Sat. Ephemerides - Variável    #########################
+
+
+
+                            double last_RX_time;
+                            // double longitude_deg;
+                            // double latitude_deg;
+                            // double height_m;
+                            // time_t UTC_time;
+                            double tempoo;
+                            double variavelTempo;
+                            double diffSATREC;
+                            double diffSATSAT = 1000;
+                            double delta_tempo;
+                            double nvotempo;
+                            double limiar = 0.2;
+
+                            double gps_time_offset;
+                            int index = 52;
+                            double deltaprange{0};
+
+                            // uint8_t msgVec[tam]{0};
+                            
+                            // Integer2Hexx(&msgVec[0],0xd4);
+                            buff[index] = 0xd4;
+                            // Double2Hexx(&buff[1], 70);
+                            uint8_t checks{0};
+                            for (const auto &y : gnss_synchro)
+                                {
+                                    for (const auto &x : gps_map)
+                                        {
+                                            if (y.second.System == 'G')
+                                                {
+                                                    last_RX_time = y.second.RX_time;
+                                                    if (y.second.PRN == x.second.PRN)
+                                                        {
+                                                            tempoo = y.second.RX_time;
+                                                            std::vector<double> LastSatPos(3);
+                                                            gps_map.at(x.first).satellitePosition(tempoo);
+                                                            // if ((pvt_ptr->get_latest_PVT_(&longitude_deg,
+                                                            //          &latitude_deg,
+                                                            //          &height_m,
+                                                            //          &UTC_time,
+                                                            //          &gps_time_offset,
+                                                            //          &rx_posX,
+                                                            //          &rx_posY,
+                                                            //          &rx_posZ,
+                                                            //          &rx_velX,
+                                                            //          &rx_velY,
+                                                            //          &rx_velZ) == true))
+                                                            //     {
+                                                            //  Step 1
+                                                            LastSatPos[0] = x.second.satpos_X;
+                                                            LastSatPos[1] = x.second.satpos_Y;
+                                                            LastSatPos[2] = x.second.satpos_Z;
+
+                                                            while (diffSATSAT > limiar)
+                                                                {
+                                                                    //  Step 2
+                                                                    diffSATREC = sqrt(
+                                                                        (rx_posX - LastSatPos[0]) * (rx_posX - LastSatPos[0]) +
+                                                                        (rx_posY - LastSatPos[1]) * (rx_posY - LastSatPos[1]) +
+                                                                        (rx_posZ - LastSatPos[2]) * (rx_posZ - LastSatPos[2]));
+                                                                    delta_tempo = diffSATREC / SPEED_OF_LIGHT_M_S;
+                                                                    // Step 3
+                                                                    nvotempo = tempoo - delta_tempo;
+                                                                    gps_map.at(x.first).satellitePosition(nvotempo);
+                                                                    diffSATSAT = sqrt(
+                                                                        (LastSatPos[0] - x.second.satpos_X) * (LastSatPos[0] - x.second.satpos_X) +
+                                                                        (LastSatPos[1] - x.second.satpos_Y) * (LastSatPos[1] - x.second.satpos_Y) +
+                                                                        (LastSatPos[2] - x.second.satpos_Z) * (LastSatPos[2] - x.second.satpos_Z));
+                                                                    LastSatPos[0] = x.second.satpos_X;
+                                                                    LastSatPos[1] = x.second.satpos_Y;
+                                                                    LastSatPos[2] = x.second.satpos_Z;
+                                                                }
+                                                            // Step 4
+                                                            variavelTempo = nvotempo - gps_time_offset;
+                                                            gps_map.at(x.first).satellitePosition(variavelTempo);
+                                                            // }
+                                                            deltaprange = -SPEED_OF_LIGHT_M_S * (y.second.Carrier_Doppler_hz / 1575420000);
+                                                            // Integer2Hex(&msgVec[index + 1], &x.second.PRN);
+                                                            buff[index + 1] = (uint8_t)y.second.PRN;
+                                                            Double2Hex(&buff[index + 2], &y.second.Pseudorange_m);
+                                                            Double2Hex(&buff[index + 10], &deltaprange);
+                                                            Double2Hex(&buff[index + 18], &x.second.satpos_X);
+                                                            Double2Hex(&buff[index + 26], &x.second.satpos_Y);
+                                                            Double2Hex(&buff[index + 34], &x.second.satpos_Z);
+                                                            Double2Hex(&buff[index + 42], &x.second.satvel_X);
+                                                            Double2Hex(&buff[index + 50], &x.second.satvel_Y);
+                                                            Double2Hex(&buff[index + 58], &x.second.satvel_Z);
+                                                            index = index + 65;
+                                                        }
+                                                }
+                                        }
+                                }
+                            for (int i = 0; i < index + 1; i++)
+                                {
+                                    // msgVec[index + 1] = msgVec[index + 1] ^ msgVec[i];  // CRC
+                                    checks ^= buff[i];
+                                }
+                            buff[index+1] = checks;
+                            // int bytes = HEserial_envio(&comms, &msgVec[0], &tam);
+                            // std::cout << "Bytes: " << bytes << "\n";
+
+                            // // ##############################################################################################
+                            // //      Correto
+                            // // ##############################################################################################
+                            //                 // serial_sat_send(&rx_posX,
+                            //                 //  &rx_posY,
+                            //                 //  &rx_posZ,
+                            //                 //  &rx_velX,
+                            //                 //  &rx_velY,
+                            //                 //  &rx_velZ);
+
+                            //                 // tcflush(comms.fd, TCIFLUSH);
+
+                            //                 // uint8_t buff[msgSize]{0};
+                            //                 // UTC_time;
+                            //                 buff[0] = 0xd5;                                    // ,
+                            //                 Double2Hex(&buff[1], (double *)&tempo_ligado_ms);  // tem que ser em double
+                            //                 //
+                            //                 // Float2Hexx(&buff[9], 0x0000);   // modo
+                            //                 // Float2Hexx(&buff[17], 0x0000);  // Estado
+                            //                 //
+                            //                 buff[9] = 0x00; buff[10] = 0x00;
+                            //                 Float2Hex(&buff[11], (float *)&gdop);  // Colocar os dops como float
+                            //                 Float2Hex(&buff[15], (float *)&hdop);
+                            //                 Float2Hex(&buff[19], (float *)&vdop);
+                            //                 Float2Hex(&buff[23], (float *)&pdop);
+                            //                 Float2Hex(&buff[27], (float *)&rx_posX);
+                            //                 Float2Hex(&buff[31], (float *)&rx_posY);
+                            //                 Float2Hex(&buff[35], (float *)&rx_posZ);
+                            //                 Float2Hex(&buff[39], (float *)&rx_velX);
+                            //                 Float2Hex(&buff[43], (float *)&rx_velY);
+                            //                 Float2Hex(&buff[47], (float *)&rx_velZ);
+                            //                 for (int i = 0; i < 51; i++)
+                            //                     {
+                            //                         buff[51] ^= buff[i];
+                            //                     }
+                            // ##########################################################################################
+                            // bytes = HEserial_envio(&comms, &buff[0], &msgSize); //tcflush(comms.fd, TCIFLUSH); 
+                            msgSize = 16;
+                            uint8_t test[] = {0xFF,0xd3,0xd4,0xd5,0xd6,0xd7,0xd8,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF,0x00,0x3E,0x80};
+
+                            
+                            tcdrain(comms.fd);
+                            tcflush(comms.fd, TCIOFLUSH);
+                            // bytes = HEserial_envio(&comms, &test, &msgSize); contador++;
+                            bytes = write(comms.fd, &test, msgSize);
+                            // bytes = write(comms.fd, &buff[0], msgSize);
+                            // contador++;  // tcdrain(comms.fd);
+                            // tcflush(comms.fd, TCIOFLUSH);
+                            std::cout << TEXT_BOLD_CYAN
+                                      << "PVT_msg: " << bytes
+                                      << " " << contador
+                                    //   << " " << (int)buff[msgSize - 1]
+                                      << TEXT_RESET << "\n";
+                        }
+                    //                                 else{
+                    //                                     uint8_t buff[msgSize];
+                    //                                     for(int i = 0; i<66;i++)
+                    //                                     {
+                    //                                         buff[i] = 0xFF;
+                    //                                     }
+                    //                                     buff[0]=0xd4;
+                    //                                     Double2Hex(&buff[1], &tempo_ligado_ms);
+                    //                                     buff[10] = (uint8_t)num_sat;
+                    //                                 }
+                    //                         // }
+                }
+        }
+    // }
+}
+
+void ControlThread::serial_sat_send(double *rx_posX, double *rx_posY, double *rx_posZ, double *rx_velX, double *rx_velY, double *rx_velZ)
+{
+    std::shared_ptr<PvtInterface> pvt_ptr = flowgraph_->get_pvt();
+    std::map<int, Gps_Ephemeris> gps_map = pvt_ptr->get_gps_ephemeris();
+    std::map<int, Gnss_Synchro> gnss_synchro = pvt_ptr->get_gnss_observables();
+
+    double last_RX_time;
+    // double longitude_deg;
+    // double latitude_deg;
+    // double height_m;
+    // time_t UTC_time;
+    double tempoo;
+    double variavelTempo;
+    double diffSATREC;
+    double diffSATSAT = 1000;
+    double delta_tempo;
+    double nvotempo;
+    double limiar = 0.2;
+    
+    double gps_time_offset;
+    int index = 0;
+    double deltaprange{0};
+    int num_sat = pvt_ptr->get_num_sat_observ();
+    int tam = num_sat * 65 + 2;
+    uint8_t msgVec[tam]{0};
+    // tcflush(comms.fd, TCIFLUSH);
+    // Integer2Hexx(&msgVec[0],0xd4);
+    msgVec[0] = 0xd4;
+    Double2Hexx(&msgVec[1],70);
+    uint8_t checks{0};
+    for (const auto &y : gnss_synchro)
+        {
+            for (const auto &x : gps_map)
+                {
+                    if (y.second.System == 'G')
+                        {
+                            last_RX_time = y.second.RX_time;
+                            if (y.second.PRN == x.second.PRN)
+                                {
+                                    tempoo = y.second.RX_time;
+                                    std::vector<double> LastSatPos(3);
+                                    gps_map.at(x.first).satellitePosition(tempoo);
+                                    // if ((pvt_ptr->get_latest_PVT_(&longitude_deg,
+                                    //          &latitude_deg,
+                                    //          &height_m,
+                                    //          &UTC_time,
+                                    //          &gps_time_offset,
+                                    //          &rx_posX,
+                                    //          &rx_posY,
+                                    //          &rx_posZ,
+                                    //          &rx_velX,
+                                    //          &rx_velY,
+                                    //          &rx_velZ) == true))
+                                    //     {
+                                            //  Step 1
+                                            LastSatPos[0] = x.second.satpos_X;
+                                            LastSatPos[1] = x.second.satpos_Y;
+                                            LastSatPos[2] = x.second.satpos_Z;
+
+                                            while (diffSATSAT > limiar)
+                                                {
+                                                    //  Step 2
+                                                    diffSATREC = sqrt(
+                                                        (*rx_posX - LastSatPos[0]) * (*rx_posX - LastSatPos[0]) +
+                                                        (*rx_posY - LastSatPos[1]) * (*rx_posY - LastSatPos[1]) +
+                                                        (*rx_posZ - LastSatPos[2]) * (*rx_posZ - LastSatPos[2]));
+                                                    delta_tempo = diffSATREC / SPEED_OF_LIGHT_M_S;
+                                                    // Step 3
+                                                    nvotempo = tempoo - delta_tempo;
+                                                    gps_map.at(x.first).satellitePosition(nvotempo);
+                                                    diffSATSAT = sqrt(
+                                                        (LastSatPos[0] - x.second.satpos_X) * (LastSatPos[0] - x.second.satpos_X) +
+                                                        (LastSatPos[1] - x.second.satpos_Y) * (LastSatPos[1] - x.second.satpos_Y) +
+                                                        (LastSatPos[2] - x.second.satpos_Z) * (LastSatPos[2] - x.second.satpos_Z));
+                                                    LastSatPos[0] = x.second.satpos_X;
+                                                    LastSatPos[1] = x.second.satpos_Y;
+                                                    LastSatPos[2] = x.second.satpos_Z;
+                                                }
+                                            // Step 4
+                                            variavelTempo = nvotempo - gps_time_offset;
+                                            gps_map.at(x.first).satellitePosition(variavelTempo);
+                                        // }
+                                    deltaprange = -SPEED_OF_LIGHT_M_S * (y.second.Carrier_Doppler_hz / 1575420000);
+                                    // Integer2Hex(&msgVec[index + 1], &x.second.PRN);
+                                    msgVec[index + 1] = (uint8_t)y.second.PRN;
+                                    Double2Hex(&msgVec[index + 2], &y.second.Pseudorange_m);
+                                    Double2Hex(&msgVec[index + 10], &deltaprange);
+                                    Double2Hex(&msgVec[index + 18], &x.second.satpos_X);
+                                    Double2Hex(&msgVec[index + 26], &x.second.satpos_Y);
+                                    Double2Hex(&msgVec[index + 34], &x.second.satpos_Z);
+                                    Double2Hex(&msgVec[index + 42], &x.second.satvel_X);
+                                    Double2Hex(&msgVec[index + 50], &x.second.satvel_Y);
+                                    Double2Hex(&msgVec[index + 58], &x.second.satvel_Z);
+                                    index = index + 65;
+
+                                }
+                        }
+                }
+        }
+    for (int i = 0; i < index+1; i++)
+        {
+            // msgVec[index + 1] = msgVec[index + 1] ^ msgVec[i];  // CRC
+            checks ^= msgVec[i];
+        }
+        msgVec[261]=checks;
+    int bytes = HEserial_envio(&comms, &msgVec[0], &tam);
+    std::cout<<"Bytes: "<<bytes<<"\n";
+    // 
+}
+
+
+// void ControlThread::serialcmd_printer(void)
+// {
+    // std::shared_ptr<PvtInterface> pvt_ptr = flowgraph_->get_pvt();
+    // while (serialcmd_enabled_)
+    //     {
+    //         double longitude_deg;
+    //         double latitude_deg;
+    //         double height_m;
+    //         time_t UTC_time;
+    //         double gdop, hdop, vdop, pdop;
+    //         int bytes;
+    //         int msgSize = 59;
+    //         tcflush(comms.fd, TCIFLUSH);
+    //         if ((pvt_ptr->get_latest_PVT_2(
+    //                  &longitude_deg,
+    //                  &latitude_deg,
+    //                  &height_m,
+    //                  &UTC_time,
+    //                  &gdop,
+    //                  &hdop,
+    //                  &vdop,
+    //                  &pdop) == true))
+    //             {
+    //                 uint8_t buff[msgSize];
+    //                 // UTC_time;
+    //                 buff[0] = 0x02;  // 0x02,
+    //                 buff[1] = 0x00;  // 0x00,
+    //                 Double2Hex(&buff[2], &gdop);
+    //                 Double2Hex(&buff[10], &hdop);
+    //                 Double2Hex(&buff[18], &vdop);
+    //                 Double2Hex(&buff[26], &pdop);
+    //                 Double2Hex(&buff[34], &latitude_deg);
+    //                 Double2Hex(&buff[42], &longitude_deg);
+    //                 Double2Hex(&buff[50], &height_m);
+    //                 buff[58] = 0xFF;
+    //                 bytes = HEserial_envio(&comms, &buff[0], &msgSize);
+    //                 // bytes = serial4send(&buff[0], &msgSize);
+    //             }
+    //     }
+// }
 
 void ControlThread::event_dispatcher(bool &valid_event, pmt::pmt_t &msg)
 {
@@ -519,19 +1035,21 @@ int ControlThread::run()
 
     // Caio
     // Fazer um listener thread para Serial Cmd
-    std::cout<<TEXT_BOLD_BLUE<<"Caio: Listener Thread Serial Cmd"<<TEXT_RESET<<"\n";
-    serial_cmd_interface_pvt_.set_pvt(flowgraph_->get_pvt());
-    serial_cmd_interface_Acq_.set_Acq(flowgraph_->get_Acq());
-    serial_cmd_interface_Trk_.set_Trk(flowgraph_->get_Trk());
-    // serial_cmd_interface_Sync_.set_Sync(flowgraph_->get_SerialSync());
+    std::cout << TEXT_BOLD_BLUE << "Caio: Listener Thread Serial Cmd" << TEXT_RESET << "\n";
+    serial_cmd_interface_.set_pvt(flowgraph_->get_pvt());
+    serial_cmd_interface_.set_Acq(flowgraph_->get_Acq());
+    serial_cmd_interface_.set_Trk(flowgraph_->get_Trk());
+    // serial_cmd_interface_.set_Sync(flowgraph_->get_SerialSync());
     serial_cmd_interface_.set_channels(flowgraph_->get_channels());
+
+    // Thread Serial Listener
     serial_cmd_interface_thread_ = std::thread(&ControlThread::serialcmd_listener, this);
+    // serial_cmd_interface_thread_w = std::thread(&ControlThread::serialcmd_printer, this);
     // Cria uma thread para isso, mas é necessário fechar com .join()
-    // na função dos destructors 
-    
+    // na função dos destructors
 
     // Caio - timers
-    serial_timer_function_ = std::thread(&ControlThread::serialcmd_timer, this);
+    serial_timer_function_thread_ = std::thread(&ControlThread::serialcmd_timer, this);
 
 #ifdef ENABLE_FPGA
     // Create a task for the acquisition such that id doesn't block the flow of the control thread
@@ -585,19 +1103,24 @@ int ControlThread::run()
 #endif
         }
 
-    //Caio
-    // A thread precisa ser finalizada
-    if(serialcmd_enabled_)
-    {
-        std::cout<<"Caio: Finalizada a Serial Thread"<<"\n";
-        pthread_t id3 = serial_cmd_interface_thread_.native_handle();
-        serial_cmd_interface_thread_.detach();
-        pthread_cancel(id3);
+    // Caio
+    //  A thread precisa ser finalizada
+    if (serialcmd_enabled_)
+        {
+            std::cout << "Caio: Finalizada a Serial Thread" << "\n";
+            pthread_t id3 = serial_cmd_interface_thread_.native_handle();
+            serial_cmd_interface_thread_.detach();
+            pthread_cancel(id3);
 
-        pthread_t id4 = serial_timer_function_.native_handle();
-        serial_timer_function_.detach();
-        pthread_cancel(id4);
-    }
+            std::cout << "Caio: Finalizada a Serial Timer Thread" << "\n";
+            pthread_t id4 = serial_timer_function_thread_.native_handle();
+            serial_timer_function_thread_.detach();
+            pthread_cancel(id4);
+
+            // pthread_t id5 = serial_cmd_interface_thread_w.native_handle();
+            // serial_cmd_interface_thread_w.detach();
+            // pthread_cancel(id5);
+        }
 
     LOG(INFO) << "Flowgraph stopped";
 
@@ -620,8 +1143,8 @@ void ControlThread::set_control_queue(std::shared_ptr<Concurrent_Queue<pmt::pmt_
     control_queue_ = std::move(control_queue);
     cmd_interface_.set_msg_queue(control_queue_);
 
-    //Caio
-    std::cout<<"Caio: set_control_queue"<<"\n";
+    // Caio
+    std::cout << "Caio: set_control_queue" << "\n";
     serial_control_queue_ = std::move(control_queue);
     serial_cmd_interface_.set_msg_queue(serial_control_queue_);
 }
@@ -1093,13 +1616,15 @@ void ControlThread::apply_action(unsigned int what)
             stop_ = true;
             break;
         case 1:
-            {char messg[] = "Caio: Receiver Restart\n";
-            // serial4send(&messg[0]);
-            std::cout<<TEXT_BOLD_BLUE<<"Caio: Receiver Restart"<<TEXT_RESET<<"\n";
-            LOG(INFO) << "Received action RESTART";
-            stop_ = true;
-            restart_ = true;
-            break;}
+            {
+                char messg[] = "Caio: Receiver Restart\n";
+                // serial4send(&messg[0]);
+                std::cout << TEXT_BOLD_BLUE << "Caio: Receiver Restart" << TEXT_RESET << "\n";
+                LOG(INFO) << "Received action RESTART";
+                stop_ = true;
+                restart_ = true;
+                break;
+            }
         case 10:  // request standby mode
             LOG(INFO) << "TC request standby mode";
             receiver_on_standby_ = true;
@@ -1139,7 +1664,7 @@ void ControlThread::apply_action(unsigned int what)
             break;
         // Caio
         case 14:
-            std::cout<<"Caio: Apply_action()"<<"\n";
+            std::cout << "Caio: Apply_action()" << "\n";
             LOG(INFO) << "NavComp. Request PVT";
             serial_cmd_interface_.serial_get_pvt();
             break;
@@ -1464,3 +1989,14 @@ void ControlThread::print_help_at_exit() const
                       << "   Documentation of the PVT block at https://gnss-sdr.org/docs/sp-blocks/pvt/\n";
         }
 }
+
+
+
+// double ControlThread::deltaprangecomp(void)
+// {
+//     std::shared_ptr<PvtInterface> pvt_ptr = flowgraph_->get_pvt();
+//     std::map<int, Gnss_Synchro> gnss_synchro = pvt_ptr->get_gnss_observables();
+//     gnss_synchro.at(0).Carrier_Doppler_hz;
+// }
+
+

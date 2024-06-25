@@ -112,6 +112,8 @@ private:
     bool d_always_output_gs;
     bool d_dump;
     bool d_dump_mat;
+
+    double rx_clk_offset_s;
 };
 
 /** \} */

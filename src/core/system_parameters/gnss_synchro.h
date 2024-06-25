@@ -85,6 +85,7 @@ public:
     double traveltempo_ms{}; // Travel time
     double transmitTime_ms_somado{}; // é o traveltime só que somado e n subtraido
     double transmitTime_ms_sub_{};
+    double rx_clk_offset{};
 
     /// Copy constructor
     Gnss_Synchro(const Gnss_Synchro& other) noexcept = default;

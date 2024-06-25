@@ -57,6 +57,7 @@ public:
     virtual std::map<int, Galileo_Almanac> get_galileo_almanac() const = 0;
     // Caio:
     virtual std::map<int, Gnss_Synchro> get_gnss_observables() const = 0;
+    virtual int get_num_sat_observ() = 0;
     // virtual std::map<int, Gnss_Ephemeris> get_gnss_ephemeris() const = 0;
 
     virtual bool get_latest_PVT(double* longitude_deg,
@@ -65,8 +66,31 @@ public:
         double* ground_speed_kmh,
         double* course_over_ground_deg,
         time_t* UTC_time) = 0;
-};
 
+    virtual bool get_latest_PVT_(double* longitude_deg,
+        double* latitude_deg,
+        double* height_m,
+        time_t* UTC_time,
+        double* gps_time_offset,
+        double* rx_posX,
+        double* rx_posY,
+        double* rx_posZ,
+        double* rx_velX,
+        double* rx_velY,
+        double* rx_velZ) = 0;
+
+    virtual bool get_latest_PVT_2(double* rx_posX,
+        double* rx_posY,
+        double* rx_posZ,
+        double* rx_velX,
+        double* rx_velY,
+        double* rx_velZ,
+        time_t* UTC_time,
+        double* gdop,
+        double* hdop,
+        double* vdop,
+        double* pdop) = 0;
+};
 
 /** \} */
 /** \} */

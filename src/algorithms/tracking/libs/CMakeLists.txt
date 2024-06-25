@@ -90,12 +90,14 @@ target_link_libraries(tracking_libs
         Volkgnsssdr::volkgnsssdr
         core_system_parameters
         algorithms_libs
-        OpenCL::OpenCL
+        # OpenCL::OpenCL
+        pvt_libs
     PRIVATE
         gnss_sdr_flags
         Glog::glog
         Gnuradio::runtime
-        OpenCL::OpenCL
+        # OpenCL::OpenCL
+        pvt_libs
 )
 
 if(ENABLE_CUDA)

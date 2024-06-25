@@ -130,6 +130,32 @@ public:
         double* course_over_ground_deg,
         time_t* UTC_time) const;
 
+    bool get_latest_PVT_(double* longitude_deg,
+        double* latitude_deg,
+        double* height_m,
+        time_t* UTC_time,
+        double* gps_time_offset,
+        double* rx_posX,
+        double* rx_posY,
+        double* rx_posZ,
+        double* rx_velX,
+        double* rx_velY,
+        double* rx_velZ);
+
+    bool get_latest_PVT_2(double* rx_posX,
+        double* rx_posY,
+        double* rx_posZ,
+        double* rx_velX,
+        double* rx_velY,
+        double* rx_velZ,
+        time_t* UTC_time,
+        double* gdop,
+        double* hdop,
+        double* vdop,
+        double* pdop);
+
+    int get_num_sat_observ(void);
+
     int work(int noutput_items, gr_vector_const_void_star& input_items,
         gr_vector_void_star& output_items);  //!< PVT Signal Processing
 

@@ -8,6 +8,9 @@
 #include "display.h"
 #include "gnss_synchro_monitor.h"
 #include "rtklib_pvt_gs.h"
+
+#include <memory>
+#include <iostream>
 // #include <ncurses.h>
 
 
@@ -66,6 +69,7 @@ void SerialCmdInterface::set_RTK_solver(std::shared_ptr<Rtklib_Solver> rtklib_so
 {
     Rtklib_solver_sptr_=std::move(rtklib_solver_sptr);
 }
+
 void SerialCmdInterface::set_GNSS_Observ(std::shared_ptr<std::vector<int, Gnss_Synchro>> gnss_observables_sptr)
 {
     gnss_observables_sptr_=std::move(gnss_observables_sptr);
@@ -103,7 +107,40 @@ void SerialCmdInterface::run_serial_listener(char* device, char* buffer, std::sh
     // = PVT_sptr_->get_gps_ephemeris();
     while (keep_running_ == true)
         {
+            // double longitude_deg;
+            // double latitude_deg;
+            // double height_m;
+            // double ground_speed_kmh;
+            // double course_over_ground_deg;
+            // time_t UTC_time;
+            // int bytes;
+            // int msgSize = 60;
+            // if ((PVT_sptr_->get_latest_PVT(&longitude_deg,
+            //         &latitude_deg,
+            //         &height_m,
+            //         &ground_speed_kmh,
+            //         &course_over_ground_deg,
+            //         &UTC_time)) == true)
+            //     {
+            //         uint8_t buff[msgSize];
+            //         // UTC_time;
+            //         buff[0] = 0x02;  // 0x02,
+            //         buff[1] = 0x00;  // 0x00,
+            //         double gdop = Rtklib_solver_sptr_->get_gdop();
+            //         double hdop = Rtklib_solver_sptr_->get_hdop();
+            //         double vdop = Rtklib_solver_sptr_->get_vdop();
+            //         double pdop = Rtklib_solver_sptr_->get_pdop();
+            //         Double2Hex(&buff[2], &gdop);
+            //         Double2Hex(&buff[10],&hdop);
+            //         Double2Hex(&buff[18],&vdop);
+            //         Double2Hex(&buff[26],&pdop);
+            //         Double2Hexx(&buff[34], latitude_deg);
+            //         Double2Hexx(&buff[42], longitude_deg);
+            //         Double2Hexx(&buff[50], height_m);
+            //         buff[58] = 0xFF;
 
+            //         bytes = serial4send(&buff[0], &msgSize);
+            //     }
             // printf("Channel ID: %d\n",Sync_sptr_->Channel_ID);
             // int n_ch = static_cast<int>(channels_sptr_->size());
             // for (int n = 0; n < n_ch; n++)
@@ -355,31 +392,29 @@ int SerialCmdInterface::DersoProtocol(void)
     double course_over_ground_deg;
     time_t UTC_time;
     int bytes;
-    if (PVT_sptr_->get_latest_PVT(&longitude_deg,
+    int msgSize = 60;
+    if ((PVT_sptr_->get_latest_PVT(&longitude_deg,
             &latitude_deg,
             &height_m,
             &ground_speed_kmh,
             &course_over_ground_deg,
-            &UTC_time) == true)
+            &UTC_time)) == true)
         {
-            char buff[400];
-            memset(buff, '\0', sizeof(buff));
-            sprintf(buff, "%d,%lf,%d,%d,%lf%lf%lf%lf,%lf%lf%lf,%d\n", 0x4d,
-                UTC_time,
-                0x02,
-                0x00,
-                Rtklib_solver_sptr_->get_gdop(),
-                Rtklib_solver_sptr_->get_hdop(),
-                Rtklib_solver_sptr_->get_vdop(),
-                Rtklib_solver_sptr_->get_pdop(),
-                latitude_deg,
-                longitude_deg,
-                height_m,
-                0xFF);
-            // bytes = serial4send(&buff[0]);
-        }
-        // else{char buff_err = 0xE0; bytes = serial4send(&buff_err);}
+            uint8_t buff[msgSize];
+            // UTC_time;
+            buff[0] = 0x02;  // 0x02,
+            buff[1] = 0x00;  // 0x00,
+            Double2Hexx(&buff[2], Rtklib_solver_sptr_->get_gdop());
+            Double2Hexx(&buff[10], Rtklib_solver_sptr_->get_hdop());
+            Double2Hexx(&buff[18], Rtklib_solver_sptr_->get_vdop());
+            Double2Hexx(&buff[26], Rtklib_solver_sptr_->get_pdop());
+            Double2Hexx(&buff[34], latitude_deg);
+            Double2Hexx(&buff[42], longitude_deg);
+            Double2Hexx(&buff[50], height_m);
+            buff[58] = 0xFF;
 
+            bytes = serial4send(&buff[0], &msgSize);
+        }
     return bytes;
 }
 

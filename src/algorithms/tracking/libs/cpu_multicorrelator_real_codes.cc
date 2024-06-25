@@ -32,6 +32,7 @@
 #include <vector>
 // #include <../gperftools/profiler.h>
 
+#include "HEtechSerial.h"
 
 // Caio
 #define LENGTH_OCL 1024
@@ -199,21 +200,35 @@ bool Cpu_Multicorrelator_Real_Codes::Carrier_wipeoff_multicorrelator_resampler(
                     signal_length_samples
             */
 
-
-            // Esse kernel é chamado para cada canal ou dentro das samples para todos os canais
-            volk_gnsssdr_32fc_32f_high_dynamic_rotator_dot_prod_32fc_xn(
-                d_corr_out,
-                d_sig_in,
-                std::exp(lv_32fc_t(0.0, -phase_step_rad)),
-                std::exp(lv_32fc_t(0.0, -phase_rate_step_rad)),
-                phase_offset_as_complex,
-                const_cast<const float**>(d_local_codes_resampled),
-                d_n_correlators,
-                signal_length_samples);
-
+            // GPU_track_record(d_corr_out,
+            //     d_sig_in,
+            //     phase_step_rad,
+            //     phase_rate_step_rad,
+            //     rem_carrier_phase_in_rad,
+            //     const_cast<const float**>(d_local_codes_resampled),
+            //     d_n_correlators,
+            //     signal_length_samples);
+                // Esse kernel é chamado para cada canal ou dentro das samples para todos os canais
+                volk_gnsssdr_32fc_32f_high_dynamic_rotator_dot_prod_32fc_xn(
+                    d_corr_out,
+                    d_sig_in,
+                    std::exp(lv_32fc_t(0.0, -phase_step_rad)),
+                    std::exp(lv_32fc_t(0.0, -phase_rate_step_rad)),
+                    phase_offset_as_complex,
+                    const_cast<const float**>(d_local_codes_resampled),
+                    d_n_correlators,
+                    signal_length_samples);
         }
     else
         {
+            // GPU_track_record(d_corr_out,
+            //     d_sig_in,
+            //     phase_step_rad,
+            //     phase_rate_step_rad,
+            //     rem_carrier_phase_in_rad,
+            //     const_cast<const float**>(d_local_codes_resampled),
+            //     d_n_correlators,
+            //     signal_length_samples);
             volk_gnsssdr_32fc_32f_rotator_dot_prod_32fc_xn(d_corr_out, d_sig_in, std::exp(lv_32fc_t(0.0, -phase_step_rad)), phase_offset_as_complex, const_cast<const float**>(d_local_codes_resampled), d_n_correlators, signal_length_samples);  // signal_length_samples);
         }
 
@@ -261,5 +276,6 @@ void Cpu_Multicorrelator_Real_Codes::set_high_dynamics_resampler(
     d_use_high_dynamics_resampler = use_high_dynamics_resampler;
 }
 
-// ########################################################################################
-// }
+
+
+

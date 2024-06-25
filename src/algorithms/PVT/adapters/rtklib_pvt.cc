@@ -920,6 +920,56 @@ bool Rtklib_Pvt::get_latest_PVT(double* longitude_deg,
         UTC_time);
 }
 
+bool Rtklib_Pvt::get_latest_PVT_(double* longitude_deg,
+    double* latitude_deg,
+    double* height_m,
+    time_t* UTC_time,
+    double* gps_time_offset,
+    double* rx_posX,
+    double* rx_poxY,
+    double* rx_posZ,
+    double* rx_velX,
+    double* rx_velY,
+    double* rx_velZ)
+{
+    return pvt_->get_latest_PVT_(longitude_deg,
+        latitude_deg,
+        height_m,
+        UTC_time,
+        gps_time_offset,
+        rx_posX,
+        rx_poxY,
+        rx_posZ,
+        rx_velX,
+        rx_velY,
+        rx_velZ);
+}
+
+bool Rtklib_Pvt::get_latest_PVT_2(double* rx_posX,
+    double* rx_posY,
+    double* rx_posZ,
+    double* rx_velX,
+    double* rx_velY,
+    double* rx_velZ,
+    time_t* UTC_time,
+    double* gdop,
+    double* hdop,
+    double* vdop,
+    double* pdop)
+{
+    return pvt_->get_latest_PVT_2(rx_posX,
+        rx_posY,
+        rx_posZ,
+        rx_velX,
+        rx_velY,
+        rx_velZ,
+        UTC_time,
+        gdop,
+        hdop,
+        vdop,
+        pdop);
+}
+
 
 void Rtklib_Pvt::clear_ephemeris()
 {
@@ -955,7 +1005,10 @@ std::map<int, Gnss_Synchro> Rtklib_Pvt::get_gnss_observables() const
 {
     return pvt_->get_observables_map();
 }
-
+int Rtklib_Pvt::get_num_sat_observ()
+{
+    return pvt_->get_num_sat_observ();
+}
 
 void Rtklib_Pvt::connect(gr::top_block_sptr top_block)
 {
