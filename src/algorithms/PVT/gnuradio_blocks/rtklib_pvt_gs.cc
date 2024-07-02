@@ -1957,6 +1957,10 @@ int rtklib_pvt_gs::get_num_sat_observ(void)
 {
     return d_user_pvt_solver->get_num_valid_observations();
 }
+bool rtklib_pvt_gs::got_first_fix(void)
+{
+    return first_fix;
+}
 //
 
 void rtklib_pvt_gs::apply_rx_clock_offset(std::map<int, Gnss_Synchro>& observables_map,
@@ -2452,6 +2456,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
 
                                     if (d_first_fix == true)
                                         {
+                                            first_fix=true;
                                             if (d_show_local_time_zone)
                                                 {
                                                     const boost::posix_time::ptime time_first_solution = d_user_pvt_solver->get_position_UTC_time() + d_utc_diff_time;

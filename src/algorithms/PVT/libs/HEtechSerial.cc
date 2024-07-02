@@ -410,7 +410,7 @@ extern "C"
     }
 
     // char HEserial_leitura_byte(serial_s_t *comm, char *msg)
-    char HEserial_leitura_byte(serial_s_t *comm)
+    uint8_t HEserial_leitura_byte(serial_s_t *comm)
     {
         // Limpar o buffer se characteres espúrios
         // memset(comm->rxbuff, '\0', sizeof(comm->rxbuff));
@@ -430,6 +430,15 @@ extern "C"
     void HEserial_disconnect(serial_s_t *comm)
     {
         close(comm->fd);
+    }
+
+    void Hex2IntegerAlt(uint32_t *output, uint8_t *input)
+    {
+        for (int i = 0; i < 1; i++)
+            {
+                *((uint8_t *)output + i) = *input;
+                input++;
+            }
     }
 
     void Double2Hexx(uint8_t *output, double input)

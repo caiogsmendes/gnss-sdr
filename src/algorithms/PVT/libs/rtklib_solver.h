@@ -159,6 +159,8 @@ private:
     bool d_flag_dump_enabled;
     bool d_flag_dump_mat_enabled;
     bool d_use_e6_for_pvt;
+
+    bool first_fix{false};
 };
 
 

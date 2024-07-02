@@ -154,6 +154,8 @@ public:
         double* vdop,
         double* pdop);
 
+    bool got_first_fix(void);
+
     int get_num_sat_observ(void);
 
     int work(int noutput_items, gr_vector_const_void_star& input_items,
@@ -204,7 +206,7 @@ private:
 
     //Caio:
     std::fstream d_log_timetag_file;
-
+    
     std::shared_ptr<Rtklib_Solver> d_internal_pvt_solver;
     std::shared_ptr<Rtklib_Solver> d_user_pvt_solver;
 
@@ -313,6 +315,7 @@ private:
 
     // caio
     int contadorrx = 0;
+    bool first_fix{false};
 };
 
 

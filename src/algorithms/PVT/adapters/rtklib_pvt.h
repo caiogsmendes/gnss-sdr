@@ -205,6 +205,7 @@ public:
 
     // Caio
     int get_num_sat_observ(void) override;
+    bool got_first_fix(void);
     //
     inline void reset() override
     {

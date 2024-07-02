@@ -58,6 +58,7 @@ public:
     // Caio:
     virtual std::map<int, Gnss_Synchro> get_gnss_observables() const = 0;
     virtual int get_num_sat_observ() = 0;
+    virtual bool got_first_fix() = 0;
     // virtual std::map<int, Gnss_Ephemeris> get_gnss_ephemeris() const = 0;
 
     virtual bool get_latest_PVT(double* longitude_deg,

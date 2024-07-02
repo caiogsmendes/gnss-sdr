@@ -49,7 +49,7 @@ serial_s_t HEserial_connect(const char *, int, int);
 int HEserial_envio(serial_s_t* comm, uint8_t* msg, int* tam);
 // int HEserial_envio(serial_s_t* comm, char* msg);
 int HEserial_leitura(serial_s_t*, uint8_t*);
-char HEserial_leitura_byte(serial_s_t*);
+uint8_t HEserial_leitura_byte(serial_s_t*);
 // char HEserial_leitura_byte(serial_s_t*, char*);
 void HEserial_disconnect(serial_s_t*);
 int serial4send(uint8_t*, int*);
@@ -59,6 +59,7 @@ void serial4readByte(uint8_t*);
 int enviaar(char *msg);
 
 // Utils
+void Hex2IntegerAlt(uint32_t*, uint8_t*);
 void Double2Hex(uint8_t*, const double*);
 void Double2Hexx(uint8_t*, double); 
 void Hex2Double(double*, uint8_t*);

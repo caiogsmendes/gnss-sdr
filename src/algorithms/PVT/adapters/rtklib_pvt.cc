@@ -1009,7 +1009,10 @@ int Rtklib_Pvt::get_num_sat_observ()
 {
     return pvt_->get_num_sat_observ();
 }
-
+bool Rtklib_Pvt::got_first_fix()
+{
+    return pvt_->got_first_fix();
+}
 void Rtklib_Pvt::connect(gr::top_block_sptr top_block)
 {
     if (top_block)
