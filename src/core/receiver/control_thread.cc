@@ -169,8 +169,8 @@ void ControlThread::init()
     serial_cmd_interface_.set_msg_queue(control_queue_);
     // serial_cmd_interface_.set_channels(flowgraph_->get_channels());
     // serial_synchro_interface_.set_channels(channel_status_->get_current_status_map());
-    // char device[] = {"/dev/ttyUSB0"};
-    char device[] = {"/dev/ttyLP2"};
+    char device[] = {"/dev/ttyUSB0"};
+    // char device[] = {"/dev/ttyLP2"};
     /* | O_NOCTTY | O_NDELAY | O_NONBLOCK */
     comms = HEserial_connect( &device[0], B115200, O_RDWR);
     // RGL_ctrl_
