@@ -172,7 +172,7 @@ void ControlThread::init()
     // char device[] = {"/dev/ttyUSB0"};
     char device[] = {"/dev/ttyLP2"};
     /* | O_NOCTTY | O_NDELAY | O_NONBLOCK */
-    comms = HEserial_connect( &device[0], B921600, O_RDWR);
+    comms = HEserial_connect( &device[0], B115200, O_RDWR);
     // RGL_ctrl_
     // ###########################################################################
     // std::cout<<sizeof(uint16_t)<<"\n";
@@ -557,9 +557,9 @@ void ControlThread::serialcmd_timer(void)
             std::chrono::nanoseconds diff = tEndSteady - tStartSteady;
             float tempo = diff.count();
             //             // std::time_t endWallTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-            // if (tempo >= 1000000000)
-            //                 // if (diff.count() >= 1000000000)
-            //     {
+            if (tempo >= 1000000000)
+                            // if (diff.count() >= 1000000000)
+                {
                     //                     // std::cout<< "tempo: "<<std::ctime(&endWallTime)<<"\n";
                     //                     // std::cout<< diff.count()/1000000<<"\n";
                     //                     // sprintf(&buff[0],"Flag 1s, Count:%d \n",count++);
@@ -823,6 +823,7 @@ void ControlThread::serialcmd_timer(void)
                                         << " "
                                         << rx_velZ
                                         << " "
+                                        <<std::fixed<<std::setprecision(10)
                                         << last_RX_time << "\n";
                                 }
                             //                                 else{
@@ -837,7 +838,7 @@ void ControlThread::serialcmd_timer(void)
                             //                                 }
                             //                         // }
                         }
-        // }
+        }
     }
     arqtest.close();
     arqtestPVT.close();
