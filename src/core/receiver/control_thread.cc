@@ -171,7 +171,7 @@ void ControlThread::init()
     // serial_synchro_interface_.set_channels(channel_status_->get_current_status_map());
     char device[] = {"/dev/ttyUSB0"};
     /* | O_NOCTTY | O_NDELAY | O_NONBLOCK */
-    comms = HEserial_connect( &device[0], B115200, O_WRONLY );
+    comms = HEserial_connect( &device[0], B115200, O_RDWR);
     // RGL_ctrl_
     // ###########################################################################
     // std::cout<<sizeof(uint16_t)<<"\n";
@@ -321,8 +321,8 @@ void ControlThread::serialcmd_listener(void)
             std::cout << TEXT_BOLD_BLUE << "Caio Debug: Serial thread Listener..." << TEXT_RESET
                       << "\n";
             //  const char device = configuration_->property("GNSS-SDR.serial_device", "/dev/ttyUSB0");
-            // char device[] = {"/dev/ttyUSB0"};
-            // serial_s_t comms = HEserial_connect(&device[0], B115200, O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
+            // char device[] = {"/dev/ttyUSB1"};
+            // serial_s_t comms2 = HEserial_connect(&device[0], B115200, O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
             // char buff;
             // serial_cmd_interface_.run_serial_listener(&device[0], &buff, flowgraph_);
     //         int lastcmd = 0xFF;
@@ -333,10 +333,14 @@ void ControlThread::serialcmd_listener(void)
                 {
                     // char msg{0};
                     int bitts;
-                    uint8_t msg = HEserial_leitura_byte(&comms);
-                    uint32_t cmd{0};
-                    Hex2IntegerAlt(&cmd, &msg);
-                    if (cmd == 0xd4)
+                    // uint8_t msg;
+                    uint8_t msg[2];
+                    // int biit = HEserial_leitura_2(&comms,2);
+                    uint8_t biit = 0;
+                    biit= HEserial_leitura_byte(&comms);
+                    // uint32_t cmd{0};
+                    // Hex2IntegerAlt(&cmd, &msg);
+                    if (biit == 223)
                         {
                             serialcmd_enabled_ = false;
                         }
@@ -552,9 +556,9 @@ void ControlThread::serialcmd_timer(void)
             std::chrono::nanoseconds diff = tEndSteady - tStartSteady;
             float tempo = diff.count();
             //             // std::time_t endWallTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-            if (tempo >= 1000000000)
-                            // if (diff.count() >= 1000000000)
-                {
+            // if (tempo >= 1000000000)
+            //                 // if (diff.count() >= 1000000000)
+            //     {
                     //                     // std::cout<< "tempo: "<<std::ctime(&endWallTime)<<"\n";
                     //                     // std::cout<< diff.count()/1000000<<"\n";
                     //                     // sprintf(&buff[0],"Flag 1s, Count:%d \n",count++);
@@ -832,7 +836,7 @@ void ControlThread::serialcmd_timer(void)
                             //                                 }
                             //                         // }
                         }
-        }
+        // }
     }
     arqtest.close();
     arqtestPVT.close();

@@ -31,6 +31,9 @@ extern "C"
 #include <termios.h>
 #include <unistd.h>
 #include <stdint.h>
+#include <sys/ioctl.h>
+#include <sys/time.h>
+#include <sys/types.h>
 // #include "intercept.h"
 
 
@@ -126,104 +129,106 @@ extern "C"
             printf("%d bytes sent\n", result);
         }
         close(fd);
+
+        return 0;
     }
-    
-        void serial_envio(const char *device, int flags, char *msg)
-        {
-            /**
-             * Função para envio de um valor apenas
-             */
-            char buf_tx[1000];
-            memset(buf_tx, '\0', sizeof(buf_tx)); // Limpa o buffer.
-            struct termios tty;
 
-            // int res = 0, err = 0;
-            // struct pollfd ufds;
+    void serial_envio(const char *device, int flags, char *msg)
+    {
+        /**
+         * Função para envio de um valor apenas
+         */
+        char buf_tx[1000];
+        memset(buf_tx, '\0', sizeof(buf_tx));  // Limpa o buffer.
+        struct termios tty;
 
-            int fd;
-            fd = open(device, flags);
-            if (fd == -1)
+        // int res = 0, err = 0;
+        // struct pollfd ufds;
+
+        int fd;
+        fd = open(device, flags);
+        if (fd == -1)
             {
                 printf("Falha em abrir port UART\n");
             }
 
-            tcgetattr(fd, &tty);
+        tcgetattr(fd, &tty);
 
 
-            tty.c_cflag &= ~PARENB;        // Clear parity bit, disabling parity (most common)
-            tty.c_cflag &= ~CSTOPB;        // Clear stop field, only one stop bit used in communication (most common)
-            tty.c_cflag &= ~CSIZE;         // Clear all bits that set the data size
-            tty.c_cflag |= CS8;            // 8 bits per byte (most common)
-            tty.c_cflag &= ~CRTSCTS;       // Disable RTS/CTS hardware flow control (most common)
-            tty.c_cflag |= CREAD | CLOCAL; // Turn on READ & ignore ctrl lines (CLOCAL = 1)
+        tty.c_cflag &= ~PARENB;         // Clear parity bit, disabling parity (most common)
+        tty.c_cflag &= ~CSTOPB;         // Clear stop field, only one stop bit used in communication (most common)
+        tty.c_cflag &= ~CSIZE;          // Clear all bits that set the data size
+        tty.c_cflag |= CS8;             // 8 bits per byte (most common)
+        tty.c_cflag &= ~CRTSCTS;        // Disable RTS/CTS hardware flow control (most common)
+        tty.c_cflag |= CREAD | CLOCAL;  // Turn on READ & ignore ctrl lines (CLOCAL = 1)
 
-            tty.c_lflag &= ~ICANON;
-            tty.c_lflag &= ~ECHO;                                                        // Disable echo
-            tty.c_lflag &= ~ECHOE;                                                       // Disable erasure
-            tty.c_lflag &= ~ECHONL;                                                      // Disable new-line echo
-            tty.c_lflag &= ~ISIG;                                                        // Disable interpretation of INTR, QUIT and SUSP
-            tty.c_iflag &= ~(IXON | IXOFF | IXANY);                                      // Turn off s/w flow ctrl
-            tty.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL); // Disable any special handling of received bytes
+        tty.c_lflag &= ~ICANON;
+        tty.c_lflag &= ~ECHO;                                                         // Disable echo
+        tty.c_lflag &= ~ECHOE;                                                        // Disable erasure
+        tty.c_lflag &= ~ECHONL;                                                       // Disable new-line echo
+        tty.c_lflag &= ~ISIG;                                                         // Disable interpretation of INTR, QUIT and SUSP
+        tty.c_iflag &= ~(IXON | IXOFF | IXANY);                                       // Turn off s/w flow ctrl
+        tty.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL);  // Disable any special handling of received bytes
 
-            // tty.c_oflag &= ~OPOST; // Prevent special interpretation of output bytes (e.g. newline chars)
-            // tty.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
+        // tty.c_oflag &= ~OPOST; // Prevent special interpretation of output bytes (e.g. newline chars)
+        // tty.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
 
 
-            cfsetispeed(&tty, B115200);
-            cfsetospeed(&tty, B115200);
+        cfsetispeed(&tty, B115200);
+        cfsetospeed(&tty, B115200);
 
-            if ((tcsetattr(fd, TCSANOW, &tty)) != 0)
+        if ((tcsetattr(fd, TCSANOW, &tty)) != 0)
             {
                 printf("Erro em setar atributos\n");
             }
 
-            tcflush(fd, TCIFLUSH);
-            // strncpy(buf_tx, /*(char *)*/ msg, sizeof(buf_tx));
-             memcpy(buf_tx, msg, strlen(msg));
-            int result = write(fd, &buf_tx, strlen(buf_tx));
-            if (result == -1)
+        tcflush(fd, TCIFLUSH);
+        // strncpy(buf_tx, /*(char *)*/ msg, sizeof(buf_tx));
+        memcpy(buf_tx, msg, strlen(msg));
+        int result = write(fd, &buf_tx, strlen(buf_tx));
+        if (result == -1)
             {
                 printf("Erro: %s\n", strerror(errno));
             }
-            close(fd);
-        }
+        close(fd);
+    }
 
-        void serial_envioByte(const char* device, int flags, double *msg)
-        {
-            struct termios tty;
-            int fd3;
-            fd3 = open(device, flags);
-            if(fd3 == -1)
+    void serial_envioByte(const char *device, int flags, double *msg)
+    {
+        struct termios tty;
+        int fd3;
+        fd3 = open(device, flags);
+        if (fd3 == -1)
             {
                 printf("Falha em abrir port UART\n");
             }
-            tcgetattr(fd3, &tty);
+        tcgetattr(fd3, &tty);
 
-            tty.c_cflag &= ~PARENB;
-            tty.c_cflag &= ~CSTOPB;
-            tty.c_cflag &= ~CSIZE;
-            tty.c_cflag |= CS8;
-            tty.c_cflag &= ~CRTSCTS;
+        tty.c_cflag &= ~PARENB;
+        tty.c_cflag &= ~CSTOPB;
+        tty.c_cflag &= ~CSIZE;
+        tty.c_cflag |= CS8;
+        tty.c_cflag &= ~CRTSCTS;
 
-            cfsetispeed(&tty, B921600);
-            cfsetospeed(&tty, B921600);
+        cfsetispeed(&tty, B921600);
+        cfsetospeed(&tty, B921600);
 
-            if ((tcsetattr(fd3, TCSANOW, &tty)) != 0)
+        if ((tcsetattr(fd3, TCSANOW, &tty)) != 0)
             {
                 printf("Erro em setar atributos\n");
             }
-            else
+        else
             {
                 printf("UART set\n");
             }
-            tcflush(fd3, TCIFLUSH);
-            int result = write(fd3, &msg, sizeof(msg));
-            if (result == -1)
+        tcflush(fd3, TCIFLUSH);
+        int result = write(fd3, &msg, sizeof(msg));
+        if (result == -1)
             {
                 printf("Erro: %s\n", strerror(errno));
             }
-            close(fd3);
-        }
+        close(fd3);
+    }
 
     int serial4send(uint8_t *data, int* tam)
     {
@@ -259,7 +264,7 @@ extern "C"
     //     return bytes;
     // }
 
-    int serial4read(uint8_t *data)
+    int serial4read(uint8_t *data, int size)
     {
         // Configs de Leitura UART
         // const char *device = "/dev/colibri-uartc";
@@ -269,7 +274,7 @@ extern "C"
 
         serial_s_t comm = HEserial_connect(device, B115200, flags);
         
-        int bytes = HEserial_leitura(&comm, data);
+        int bytes = HEserial_leitura(&comm, data, size);
         
         HEserial_disconnect(&comm);
         return bytes;
@@ -308,7 +313,7 @@ extern "C"
         cfsetspeed(&comm.tty, baudrate);
         comm.tty.c_cflag &= ~PARENB;   // Disable geração/check de Bit de pariedade
         comm.tty.c_cflag &= ~CSTOPB;   // set 1 Stop Bit
-        comm.tty.c_cflag |= CREAD | CLOCAL;
+        comm.tty.c_cflag |= (CREAD | CLOCAL);
         comm.tty.c_cflag &= ~CSIZE;
         comm.tty.c_cflag |= CS8;       //Character size mask
         comm.tty.c_cflag &= ~CRTSCTS;  // Disable RTS/CTS (hardware) flow control
@@ -392,20 +397,26 @@ extern "C"
 //         return result;
 //     }
 
-    int HEserial_leitura(serial_s_t *comm, uint8_t *msg)
+    int HEserial_leitura(serial_s_t *comm, uint8_t *msg, int size)
     {
         // Limpar o buffer se characteres espúrios
         memset(comm->rxbuff, '\0', sizeof(comm->rxbuff));
+        // int toReceive;
+        // uint8_t mmsg=0;
         int result = 0;
+        uint8_t buf[2];
         comm->ufds.events = POLLIN;
         if (poll(&comm->ufds, 1, -1) > 0)
-        {
-            if (comm->ufds.revents & POLLIN)
             {
-                result = read(comm->fd, &comm->rxbuff, sizeof(comm->rxbuff));
-                memcpy(msg, &comm->rxbuff, sizeof(comm->rxbuff)); // Está Redundante ??
+                // while (result < size)
+                //     {
+                        if (comm->ufds.revents & POLLIN)
+                            {
+                                result = read(comm->fd, (void*)&buf[0], size/*sizeof(comm->rxbuff)*/);
+                                memcpy(msg, &comm->rxbuff, sizeof(comm->rxbuff));  // Está Redundante ??
+                            }
+                    // }
             }
-        }
         return result;
     }
 
@@ -420,11 +431,39 @@ extern "C"
             if (comm->ufds.revents & POLLIN)
             {
                 // printf("Alguma coisa foi lida na HEserial_leitura_byte\n");
-                int result = read(comm->fd, &comm->buffrx, sizeof(comm->buffrx));
+                int result = 0; int algu=3;
+                result = read(comm->fd, &comm->buffrx, sizeof(comm->buffrx));
+                algu=2;
                 // memcpy(msg, &comm->buffrx, sizeof(comm->buffrx)); // Está Redundante ??
             }
         }
         return comm->buffrx;
+    }
+
+    int HEserial_leitura_2(serial_s_t *comm, int tam)
+    {
+        tcflush(comm->fd, TCIFLUSH);
+        int bytesRcv = 0;
+        fd_set read_fds;
+        FD_ZERO(&(read_fds));
+        FD_SET(comm->fd, &(read_fds));
+        struct timeval tout;
+        tout.tv_sec = 1000;
+        tout.tv_usec = 0;
+        int rx = 0;
+        while (rx < tam)
+            {
+                int result = select(comm->fd+ 1, &(read_fds), NULL, NULL, &(tout));
+                if (result > 0)
+                    {
+                        int tmp = read(comm->fd, &comm->rxbuff[rx], sizeof(comm->rxbuff));
+                        if (tmp != -1)
+                            {
+                                rx += tmp;
+                            }
+                    }
+            }
+        return bytesRcv;
     }
 
     void HEserial_disconnect(serial_s_t *comm)

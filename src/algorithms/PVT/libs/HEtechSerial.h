@@ -48,13 +48,15 @@ serial_s_t HEserial_connect(const char *, int, int);
 // int HEserial_envio(serial_s_t*, uint8_t*);
 int HEserial_envio(serial_s_t* comm, uint8_t* msg, int* tam);
 // int HEserial_envio(serial_s_t* comm, char* msg);
-int HEserial_leitura(serial_s_t*, uint8_t*);
+// int HEserial_leitura(serial_s_t*, uint8_t*);
+int HEserial_leitura(serial_s_t*, uint8_t*, int);
+int HEserial_leitura_2(serial_s_t*, int);
 uint8_t HEserial_leitura_byte(serial_s_t*);
 // char HEserial_leitura_byte(serial_s_t*, char*);
 void HEserial_disconnect(serial_s_t*);
 int serial4send(uint8_t*, int*);
 // int serial4send(double*);
-int serial4read(uint8_t*);
+int serial4read(uint8_t*, int);
 void serial4readByte(uint8_t*);
 int enviaar(char *msg);
 
