@@ -169,9 +169,10 @@ void ControlThread::init()
     serial_cmd_interface_.set_msg_queue(control_queue_);
     // serial_cmd_interface_.set_channels(flowgraph_->get_channels());
     // serial_synchro_interface_.set_channels(channel_status_->get_current_status_map());
-    char device[] = {"/dev/ttyUSB0"};
+    // char device[] = {"/dev/ttyUSB0"};
+    char device[] = {"/dev/ttyLP2"};
     /* | O_NOCTTY | O_NDELAY | O_NONBLOCK */
-    comms = HEserial_connect( &device[0], B115200, O_RDWR);
+    comms = HEserial_connect( &device[0], B921600, O_RDWR);
     // RGL_ctrl_
     // ###########################################################################
     // std::cout<<sizeof(uint16_t)<<"\n";
@@ -656,7 +657,7 @@ void ControlThread::serialcmd_timer(void)
                                                 {
                                                     if (y.second.System == 'G')
                                                         {
-                                                            last_RX_time = y.second.RX_time;
+                                                            last_RX_time = y.second.TOW_at_current_symbol_ms;
                                                             if (y.second.PRN == x.second.PRN)
                                                                 {
                                                                     tempoo = y.second.RX_time;
