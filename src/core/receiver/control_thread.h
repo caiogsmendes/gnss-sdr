@@ -248,6 +248,8 @@ private:
     bool RGL_NavAux_enabled_;
     serial_s_t comms;
     uint16_t RGL_ctrl_{};
+    bool flag_serial_interrupt{false};
+
 
     bool pre_2009_file_;  // to override the system time to postprocess old gnss records and avoid wrong week rollover
 };

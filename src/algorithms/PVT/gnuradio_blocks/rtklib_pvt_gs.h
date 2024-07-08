@@ -34,9 +34,13 @@
 #include <map>                    // for map
 #include <memory>                 // for shared_ptr, unique_ptr
 #include <queue>                  // for std::queue
+#include <thread>
 #include <string>                 // for string
 #include <sys/types.h>            // for key_t
 #include <vector>                 // for vector
+
+
+#include "HEtechSerial.h"
 
 /** \addtogroup PVT
  * \{ */
@@ -118,7 +122,7 @@ public:
 
     // Caio: 
     std::map<int, Gnss_Synchro> get_observables_map() const;
-
+    bool set_flag_serial_interp(bool status);
 
     /*!
      * \brief Get the latest Position WGS84 [deg], Ground Velocity, Course over Ground, and UTC Time, if available
@@ -153,6 +157,11 @@ public:
         double* hdop,
         double* vdop,
         double* pdop);
+
+// void set_pvt(std::shared_ptr<> PVT_sptr)
+// {
+//     serial_sptr_ = std::move(PVT_sptr);
+// }
 
     bool got_first_fix(void);
 
@@ -206,7 +215,8 @@ private:
 
     //Caio:
     std::fstream d_log_timetag_file;
-    
+    //
+
     std::shared_ptr<Rtklib_Solver> d_internal_pvt_solver;
     std::shared_ptr<Rtklib_Solver> d_user_pvt_solver;
 
@@ -315,7 +325,13 @@ private:
 
     // caio
     int contadorrx = 0;
+    int contadorgrav=0;
     bool first_fix{false};
+    bool flag_interrupt_serial{false};
+    // std::shared_ptr<PVT_interface> serial_sptr_;
+    std::thread serial_temp_thread_;
+    void serialcmd_(void);
+    serial_s_t comms;
 };
 
 

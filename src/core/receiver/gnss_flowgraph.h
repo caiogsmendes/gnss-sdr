@@ -159,7 +159,7 @@ public:
         return std::dynamic_pointer_cast<PvtInterface>(pvt_);
     }
 
-    //Caio
+    // Caio
     std::shared_ptr<AcquisitionInterface> get_Acq()
     {
         return std::dynamic_pointer_cast<AcquisitionInterface>(Acq_);
@@ -170,13 +170,16 @@ public:
     }
     std::shared_ptr<std::vector<std::shared_ptr<ChannelInterface>>> get_channels()
     {
-        return std::make_shared<std::vector<std::shared_ptr<ChannelInterface>>> (channels_);
+        return std::make_shared<std::vector<std::shared_ptr<ChannelInterface>>>(channels_);
     }
-
+    // std::shared_ptr<rtklib_pvt_gs> get_rtklib_pvt_gs()
+    // {
+    //     return std::dynamic_pointer_cast<rtklib_pvt_gs> (rtkflag_);
+    // }
     //
     /*!
      * \brief Priorize visible satellites in the specified vector
-     */ 
+     */
     void priorize_satellites(const std::vector<std::pair<int, Gnss_Satellite>>& visible_satellites);
 
 #if ENABLE_FPGA
@@ -254,6 +257,7 @@ private:
     std::shared_ptr<GNSSBlockInterface> Trk_;
     std::shared_ptr<SerialCmdInterface> SerialCmd_sptr_;
     channel_status_msg_receiver_sptr serial_channels_status_;
+    // std::shared_ptr<rtklib_pvt_gs> rtkflag_;
 
     // SerialCmdInterface serial_interface_;
 
