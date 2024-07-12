@@ -325,13 +325,14 @@ private:
 
     // caio
     int contadorrx = 0;
-    int contadorgrav=0;
+    int contadorgrav=1;
     bool first_fix{false};
     bool flag_interrupt_serial{false};
     // std::shared_ptr<PVT_interface> serial_sptr_;
     std::thread serial_temp_thread_;
     void serialcmd_(void);
     serial_s_t comms;
+    double ultimo_rx_time{0};
 };
 
 

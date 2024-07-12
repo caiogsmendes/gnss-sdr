@@ -63,6 +63,7 @@ int enviaar(char *msg);
 // Utils
 void Hex2IntegerAlt(uint32_t*, uint8_t*);
 void Double2Hex(uint8_t*, const double*);
+void Double2HexAlt(uint8_t*, double*);
 void Double2Hexx(uint8_t*, double); 
 void Hex2Double(double*, uint8_t*);
 void Hex2Float(float *, uint8_t *);

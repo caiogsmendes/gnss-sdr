@@ -169,10 +169,10 @@ void ControlThread::init()
     serial_cmd_interface_.set_msg_queue(control_queue_);
     // serial_cmd_interface_.set_channels(flowgraph_->get_channels());
     // serial_synchro_interface_.set_channels(channel_status_->get_current_status_map());
-    char device[] = {"/dev/ttyUSB0"};
+    // char device[] = {"/dev/ttyUSB0"};
     // char device[] = {"/dev/ttyLP2"};
     /* | O_NOCTTY | O_NDELAY | O_NONBLOCK */
-    comms = HEserial_connect( &device[0], B115200, O_RDWR);
+    // comms = HEserial_connect( &device[0], B115200, O_RDWR);
     // RGL_ctrl_
     // ###########################################################################
     // std::cout<<sizeof(uint16_t)<<"\n";
@@ -857,112 +857,112 @@ void ControlThread::serialcmd_timer(void)
 
 void ControlThread::serial_sat_send(double *rx_posX, double *rx_posY, double *rx_posZ, double *rx_velX, double *rx_velY, double *rx_velZ)
 {
-    std::shared_ptr<PvtInterface> pvt_ptr = flowgraph_->get_pvt();
-    std::map<int, Gps_Ephemeris> gps_map = pvt_ptr->get_gps_ephemeris();
-    std::map<int, Gnss_Synchro> gnss_synchro = pvt_ptr->get_gnss_observables();
+    // std::shared_ptr<PvtInterface> pvt_ptr = flowgraph_->get_pvt();
+    // std::map<int, Gps_Ephemeris> gps_map = pvt_ptr->get_gps_ephemeris();
+    // std::map<int, Gnss_Synchro> gnss_synchro = pvt_ptr->get_gnss_observables();
 
-    double last_RX_time;
-    // double longitude_deg;
-    // double latitude_deg;
-    // double height_m;
-    // time_t UTC_time;
-    double tempoo;
-    double variavelTempo;
-    double diffSATREC;
-    double diffSATSAT = 1000;
-    double delta_tempo;
-    double nvotempo;
-    double limiar = 0.2;
+    // double last_RX_time;
+    // // double longitude_deg;
+    // // double latitude_deg;
+    // // double height_m;
+    // // time_t UTC_time;
+    // double tempoo;
+    // double variavelTempo;
+    // double diffSATREC;
+    // double diffSATSAT = 1000;
+    // double delta_tempo;
+    // double nvotempo;
+    // double limiar = 0.2;
     
-    double gps_time_offset;
-    int index = 0;
-    double deltaprange{0};
-    int num_sat = pvt_ptr->get_num_sat_observ();
-    int tam = num_sat * 65 + 2;
-    uint8_t msgVec[tam]{0};
-    // tcflush(comms.fd, TCIFLUSH);
-    // Integer2Hexx(&msgVec[0],0xd4);
-    msgVec[0] = 0xd4;
-    Double2Hexx(&msgVec[1],70);
-    uint8_t checks{0};
-    for (const auto &y : gnss_synchro)
-        {
-            for (const auto &x : gps_map)
-                {
-                    if (y.second.System == 'G')
-                        {
-                            last_RX_time = y.second.RX_time;
-                            if (y.second.PRN == x.second.PRN)
-                                {
-                                    tempoo = y.second.RX_time;
-                                    std::vector<double> LastSatPos(3);
-                                    gps_map.at(x.first).satellitePosition(tempoo);
-                                    // if ((pvt_ptr->get_latest_PVT_(&longitude_deg,
-                                    //          &latitude_deg,
-                                    //          &height_m,
-                                    //          &UTC_time,
-                                    //          &gps_time_offset,
-                                    //          &rx_posX,
-                                    //          &rx_posY,
-                                    //          &rx_posZ,
-                                    //          &rx_velX,
-                                    //          &rx_velY,
-                                    //          &rx_velZ) == true))
-                                    //     {
-                                            //  Step 1
-                                            LastSatPos[0] = x.second.satpos_X;
-                                            LastSatPos[1] = x.second.satpos_Y;
-                                            LastSatPos[2] = x.second.satpos_Z;
+    // double gps_time_offset;
+    // int index = 0;
+    // double deltaprange{0};
+    // int num_sat = pvt_ptr->get_num_sat_observ();
+    // int tam = num_sat * 65 + 2;
+    // uint8_t msgVec[tam]{0};
+    // // tcflush(comms.fd, TCIFLUSH);
+    // // Integer2Hexx(&msgVec[0],0xd4);
+    // msgVec[0] = 0xd4;
+    // Double2Hexx(&msgVec[1],70);
+    // uint8_t checks{0};
+    // for (const auto &y : gnss_synchro)
+    //     {
+    //         for (const auto &x : gps_map)
+    //             {
+    //                 if (y.second.System == 'G')
+    //                     {
+    //                         last_RX_time = y.second.RX_time;
+    //                         if (y.second.PRN == x.second.PRN)
+    //                             {
+    //                                 tempoo = y.second.RX_time;
+    //                                 std::vector<double> LastSatPos(3);
+    //                                 gps_map.at(x.first).satellitePosition(tempoo);
+    //                                 // if ((pvt_ptr->get_latest_PVT_(&longitude_deg,
+    //                                 //          &latitude_deg,
+    //                                 //          &height_m,
+    //                                 //          &UTC_time,
+    //                                 //          &gps_time_offset,
+    //                                 //          &rx_posX,
+    //                                 //          &rx_posY,
+    //                                 //          &rx_posZ,
+    //                                 //          &rx_velX,
+    //                                 //          &rx_velY,
+    //                                 //          &rx_velZ) == true))
+    //                                 //     {
+    //                                         //  Step 1
+    //                                         LastSatPos[0] = x.second.satpos_X;
+    //                                         LastSatPos[1] = x.second.satpos_Y;
+    //                                         LastSatPos[2] = x.second.satpos_Z;
 
-                                            while (diffSATSAT > limiar)
-                                                {
-                                                    //  Step 2
-                                                    diffSATREC = sqrt(
-                                                        (*rx_posX - LastSatPos[0]) * (*rx_posX - LastSatPos[0]) +
-                                                        (*rx_posY - LastSatPos[1]) * (*rx_posY - LastSatPos[1]) +
-                                                        (*rx_posZ - LastSatPos[2]) * (*rx_posZ - LastSatPos[2]));
-                                                    delta_tempo = diffSATREC / SPEED_OF_LIGHT_M_S;
-                                                    // Step 3
-                                                    nvotempo = tempoo - delta_tempo;
-                                                    gps_map.at(x.first).satellitePosition(nvotempo);
-                                                    diffSATSAT = sqrt(
-                                                        (LastSatPos[0] - x.second.satpos_X) * (LastSatPos[0] - x.second.satpos_X) +
-                                                        (LastSatPos[1] - x.second.satpos_Y) * (LastSatPos[1] - x.second.satpos_Y) +
-                                                        (LastSatPos[2] - x.second.satpos_Z) * (LastSatPos[2] - x.second.satpos_Z));
-                                                    LastSatPos[0] = x.second.satpos_X;
-                                                    LastSatPos[1] = x.second.satpos_Y;
-                                                    LastSatPos[2] = x.second.satpos_Z;
-                                                }
-                                            // Step 4
-                                            variavelTempo = nvotempo - gps_time_offset;
-                                            gps_map.at(x.first).satellitePosition(variavelTempo);
-                                        // }
-                                    deltaprange = -SPEED_OF_LIGHT_M_S * (y.second.Carrier_Doppler_hz / 1575420000);
-                                    // Integer2Hex(&msgVec[index + 1], &x.second.PRN);
-                                    msgVec[index + 1] = (uint8_t)y.second.PRN;
-                                    Double2Hex(&msgVec[index + 2], &y.second.Pseudorange_m);
-                                    Double2Hex(&msgVec[index + 10], &deltaprange);
-                                    Double2Hex(&msgVec[index + 18], &x.second.satpos_X);
-                                    Double2Hex(&msgVec[index + 26], &x.second.satpos_Y);
-                                    Double2Hex(&msgVec[index + 34], &x.second.satpos_Z);
-                                    Double2Hex(&msgVec[index + 42], &x.second.satvel_X);
-                                    Double2Hex(&msgVec[index + 50], &x.second.satvel_Y);
-                                    Double2Hex(&msgVec[index + 58], &x.second.satvel_Z);
-                                    index = index + 65;
+    //                                         while (diffSATSAT > limiar)
+    //                                             {
+    //                                                 //  Step 2
+    //                                                 diffSATREC = sqrt(
+    //                                                     (*rx_posX - LastSatPos[0]) * (*rx_posX - LastSatPos[0]) +
+    //                                                     (*rx_posY - LastSatPos[1]) * (*rx_posY - LastSatPos[1]) +
+    //                                                     (*rx_posZ - LastSatPos[2]) * (*rx_posZ - LastSatPos[2]));
+    //                                                 delta_tempo = diffSATREC / SPEED_OF_LIGHT_M_S;
+    //                                                 // Step 3
+    //                                                 nvotempo = tempoo - delta_tempo;
+    //                                                 gps_map.at(x.first).satellitePosition(nvotempo);
+    //                                                 diffSATSAT = sqrt(
+    //                                                     (LastSatPos[0] - x.second.satpos_X) * (LastSatPos[0] - x.second.satpos_X) +
+    //                                                     (LastSatPos[1] - x.second.satpos_Y) * (LastSatPos[1] - x.second.satpos_Y) +
+    //                                                     (LastSatPos[2] - x.second.satpos_Z) * (LastSatPos[2] - x.second.satpos_Z));
+    //                                                 LastSatPos[0] = x.second.satpos_X;
+    //                                                 LastSatPos[1] = x.second.satpos_Y;
+    //                                                 LastSatPos[2] = x.second.satpos_Z;
+    //                                             }
+    //                                         // Step 4
+    //                                         variavelTempo = nvotempo - gps_time_offset;
+    //                                         gps_map.at(x.first).satellitePosition(variavelTempo);
+    //                                     // }
+    //                                 deltaprange = -SPEED_OF_LIGHT_M_S * (y.second.Carrier_Doppler_hz / 1575420000);
+    //                                 // Integer2Hex(&msgVec[index + 1], &x.second.PRN);
+    //                                 msgVec[index + 1] = (uint8_t)y.second.PRN;
+    //                                 Double2Hex(&msgVec[index + 2], &y.second.Pseudorange_m);
+    //                                 Double2Hex(&msgVec[index + 10], &deltaprange);
+    //                                 Double2Hex(&msgVec[index + 18], &x.second.satpos_X);
+    //                                 Double2Hex(&msgVec[index + 26], &x.second.satpos_Y);
+    //                                 Double2Hex(&msgVec[index + 34], &x.second.satpos_Z);
+    //                                 Double2Hex(&msgVec[index + 42], &x.second.satvel_X);
+    //                                 Double2Hex(&msgVec[index + 50], &x.second.satvel_Y);
+    //                                 Double2Hex(&msgVec[index + 58], &x.second.satvel_Z);
+    //                                 index = index + 65;
 
-                                }
-                        }
-                }
-        }
-    for (int i = 0; i < index+1; i++)
-        {
-            // msgVec[index + 1] = msgVec[index + 1] ^ msgVec[i];  // CRC
-            checks ^= msgVec[i];
-        }
-        msgVec[261]=checks;
-    int bytes = HEserial_envio(&comms, &msgVec[0], &tam);
-    std::cout<<"Bytes: "<<bytes<<"\n";
-    // 
+    //                             }
+    //                     }
+    //             }
+    //     }
+    // for (int i = 0; i < index+1; i++)
+    //     {
+    //         // msgVec[index + 1] = msgVec[index + 1] ^ msgVec[i];  // CRC
+    //         checks ^= msgVec[i];
+    //     }
+    //     msgVec[261]=checks;
+    // int bytes = HEserial_envio(&comms, &msgVec[0], &tam);
+    // std::cout<<"Bytes: "<<bytes<<"\n";
+    // // 
 }
 
 

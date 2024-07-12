@@ -323,7 +323,7 @@ extern "C"
         comm.tty.c_lflag &= ~ECHONL;                                                      // Disable new-line echo
         comm.tty.c_lflag &= ~ISIG;                                                        // Disable interpretation of INTR, QUIT and SUSP
         comm.tty.c_iflag &= ~(IXON | IXOFF | IXANY);                                      // Turn off s/w flow ctrl
-        comm.tty.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL); // Disable any special handling of received bytes
+        comm.tty.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | OFILL); // Disable any special handling of received bytes
         comm.tty.c_oflag &= ~OPOST; // Prevent special interpretation of output bytes (e.g. newline chars)
         comm.tty.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
 
@@ -406,7 +406,7 @@ extern "C"
         int result = 0;
         uint8_t buf[2];
         comm->ufds.events = POLLIN;
-        if (poll(&comm->ufds, 1, -1) > 0)
+        if (poll(&comm->ufds, 1, 10) > 0)
             {
                 // while (result < size)
                 //     {
@@ -426,7 +426,7 @@ extern "C"
         // Limpar o buffer se characteres espúrios
         // memset(comm->rxbuff, '\0', sizeof(comm->rxbuff));
         comm->ufds.events = POLLIN;
-        if (poll(&comm->ufds, 1, -1) > 0)
+        if (poll(&comm->ufds, 1, 10) > 0)
         {
             if (comm->ufds.revents & POLLIN)
             {
@@ -502,6 +502,17 @@ extern "C"
             }
     }
 
+    void Double2HexAlt(uint8_t *output, double *input)
+    {
+        // Output -> vetor de msg
+        // Input -> valor a ser compactado
+        for (int i = 0; i < 8; i++)
+            {
+                *output = *((uint8_t *)input + i);
+                output = output + 1;
+            }
+    }
+
     void Hex2Double(double *output, uint8_t *input)
     {
         for (int i = 0; i < 8; i++)
@@ -546,7 +557,7 @@ extern "C"
     {
         // Output -> vetor de msg
         // Input -> valor a ser compactado
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < 4; i++)
             {
                 *output = *((uint8_t *)input + i);
                 output = output + 1;
@@ -557,7 +568,7 @@ extern "C"
     {
         // Output -> vetor de msg
         // Input -> valor a ser compactado
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < 4; i++)
             {
                 *output = *((uint8_t *)&input + i);
                 output = output + 1;
@@ -566,9 +577,9 @@ extern "C"
 
     void Hex2Integer(uint32_t *output, uint8_t *input)
     {
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 4; i++)
             {
-                *((uint32_t *)output + i) = *input;
+                *((uint8_t *)output + i) = *input;
                 input++;
             }
     }
