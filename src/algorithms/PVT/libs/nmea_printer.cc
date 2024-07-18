@@ -55,7 +55,7 @@ Nmea_Printer::Nmea_Printer(const std::string& filename,
                                 {
                                     if (!fs::create_directory(new_folder, ec))
                                         {
-                                            std::cout << "Could not create the " << new_folder << " folder." << std::endl;
+                                            // std::cout << "Could not create the " << new_folder << " folder." << std::endl;
                                             nmea_base_path = full_path.string();
                                         }
                                 }
@@ -69,7 +69,7 @@ Nmea_Printer::Nmea_Printer(const std::string& filename,
 
             if ((nmea_base_path != ".") and (d_flag_nmea_output_file == true))
                 {
-                    std::cout << "NMEA files will be stored at " << nmea_base_path << std::endl;
+                    // std::cout << "NMEA files will be stored at " << nmea_base_path << std::endl;
                 }
 
             nmea_base_path = nmea_base_path + fs::path::preferred_separator;
@@ -79,11 +79,11 @@ Nmea_Printer::Nmea_Printer(const std::string& filename,
             nmea_file_descriptor.open(nmea_filename.c_str(), std::ios::out);
             if (nmea_file_descriptor.is_open())
                 {
-                    DLOG(INFO) << "NMEA printer writing on " << nmea_filename.c_str();
+                    // DLOG(INFO) << "NMEA printer writing on " << nmea_filename.c_str();
                 }
             else
                 {
-                    std::cout << "File " << nmea_filename << " cannot be saved. Wrong permissions?" << std::endl;
+                    // std::cout << "File " << nmea_filename << " cannot be saved. Wrong permissions?" << std::endl;
                 }
         }
 
@@ -93,7 +93,7 @@ Nmea_Printer::Nmea_Printer(const std::string& filename,
             nmea_dev_descriptor = init_serial(nmea_devname);
             if (nmea_dev_descriptor != -1)
                 {
-                    DLOG(INFO) << "NMEA printer writing on " << nmea_devname.c_str();
+                    // DLOG(INFO) << "NMEA printer writing on " << nmea_devname.c_str();
                 }
         }
     else
@@ -107,7 +107,7 @@ Nmea_Printer::Nmea_Printer(const std::string& filename,
 
 Nmea_Printer::~Nmea_Printer()
 {
-    DLOG(INFO) << "NMEA printer destructor called.";
+    // DLOG(INFO) << "NMEA printer destructor called.";
     const auto pos = nmea_file_descriptor.tellp();
     try
         {
@@ -166,7 +166,7 @@ int Nmea_Printer::init_serial(const std::string& serial_device)
 
     if (fcntl(fd, F_SETFL, 0) == -1)
         {
-            LOG(INFO) << "Error enabling direct I/O";  // clear all flags on descriptor, enable direct I/O
+           // LOG(INFO) << "Error enabling direct I/O";  // clear all flags on descriptor, enable direct I/O
         }
     tcgetattr(fd, &options);  // read serial port options
 
@@ -221,7 +221,7 @@ bool Nmea_Printer::Print_Nmea_Line(const Rtklib_Solver* const pvt_data, bool pri
                 }
             catch (const std::exception& ex)
                 {
-                    DLOG(INFO) << "NMEA printer can not write on output file" << nmea_filename.c_str();
+                    // DLOG(INFO) << "NMEA printer can not write on output file" << nmea_filename.c_str();
                 }
         }
 
@@ -230,22 +230,22 @@ bool Nmea_Printer::Print_Nmea_Line(const Rtklib_Solver* const pvt_data, bool pri
         {
             if (write(nmea_dev_descriptor, GPRMC.c_str(), GPRMC.length()) == -1)
                 {
-                    DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
+                    // DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
                     return false;
                 }
             if (write(nmea_dev_descriptor, GPGGA.c_str(), GPGGA.length()) == -1)
                 {
-                    DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
+                    // DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
                     return false;
                 }
             if (write(nmea_dev_descriptor, GPGSA.c_str(), GPGSA.length()) == -1)
                 {
-                    DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
+                    // DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
                     return false;
                 }
             if (write(nmea_dev_descriptor, GPGSV.c_str(), GPGSV.length()) == -1)
                 {
-                    DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
+                    // DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
                     return false;
                 }
         }

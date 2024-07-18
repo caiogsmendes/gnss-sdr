@@ -52,7 +52,7 @@ PulseBlankingFilter::PulseBlankingFilter(const ConfigurationInterface* configura
     item_type_ = configuration->property(role_ + ".item_type", default_item_type);
     dump_ = configuration->property(role_ + ".dump", false);
 
-    DLOG(INFO) << "role " << role_;
+    // DLOG(INFO) << "role " << role_;
     size_t item_size;
     if (item_type_ == "gr_complex")
         {
@@ -62,7 +62,7 @@ PulseBlankingFilter::PulseBlankingFilter(const ConfigurationInterface* configura
         }
     else
         {
-            LOG(ERROR) << "Unknown input filter item_types conversion";
+            // LOG(ERROR) << "Unknown input filter item_types conversion";
             item_size = sizeof(gr_complex);  // avoids uninitialization
             input_size_ = 0;                 // notify wrong configuration
         }
@@ -84,17 +84,17 @@ PulseBlankingFilter::PulseBlankingFilter(const ConfigurationInterface* configura
         }
     if (dump_)
         {
-            DLOG(INFO) << "Dumping output into file " << dump_filename_;
-            std::cout << "Dumping output into file " << dump_filename_ << '\n';
+            // DLOG(INFO) << "Dumping output into file " << dump_filename_;
+            // std::cout << "Dumping output into file " << dump_filename_ << '\n';
             file_sink_ = gr::blocks::file_sink::make(item_size, dump_filename_.c_str());
         }
     if (in_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 
@@ -115,7 +115,7 @@ void PulseBlankingFilter::connect(gr::top_block_sptr top_block)
 
     else
         {
-            LOG(ERROR) << " Unknown input filter input/output item type conversion";
+            // LOG(ERROR) << " Unknown input filter input/output item type conversion";
         }
 }
 
@@ -135,7 +135,7 @@ void PulseBlankingFilter::disconnect(gr::top_block_sptr top_block)
         }
     else
         {
-            LOG(ERROR) << " Unknown input filter input/output item type conversion";
+            // LOG(ERROR) << " Unknown input filter input/output item type conversion";
         }
 }
 
@@ -150,7 +150,7 @@ gr::basic_block_sptr PulseBlankingFilter::get_left_block()
                 }
             return pulse_blanking_cc_;
         }
-    LOG(ERROR) << " Unknown input filter input/output item type conversion";
+    // LOG(ERROR) << " Unknown input filter input/output item type conversion";
     return nullptr;
 }
 
@@ -161,6 +161,6 @@ gr::basic_block_sptr PulseBlankingFilter::get_right_block()
         {
             return pulse_blanking_cc_;
         }
-    LOG(ERROR) << " Unknown input filter input/output item type conversion";
+    // LOG(ERROR) << " Unknown input filter input/output item type conversion";
     return nullptr;
 }

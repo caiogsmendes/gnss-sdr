@@ -179,9 +179,9 @@ bool Cpu_Multicorrelator_Real_Codes::Carrier_wipeoff_multicorrelator_resampler(
 
     // filename<<d_local_codes_resampled_real[signal_length_samples][0]<<" "<<d_local_codes_resampled_imag[signal_length_samples][0]<<"\n";
 
-    // std::cout<<TEXT_CYAN<<"Carrier_wipeoff\n";
-    // std::cout<<TEXT_RESET<<"\n";
-    // std::cout<<const_cast<const lv_32fc_t**>(d_local_codes_resampled)<<"\n";
+    // // std::cout<<TEXT_CYAN<<"Carrier_wipeoff\n";
+    // // std::cout<<TEXT_RESET<<"\n";
+    // // std::cout<<const_cast<const lv_32fc_t**>(d_local_codes_resampled)<<"\n";
 
     
     

@@ -106,35 +106,35 @@ FreqXlatingFirFilter::FreqXlatingFirFilter(const ConfigurationInterface* configu
         }
 
     size_t item_size;
-    DLOG(INFO) << "role " << role_;
-    LOG(INFO) << "Created freq_xlating_fir_filter with " << taps_.size() << " taps";
+    // DLOG(INFO) << "role " << role_;
+   // LOG(INFO) << "Created freq_xlating_fir_filter with " << taps_.size() << " taps";
     if ((taps_item_type_ == "float") && (input_item_type_ == "gr_complex") && (output_item_type_ == "gr_complex"))
         {
             item_size = sizeof(gr_complex);    // output
             input_size_ = sizeof(gr_complex);  // input
             freq_xlating_fir_filter_ccf_ = gr::filter::freq_xlating_fir_filter_ccf::make(decimation_factor_, taps_, intermediate_freq_, sampling_freq_);
-            DLOG(INFO) << "input_filter(" << freq_xlating_fir_filter_ccf_->unique_id() << ")";
+            // DLOG(INFO) << "input_filter(" << freq_xlating_fir_filter_ccf_->unique_id() << ")";
         }
     else if ((taps_item_type_ == "float") && (input_item_type_ == "float") && (output_item_type_ == "gr_complex"))
         {
             item_size = sizeof(gr_complex);
             input_size_ = sizeof(float);  // input
             freq_xlating_fir_filter_fcf_ = gr::filter::freq_xlating_fir_filter_fcf::make(decimation_factor_, taps_, intermediate_freq_, sampling_freq_);
-            DLOG(INFO) << "input_filter(" << freq_xlating_fir_filter_fcf_->unique_id() << ")";
+            // DLOG(INFO) << "input_filter(" << freq_xlating_fir_filter_fcf_->unique_id() << ")";
         }
     else if ((taps_item_type_ == "float") && (input_item_type_ == "short") && (output_item_type_ == "gr_complex"))
         {
             item_size = sizeof(gr_complex);
             input_size_ = sizeof(int16_t);  // input
             freq_xlating_fir_filter_scf_ = gr::filter::freq_xlating_fir_filter_scf::make(decimation_factor_, taps_, intermediate_freq_, sampling_freq_);
-            DLOG(INFO) << "input_filter(" << freq_xlating_fir_filter_scf_->unique_id() << ")";
+            // DLOG(INFO) << "input_filter(" << freq_xlating_fir_filter_scf_->unique_id() << ")";
         }
     else if ((taps_item_type_ == "float") && (input_item_type_ == "short") && (output_item_type_ == "cshort"))
         {
             item_size = sizeof(lv_16sc_t);
             input_size_ = sizeof(int16_t);  // input
             freq_xlating_fir_filter_scf_ = gr::filter::freq_xlating_fir_filter_scf::make(decimation_factor_, taps_, intermediate_freq_, sampling_freq_);
-            DLOG(INFO) << "input_filter(" << freq_xlating_fir_filter_scf_->unique_id() << ")";
+            // DLOG(INFO) << "input_filter(" << freq_xlating_fir_filter_scf_->unique_id() << ")";
             complex_to_float_ = gr::blocks::complex_to_float::make();
             float_to_short_1_ = gr::blocks::float_to_short::make();
             float_to_short_2_ = gr::blocks::float_to_short::make();
@@ -146,7 +146,7 @@ FreqXlatingFirFilter::FreqXlatingFirFilter(const ConfigurationInterface* configu
             input_size_ = sizeof(int8_t);  // input
             gr_char_to_short_ = gr::blocks::char_to_short::make();
             freq_xlating_fir_filter_scf_ = gr::filter::freq_xlating_fir_filter_scf::make(decimation_factor_, taps_, intermediate_freq_, sampling_freq_);
-            DLOG(INFO) << "input_filter(" << freq_xlating_fir_filter_scf_->unique_id() << ")";
+            // DLOG(INFO) << "input_filter(" << freq_xlating_fir_filter_scf_->unique_id() << ")";
         }
     else if ((taps_item_type_ == "float") && (input_item_type_ == "byte") && (output_item_type_ == "cbyte"))
         {
@@ -154,29 +154,29 @@ FreqXlatingFirFilter::FreqXlatingFirFilter(const ConfigurationInterface* configu
             input_size_ = sizeof(int8_t);  // input
             gr_char_to_short_ = gr::blocks::char_to_short::make();
             freq_xlating_fir_filter_scf_ = gr::filter::freq_xlating_fir_filter_scf::make(decimation_factor_, taps_, intermediate_freq_, sampling_freq_);
-            DLOG(INFO) << "input_filter(" << freq_xlating_fir_filter_scf_->unique_id() << ")";
+            // DLOG(INFO) << "input_filter(" << freq_xlating_fir_filter_scf_->unique_id() << ")";
             complex_to_complex_byte_ = make_complex_float_to_complex_byte();
         }
     else
         {
-            LOG(ERROR) << " Unknown input filter input/output item type conversion";
+            // LOG(ERROR) << " Unknown input filter input/output item type conversion";
             item_size = sizeof(gr_complex);  // avoids uninitialization
             input_size_ = 0;                 // notifies wrong configuration
         }
 
     if (dump_)
         {
-            DLOG(INFO) << "Dumping output into file " << dump_filename_;
-            std::cout << "Dumping output into file " << dump_filename_ << '\n';
+            // DLOG(INFO) << "Dumping output into file " << dump_filename_;
+            // std::cout << "Dumping output into file " << dump_filename_ << '\n';
             file_sink_ = gr::blocks::file_sink::make(item_size, dump_filename_.c_str());
         }
     if (in_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 
@@ -235,7 +235,7 @@ void FreqXlatingFirFilter::connect(gr::top_block_sptr top_block)
         }
     else
         {
-            LOG(ERROR) << " Unknown input filter input/output item type conversion";
+            // LOG(ERROR) << " Unknown input filter input/output item type conversion";
         }
 }
 
@@ -294,7 +294,7 @@ void FreqXlatingFirFilter::disconnect(gr::top_block_sptr top_block)
         }
     else
         {
-            LOG(ERROR) << " Unknown input filter input/output item type conversion";
+            // LOG(ERROR) << " Unknown input filter input/output item type conversion";
         }
 }
 
@@ -326,7 +326,7 @@ gr::basic_block_sptr FreqXlatingFirFilter::get_left_block()
             return gr_char_to_short_;
         }
 
-    LOG(WARNING) << " Unknown input filter input/output item type conversion";
+    // LOG(WARNING) << " Unknown input filter input/output item type conversion";
     return nullptr;
 }
 
@@ -358,6 +358,6 @@ gr::basic_block_sptr FreqXlatingFirFilter::get_right_block()
             return complex_to_complex_byte_;
         }
 
-    LOG(WARNING) << " Unknown input filter input/output item type conversion";
+    // LOG(WARNING) << " Unknown input filter input/output item type conversion";
     return nullptr;
 }

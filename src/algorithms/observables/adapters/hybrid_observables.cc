@@ -48,13 +48,13 @@ HybridObservables::HybridObservables(const ConfigurationInterface* configuration
         {
             conf.smoothing_factor = configuration->property(role + ".smoothing_factor", conf.smoothing_factor);
         }
-    DLOG(INFO) << "role " << role;
+    // DLOG(INFO) << "role " << role;
     if (conf.enable_carrier_smoothing == true)
         {
-            LOG(INFO) << "Observables carrier smoothing enabled with smoothing factor " << conf.smoothing_factor;
+           // LOG(INFO) << "Observables carrier smoothing enabled with smoothing factor " << conf.smoothing_factor;
         }
     observables_ = hybrid_observables_gs_make(conf);
-    DLOG(INFO) << "Observables block ID (" << observables_->unique_id() << ")";
+    // DLOG(INFO) << "Observables block ID (" << observables_->unique_id() << ")";
 }
 
 
@@ -64,7 +64,7 @@ void HybridObservables::connect(gr::top_block_sptr top_block)
         { /* top_block is not null */
         };
     // Nothing to connect internally
-    DLOG(INFO) << "nothing to connect internally";
+    // DLOG(INFO) << "nothing to connect internally";
 }
 
 

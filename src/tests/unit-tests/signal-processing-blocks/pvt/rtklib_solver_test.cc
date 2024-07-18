@@ -69,10 +69,10 @@ rtk_t configure_rtklib_options()
     if (positioning_mode == -1)
         {
             // warn user and set the default
-            std::cout << "WARNING: Bad specification of positioning mode.\n";
-            std::cout << "positioning_mode possible values: Single / Static / Kinematic / PPP_Static / PPP_Kinematic\n";
-            std::cout << "positioning_mode specified value: " << positioning_mode_str << '\n';
-            std::cout << "Setting positioning_mode to Single\n";
+            // std::cout << "WARNING: Bad specification of positioning mode.\n";
+            // std::cout << "positioning_mode possible values: Single / Static / Kinematic / PPP_Static / PPP_Kinematic\n";
+            // std::cout << "positioning_mode specified value: " << positioning_mode_str << '\n';
+            // std::cout << "Setting positioning_mode to Single\n";
             positioning_mode = PMODE_SINGLE;
         }
 
@@ -94,7 +94,7 @@ rtk_t configure_rtklib_options()
     if ((elevation_mask < 0.0) || (elevation_mask > 90.0))
         {
             // warn user and set the default
-            LOG(WARNING) << "Erroneous Elevation Mask. Setting to default value of 15.0 degrees";
+            // LOG(WARNING) << "Erroneous Elevation Mask. Setting to default value of 15.0 degrees";
             elevation_mask = 15.0;
         }
 
@@ -102,7 +102,7 @@ rtk_t configure_rtklib_options()
     if ((dynamics_model < 0) || (dynamics_model > 2))
         {
             // warn user and set the default
-            LOG(WARNING) << "Erroneous Dynamics Model configuration. Setting to default value of (0:none)";
+            // LOG(WARNING) << "Erroneous Dynamics Model configuration. Setting to default value of (0:none)";
             dynamics_model = 0;
         }
 
@@ -136,10 +136,10 @@ rtk_t configure_rtklib_options()
     if (iono_model == -1)
         {
             // warn user and set the default
-            std::cout << "WARNING: Bad specification of ionospheric model.\n";
-            std::cout << "iono_model possible values: OFF / Broadcast / SBAS / Iono-Free-LC / Estimate_STEC / IONEX\n";
-            std::cout << "iono_model specified value: " << iono_model_str << '\n';
-            std::cout << "Setting iono_model to OFF\n";
+            // std::cout << "WARNING: Bad specification of ionospheric model.\n";
+            // std::cout << "iono_model possible values: OFF / Broadcast / SBAS / Iono-Free-LC / Estimate_STEC / IONEX\n";
+            // std::cout << "iono_model specified value: " << iono_model_str << '\n';
+            // std::cout << "Setting iono_model to OFF\n";
             iono_model = IONOOPT_OFF; /* 0: ionosphere option: correction off */
         }
 
@@ -169,10 +169,10 @@ rtk_t configure_rtklib_options()
     if (trop_model == -1)
         {
             // warn user and set the default
-            std::cout << "WARNING: Bad specification of tropospheric model.\n";
-            std::cout << "trop_model possible values: OFF / Saastamoinen / SBAS / Estimate_ZTD / Estimate_ZTD_Grad\n";
-            std::cout << "trop_model specified value: " << trop_model_str << '\n';
-            std::cout << "Setting trop_model to OFF\n";
+            // std::cout << "WARNING: Bad specification of tropospheric model.\n";
+            // std::cout << "trop_model possible values: OFF / Saastamoinen / SBAS / Estimate_ZTD / Estimate_ZTD_Grad\n";
+            // std::cout << "trop_model specified value: " << trop_model_str << '\n';
+            // std::cout << "Setting trop_model to OFF\n";
             trop_model = TROPOPT_OFF;
         }
 
@@ -202,7 +202,7 @@ rtk_t configure_rtklib_options()
     if ((navigation_system < 1) || (navigation_system > 255))                           /* GPS: 1   SBAS: 2   GPS+SBAS: 3 Galileo: 8  Galileo+GPS: 9 GPS+SBAS+Galileo: 11 All: 255 */
         {
             // warn user and set the default
-            LOG(WARNING) << "Erroneous Navigation System. Setting to default value of (0:none)";
+            // LOG(WARNING) << "Erroneous Navigation System. Setting to default value of (0:none)";
             navigation_system = nsys;
         }
 
@@ -233,10 +233,10 @@ rtk_t configure_rtklib_options()
     if (integer_ambiguity_resolution_gps == -1)
         {
             // warn user and set the default
-            std::cout << "WARNING: Bad specification of GPS ambiguity resolution method.\n";
-            std::cout << "AR_GPS possible values: OFF / Continuous / Instantaneous / Fix-and-Hold / PPP-AR\n";
-            std::cout << "AR_GPS specified value: " << integer_ambiguity_resolution_gps_str << '\n';
-            std::cout << "Setting AR_GPS to OFF\n";
+            // std::cout << "WARNING: Bad specification of GPS ambiguity resolution method.\n";
+            // std::cout << "AR_GPS possible values: OFF / Continuous / Instantaneous / Fix-and-Hold / PPP-AR\n";
+            // std::cout << "AR_GPS specified value: " << integer_ambiguity_resolution_gps_str << '\n';
+            // std::cout << "Setting AR_GPS to OFF\n";
             integer_ambiguity_resolution_gps = ARMODE_OFF;
         }
 
@@ -244,7 +244,7 @@ rtk_t configure_rtklib_options()
     if ((integer_ambiguity_resolution_glo < 0) || (integer_ambiguity_resolution_glo > 3))
         {
             // warn user and set the default
-            LOG(WARNING) << "Erroneous Integer Ambiguity Resolution for GLONASS . Setting to default value of (1:on)";
+            // LOG(WARNING) << "Erroneous Integer Ambiguity Resolution for GLONASS . Setting to default value of (1:on)";
             integer_ambiguity_resolution_glo = 1;
         }
 
@@ -252,7 +252,7 @@ rtk_t configure_rtklib_options()
     if ((integer_ambiguity_resolution_bds < 0) || (integer_ambiguity_resolution_bds > 1))
         {
             // warn user and set the default
-            LOG(WARNING) << "Erroneous Integer Ambiguity Resolution for BEIDOU . Setting to default value of (1:on)";
+            // LOG(WARNING) << "Erroneous Integer Ambiguity Resolution for BEIDOU . Setting to default value of (1:on)";
             integer_ambiguity_resolution_bds = 1;
         }
 
@@ -391,7 +391,7 @@ TEST(RTKLibSolverTest, test1)
     std::string eph_xml_filename = path + "data/rtklib_test/eph_GPS_L1CA_test1.xml";
     Gnss_Sdr_Supl_Client supl_client_ephemeris_;
 
-    std::cout << "SUPL: Try read GPS ephemeris from XML file " << eph_xml_filename << '\n';
+    // std::cout << "SUPL: Try read GPS ephemeris from XML file " << eph_xml_filename << '\n';
     if (supl_client_ephemeris_.load_ephemeris_xml(eph_xml_filename) == true)
         {
             std::map<int, Gps_Ephemeris>::const_iterator gps_eph_iter;
@@ -399,7 +399,7 @@ TEST(RTKLibSolverTest, test1)
                  gps_eph_iter != supl_client_ephemeris_.gps_ephemeris_map.cend();
                  gps_eph_iter++)
                 {
-                    std::cout << "SUPL: Read XML Ephemeris for GPS SV " << gps_eph_iter->first << '\n';
+                    // std::cout << "SUPL: Read XML Ephemeris for GPS SV " << gps_eph_iter->first << '\n';
                     std::shared_ptr<Gps_Ephemeris> tmp_obj = std::make_shared<Gps_Ephemeris>(gps_eph_iter->second);
                     // update/insert new ephemeris record to the global ephemeris map
                     d_ls_pvt->gps_ephemeris_map[gps_eph_iter->first] = *tmp_obj;
@@ -407,7 +407,7 @@ TEST(RTKLibSolverTest, test1)
         }
     else
         {
-            std::cout << "ERROR: SUPL client error reading XML\n";
+            // std::cout << "ERROR: SUPL client error reading XML\n";
         }
 
     // insert observables epoch
@@ -431,11 +431,11 @@ TEST(RTKLibSolverTest, test1)
             boost::archive::xml_iarchive xml(ifs);
             gnss_synchro_map.clear();
             xml >> boost::serialization::make_nvp("GNSS-SDR_gnss_synchro_map", gnss_synchro_map);
-            std::cout << "Loaded gnss_synchro map data with " << gnss_synchro_map.size() << " pseudoranges\n";
+            // std::cout << "Loaded gnss_synchro map data with " << gnss_synchro_map.size() << " pseudoranges\n";
         }
     catch (std::exception& e)
         {
-            std::cout << e.what() << "File: " << file_name;
+            // std::cout << e.what() << "File: " << file_name;
         }
     ifs.close();
 
@@ -446,33 +446,33 @@ TEST(RTKLibSolverTest, test1)
             // DEBUG MESSAGE: Display position in console output
             if (d_ls_pvt->is_valid_position())
                 {
-                    std::streamsize ss = std::cout.precision();  // save current precision
-                    std::cout.setf(std::ios::fixed, std::ios::floatfield);
+                    std::streamsize ss = // std::cout.precision();  // save current precision
+                    // std::cout.setf(std::ios::fixed, std::ios::floatfield);
 
                     auto facet = new boost::posix_time::time_facet("%Y-%b-%d %H:%M:%S.%f %z");
-                    std::cout.imbue(std::locale(std::cout.getloc(), facet));
+                    // std::cout.imbue(std::locale(// std::cout.getloc(), facet));
 
-                    std::cout << "Position at " << d_ls_pvt->get_position_UTC_time()
+                    // std::cout << "Position at " << d_ls_pvt->get_position_UTC_time()
                               << " UTC using " << d_ls_pvt->get_num_valid_observations()
                               << std::fixed << std::setprecision(9)
                               << " observations is Lat = " << d_ls_pvt->get_latitude() << " [deg], Long = " << d_ls_pvt->get_longitude()
                               << std::fixed << std::setprecision(3)
                               << " [deg], Height = " << d_ls_pvt->get_height() << " [m]\n";
-                    std::cout << std::setprecision(ss);
-                    std::cout << "RX clock offset: " << d_ls_pvt->get_time_offset_s() << "[s]\n";
+                    // std::cout << std::setprecision(ss);
+                    // std::cout << "RX clock offset: " << d_ls_pvt->get_time_offset_s() << "[s]\n";
 
                     // boost::posix_time::ptime p_time;
                     // gtime_t rtklib_utc_time = gpst2time(adjgpsweek(d_ls_pvt->gps_ephemeris_map.cbegin()->second.i_GPS_week), d_rx_time);
                     // p_time = boost::posix_time::from_time_t(rtklib_utc_time.time);
                     // p_time += boost::posix_time::microseconds(round(rtklib_utc_time.sec * 1e6));
-                    // std::cout << TEXT_MAGENTA << "Observable RX time (GPST) " << boost::posix_time::to_simple_string(p_time) << TEXT_RESET << '\n';
+                    // // std::cout << TEXT_MAGENTA << "Observable RX time (GPST) " << boost::posix_time::to_simple_string(p_time) << TEXT_RESET << '\n';
 
-                    std::cout << "RTKLIB Position at RX TOW = " << gnss_synchro_map.begin()->second.RX_time
+                    // std::cout << "RTKLIB Position at RX TOW = " << gnss_synchro_map.begin()->second.RX_time
                               << " in ECEF (X,Y,Z,t[meters]) = " << std::fixed << std::setprecision(16)
                               << d_ls_pvt->pvt_sol.rr[0] << ","
                               << d_ls_pvt->pvt_sol.rr[1] << ","
                               << d_ls_pvt->pvt_sol.rr[2] << '\n';
-                    /* std::cout << "Dilution of Precision at " << boost::posix_time::to_simple_string(d_ls_pvt->get_position_UTC_time())
+                    /* // std::cout << "Dilution of Precision at " << boost::posix_time::to_simple_string(d_ls_pvt->get_position_UTC_time())
                              << " UTC using "<< d_ls_pvt->get_num_valid_observations() <<" observations is HDOP = " << d_ls_pvt->get_hdop() << " VDOP = "
                              << d_ls_pvt->get_vdop()
                              << " GDOP = " << d_ls_pvt->get_gdop() << '\n'; */
@@ -482,11 +482,11 @@ TEST(RTKLibSolverTest, test1)
                     arma::vec LLH = {30.286502, 120.032669, 100};  // ref position for this scenario
 
                     double error_LLH_m = great_circle_distance(LLH(0), LLH(1), d_ls_pvt->get_latitude(), d_ls_pvt->get_longitude());
-                    std::cout << "Lat, Long, H error: " << d_ls_pvt->get_latitude() - LLH(0)
+                    // std::cout << "Lat, Long, H error: " << d_ls_pvt->get_latitude() - LLH(0)
                               << "," << d_ls_pvt->get_longitude() - LLH(1)
                               << "," << d_ls_pvt->get_height() - LLH(2) << " [deg,deg,meters]\n";
 
-                    std::cout << "Haversine Great Circle error LLH distance: " << error_LLH_m << " [meters]\n";
+                    // std::cout << "Haversine Great Circle error LLH distance: " << error_LLH_m << " [meters]\n";
 
                     arma::vec v_eb_n = {0.0, 0.0, 0.0};
                     arma::vec true_r_eb_e;
@@ -497,11 +497,11 @@ TEST(RTKLibSolverTest, test1)
 
                     arma::vec error_r_eb_e = measured_r_eb_e - true_r_eb_e;
 
-                    std::cout << "ECEF position error vector: " << error_r_eb_e << " [meters]\n";
+                    // std::cout << "ECEF position error vector: " << error_r_eb_e << " [meters]\n";
 
                     double error_3d_m = arma::norm(error_r_eb_e, 2);
 
-                    std::cout << "3D positioning error: " << error_3d_m << " [meters]\n";
+                    // std::cout << "3D positioning error: " << error_3d_m << " [meters]\n";
 
                     // check results against the test tolerance
                     ASSERT_LT(error_3d_m, 0.2);

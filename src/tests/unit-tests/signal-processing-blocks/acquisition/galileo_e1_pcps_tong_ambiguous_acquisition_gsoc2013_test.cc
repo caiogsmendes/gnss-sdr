@@ -91,7 +91,7 @@ void GalileoE1PcpsTongAmbiguousAcquisitionGSoC2013Test_msg_rx::msg_handler_chann
         }
     catch (const wht::bad_any_cast& e)
         {
-            LOG(WARNING) << "msg_handler_channel_events Bad any_cast: " << e.what();
+            // LOG(WARNING) << "msg_handler_channel_events Bad any_cast: " << e.what();
             rx_message = 0;
         }
 }
@@ -403,7 +403,7 @@ void GalileoE1PcpsTongAmbiguousAcquisitionGSoC2013Test::process_message()
 
     realization_counter++;
 
-    std::cout << "Progress: " << round(static_cast<float>(realization_counter) / static_cast<float>(num_of_realizations) * 100.0) << "% \r" << std::flush;
+    // std::cout << "Progress: " << round(static_cast<float>(realization_counter) / static_cast<float>(num_of_realizations) * 100.0) << "% \r" << std::flush;
 
     if (realization_counter == num_of_realizations)
         {
@@ -419,7 +419,7 @@ void GalileoE1PcpsTongAmbiguousAcquisitionGSoC2013Test::process_message()
             stop_queue();
             top_block->stop();
 
-            std::cout << '\n';
+            // std::cout << '\n';
         }
 }
 
@@ -464,7 +464,7 @@ TEST_F(GalileoE1PcpsTongAmbiguousAcquisitionGSoC2013Test, ConnectAndRun)
         elapsed_seconds = end - start;
     }) << "Failure running the top_block.";
 
-    std::cout << "Processed " << nsamples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
+    // std::cout << "Processed " << nsamples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
 }
 
 
@@ -549,8 +549,8 @@ TEST_F(GalileoE1PcpsTongAmbiguousAcquisitionGSoC2013Test, ValidationOfResults)
                     EXPECT_EQ(2, message) << "Acquisition failure. Expected message: 2=ACQ FAIL.";
                 }
 
-            // std::cout << "Delay: " << gnss_synchro.Acq_delay_samples << '\n';
-            // std::cout << "Doppler: " << gnss_synchro.Acq_doppler_hz << '\n';
+            // // std::cout << "Delay: " << gnss_synchro.Acq_delay_samples << '\n';
+            // // std::cout << "Doppler: " << gnss_synchro.Acq_doppler_hz << '\n';
             ch_thread.join();
         }
 }
@@ -600,7 +600,7 @@ TEST_F(GalileoE1PcpsTongAmbiguousAcquisitionGSoC2013Test, ValidationOfResultsPro
         top_block->msg_connect(acquisition->get_right_block(), pmt::mp("events"), msg_rx, pmt::mp("events"));
     }) << "Failure connecting the blocks of acquisition test.";
 
-    std::cout << "Probability of false alarm (target) = " << 0.1 << '\n';
+    // std::cout << "Probability of false alarm (target) = " << 0.1 << '\n';
 
     // i = 0 --> satellite in acquisition is visible (prob of detection and prob of detection with wrong estimation)
     // i = 1 --> satellite in acquisition is not visible (prob of false detection)
@@ -629,14 +629,14 @@ TEST_F(GalileoE1PcpsTongAmbiguousAcquisitionGSoC2013Test, ValidationOfResultsPro
 
             if (i == 0)
                 {
-                    std::cout << "Estimated probability of detection = " << Pd << '\n';
-                    std::cout << "Estimated probability of false alarm (satellite present) = " << Pfa_p << '\n';
-                    std::cout << "Mean acq time = " << mean_acq_time_us << " microseconds.\n";
+                    // std::cout << "Estimated probability of detection = " << Pd << '\n';
+                    // std::cout << "Estimated probability of false alarm (satellite present) = " << Pfa_p << '\n';
+                    // std::cout << "Mean acq time = " << mean_acq_time_us << " microseconds.\n";
                 }
             else if (i == 1)
                 {
-                    std::cout << "Estimated probability of false alarm (satellite absent) = " << Pfa_a << '\n';
-                    std::cout << "Mean acq time = " << mean_acq_time_us << " microseconds.\n";
+                    // std::cout << "Estimated probability of false alarm (satellite absent) = " << Pfa_a << '\n';
+                    // std::cout << "Mean acq time = " << mean_acq_time_us << " microseconds.\n";
                 }
             ch_thread.join();
         }

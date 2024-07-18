@@ -33,19 +33,19 @@ GalileoE5aTelemetryDecoder::GalileoE5aTelemetryDecoder(
                                 in_streams_(in_streams),
                                 out_streams_(out_streams)
 {
-    DLOG(INFO) << "role " << role;
+    // DLOG(INFO) << "role " << role;
     tlm_parameters_.SetFromConfiguration(configuration, role);
     // make telemetry decoder object
     telemetry_decoder_ = galileo_make_telemetry_decoder_gs(satellite_, tlm_parameters_, 2);  // unified galileo decoder set to FNAV (frame_type=2)
-    DLOG(INFO) << "telemetry_decoder(" << telemetry_decoder_->unique_id() << ")";
+    // DLOG(INFO) << "telemetry_decoder(" << telemetry_decoder_->unique_id() << ")";
 
     if (in_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 
@@ -54,7 +54,7 @@ void GalileoE5aTelemetryDecoder::set_satellite(const Gnss_Satellite& satellite)
 {
     satellite_ = Gnss_Satellite(satellite.get_system(), satellite.get_PRN());
     telemetry_decoder_->set_satellite(satellite_);
-    DLOG(INFO) << "TELEMETRY DECODER: satellite set to " << satellite_;
+    // DLOG(INFO) << "TELEMETRY DECODER: satellite set to " << satellite_;
 }
 
 
@@ -64,7 +64,7 @@ void GalileoE5aTelemetryDecoder::connect(gr::top_block_sptr top_block)
         { /* top_block is not null */
         };
     // Nothing to connect internally
-    DLOG(INFO) << "nothing to connect internally";
+    // DLOG(INFO) << "nothing to connect internally";
 }
 
 

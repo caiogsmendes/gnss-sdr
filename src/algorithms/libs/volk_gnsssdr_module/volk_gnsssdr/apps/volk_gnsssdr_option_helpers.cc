@@ -92,7 +92,7 @@ void option_list::parse(int argc, char **argv)
                                         }
                                     catch (std::exception &exc)
                                         {
-                                            std::cout << "An int option can only receive a number\n";
+                                            // std::cout << "An int option can only receive a number\n";
                                             throw std::exception();
                                         };
                                     break;
@@ -104,7 +104,7 @@ void option_list::parse(int argc, char **argv)
                                         }
                                     catch (std::exception &exc)
                                         {
-                                            std::cout << "A float option can only receive a number\n";
+                                            // std::cout << "A float option can only receive a number\n";
                                             throw std::exception();
                                         };
                                     break;
@@ -116,7 +116,7 @@ void option_list::parse(int argc, char **argv)
                                         }
                                     catch (std::exception &exc)
                                         {
-                                            std::cout << "A bool option can only receive 0 or 1\n";
+                                            // std::cout << "A bool option can only receive 0 or 1\n";
                                             throw std::exception();
                                         };
                                     break;
@@ -131,7 +131,7 @@ void option_list::parse(int argc, char **argv)
                                         };
                                     break;
                                 case STRING:
-                                    std::cout << this_option->printval << '\n';
+                                    // std::cout << this_option->printval << '\n';
                                     break;
                                 default:
                                     this_option->callback();
@@ -149,8 +149,8 @@ void option_list::parse(int argc, char **argv)
 
 void option_list::help()
 {
-    std::cout << program_name << '\n';
-    std::cout << "  -h [ --help ] \t\tDisplay this help message\n";
+    // std::cout << program_name << '\n';
+    // std::cout << "  -h [ --help ] \t\tDisplay this help message\n";
     for (std::vector<option_t>::iterator this_option = internal_list.begin();
          this_option != internal_list.end();
          this_option++)
@@ -183,6 +183,6 @@ void option_list::help()
                     break;
                 }
             help_line += this_option->msg;
-            std::cout << help_line << '\n';
+            // std::cout << help_line << '\n';
         }
 }

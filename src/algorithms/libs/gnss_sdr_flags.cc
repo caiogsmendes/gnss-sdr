@@ -73,8 +73,8 @@ static bool ValidateC(const char* flagname, const std::string& value)
         {  // value is ok
             return true;
         }
-    std::cout << "Invalid value for flag -" << flagname << ". The file '" << value << "' does not exist.\n";
-    std::cout << "GNSS-SDR program ended.\n";
+    // std::cout << "Invalid value for flag -" << flagname << ". The file '" << value << "' does not exist.\n";
+    // std::cout << "GNSS-SDR program ended.\n";
     return false;
 }
 
@@ -84,8 +84,8 @@ static bool ValidateConfigFile(const char* flagname, const std::string& value)
         {  // value is ok
             return true;
         }
-    std::cout << "Invalid value for flag -" << flagname << ". The file '" << value << "' does not exist.\n";
-    std::cout << "GNSS-SDR program ended.\n";
+    // std::cout << "Invalid value for flag -" << flagname << ". The file '" << value << "' does not exist.\n";
+    // std::cout << "GNSS-SDR program ended.\n";
     return false;
 }
 
@@ -95,8 +95,8 @@ static bool ValidateS(const char* flagname, const std::string& value)
         {  // value is ok
             return true;
         }
-    std::cout << "Invalid value for flag -" << flagname << ". The file '" << value << "' does not exist.\n";
-    std::cout << "GNSS-SDR program ended.\n";
+    // std::cout << "Invalid value for flag -" << flagname << ". The file '" << value << "' does not exist.\n";
+    // std::cout << "GNSS-SDR program ended.\n";
     return false;
 }
 
@@ -106,8 +106,8 @@ static bool ValidateSignalSource(const char* flagname, const std::string& value)
         {  // value is ok
             return true;
         }
-    std::cout << "Invalid value for flag -" << flagname << ". The file '" << value << "' does not exist.\n";
-    std::cout << "GNSS-SDR program ended.\n";
+    // std::cout << "Invalid value for flag -" << flagname << ". The file '" << value << "' does not exist.\n";
+    // std::cout << "GNSS-SDR program ended.\n";
     return false;
 }
 
@@ -118,8 +118,8 @@ static bool ValidateDopplerMax(const char* flagname, int32_t value)
         {  // value is ok
             return true;
         }
-    std::cout << "Invalid value for flag -" << flagname << ": " << value << ". Allowed range is 0 < " << flagname << " < " << max_value << " Hz.\n";
-    std::cout << "GNSS-SDR program ended.\n";
+    // std::cout << "Invalid value for flag -" << flagname << ": " << value << ". Allowed range is 0 < " << flagname << " < " << max_value << " Hz.\n";
+    // std::cout << "GNSS-SDR program ended.\n";
     return false;
 }
 
@@ -130,8 +130,8 @@ static bool ValidateDopplerStep(const char* flagname, int32_t value)
         {  // value is ok
             return true;
         }
-    std::cout << "Invalid value for flag -" << flagname << ": " << value << ". Allowed range is 0 < " << flagname << " < " << max_value << " Hz.\n";
-    std::cout << "GNSS-SDR program ended.\n";
+    // std::cout << "Invalid value for flag -" << flagname << ": " << value << ". Allowed range is 0 < " << flagname << " < " << max_value << " Hz.\n";
+    // std::cout << "GNSS-SDR program ended.\n";
     return false;
 }
 
@@ -142,8 +142,8 @@ static bool ValidateCn0Samples(const char* flagname, int32_t value)
         {  // value is ok
             return true;
         }
-    std::cout << "Invalid value for flag -" << flagname << ": " << value << ". Allowed range is 0 < " << flagname << " < " << max_value << " samples.\n";
-    std::cout << "GNSS-SDR program ended.\n";
+    // std::cout << "Invalid value for flag -" << flagname << ": " << value << ". Allowed range is 0 < " << flagname << " < " << max_value << " samples.\n";
+    // std::cout << "GNSS-SDR program ended.\n";
     return false;
 }
 
@@ -154,8 +154,8 @@ static bool ValidateCn0Min(const char* flagname, int32_t value)
         {  // value is ok
             return true;
         }
-    std::cout << "Invalid value for flag -" << flagname << ": " << value << ". Allowed range is 0 < " << flagname << " < " << max_value << " dB-Hz.\n";
-    std::cout << "GNSS-SDR program ended.\n";
+    // std::cout << "Invalid value for flag -" << flagname << ": " << value << ". Allowed range is 0 < " << flagname << " < " << max_value << " dB-Hz.\n";
+    // std::cout << "GNSS-SDR program ended.\n";
     return false;
 }
 
@@ -166,8 +166,8 @@ static bool ValidateMaxLockFail(const char* flagname, int32_t value)
         {  // value is ok
             return true;
         }
-    std::cout << "Invalid value for flag -" << flagname << ": " << value << ". Allowed range is 0 < " << flagname << " < " << max_value << " fails.\n";
-    std::cout << "GNSS-SDR program ended.\n";
+    // std::cout << "Invalid value for flag -" << flagname << ": " << value << ". Allowed range is 0 < " << flagname << " < " << max_value << " fails.\n";
+    // std::cout << "GNSS-SDR program ended.\n";
     return false;
 }
 
@@ -178,8 +178,8 @@ static bool ValidateCarrierLockTh(const char* flagname, double value)
         {  // value is ok
             return true;
         }
-    std::cout << "Invalid value for flag -" << flagname << ": " << value << ". Allowed range is 0 < " << flagname << " < " << max_value << " rad.\n";
-    std::cout << "GNSS-SDR program ended.\n";
+    // std::cout << "Invalid value for flag -" << flagname << ": " << value << ". Allowed range is 0 < " << flagname << " < " << max_value << " rad.\n";
+    // std::cout << "GNSS-SDR program ended.\n";
     return false;
 }
 
@@ -190,8 +190,8 @@ static bool ValidateDllBw(const char* flagname, double value)
         {  // value is ok
             return true;
         }
-    std::cout << "Invalid value for flag -" << flagname << ": " << value << ". Allowed range is 0 < " << flagname << " < " << max_value << " Hz.\n";
-    std::cout << "GNSS-SDR program ended.\n";
+    // std::cout << "Invalid value for flag -" << flagname << ": " << value << ". Allowed range is 0 < " << flagname << " < " << max_value << " Hz.\n";
+    // std::cout << "GNSS-SDR program ended.\n";
     return false;
 }
 
@@ -202,8 +202,8 @@ static bool ValidatePllBw(const char* flagname, double value)
         {  // value is ok
             return true;
         }
-    std::cout << "Invalid value for flag -" << flagname << ": " << value << ". Allowed range is 0 < " << flagname << " < " << max_value << " Hz.\n";
-    std::cout << "GNSS-SDR program ended.\n";
+    // std::cout << "Invalid value for flag -" << flagname << ": " << value << ". Allowed range is 0 < " << flagname << " < " << max_value << " Hz.\n";
+    // std::cout << "GNSS-SDR program ended.\n";
     return false;
 }
 
@@ -214,8 +214,8 @@ static bool ValidateCarrierSmoothingFactor(const char* flagname, int32_t value)
         {  // value is ok
             return true;
         }
-    std::cout << "Invalid value for flag -" << flagname << ": " << value << ". Allowed range is 1 <= " << flagname << ".\n";
-    std::cout << "GNSS-SDR program ended.\n";
+    // std::cout << "Invalid value for flag -" << flagname << ": " << value << ". Allowed range is 1 <= " << flagname << ".\n";
+    // std::cout << "GNSS-SDR program ended.\n";
     return false;
 }
 

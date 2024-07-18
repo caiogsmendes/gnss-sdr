@@ -136,23 +136,23 @@ void gnss_sdr_fpga_sample_counter::open_device()
     // find the uio device file corresponding to the sample counter module
     if (find_uio_dev_file_name(device_io_name, device_name, 0) < 0)
         {
-            std::cout << "Cannot find the FPGA uio device file corresponding to device name " << device_name << std::endl;
+            // std::cout << "Cannot find the FPGA uio device file corresponding to device name " << device_name << std::endl;
             throw std::exception();
         }
 
     // open communication with HW accelerator
     if ((fd = open(device_io_name.c_str(), O_RDWR | O_SYNC)) == -1)
         {
-            LOG(WARNING) << "Cannot open deviceio" << device_io_name;
-            std::cout << "Counter-Intr: cannot open deviceio" << device_io_name << '\n';
+            // LOG(WARNING) << "Cannot open deviceio" << device_io_name;
+            // std::cout << "Counter-Intr: cannot open deviceio" << device_io_name << '\n';
         }
     map_base = reinterpret_cast<volatile uint32_t *>(mmap(nullptr, FPGA_PAGE_SIZE,
         PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
 
     if (map_base == reinterpret_cast<void *>(-1))
         {
-            LOG(WARNING) << "Cannot map the FPGA acquisition module into user memory";
-            std::cout << "Counter-Intr: cannot map deviceio" << device_io_name << '\n';
+            // LOG(WARNING) << "Cannot map the FPGA acquisition module into user memory";
+            // std::cout << "Counter-Intr: cannot map deviceio" << device_io_name << '\n';
         }
 
     // sanity check : check test register
@@ -161,12 +161,12 @@ void gnss_sdr_fpga_sample_counter::open_device()
     readval = gnss_sdr_fpga_sample_counter::test_register(writeval);
     if (writeval != readval)
         {
-            LOG(WARNING) << "Acquisition test register sanity check failed";
+            // LOG(WARNING) << "Acquisition test register sanity check failed";
         }
     else
         {
-            LOG(INFO) << "Acquisition test register sanity check success!";
-            // std::cout << "Acquisition test register sanity check success!\n";
+           // LOG(INFO) << "Acquisition test register sanity check success!";
+            // // std::cout << "Acquisition test register sanity check success!\n";
         }
 }
 
@@ -178,7 +178,7 @@ void gnss_sdr_fpga_sample_counter::close_device()
     auto *aux = const_cast<uint32_t *>(map_base);
     if (munmap(static_cast<void *>(aux), FPGA_PAGE_SIZE) == -1)
         {
-            std::cout << "Failed to unmap memory uio\n";
+            // std::cout << "Failed to unmap memory uio\n";
         }
     close(fd);
 }
@@ -241,23 +241,23 @@ int gnss_sdr_fpga_sample_counter::general_work(int noutput_items __attribute__((
                         {
                             day = " days ";
                         }
-                    std::cout << "Current receiver time: " << current_days << day << current_h << " h " << current_m << " min " << current_s << " s\n";
+                    // std::cout << "Current receiver time: " << current_days << day << current_h << " h " << current_m << " min " << current_s << " s\n";
                 }
             else
                 {
                     if (flag_h)
                         {
-                            std::cout << "Current receiver time: " << current_h << " h " << current_m << " min " << current_s << " s\n";
+                            // std::cout << "Current receiver time: " << current_h << " h " << current_m << " min " << current_s << " s\n";
                         }
                     else
                         {
                             if (flag_m)
                                 {
-                                    std::cout << "Current receiver time: " << current_m << " min " << current_s << " s\n";
+                                    // std::cout << "Current receiver time: " << current_m << " min " << current_s << " s\n";
                                 }
                             else
                                 {
-                                    std::cout << "Current receiver time: " << current_s << " s\n";
+                                    // std::cout << "Current receiver time: " << current_s << " s\n";
                                 }
                         }
                 }
@@ -285,7 +285,7 @@ void gnss_sdr_fpga_sample_counter::wait_for_interrupt() const
     nb = read(fd, &irq_count, sizeof(irq_count));
     if (nb != sizeof(irq_count))
         {
-            std::cout << "fpga sample counter module read failed to retrieve 4 bytes!\n";
-            std::cout << "fpga sample counter module interrupt number " << irq_count << '\n';
+            // std::cout << "fpga sample counter module read failed to retrieve 4 bytes!\n";
+            // std::cout << "fpga sample counter module interrupt number " << irq_count << '\n';
         }
 }

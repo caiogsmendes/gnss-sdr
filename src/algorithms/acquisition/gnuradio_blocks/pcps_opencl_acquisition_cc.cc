@@ -167,12 +167,12 @@ int pcps_opencl_acquisition_cc::init_opencl_environment(const std::string &kerne
 
     if (all_platforms.empty())
         {
-            std::cout << "No OpenCL platforms found. Check OpenCL installation!\n";
+            // std::cout << "No OpenCL platforms found. Check OpenCL installation!\n";
             return 1;
         }
 
     d_cl_platform = all_platforms[0];  // get default platform
-    std::cout << "Using platform: " << d_cl_platform.getInfo<CL_PLATFORM_NAME>()
+    // std::cout << "Using platform: " << d_cl_platform.getInfo<CL_PLATFORM_NAME>()
               << '\n';
 
     // get default GPU device of the default platform
@@ -181,7 +181,7 @@ int pcps_opencl_acquisition_cc::init_opencl_environment(const std::string &kerne
 
     if (gpu_devices.empty())
         {
-            std::cout << "No GPU devices found. Check OpenCL installation!\n";
+            // std::cout << "No GPU devices found. Check OpenCL installation!\n";
             return 2;
         }
 
@@ -189,7 +189,7 @@ int pcps_opencl_acquisition_cc::init_opencl_environment(const std::string &kerne
 
     std::vector<cl::Device> device;
     device.push_back(d_cl_device);
-    std::cout << "Using device: " << d_cl_device.getInfo<CL_DEVICE_NAME>() << '\n';
+    // std::cout << "Using device: " << d_cl_device.getInfo<CL_DEVICE_NAME>() << '\n';
 
     cl::Context context(device);
     d_cl_context = context;
@@ -207,7 +207,7 @@ int pcps_opencl_acquisition_cc::init_opencl_environment(const std::string &kerne
     cl::Program program(context, sources);
     if (program.build(device) != CL_SUCCESS)
         {
-            std::cout << " Error building: "
+            // std::cout << " Error building: "
                       << program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(device[0])
                       << '\n';
             return 3;
@@ -240,7 +240,7 @@ int pcps_opencl_acquisition_cc::init_opencl_environment(const std::string &kerne
             delete d_cl_buffer_magnitude;
             delete d_cl_buffer_fft_codes;
 
-            std::cout << "Error creating OpenCL FFT plan.\n";
+            // std::cout << "Error creating OpenCL FFT plan.\n";
             return 4;
         }
 
@@ -354,7 +354,7 @@ void pcps_opencl_acquisition_cc::acquisition_core_volk()
 
     d_well_count++;
 
-    DLOG(INFO) << "Channel: " << d_channel
+    // DLOG(INFO) << "Channel: " << d_channel
                << " , doing acquisition of satellite: " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
                << " ,sample stamp: " << d_sample_counter << ", threshold: "
                << d_threshold << ", doppler_max: " << d_doppler_max
@@ -487,7 +487,7 @@ void pcps_opencl_acquisition_cc::acquisition_core_opencl()
     //    gettimeofday(&tv, NULL);
     //    begin = tv.tv_sec *1e6 + tv.tv_usec;
 
-    DLOG(INFO) << "Channel: " << d_channel
+    // DLOG(INFO) << "Channel: " << d_channel
                << " , doing acquisition of satellite: " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
                << " ,sample stamp: " << d_sample_counter << ", threshold: "
                << d_threshold << ", doppler_max: " << d_doppler_max
@@ -596,7 +596,7 @@ void pcps_opencl_acquisition_cc::acquisition_core_opencl()
 
     //    gettimeofday(&tv, NULL);
     //    end = tv.tv_sec *1e6 + tv.tv_usec;
-    //    std::cout << "Acq time = " << (end-begin) << " us\n";
+    //    // std::cout << "Acq time = " << (end-begin) << " us\n";
 
     if (!d_bit_transition_flag)
         {
@@ -649,7 +649,7 @@ void pcps_opencl_acquisition_cc::set_state(int state)
         }
     else
         {
-            LOG(ERROR) << "State can only be set to 0 or 1";
+            // LOG(ERROR) << "State can only be set to 0 or 1";
         }
 }
 
@@ -741,15 +741,15 @@ int pcps_opencl_acquisition_cc::general_work(int noutput_items,
         case 2:
             {
                 // Declare positive acquisition using a message port
-                DLOG(INFO) << "positive acquisition";
-                DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
-                DLOG(INFO) << "sample_stamp " << d_sample_counter;
-                DLOG(INFO) << "test statistics value " << d_test_statistics;
-                DLOG(INFO) << "test statistics threshold " << d_threshold;
-                DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
-                DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
-                DLOG(INFO) << "magnitude " << d_mag;
-                DLOG(INFO) << "input signal power " << d_input_power;
+                // DLOG(INFO) << "positive acquisition";
+                // DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
+                // DLOG(INFO) << "sample_stamp " << d_sample_counter;
+                // DLOG(INFO) << "test statistics value " << d_test_statistics;
+                // DLOG(INFO) << "test statistics threshold " << d_threshold;
+                // DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
+                // DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
+                // DLOG(INFO) << "magnitude " << d_mag;
+                // DLOG(INFO) << "input signal power " << d_input_power;
 
                 d_active = false;
                 d_state = 0;
@@ -775,15 +775,15 @@ int pcps_opencl_acquisition_cc::general_work(int noutput_items,
         case 3:
             {
                 // Declare negative acquisition using a message port
-                DLOG(INFO) << "negative acquisition";
-                DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
-                DLOG(INFO) << "sample_stamp " << d_sample_counter;
-                DLOG(INFO) << "test statistics value " << d_test_statistics;
-                DLOG(INFO) << "test statistics threshold " << d_threshold;
-                DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
-                DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
-                DLOG(INFO) << "magnitude " << d_mag;
-                DLOG(INFO) << "input signal power " << d_input_power;
+                // DLOG(INFO) << "negative acquisition";
+                // DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
+                // DLOG(INFO) << "sample_stamp " << d_sample_counter;
+                // DLOG(INFO) << "test statistics value " << d_test_statistics;
+                // DLOG(INFO) << "test statistics threshold " << d_threshold;
+                // DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
+                // DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
+                // DLOG(INFO) << "magnitude " << d_mag;
+                // DLOG(INFO) << "input signal power " << d_input_power;
 
                 d_active = false;
                 d_state = 0;

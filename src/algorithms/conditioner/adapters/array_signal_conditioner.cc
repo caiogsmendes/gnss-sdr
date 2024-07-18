@@ -39,7 +39,7 @@ void ArraySignalConditioner::connect(gr::top_block_sptr top_block)
     // note: the array signal conditioner do not have data type adapter, and must use the array input filter (multichannel)
     if (connected_)
         {
-            LOG(WARNING) << "Array Signal conditioner already connected internally";
+            // LOG(WARNING) << "Array Signal conditioner already connected internally";
             return;
         }
     // data_type_adapt_->connect(top_block);
@@ -47,12 +47,12 @@ void ArraySignalConditioner::connect(gr::top_block_sptr top_block)
     res_->connect(top_block);
 
     // top_block->connect(data_type_adapt_->get_right_block(), 0, in_filt_->get_left_block(), 0);
-    // DLOG(INFO) << "data_type_adapter -> input_filter";
+    // // DLOG(INFO) << "data_type_adapter -> input_filter";
 
     top_block->connect(in_filt_->get_right_block(), 0,
         res_->get_left_block(), 0);
 
-    DLOG(INFO) << "Array input_filter -> resampler";
+    // DLOG(INFO) << "Array input_filter -> resampler";
 
     connected_ = true;
 }
@@ -62,7 +62,7 @@ void ArraySignalConditioner::disconnect(gr::top_block_sptr top_block)
 {
     if (!connected_)
         {
-            LOG(WARNING) << "Array Signal conditioner already disconnected internally";
+            // LOG(WARNING) << "Array Signal conditioner already disconnected internally";
             return;
         }
 

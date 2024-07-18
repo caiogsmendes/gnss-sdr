@@ -72,18 +72,18 @@ GalileoE5aNoncoherentIQAcquisitionCaf::GalileoE5aNoncoherentIQAcquisitionCaf(
             doppler_max_ = FLAGS_doppler_max;
         }
 
-    DLOG(INFO) << "role " << role_;
+    // DLOG(INFO) << "role " << role_;
     if (sampled_ms_ > 3)
         {
             sampled_ms_ = 3;
-            DLOG(INFO) << "Coherent integration time should be 3 ms or less. Changing to 3ms ";
-            std::cout << "Too high coherent integration time. Changing to 3ms\n";
+            // DLOG(INFO) << "Coherent integration time should be 3 ms or less. Changing to 3ms ";
+            // std::cout << "Too high coherent integration time. Changing to 3ms\n";
         }
     if (Zero_padding > 0)
         {
             sampled_ms_ = 2;
-            DLOG(INFO) << "Zero padding activated. Changing to 1ms code + 1ms zero padding ";
-            std::cout << "Zero padding activated. Changing to 1ms code + 1ms zero padding\n";
+            // DLOG(INFO) << "Zero padding activated. Changing to 1ms code + 1ms zero padding ";
+            // std::cout << "Zero padding activated. Changing to 1ms code + 1ms zero padding\n";
         }
 
     // -- Find number of samples per spreading code (1ms)-------------------------
@@ -112,16 +112,16 @@ GalileoE5aNoncoherentIQAcquisitionCaf::GalileoE5aNoncoherentIQAcquisitionCaf(
         {
             item_size_ = 0;
             acquisition_cc_ = nullptr;
-            LOG(WARNING) << item_type_ << " unknown acquisition item type";
+            // LOG(WARNING) << item_type_ << " unknown acquisition item type";
         }
 
     if (in_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_streams_ > 0)
         {
-            LOG(ERROR) << "This implementation does not provide an output stream";
+            // LOG(ERROR) << "This implementation does not provide an output stream";
         }
 }
 
@@ -151,7 +151,7 @@ void GalileoE5aNoncoherentIQAcquisitionCaf::set_threshold(float threshold)
             threshold_ = calculate_threshold(pfa);
         }
 
-    DLOG(INFO) << "Channel " << channel_ << " Threshold = " << threshold_;
+    // DLOG(INFO) << "Channel " << channel_ << " Threshold = " << threshold_;
 
     if (item_type_ == "gr_complex")
         {
@@ -278,7 +278,7 @@ float GalileoE5aNoncoherentIQAcquisitionCaf::calculate_threshold(float pfa) cons
         {
             frequency_bins++;
         }
-    DLOG(INFO) << "Channel " << channel_ << "  Pfa = " << pfa;
+    // DLOG(INFO) << "Channel " << channel_ << "  Pfa = " << pfa;
     unsigned int ncells = vector_length_ * frequency_bins;
     double exponent = 1 / static_cast<double>(ncells);
     double val = pow(1.0 - pfa, exponent);

@@ -111,7 +111,7 @@ gps_l1_ca_telemetry_decoder_gs::gps_l1_ca_telemetry_decoder_gs(
         }
 
     d_satellite = Gnss_Satellite(satellite.get_system(), satellite.get_PRN());
-    DLOG(INFO) << "Initializing GPS L1 TELEMETRY DECODER";
+    // DLOG(INFO) << "Initializing GPS L1 TELEMETRY DECODER";
 
     // set the preamble
     // preamble bits to sampled symbols
@@ -149,7 +149,7 @@ gps_l1_ca_telemetry_decoder_gs::gps_l1_ca_telemetry_decoder_gs(
 
 gps_l1_ca_telemetry_decoder_gs::~gps_l1_ca_telemetry_decoder_gs()
 {
-    DLOG(INFO) << "GPS L1 C/A Telemetry decoder block (channel " << d_channel << ") destructor called.";
+    // DLOG(INFO) << "GPS L1 C/A Telemetry decoder block (channel " << d_channel << ") destructor called.";
     size_t pos = 0;
     if (d_dump_file.is_open() == true)
         {
@@ -160,13 +160,13 @@ gps_l1_ca_telemetry_decoder_gs::~gps_l1_ca_telemetry_decoder_gs()
                 }
             catch (const std::exception &ex)
                 {
-                    LOG(WARNING) << "Exception in destructor closing the dump file " << ex.what();
+                    // LOG(WARNING) << "Exception in destructor closing the dump file " << ex.what();
                 }
             if (pos == 0)
                 {
                     if (!tlm_remove_file(d_dump_filename))
                         {
-                            LOG(WARNING) << "Error deleting temporary file";
+                            // LOG(WARNING) << "Error deleting temporary file";
                         }
                 }
         }
@@ -177,7 +177,7 @@ gps_l1_ca_telemetry_decoder_gs::~gps_l1_ca_telemetry_decoder_gs()
                 {
                     if (!tlm_remove_file(d_dump_filename))
                         {
-                            LOG(WARNING) << "Error deleting temporary file";
+                            // LOG(WARNING) << "Error deleting temporary file";
                         }
                 }
         }
@@ -214,9 +214,9 @@ void gps_l1_ca_telemetry_decoder_gs::set_satellite(const Gnss_Satellite &satelli
 {
     d_nav = Gps_Navigation_Message();
     d_satellite = Gnss_Satellite(satellite.get_system(), satellite.get_PRN());
-    DLOG(INFO) << "Setting decoder Finite State Machine to satellite " << d_satellite;
+    // DLOG(INFO) << "Setting decoder Finite State Machine to satellite " << d_satellite;
     d_nav.set_satellite_PRN(d_satellite.get_PRN());
-    DLOG(INFO) << "Navigation Satellite set to " << d_satellite;
+    // DLOG(INFO) << "Navigation Satellite set to " << d_satellite;
 }
 
 
@@ -224,7 +224,7 @@ void gps_l1_ca_telemetry_decoder_gs::set_channel(int32_t channel)
 {
     d_channel = channel;
     d_nav.set_channel(channel);
-    DLOG(INFO) << "Navigation channel set to " << channel;
+    // DLOG(INFO) << "Navigation channel set to " << channel;
     // ############# ENABLE DATA FILE LOG #################
     if (d_dump == true)
         {
@@ -236,12 +236,12 @@ void gps_l1_ca_telemetry_decoder_gs::set_channel(int32_t channel)
                             d_dump_filename.append(".dat");
                             d_dump_file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
                             d_dump_file.open(d_dump_filename.c_str(), std::ios::out | std::ios::binary);
-                            LOG(INFO) << "Telemetry decoder dump enabled on channel " << d_channel
-                                      << " Log file: " << d_dump_filename.c_str();
+                           // LOG(INFO) << "Telemetry decoder dump enabled on channel " << d_channel
+                                    //   << " Log file: " << d_dump_filename.c_str();
                         }
                     catch (const std::ofstream::failure &e)
                         {
-                            LOG(WARNING) << "channel " << d_channel << " Exception opening trk dump file " << e.what();
+                            // LOG(WARNING) << "channel " << d_channel << " Exception opening trk dump file " << e.what();
                         }
                 }
         }
@@ -416,7 +416,7 @@ void gps_l1_ca_telemetry_decoder_gs::reset()
     d_flag_TOW_set = false;
     d_symbol_history.clear();
     d_stat = 0;
-    DLOG(INFO) << "Telemetry decoder reset for satellite " << d_satellite;
+    // DLOG(INFO) << "Telemetry decoder reset for satellite " << d_satellite;
 }
 
 
@@ -497,7 +497,7 @@ int gps_l1_ca_telemetry_decoder_gs::general_work(int noutput_items __attribute__
                             {
                                 d_flag_PLL_180_deg_phase_locked = false;
                             }
-                        DLOG(INFO) << "Preamble detection for GPS L1 satellite " << this->d_satellite;
+                        // DLOG(INFO) << "Preamble detection for GPS L1 satellite " << this->d_satellite;
                         d_prev_GPS_frame_4bytes = 0;
                         if (decode_subframe(d_flag_PLL_180_deg_phase_locked))
                             {
@@ -508,7 +508,7 @@ int gps_l1_ca_telemetry_decoder_gs::general_work(int noutput_items __attribute__
                                 if (!d_flag_frame_sync)
                                     {
                                         d_flag_frame_sync = true;
-                                        DLOG(INFO) << " Frame sync SAT " << this->d_satellite;
+                                        // DLOG(INFO) << " Frame sync SAT " << this->d_satellite;
                                     }
                                 d_stat = 1;  // preamble acquired
                             }
@@ -520,7 +520,7 @@ int gps_l1_ca_telemetry_decoder_gs::general_work(int noutput_items __attribute__
             {
                 if (d_sample_counter >= d_preamble_index + static_cast<uint64_t>(d_preamble_period_symbols))
                     {
-                        DLOG(INFO) << "Preamble received for SAT " << this->d_satellite << "d_sample_counter=" << d_sample_counter << "\n";
+                        // DLOG(INFO) << "Preamble received for SAT " << this->d_satellite << "d_sample_counter=" << d_sample_counter << "\n";
                         // call the decoder
                         // 0. fetch the symbols into an array
                         d_preamble_index = d_sample_counter;  // record the preamble sample stamp (t_P)
@@ -534,7 +534,7 @@ int gps_l1_ca_telemetry_decoder_gs::general_work(int noutput_items __attribute__
                                 if (!d_flag_frame_sync)
                                     {
                                         d_flag_frame_sync = true;
-                                        DLOG(INFO) << " Frame sync SAT " << this->d_satellite;
+                                        // DLOG(INFO) << " Frame sync SAT " << this->d_satellite;
                                     }
                             }
                         else
@@ -542,7 +542,7 @@ int gps_l1_ca_telemetry_decoder_gs::general_work(int noutput_items __attribute__
                                 d_CRC_error_counter++;
                                 if (d_CRC_error_counter > 2)
                                     {
-                                        DLOG(INFO) << "Lost of frame sync SAT " << this->d_satellite;
+                                        // DLOG(INFO) << "Lost of frame sync SAT " << this->d_satellite;
                                         d_flag_frame_sync = false;
                                         d_stat = 0;
                                         d_TOW_at_current_symbol_ms = 0;
@@ -567,7 +567,7 @@ int gps_l1_ca_telemetry_decoder_gs::general_work(int noutput_items __attribute__
                 }
             else
                 {
-                    DLOG(INFO) << "Received GPS L1 TOW equal to zero at sat " << d_nav.get_satellite_PRN();
+                    // DLOG(INFO) << "Received GPS L1 TOW equal to zero at sat " << d_nav.get_satellite_PRN();
                 }
         }
     else
@@ -613,18 +613,18 @@ int gps_l1_ca_telemetry_decoder_gs::general_work(int noutput_items __attribute__
                             if (pmt::any_ref(it.value).type().hash_code() == typeid(const std::shared_ptr<GnssTime>).hash_code())
                                 {
                                     const auto timetag = wht::any_cast<const std::shared_ptr<GnssTime>>(pmt::any_ref(it.value));
-                                    // std::cout << "[" << this->nitems_written(0) + 1 << "] TLM RX TimeTag Week: " << timetag->week << ", TOW: " << timetag->tow_ms << " [ms], TOW fraction: " << timetag->tow_ms_fraction
+                                    // // std::cout << "[" << this->nitems_written(0) + 1 << "] TLM RX TimeTag Week: " << timetag->week << ", TOW: " << timetag->tow_ms << " [ms], TOW fraction: " << timetag->tow_ms_fraction
                                     //           << " [ms], DELTA TLM TOW: " << static_cast<double>(timetag->tow_ms - current_symbol.TOW_at_current_symbol_ms) + timetag->tow_ms_fraction << " [ms] \n";
                                     add_item_tag(0, this->nitems_written(0) + 1, pmt::mp("timetag"), pmt::make_any(timetag));
                                 }
                             else
                                 {
-                                    std::cout << "hash code not match\n";
+                                    // std::cout << "hash code not match\n";
                                 }
                         }
                     catch (const wht::bad_any_cast &e)
                         {
-                            std::cout << "msg Bad any_cast: " << e.what();
+                            // std::cout << "msg Bad any_cast: " << e.what();
                         }
                 }
             if (d_dump == true)
@@ -648,7 +648,7 @@ int gps_l1_ca_telemetry_decoder_gs::general_work(int noutput_items __attribute__
                         }
                     catch (const std::ofstream::failure &e)
                         {
-                            LOG(WARNING) << "Exception writing observables dump file " << e.what();
+                            // LOG(WARNING) << "Exception writing observables dump file " << e.what();
                         }
                 }
 

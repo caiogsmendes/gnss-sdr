@@ -146,7 +146,7 @@ void SerialCmdInterface::run_serial_listener(char* device, char* buffer, std::sh
             // for (int n = 0; n < n_ch; n++)
             //     {
             //         std::shared_ptr<Channel> ch_sptr = std::dynamic_pointer_cast<Channel>(channels_sptr_->at(0));
-            //         std::cout << TEXT_BOLD_BLUE
+            //         // std::cout << TEXT_BOLD_BLUE
             //                   << "System: "
             //                   << ch_sptr->get_signal().get_satellite().get_system()
             //                   << " PRN: "
@@ -155,12 +155,12 @@ void SerialCmdInterface::run_serial_listener(char* device, char* buffer, std::sh
             //     }
             // CospeEphemeris();
             // set_Sync();
-            // std::cout<<"Channel_ID: "<<sats[0].Channel_ID<<"\n";
+            // // std::cout<<"Channel_ID: "<<sats[0].Channel_ID<<"\n";
             // flowgraph_sptr->get_Acq();
             // std::map<int, std::shared_ptr<Gnss_Synchro>> current_channels_status = channels_status_->get_current_status_map();
             // for(const auto&x:current_channels_status)
             // {
-            //     std::cout<<"Channel_ID: "<<x.second->Channel_ID<<"  "<<"PRN: "<<x.second->PRN<<"  "<<"\n";
+            //     // std::cout<<"Channel_ID: "<<x.second->Channel_ID<<"  "<<"PRN: "<<x.second->PRN<<"  "<<"\n";
             // }
 
             // // Gnss_Synchro - Correto
@@ -183,7 +183,7 @@ void SerialCmdInterface::run_serial_listener(char* device, char* buffer, std::sh
             //                     {
             //                         if (x.second.fs != 0)
             //                             {
-                                            // std::cout
+                                            // // std::cout
                                             //     << TEXT_BOLD_RED
                                             //     << "Channel_ID: "
                                             //     << x.second.Channel_ID
@@ -215,7 +215,7 @@ void SerialCmdInterface::run_serial_listener(char* device, char* buffer, std::sh
 
             // for(const auto &x:gps_map_ephem)
             // {
-            //     std::cout<<TEXT_GREEN
+            //     // std::cout<<TEXT_GREEN
             //     << " sqrtA: "
             //     << x.second.sqrtA
             //     << " ecc: "
@@ -242,7 +242,7 @@ void SerialCmdInterface::run_serial_listener(char* device, char* buffer, std::sh
             //     {
             //         // if (x.second.PRN == y.second.PRN)
             //         //     {
-            //         std::cout
+            //         // std::cout
             //             // << x.second.PRN
             //             // << x.second.Pseudorange_m
             //             // << x.second.Pseudorange_m
@@ -258,9 +258,9 @@ void SerialCmdInterface::run_serial_listener(char* device, char* buffer, std::sh
 // 
 //         }
 // }
-// std::cout<< std::dynamic_pointer_cast<Channel> (channels_sptr_->at(0));
+// // std::cout<< std::dynamic_pointer_cast<Channel> (channels_sptr_->at(0));
 // std::shared_ptr<Channel> ch_sptr = std::dynamic_pointer_cast<Channel>(channels_sptr_->at(0));
-// std::cout<<TEXT_GREEN<<ch_sptr->get_signal().get_satellite().get_PRN()<<TEXT_RESET<<"\n";
+// // std::cout<<TEXT_GREEN<<ch_sptr->get_signal().get_satellite().get_PRN()<<TEXT_RESET<<"\n";
 }
 
 void SerialCmdInterface::register_functions(void)
@@ -295,7 +295,7 @@ void SerialCmdInterface::CmdParser(char* cmd)
                 for (int n = 0; n < n_ch; n++)
                     {
                         std::shared_ptr<Channel> ch_sptr = std::dynamic_pointer_cast<Channel>(channels_sptr_->at(0));
-                        // std::cout << TEXT_BOLD_BLUE
+                        // // std::cout << TEXT_BOLD_BLUE
                         //           << "System: "
                         //           << ch_sptr->get_signal().get_satellite().get_system()
                         //           << " PRN: "
@@ -313,8 +313,8 @@ void SerialCmdInterface::CmdParser(char* cmd)
             break;
         case (0x07):
             {
-                std::cout << "Protocolo Anderson: "
-                          << "\n";
+                // std::cout << "Protocolo Anderson: "
+                        //   << "\n";
                 DersoProtocol();
             }break;
         default:
@@ -333,7 +333,7 @@ void SerialCmdInterface::serial_get_pvt(void)
     time_t UTC_time;
     // std::map<int, Gps_Ephemeris> gps_map_ephem = PVT_sptr_->get_gps_ephemeris();
 
-    // std::cout<<TEXT_RED<<gps_map_ephem[13].PRN <<TEXT_RESET<<"\n";
+    // // std::cout<<TEXT_RED<<gps_map_ephem[13].PRN <<TEXT_RESET<<"\n";
     // PVT_sptr_->get_gps_ephemeris
     // if (PVT_sptr_->get_latest_PVT(&longitude_deg,
     //         &latitude_deg,
@@ -356,7 +356,7 @@ void SerialCmdInterface::serial_reset(void)
 {
     const command_event_sptr new_evnt = command_event_make(200, 1);  // send the restart message (who=200,what=1)
     control_queue_->push(pmt::make_any(new_evnt));
-    std::cout << "OK. Receptor GNSS reiniciando ...\n";
+    // std::cout << "OK. Receptor GNSS reiniciando ...\n";
 }
 
 std::string SerialCmdInterface::serial_status(const std::vector<std::string> &commandLine __attribute__((unused)))
@@ -451,7 +451,7 @@ std::vector<Gnss_Synchro> SerialCmdInterface::Update_Synchro_Internals(const std
     //     }
     // for(int i=0; i<n_channels;i++)
     // {
-    //     std::cout<<stocks[i].PRN<<"\n";
+    //     // std::cout<<stocks[i].PRN<<"\n";
     // }
 }
 
@@ -461,7 +461,7 @@ void SerialCmdInterface::serial_get_synchro()
     // system("clear");
     // for (const auto& x : gnss_observ)
     //     {
-    //         std::cout
+    //         // std::cout
     //             << TEXT_BOLD_MAGENTA
     //             << "Channel_ID: "
     //             << x.second.Channel_ID
@@ -488,7 +488,7 @@ void SerialCmdInterface::CospeEphemeris(void)
     // char *char_ptr;
     // system("clear");
     // std::map<int, Gps_Ephemeris> gps_map_ephem = PVT_sptr_->get_gps_ephemeris();
-    // std::cout<<TEXT_RED<<"System: "<<gps_map_ephem[13].System<<"\n"
+    // // std::cout<<TEXT_RED<<"System: "<<gps_map_ephem[13].System<<"\n"
     //                     <<"PRN: "<<gps_map_ephem[13].PRN<<"\n"
     //                     <<"delta_n: "<<gps_map_ephem[13].delta_n<<"\n"
     //                     <<"semiEixo: "<<gps_map_ephem[13].sqrtA<<"\n"
@@ -505,16 +505,16 @@ void SerialCmdInterface::CospeEphemeris(void)
                 {
                     // if (y.second.PRN == x.second.PRN)
                         {
-                            std::cout << TEXT_BOLD_RED
-                                      << "PRN: " << x.second.PRN << "\n"
-                                      << "delta_n: " << x.second.delta_n << "\n"
-                                      << "SemiEixo: " << x.second.sqrtA << "\n"
-                                      << "Excent.: " << x.second.ecc << "\n"
-                                      << "Inclin.: " << x.second.i_0 << "\n"
-                                      << "Asc.Reta: " << x.second.OMEGA_0 << "\n"
-                                      << "Arg.Perigeo: " << x.second.omega << "\n"
-                                      << "Anom. Media: " << x.second.M_0 << "\n"
-                                      << TEXT_RESET << "\n";
+                            // std::cout << TEXT_BOLD_RED
+                                    //   << "PRN: " << x.second.PRN << "\n"
+                                    //   << "delta_n: " << x.second.delta_n << "\n"
+                                    //   << "SemiEixo: " << x.second.sqrtA << "\n"
+                                    //   << "Excent.: " << x.second.ecc << "\n"
+                                    //   << "Inclin.: " << x.second.i_0 << "\n"
+                                    //   << "Asc.Reta: " << x.second.OMEGA_0 << "\n"
+                                    //   << "Arg.Perigeo: " << x.second.omega << "\n"
+                                    //   << "Anom. Media: " << x.second.M_0 << "\n"
+                                    //   << TEXT_RESET << "\n";
                         }
                 }
         }

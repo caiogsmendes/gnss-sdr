@@ -67,7 +67,7 @@ GlonassL1CaDllPllCAidTracking::GlonassL1CaDllPllCAidTracking(
     const auto vector_length = static_cast<int>(std::round(fs_in / (GLONASS_L1_CA_CODE_RATE_CPS / GLONASS_L1_CA_CODE_LENGTH_CHIPS)));
 
     // ################# MAKE TRACKING GNURadio object ###################
-    DLOG(INFO) << "role " << role_;
+    // DLOG(INFO) << "role " << role_;
     if (item_type_ == "gr_complex")
         {
             tracking_cc_sptr_ = glonass_l1_ca_dll_pll_c_aid_make_tracking_cc(
@@ -82,7 +82,7 @@ GlonassL1CaDllPllCAidTracking::GlonassL1CaDllPllCAidTracking(
                 extend_correlation_ms,
                 early_late_space_chips);
             tracking_sc_sptr_ = nullptr;
-            DLOG(INFO) << "tracking(" << tracking_cc_sptr_->unique_id() << ")";
+            // DLOG(INFO) << "tracking(" << tracking_cc_sptr_->unique_id() << ")";
         }
     else if (item_type_ == "cshort")
         {
@@ -99,23 +99,23 @@ GlonassL1CaDllPllCAidTracking::GlonassL1CaDllPllCAidTracking(
                 extend_correlation_ms,
                 early_late_space_chips);
             tracking_cc_sptr_ = nullptr;
-            DLOG(INFO) << "tracking(" << tracking_sc_sptr_->unique_id() << ")";
+            // DLOG(INFO) << "tracking(" << tracking_sc_sptr_->unique_id() << ")";
         }
     else
         {
             item_size_ = 0;
             tracking_sc_sptr_ = nullptr;
             tracking_cc_sptr_ = nullptr;
-            LOG(WARNING) << item_type_ << " unknown tracking item type.";
+            // LOG(WARNING) << item_type_ << " unknown tracking item type.";
         }
 
     if (in_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 
@@ -137,7 +137,7 @@ void GlonassL1CaDllPllCAidTracking::start_tracking()
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unknown tracking item type";
+            // LOG(WARNING) << item_type_ << " unknown tracking item type";
         }
 }
 
@@ -159,7 +159,7 @@ void GlonassL1CaDllPllCAidTracking::set_channel(unsigned int channel)
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unknown tracking item type";
+            // LOG(WARNING) << item_type_ << " unknown tracking item type";
         }
 }
 
@@ -176,7 +176,7 @@ void GlonassL1CaDllPllCAidTracking::set_gnss_synchro(Gnss_Synchro* p_gnss_synchr
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unknown tracking item type";
+            // LOG(WARNING) << item_type_ << " unknown tracking item type";
         }
 }
 
@@ -209,7 +209,7 @@ gr::basic_block_sptr GlonassL1CaDllPllCAidTracking::get_left_block()
         {
             return tracking_sc_sptr_;
         }
-    LOG(WARNING) << item_type_ << " unknown tracking item type";
+    // LOG(WARNING) << item_type_ << " unknown tracking item type";
     return nullptr;
 }
 
@@ -226,6 +226,6 @@ gr::basic_block_sptr GlonassL1CaDllPllCAidTracking::get_right_block()
         }
 
 
-    LOG(WARNING) << item_type_ << " unknown tracking item type";
+    // LOG(WARNING) << item_type_ << " unknown tracking item type";
     return nullptr;
 }

@@ -130,16 +130,16 @@ GalileoE1PcpsAmbiguousAcquisitionFpga::GalileoE1PcpsAmbiguousAcquisitionFpga(
 
     acq_parameters_.all_fft_codes = d_all_fft_codes_.data();
 
-    DLOG(INFO) << "role " << role_;
+    // DLOG(INFO) << "role " << role_;
     acquisition_fpga_ = pcps_make_acquisition_fpga(acq_parameters_);
 
     if (in_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_streams_ > 0)
         {
-            LOG(ERROR) << "This implementation does not provide an output stream";
+            // LOG(ERROR) << "This implementation does not provide an output stream";
         }
 }
 
@@ -153,7 +153,7 @@ void GalileoE1PcpsAmbiguousAcquisitionFpga::stop_acquisition()
 
 void GalileoE1PcpsAmbiguousAcquisitionFpga::set_threshold(float threshold)
 {
-    DLOG(INFO) << "Channel " << channel_ << " Threshold = " << threshold;
+    // DLOG(INFO) << "Channel " << channel_ << " Threshold = " << threshold;
     acquisition_fpga_->set_threshold(threshold);
 }
 

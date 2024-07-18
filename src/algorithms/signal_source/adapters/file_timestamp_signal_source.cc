@@ -31,11 +31,11 @@ FileTimestampSignalSource::FileTimestampSignalSource(const ConfigurationInterfac
 {
     if (in_streams > 0)
         {
-            LOG(ERROR) << "A signal source does not have an input stream";
+            // LOG(ERROR) << "A signal source does not have an input stream";
         }
     if (out_streams > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 
     // override value with commandline flag, if present
@@ -55,17 +55,17 @@ void FileTimestampSignalSource::create_file_source_hook()
         std::get<0>(itemTypeToSize()),
         timestamp_file_,
         timestamp_clock_offset_ms_);
-    DLOG(INFO) << "timestamp_block_(" << timestamp_block_->unique_id() << ")";
+    // DLOG(INFO) << "timestamp_block_(" << timestamp_block_->unique_id() << ")";
 }
 
 void FileTimestampSignalSource::pre_connect_hook(gr::top_block_sptr top_block)
 {
     top_block->connect(file_source(), 0, timestamp_block_, 0);
-    DLOG(INFO) << "connected file_source to timestamp_block_";
+    // DLOG(INFO) << "connected file_source to timestamp_block_";
 }
 
 void FileTimestampSignalSource::pre_disconnect_hook(gr::top_block_sptr top_block)
 {
     top_block->disconnect(file_source(), 0, timestamp_block_, 0);
-    DLOG(INFO) << "disconnected file_source from timestamp_block_";
+    // DLOG(INFO) << "disconnected file_source from timestamp_block_";
 }

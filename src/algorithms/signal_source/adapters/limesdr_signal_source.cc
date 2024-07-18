@@ -77,11 +77,11 @@ LimesdrSignalSource::LimesdrSignalSource(const ConfigurationInterface* configura
                         {
                             if (limesdr_source_->set_ext_clk(ext_clock_MHz_))
                                 {
-                                    std::cout << "External clock enabled with expected frequency input of " << ext_clock_MHz_ << " MHz\n";
+                                    // std::cout << "External clock enabled with expected frequency input of " << ext_clock_MHz_ << " MHz\n";
                                 }
                             else
                                 {
-                                    std::cout << "Error setting external reference clock\n";
+                                    // std::cout << "Error setting external reference clock\n";
                                 }
                         }
                     else
@@ -98,7 +98,7 @@ LimesdrSignalSource::LimesdrSignalSource(const ConfigurationInterface* configura
                 }
             catch (const boost::exception& e)
                 {
-                    LOG(WARNING) << "Boost exception: " << boost::diagnostic_information(e);
+                    // LOG(WARNING) << "Boost exception: " << boost::diagnostic_information(e);
                     throw std::invalid_argument("Wrong LimeSDR arguments");
                 }
 
@@ -112,35 +112,35 @@ LimesdrSignalSource::LimesdrSignalSource(const ConfigurationInterface* configura
              */
 
             limesdr_source_->set_antenna(antenna_, channel_);
-            std::cout << "LimeSDR RX antenna set to " << antenna_ << " for channel " << channel_ << '\n';
-            LOG(INFO) << "LimeSDR RX antenna set to " << antenna_ << " for channel " << channel_;
+            // std::cout << "LimeSDR RX antenna set to " << antenna_ << " for channel " << channel_ << '\n';
+           // LOG(INFO) << "LimeSDR RX antenna set to " << antenna_ << " for channel " << channel_;
 
             // 2. set sampling rate
             double actual_sample_rate = limesdr_source_->set_sample_rate(sample_rate_);
-            std::cout << "Actual RX Rate: " << actual_sample_rate << " [SPS]...\n";
-            LOG(INFO) << "Actual RX Rate: " << actual_sample_rate << " [SPS]...";
+            // std::cout << "Actual RX Rate: " << actual_sample_rate << " [SPS]...\n";
+           // LOG(INFO) << "Actual RX Rate: " << actual_sample_rate << " [SPS]...";
 
             // 3. set rx frequency
             double actual_center_freq = limesdr_source_->set_center_freq(freq_);
 
-            std::cout << "Actual RX Freq: " << actual_center_freq << " [Hz]...\n";
-            LOG(INFO) << "Actual RX Freq: " << actual_center_freq << " [Hz]...";
+            // std::cout << "Actual RX Freq: " << actual_center_freq << " [Hz]...\n";
+           // LOG(INFO) << "Actual RX Freq: " << actual_center_freq << " [Hz]...";
 
             // TODO: Assign the remnant IF from the PLL tune error
-            std::cout << "PLL Frequency tune error: " << actual_center_freq - freq_ << " [Hz]...\n";
-            LOG(INFO) << "PLL Frequency tune error: " << actual_center_freq - freq_ << " [Hz]...\n";
+            // std::cout << "PLL Frequency tune error: " << actual_center_freq - freq_ << " [Hz]...\n";
+           // LOG(INFO) << "PLL Frequency tune error: " << actual_center_freq - freq_ << " [Hz]...\n";
 
             // TODO: gr-limesdr does not report PLL tune frequency error...
 
             // 4. set rx gain
             double actual_gain = limesdr_source_->set_gain(gain_, channel_);
-            std::cout << "Actual RX Gain: " << actual_gain << " [dB]...\n";
-            LOG(INFO) << "Actual RX Gain: " << actual_gain << " [dB]...";
+            // std::cout << "Actual RX Gain: " << actual_gain << " [dB]...\n";
+           // LOG(INFO) << "Actual RX Gain: " << actual_gain << " [dB]...";
 
             // Set analog bandwidth
             double current_analog_bw = limesdr_source_->set_bandwidth(analog_bw_hz_, channel_);
-            std::cout << "Actual Analog Bandwidth: " << current_analog_bw << " [Hz]...\n";
-            LOG(INFO) << "Actual Analog Bandwidth: : " << current_analog_bw << " [Hz]...";
+            // std::cout << "Actual Analog Bandwidth: " << current_analog_bw << " [Hz]...\n";
+           // LOG(INFO) << "Actual Analog Bandwidth: : " << current_analog_bw << " [Hz]...";
 
             // Set digital bandwidth
             limesdr_source_->set_digital_filter(digital_bw_hz_, channel_);
@@ -149,31 +149,31 @@ LimesdrSignalSource::LimesdrSignalSource(const ConfigurationInterface* configura
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unrecognized item type. Using short.";
+            // LOG(WARNING) << item_type_ << " unrecognized item type. Using short.";
             item_size_ = sizeof(int16_t);
         }
 
     if (samples_ != 0)
         {
-            DLOG(INFO) << "Send STOP signal after " << samples_ << " samples";
+            // DLOG(INFO) << "Send STOP signal after " << samples_ << " samples";
             valve_ = gnss_sdr_make_valve(item_size_, samples_, queue);
-            DLOG(INFO) << "valve(" << valve_->unique_id() << ")";
+            // DLOG(INFO) << "valve(" << valve_->unique_id() << ")";
         }
 
     if (dump_)
         {
-            DLOG(INFO) << "Dumping output into file " << dump_filename_;
+            // DLOG(INFO) << "Dumping output into file " << dump_filename_;
             file_sink_ = gr::blocks::file_sink::make(item_size_, dump_filename_.c_str());
-            DLOG(INFO) << "file_sink(" << file_sink_->unique_id() << ")";
+            // DLOG(INFO) << "file_sink(" << file_sink_->unique_id() << ")";
         }
 
     if (in_stream_ > 0)
         {
-            LOG(ERROR) << "A signal source does not have an input stream";
+            // LOG(ERROR) << "A signal source does not have an input stream";
         }
     if (out_stream_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 
@@ -183,11 +183,11 @@ void LimesdrSignalSource::connect(gr::top_block_sptr top_block)
     if (samples_ != 0)
         {
             top_block->connect(limesdr_source_, 0, valve_, 0);
-            DLOG(INFO) << "connected limesdr source to valve";
+            // DLOG(INFO) << "connected limesdr source to valve";
             if (dump_)
                 {
                     top_block->connect(valve_, 0, file_sink_, 0);
-                    DLOG(INFO) << "connected valve to file sink";
+                    // DLOG(INFO) << "connected valve to file sink";
                 }
         }
     else
@@ -195,7 +195,7 @@ void LimesdrSignalSource::connect(gr::top_block_sptr top_block)
             if (dump_)
                 {
                     top_block->connect(limesdr_source_, 0, file_sink_, 0);
-                    DLOG(INFO) << "connected limesdr source to file sink";
+                    // DLOG(INFO) << "connected limesdr source to file sink";
                 }
         }
 }
@@ -223,7 +223,7 @@ void LimesdrSignalSource::disconnect(gr::top_block_sptr top_block)
 
 gr::basic_block_sptr LimesdrSignalSource::get_left_block()
 {
-    LOG(WARNING) << "Trying to get signal source left block.";
+    // LOG(WARNING) << "Trying to get signal source left block.";
     return {};
 }
 

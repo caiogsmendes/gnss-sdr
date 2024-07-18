@@ -37,7 +37,7 @@ An_Packet_Printer::An_Packet_Printer(const std::string& an_dump_devname)
 {
     if (d_an_dev_descriptor != -1)
         {
-            DLOG(INFO) << "AN Printer writing on " << d_an_devname;
+            // DLOG(INFO) << "AN Printer writing on " << d_an_devname;
         }
 }
 
@@ -67,7 +67,7 @@ bool An_Packet_Printer::print_packet(const Rtklib_Solver* const pvt_data, const 
         {
             if (write(d_an_dev_descriptor, &an_packet, sizeof(an_packet)) == -1)
                 {
-                    LOG(ERROR) << "Advanced Navigation printer cannot write on serial device " << d_an_devname;
+                    // LOG(ERROR) << "Advanced Navigation printer cannot write on serial device " << d_an_devname;
                     return false;
                 }
         }
@@ -342,7 +342,7 @@ int An_Packet_Printer::init_serial(const std::string& serial_device)
 
     if (fcntl(fd, F_SETFL, 0) == -1)
         {
-            LOG(INFO) << "Error enabling direct I/O";  // clear all flags on descriptor, enable direct I/O
+           // LOG(INFO) << "Error enabling direct I/O";  // clear all flags on descriptor, enable direct I/O
         }
     tcgetattr(fd, &options);  // read serial port options
 

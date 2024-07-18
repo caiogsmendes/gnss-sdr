@@ -56,7 +56,7 @@ GpsL1CaPcpsTongAcquisition::GpsL1CaPcpsTongAcquisition(
     const std::string default_item_type("gr_complex");
     std::string default_dump_filename = "./data/acquisition.dat";
 
-    DLOG(INFO) << "role " << role_;
+    // DLOG(INFO) << "role " << role_;
 
     item_type_ = configuration_->property(role_ + ".item_type", default_item_type);
     int64_t fs_in_deprecated = configuration_->property("GNSS-SDR.internal_fs_hz", 2048000);
@@ -84,23 +84,23 @@ GpsL1CaPcpsTongAcquisition::GpsL1CaPcpsTongAcquisition(
 
             stream_to_vector_ = gr::blocks::stream_to_vector::make(item_size_, vector_length_);
 
-            DLOG(INFO) << "stream_to_vector(" << stream_to_vector_->unique_id() << ")";
-            DLOG(INFO) << "acquisition(" << acquisition_cc_->unique_id() << ")";
+            // DLOG(INFO) << "stream_to_vector(" << stream_to_vector_->unique_id() << ")";
+            // DLOG(INFO) << "acquisition(" << acquisition_cc_->unique_id() << ")";
         }
     else
         {
             acquisition_cc_ = nullptr;
             item_size_ = 0;
-            LOG(WARNING) << item_type_ << " unknown acquisition item type";
+            // LOG(WARNING) << item_type_ << " unknown acquisition item type";
         }
 
     if (in_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_streams_ > 0)
         {
-            LOG(ERROR) << "This implementation does not provide an output stream";
+            // LOG(ERROR) << "This implementation does not provide an output stream";
         }
 }
 
@@ -129,7 +129,7 @@ void GpsL1CaPcpsTongAcquisition::set_threshold(float threshold)
             threshold_ = calculate_threshold(pfa);
         }
 
-    DLOG(INFO) << "Channel " << channel_ << "  Threshold = " << threshold_;
+    // DLOG(INFO) << "Channel " << channel_ << "  Threshold = " << threshold_;
 
     if (item_type_ == "gr_complex")
         {
@@ -230,7 +230,7 @@ float GpsL1CaPcpsTongAcquisition::calculate_threshold(float pfa) const
             frequency_bins++;
         }
 
-    DLOG(INFO) << "Channel " << channel_ << "   Pfa = " << pfa;
+    // DLOG(INFO) << "Channel " << channel_ << "   Pfa = " << pfa;
 
     unsigned int ncells = vector_length_ * frequency_bins;
     double exponent = 1 / static_cast<double>(ncells);

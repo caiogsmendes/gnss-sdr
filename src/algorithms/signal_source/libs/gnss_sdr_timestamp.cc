@@ -75,7 +75,7 @@ bool Gnss_Sdr_Timestamp::start()
 
     if (d_timefilestream.is_open() == false)
         {
-            std::cout << "ERROR: Could not open timestamp file: " << d_timefile << "\n";
+            // std::cout << "ERROR: Could not open timestamp file: " << d_timefile << "\n";
             return false;
         }
     else
@@ -102,7 +102,7 @@ int Gnss_Sdr_Timestamp::work(int noutput_items,
         {
             if (read_next_timetag() == false)
                 {
-                    // std::cout << "End of TimeTag file reached!\n";
+                    // // std::cout << "End of TimeTag file reached!\n";
                     // return 0;  // todo: find why return -1 does not stop gnss-sdr!
                 }
             d_get_next_timetag = false;
@@ -112,7 +112,7 @@ int Gnss_Sdr_Timestamp::work(int noutput_items,
             std::memcpy(output_items[ch], input_items[ch], noutput_items * input_signature()->sizeof_stream_item(ch));
             uint64_t bytes_to_samples = 2;  // todo: improve this.. hardcoded 2 bytes -> 1 complex sample!
             int64_t diff_samplecount = uint64diff(this->nitems_written(ch), d_next_timetag_samplecount * bytes_to_samples);
-            // std::cout << "diff_samplecount: " << diff_samplecount << ", noutput_items: " << noutput_items << "\n";
+            // // std::cout << "diff_samplecount: " << diff_samplecount << ", noutput_items: " << noutput_items << "\n";
             if (diff_samplecount <= noutput_items and std::labs(diff_samplecount) <= noutput_items)
                 {
                     const std::shared_ptr<GnssTime> tmp_obj = std::make_shared<GnssTime>(GnssTime());
@@ -121,7 +121,7 @@ int Gnss_Sdr_Timestamp::work(int noutput_items,
                     tmp_obj->tow_ms_fraction = d_fraction_ms_offset;
                     tmp_obj->rx_time = 0;
                     add_item_tag(ch, this->nitems_written(ch) - diff_samplecount, pmt::mp("timetag"), pmt::make_any(tmp_obj));
-                    // std::cout << "[" << this->nitems_written(ch) - diff_samplecount << "] Sent TimeTag SC: " << d_next_timetag_samplecount * bytes_to_samples << ", Week: " << next_timetag.week << ", TOW: " << next_timetag.tow_ms << " [ms] \n";
+                    // // std::cout << "[" << this->nitems_written(ch) - diff_samplecount << "] Sent TimeTag SC: " << d_next_timetag_samplecount * bytes_to_samples << ", Week: " << next_timetag.week << ", TOW: " << next_timetag.tow_ms << " [ms] \n";
                     d_get_next_timetag = true;
                 }
         }

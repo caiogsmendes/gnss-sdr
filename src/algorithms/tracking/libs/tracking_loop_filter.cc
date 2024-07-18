@@ -242,9 +242,9 @@ void Tracking_loop_filter::set_order(int loop_order)
 {
     if (loop_order < 1 or loop_order > MAX_LOOP_ORDER)
         {
-            LOG(WARNING) << "Ignoring attempt to set loop order to " << loop_order
-                         << ". Maximum allowed order is: " << MAX_LOOP_ORDER
-                         << ". Not changing current value of " << d_loop_order;
+            // LOG(WARNING) << "Ignoring attempt to set loop order to " << loop_order
+                        //  << ". Maximum allowed order is: " << MAX_LOOP_ORDER
+                        //  << ". Not changing current value of " << d_loop_order;
             return;
         }
 

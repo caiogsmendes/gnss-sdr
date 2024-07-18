@@ -48,32 +48,32 @@ NotchFilter::NotchFilter(const ConfigurationInterface* configuration,
     dump_filename_ = configuration->property(role + ".dump_filename", default_dump_file);
     item_type_ = configuration->property(role + ".item_type", default_item_type);
 
-    DLOG(INFO) << "role " << role_;
+    // DLOG(INFO) << "role " << role_;
     if (item_type_ == "gr_complex")
         {
             item_size_ = sizeof(gr_complex);
             notch_filter_ = make_notch_filter(pfa, p_c_factor, length_, n_segments_est, n_segments_reset);
-            DLOG(INFO) << "Item size " << item_size_;
-            DLOG(INFO) << "input filter(" << notch_filter_->unique_id() << ")";
+            // DLOG(INFO) << "Item size " << item_size_;
+            // DLOG(INFO) << "input filter(" << notch_filter_->unique_id() << ")";
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unrecognized item type for notch filter";
+            // LOG(WARNING) << item_type_ << " unrecognized item type for notch filter";
             item_size_ = 0;  // notify wrong configuration
         }
     if (dump_)
         {
-            DLOG(INFO) << "Dumping output into file " << dump_filename_;
+            // DLOG(INFO) << "Dumping output into file " << dump_filename_;
             file_sink_ = gr::blocks::file_sink::make(item_size_, dump_filename_.c_str());
-            DLOG(INFO) << "file_sink(" << file_sink_->unique_id() << ")";
+            // DLOG(INFO) << "file_sink(" << file_sink_->unique_id() << ")";
         }
     if (in_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 
@@ -83,11 +83,11 @@ void NotchFilter::connect(gr::top_block_sptr top_block)
     if (dump_)
         {
             top_block->connect(notch_filter_, 0, file_sink_, 0);
-            DLOG(INFO) << "connected notch filter output to file sink";
+            // DLOG(INFO) << "connected notch filter output to file sink";
         }
     else
         {
-            DLOG(INFO) << "nothing to connect internally";
+            // DLOG(INFO) << "nothing to connect internally";
         }
 }
 

@@ -49,48 +49,48 @@ BeidouB1iDllPllTracking::BeidouB1iDllPllTracking(
     if (trk_params.extend_correlation_symbols < 1)
         {
             trk_params.extend_correlation_symbols = 1;
-            std::cout << TEXT_RED << "WARNING: BEIDOU B1I. extend_correlation_symbols must be bigger than 1. Coherent integration has been set to 1 symbol (1 ms)" << TEXT_RESET << '\n';
+            // std::cout << TEXT_RED << "WARNING: BEIDOU B1I. extend_correlation_symbols must be bigger than 1. Coherent integration has been set to 1 symbol (1 ms)" << TEXT_RESET << '\n';
         }
     else if (trk_params.extend_correlation_symbols > 20)
         {
             trk_params.extend_correlation_symbols = 20;
-            std::cout << TEXT_RED << "WARNING: BEIDOU B1I. extend_correlation_symbols must be lower than 21. Coherent integration has been set to 20 symbols (20 ms)" << TEXT_RESET << '\n';
+            // std::cout << TEXT_RED << "WARNING: BEIDOU B1I. extend_correlation_symbols must be lower than 21. Coherent integration has been set to 20 symbols (20 ms)" << TEXT_RESET << '\n';
         }
     trk_params.track_pilot = configuration->property(role_ + ".track_pilot", false);
     if (trk_params.track_pilot)
         {
-            std::cout << TEXT_RED << "WARNING: BEIDOU B1I does not have pilot signal. Data tracking has been enabled" << TEXT_RESET << '\n';
+            // std::cout << TEXT_RED << "WARNING: BEIDOU B1I does not have pilot signal. Data tracking has been enabled" << TEXT_RESET << '\n';
             trk_params.track_pilot = false;
         }
     if ((trk_params.extend_correlation_symbols > 1) && (trk_params.pll_bw_narrow_hz > trk_params.pll_bw_hz or trk_params.dll_bw_narrow_hz > trk_params.dll_bw_hz))
         {
-            std::cout << TEXT_RED << "WARNING: BEIDOU B1I. PLL or DLL narrow tracking bandwidth is higher than wide tracking one" << TEXT_RESET << '\n';
+            // std::cout << TEXT_RED << "WARNING: BEIDOU B1I. PLL or DLL narrow tracking bandwidth is higher than wide tracking one" << TEXT_RESET << '\n';
         }
     trk_params.system = 'C';
     const std::array<char, 3> sig{'B', '1', '\0'};
     std::copy_n(sig.data(), 3, trk_params.signal);
 
     // ################# Make a GNU Radio Tracking block object ################
-    DLOG(INFO) << "role " << role_;
+    // DLOG(INFO) << "role " << role_;
     if (trk_params.item_type == "gr_complex")
         {
             tracking_sptr_ = dll_pll_veml_make_tracking(trk_params);
-            DLOG(INFO) << "tracking(" << tracking_sptr_->unique_id() << ")";
+            // DLOG(INFO) << "tracking(" << tracking_sptr_->unique_id() << ")";
         }
     else
         {
             item_size_ = 0;
             tracking_sptr_ = nullptr;
-            LOG(WARNING) << trk_params.item_type << " unknown tracking item type.";
+            // LOG(WARNING) << trk_params.item_type << " unknown tracking item type.";
         }
 
     if (in_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 

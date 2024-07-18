@@ -221,7 +221,7 @@ std::unique_ptr<SignalSourceInterface> GNSSBlockFactory::GetSignalSource(
 {
     auto role = findRole(configuration, "SignalSource"s, ID);
     auto implementation = configuration->property(role + impl_prop, ""s);
-    LOG(INFO) << "Getting SignalSource " << role << " with implementation " << implementation;
+   // LOG(INFO) << "Getting SignalSource " << role << " with implementation " << implementation;
 
     return dynamic_unique_cast<SignalSourceInterface>(GetBlock(configuration, role, 0, 1, queue));
 }
@@ -237,7 +237,7 @@ std::unique_ptr<GNSSBlockInterface> GNSSBlockFactory::GetSignalConditioner(
     auto role_inputfilter = findRole(configuration, "InputFilter"s, ID);
     auto role_resampler = findRole(configuration, "Resampler"s, ID);
 
-    DLOG(INFO) << "role: " << role_conditioner << " (ID=" << ID << ")";
+    // DLOG(INFO) << "role: " << role_conditioner << " (ID=" << ID << ")";
 
     const std::string signal_conditioner = configuration->property(role_conditioner + impl_prop, ""s);
 
@@ -249,36 +249,36 @@ std::unique_ptr<GNSSBlockInterface> GNSSBlockFactory::GetSignalConditioner(
         {
             if (!data_type_adapter.empty() and (data_type_adapter != "Pass_Through"))
                 {
-                    LOG(WARNING) << "Configuration warning: if " << role_conditioner << impl_prop << "\n"
-                                 << "is set to Pass_Through, then the " << role_datatypeadapter << impl_prop << "\n"
-                                 << "parameter should be either not set or set to Pass_Through.\n"
-                                 << role_datatypeadapter << " configuration parameters will be ignored.";
+                    // LOG(WARNING) << "Configuration warning: if " << role_conditioner << impl_prop << "\n"
+                                //  << "is set to Pass_Through, then the " << role_datatypeadapter << impl_prop << "\n"
+                                //  << "parameter should be either not set or set to Pass_Through.\n"
+                                //  << role_datatypeadapter << " configuration parameters will be ignored.";
                 }
             if (!input_filter.empty() and (input_filter != "Pass_Through"))
                 {
-                    LOG(WARNING) << "Configuration warning: if " << role_conditioner << impl_prop << "\n"
-                                 << "is set to Pass_Through, then the " << role_inputfilter << impl_prop << "\n"
-                                 << "parameter should be either not set or set to Pass_Through.\n"
-                                 << role_inputfilter << " configuration parameters will be ignored.";
+                    // LOG(WARNING) << "Configuration warning: if " << role_conditioner << impl_prop << "\n"
+                                //  << "is set to Pass_Through, then the " << role_inputfilter << impl_prop << "\n"
+                                //  << "parameter should be either not set or set to Pass_Through.\n"
+                                //  << role_inputfilter << " configuration parameters will be ignored.";
                 }
             if (!resampler.empty() and (resampler != "Pass_Through"))
                 {
-                    LOG(WARNING) << "Configuration warning: if " << role_conditioner << impl_prop << "\n"
-                                 << "is set to Pass_Through, then the " << role_resampler << impl_prop << "\n"
-                                 << "parameter should be either not set or set to Pass_Through.\n"
-                                 << role_resampler << " configuration parameters will be ignored.";
+                    // LOG(WARNING) << "Configuration warning: if " << role_conditioner << impl_prop << "\n"
+                                //  << "is set to Pass_Through, then the " << role_resampler << impl_prop << "\n"
+                                //  << "parameter should be either not set or set to Pass_Through.\n"
+                                //  << role_resampler << " configuration parameters will be ignored.";
                 }
-            LOG(INFO) << "Getting " << role_conditioner << " with Pass_Through implementation";
+           // LOG(INFO) << "Getting " << role_conditioner << " with Pass_Through implementation";
 
             std::unique_ptr<GNSSBlockInterface> conditioner_ = std::make_unique<Pass_Through>(configuration, role_conditioner, 1, 1);
 
             return conditioner_;
         }
 
-    LOG(INFO) << "Getting " << role_conditioner << " with " << role_datatypeadapter << " implementation: "
-              << data_type_adapter << ", " << role_inputfilter << " implementation: "
-              << input_filter << ", and " << role_resampler << " implementation: "
-              << resampler;
+   // LOG(INFO) << "Getting " << role_conditioner << " with " << role_datatypeadapter << " implementation: "
+            //   << data_type_adapter << ", " << role_inputfilter << " implementation: "
+            //   << input_filter << ", and " << role_resampler << " implementation: "
+            //   << resampler;
 
     if (signal_conditioner == "Array_Signal_Conditioner")
         {
@@ -311,7 +311,7 @@ std::unique_ptr<GNSSBlockInterface> GNSSBlockFactory::GetObservables(const Confi
 {
     const std::string empty_implementation;
     std::string implementation = configuration->property("Observables.implementation", empty_implementation);
-    LOG(INFO) << "Getting Observables with implementation " << implementation;
+   // LOG(INFO) << "Getting Observables with implementation " << implementation;
     if (implementation.find("_Observables") == std::string::npos)
         {
             std::cerr << "Error in configuration file: please set Observables.implementation=Hybrid_Observables\n";
@@ -346,7 +346,7 @@ std::unique_ptr<GNSSBlockInterface> GNSSBlockFactory::GetPVT(const Configuration
 {
     const std::string empty_implementation;
     std::string implementation = configuration->property("PVT.implementation", empty_implementation);
-    LOG(INFO) << "Getting PVT with implementation " << implementation;
+   // LOG(INFO) << "Getting PVT with implementation " << implementation;
     if (implementation.find("_PVT") == std::string::npos)
         {
             std::cerr << "Error in configuration file: please set PVT.implementation=RTKLIB_PVT\n";
@@ -408,13 +408,13 @@ std::unique_ptr<GNSSBlockInterface> GNSSBlockFactory::GetChannel(
             return nullptr;
         }
 
-    LOG(INFO) << "Instantiating Channel " << channel
-              << " with Acquisition Implementation: "
-              << configuration->property("Acquisition_" + signal + appendix1 + impl_prop, std::string("W"))
-              << ", Tracking Implementation: "
-              << configuration->property("Tracking_" + signal + appendix2 + impl_prop, std::string("W"))
-              << ", Telemetry Decoder implementation: "
-              << configuration->property("TelemetryDecoder_" + signal + appendix3 + impl_prop, std::string("W"));
+   // LOG(INFO) << "Instantiating Channel " << channel
+            //   << " with Acquisition Implementation: "
+            //   << configuration->property("Acquisition_" + signal + appendix1 + impl_prop, std::string("W"))
+            //   << ", Tracking Implementation: "
+            //   << configuration->property("Tracking_" + signal + appendix2 + impl_prop, std::string("W"))
+            //   << ", Telemetry Decoder implementation: "
+            //   << configuration->property("TelemetryDecoder_" + signal + appendix3 + impl_prop, std::string("W"));
 
     std::unique_ptr<AcquisitionInterface> acq_ = GetAcqBlock(configuration, "Acquisition_" + signal + appendix1, 1, 0);
     std::unique_ptr<TrackingInterface> trk_ = GetTrkBlock(configuration, "Tracking_" + signal + appendix2, 1, 1);
@@ -474,7 +474,7 @@ std::unique_ptr<std::vector<std::unique_ptr<GNSSBlockInterface>>> GNSSBlockFacto
     try
         {
             // **************** GPS L1 C/A CHANNELS ****************************
-            LOG(INFO) << "Getting " << Channels_1C_count << " GPS L1 C/A channels";
+           // LOG(INFO) << "Getting " << Channels_1C_count << " GPS L1 C/A channels";
 
             for (unsigned int i = 0; i < Channels_1C_count; i++)
                 {
@@ -487,7 +487,7 @@ std::unique_ptr<std::vector<std::unique_ptr<GNSSBlockInterface>>> GNSSBlockFacto
                 }
 
             // **************** GPS L2C (M) CHANNELS ***************************
-            LOG(INFO) << "Getting " << Channels_2S_count << " GPS L2C (M) channels";
+           // LOG(INFO) << "Getting " << Channels_2S_count << " GPS L2C (M) channels";
 
             for (unsigned int i = 0; i < Channels_2S_count; i++)
                 {
@@ -500,7 +500,7 @@ std::unique_ptr<std::vector<std::unique_ptr<GNSSBlockInterface>>> GNSSBlockFacto
                 }
 
             // **************** GPS L5 CHANNELS ********************************
-            LOG(INFO) << "Getting " << Channels_L5_count << " GPS L5 channels";
+           // LOG(INFO) << "Getting " << Channels_L5_count << " GPS L5 channels";
 
             for (unsigned int i = 0; i < Channels_L5_count; i++)
                 {
@@ -513,7 +513,7 @@ std::unique_ptr<std::vector<std::unique_ptr<GNSSBlockInterface>>> GNSSBlockFacto
                 }
 
             // **************** GALILEO E1 B (I/NAV OS) CHANNELS ***************
-            LOG(INFO) << "Getting " << Channels_1B_count << " GALILEO E1 B (I/NAV OS) channels";
+           // LOG(INFO) << "Getting " << Channels_1B_count << " GALILEO E1 B (I/NAV OS) channels";
 
             for (unsigned int i = 0; i < Channels_1B_count; i++)
                 {
@@ -526,7 +526,7 @@ std::unique_ptr<std::vector<std::unique_ptr<GNSSBlockInterface>>> GNSSBlockFacto
                 }
 
             // **************** GALILEO E5a I (F/NAV OS) CHANNELS **************
-            LOG(INFO) << "Getting " << Channels_5X_count << " GALILEO E5a I (F/NAV OS) channels";
+           // LOG(INFO) << "Getting " << Channels_5X_count << " GALILEO E5a I (F/NAV OS) channels";
 
             for (unsigned int i = 0; i < Channels_5X_count; i++)
                 {
@@ -539,7 +539,7 @@ std::unique_ptr<std::vector<std::unique_ptr<GNSSBlockInterface>>> GNSSBlockFacto
                 }
 
             // **************** GALILEO E6 (B/C HAS) CHANNELS **************
-            LOG(INFO) << "Getting " << Channels_E6_count << " GALILEO E6 (B/C HAS) channels";
+           // LOG(INFO) << "Getting " << Channels_E6_count << " GALILEO E6 (B/C HAS) channels";
 
             for (unsigned int i = 0; i < Channels_E6_count; i++)
                 {
@@ -552,7 +552,7 @@ std::unique_ptr<std::vector<std::unique_ptr<GNSSBlockInterface>>> GNSSBlockFacto
                 }
 
             // **************** GLONASS L1 C/A CHANNELS ************************
-            LOG(INFO) << "Getting " << Channels_1G_count << " GLONASS L1 C/A channels";
+           // LOG(INFO) << "Getting " << Channels_1G_count << " GLONASS L1 C/A channels";
 
             for (unsigned int i = 0; i < Channels_1G_count; i++)
                 {
@@ -565,7 +565,7 @@ std::unique_ptr<std::vector<std::unique_ptr<GNSSBlockInterface>>> GNSSBlockFacto
                 }
 
             // **************** GLONASS L2 C/A CHANNELS ************************
-            LOG(INFO) << "Getting " << Channels_2G_count << " GLONASS L2 C/A channels";
+           // LOG(INFO) << "Getting " << Channels_2G_count << " GLONASS L2 C/A channels";
 
             for (unsigned int i = 0; i < Channels_2G_count; i++)
                 {
@@ -578,7 +578,7 @@ std::unique_ptr<std::vector<std::unique_ptr<GNSSBlockInterface>>> GNSSBlockFacto
                 }
 
             // **************** BEIDOU B1I CHANNELS ****************************
-            LOG(INFO) << "Getting " << Channels_B1_count << " BEIDOU B1I channels";
+           // LOG(INFO) << "Getting " << Channels_B1_count << " BEIDOU B1I channels";
 
             for (unsigned int i = 0; i < Channels_B1_count; i++)
                 {
@@ -591,7 +591,7 @@ std::unique_ptr<std::vector<std::unique_ptr<GNSSBlockInterface>>> GNSSBlockFacto
                 }
 
             // **************** BEIDOU B3I CHANNELS ****************************
-            LOG(INFO) << "Getting " << Channels_B3_count << " BEIDOU B3I channels";
+           // LOG(INFO) << "Getting " << Channels_B3_count << " BEIDOU B3I channels";
 
             for (unsigned int i = 0; i < Channels_B3_count; i++)
                 {
@@ -604,7 +604,7 @@ std::unique_ptr<std::vector<std::unique_ptr<GNSSBlockInterface>>> GNSSBlockFacto
                 }
 
             // **************** GALILEO E5b I (I/NAV OS) CHANNELS **************
-            LOG(INFO) << "Getting " << Channels_7X_count << " GALILEO E5b I (I/NAV OS) channels";
+           // LOG(INFO) << "Getting " << Channels_7X_count << " GALILEO E5b I (I/NAV OS) channels";
 
             for (unsigned int i = 0; i < Channels_7X_count; i++)
                 {
@@ -618,7 +618,7 @@ std::unique_ptr<std::vector<std::unique_ptr<GNSSBlockInterface>>> GNSSBlockFacto
         }
     catch (const std::exception& e)
         {
-            LOG(WARNING) << e.what();
+            // LOG(WARNING) << e.what();
         }
 
     return channels;
@@ -1315,10 +1315,10 @@ std::unique_ptr<GNSSBlockInterface> GNSSBlockFactory::GetBlock(
         }
     catch (const std::exception& e)
         {
-            LOG(INFO) << "Exception raised while instantiating the block: " << e.what();
-            std::cout << "Configuration error in " << role << " block, implementation " << (implementation == "Wrong"s ? "not defined."s : implementation) << ". The error was:\n"
-                      << e.what() << '\n';
-            std::cout << "GNSS-SDR program ended.\n";
+           // LOG(INFO) << "Exception raised while instantiating the block: " << e.what();
+            // std::cout << "Configuration error in " << role << " block, implementation " << (implementation == "Wrong"s ? "not defined."s : implementation) << ". The error was:\n"
+                    //   << e.what() << '\n';
+            // std::cout << "GNSS-SDR program ended.\n";
             exit(1);
         }
     return block;

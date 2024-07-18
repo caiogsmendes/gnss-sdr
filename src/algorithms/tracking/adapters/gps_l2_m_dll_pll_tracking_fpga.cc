@@ -56,14 +56,14 @@ GpsL2MDllPllTrackingFpga::GpsL2MDllPllTrackingFpga(
     if (trk_params_fpga.extend_correlation_symbols != 1)
         {
             trk_params_fpga.extend_correlation_symbols = 1;
-            std::cout << TEXT_RED << "WARNING: Extended coherent integration is not allowed in GPS L2. Coherent integration has been set to 20 ms (1 symbol)" << TEXT_RESET << '\n';
+            // std::cout << TEXT_RED << "WARNING: Extended coherent integration is not allowed in GPS L2. Coherent integration has been set to 20 ms (1 symbol)" << TEXT_RESET << '\n';
         }
 
     trk_params_fpga.track_pilot = configuration->property(role_ + ".track_pilot", false);
     if (trk_params_fpga.track_pilot)
         {
             trk_params_fpga.track_pilot = false;
-            std::cout << TEXT_RED << "WARNING: GPS L2 does not have pilot signal. Data tracking has been enabled" << TEXT_RESET << '\n';
+            // std::cout << TEXT_RED << "WARNING: GPS L2 does not have pilot signal. Data tracking has been enabled" << TEXT_RESET << '\n';
         }
     trk_params_fpga.system = 'G';
     const std::array<char, 3> sig{'2', 'S', '\0'};
@@ -93,17 +93,17 @@ GpsL2MDllPllTrackingFpga::GpsL2MDllPllTrackingFpga(
     trk_params_fpga.code_samples_per_chip = 1;  // 1 sample per chip
 
     // ################# MAKE TRACKING GNU Radio object ###################
-    DLOG(INFO) << "role " << role_;
+    // DLOG(INFO) << "role " << role_;
     tracking_fpga_sc_sptr_ = dll_pll_veml_make_tracking_fpga(trk_params_fpga);
-    DLOG(INFO) << "tracking(" << tracking_fpga_sc_sptr_->unique_id() << ")";
+    // DLOG(INFO) << "tracking(" << tracking_fpga_sc_sptr_->unique_id() << ")";
 
     if (in_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 
@@ -138,7 +138,7 @@ void GpsL2MDllPllTrackingFpga::set_channel(unsigned int channel)
     // find the uio device file corresponding to the tracking multicorrelator
     if (find_uio_dev_file_name(device_io_name, device_name_, channel_ - num_prev_assigned_ch_) < 0)
         {
-            std::cout << "Cannot find the FPGA uio device file corresponding to device name " << device_name_ << std::endl;
+            // std::cout << "Cannot find the FPGA uio device file corresponding to device name " << device_name_ << std::endl;
             throw std::exception();
         }
 

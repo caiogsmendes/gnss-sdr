@@ -92,7 +92,7 @@ void GpsL1CaPcpsAcquisitionGSoC2013Test_msg_rx::msg_handler_channel_events(const
         }
     catch (const wht::bad_any_cast& e)
         {
-            LOG(WARNING) << "msg_handler_channel_events Bad any_cast: " << e.what();
+            // LOG(WARNING) << "msg_handler_channel_events Bad any_cast: " << e.what();
             rx_message = 0;
         }
 }
@@ -402,7 +402,7 @@ void GpsL1CaPcpsAcquisitionGSoC2013Test::process_message()
 
     realization_counter++;
 
-    std::cout << "Progress: " << round(static_cast<float>(realization_counter) / static_cast<float>(num_of_realizations) * 100.0) << "% \r" << std::flush;
+    // std::cout << "Progress: " << round(static_cast<float>(realization_counter) / static_cast<float>(num_of_realizations) * 100.0) << "% \r" << std::flush;
 
     if (realization_counter == num_of_realizations)
         {
@@ -462,7 +462,7 @@ TEST_F(GpsL1CaPcpsAcquisitionGSoC2013Test, ConnectAndRun)
         elapsed_seconds = end - start;
     }) << "Failure running the top_block.";
 
-    std::cout << "Processed " << nsamples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
+    // std::cout << "Processed " << nsamples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
 }
 
 
@@ -588,7 +588,7 @@ TEST_F(GpsL1CaPcpsAcquisitionGSoC2013Test, ValidationOfResultsProbabilities)
         top_block->connect(signal_source->get_right_block(), 0, acquisition->get_left_block(), 0);
     }) << "Failure connecting the blocks of acquisition test.";
 
-    std::cout << "Probability of false alarm (target) = " << 0.1 << '\n';
+    // std::cout << "Probability of false alarm (target) = " << 0.1 << '\n';
 
     // i = 0 --> satellite in acquisition is visible (prob of detection and prob of detection with wrong estimation)
     // i = 1 --> satellite in acquisition is not visible (prob of false detection)
@@ -615,14 +615,14 @@ TEST_F(GpsL1CaPcpsAcquisitionGSoC2013Test, ValidationOfResultsProbabilities)
 
             if (i == 0)
                 {
-                    std::cout << "Estimated probability of detection = " << Pd << '\n';
-                    std::cout << "Estimated probability of false alarm (satellite present) = " << Pfa_p << '\n';
-                    std::cout << "Mean acq time = " << mean_acq_time_us << " microseconds.\n";
+                    // std::cout << "Estimated probability of detection = " << Pd << '\n';
+                    // std::cout << "Estimated probability of false alarm (satellite present) = " << Pfa_p << '\n';
+                    // std::cout << "Mean acq time = " << mean_acq_time_us << " microseconds.\n";
                 }
             else if (i == 1)
                 {
-                    std::cout << "Estimated probability of false alarm (satellite absent) = " << Pfa_a << '\n';
-                    std::cout << "Mean acq time = " << mean_acq_time_us << " microseconds.\n";
+                    // std::cout << "Estimated probability of false alarm (satellite absent) = " << Pfa_a << '\n';
+                    // std::cout << "Mean acq time = " << mean_acq_time_us << " microseconds.\n";
                 }
 
             ASSERT_NO_THROW({

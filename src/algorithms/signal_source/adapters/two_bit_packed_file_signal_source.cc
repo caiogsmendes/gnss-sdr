@@ -37,11 +37,11 @@ TwoBitPackedFileSignalSource::TwoBitPackedFileSignalSource(
 {
     if (in_streams > 0)
         {
-            LOG(ERROR) << "A signal source does not have an input stream";
+            // LOG(ERROR) << "A signal source does not have an input stream";
         }
     if (out_streams > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 
@@ -72,7 +72,7 @@ std::tuple<size_t, bool> TwoBitPackedFileSignalSource::itemTypeToSize()
         }
     else
         {
-            LOG(WARNING) << item_type() << " unrecognized item type. Using byte.";
+            // LOG(WARNING) << item_type() << " unrecognized item type. Using byte.";
         }
 
     // the complex-ness of the input is inferred from the output type
@@ -91,8 +91,8 @@ std::tuple<size_t, bool> TwoBitPackedFileSignalSource::itemTypeToSize()
         }
     else
         {
-            LOG(WARNING) << sample_type_ << " unrecognized sample type. Assuming: "
-                         << (is_complex_t ? (reverse_interleaving_ ? "qi" : "iq") : "real");
+            // LOG(WARNING) << sample_type_ << " unrecognized sample type. Assuming: "
+                        //  << (is_complex_t ? (reverse_interleaving_ ? "qi" : "iq") : "real");
         }
 
 
@@ -118,32 +118,32 @@ void TwoBitPackedFileSignalSource::create_file_source_hook()
 {
     unpack_samples_ = make_unpack_2bit_samples(big_endian_bytes_, item_size(),
         big_endian_items_, reverse_interleaving_);
-    DLOG(INFO) << "unpack_byte_2bit_samples(" << unpack_samples_->unique_id() << ")";
+    // DLOG(INFO) << "unpack_byte_2bit_samples(" << unpack_samples_->unique_id() << ")";
 
     if (is_complex())
         {
             char_to_float_ = gr::blocks::interleaved_char_to_complex::make(false);
-            DLOG(INFO) << "interleaved_char_to_complex(" << char_to_float_->unique_id() << ")";
+            // DLOG(INFO) << "interleaved_char_to_complex(" << char_to_float_->unique_id() << ")";
         }
     else
         {
             char_to_float_ = gr::blocks::char_to_float::make();
-            DLOG(INFO) << "char_to_float(" << char_to_float_->unique_id() << ")";
+            // DLOG(INFO) << "char_to_float(" << char_to_float_->unique_id() << ")";
         }
 }
 
 void TwoBitPackedFileSignalSource::pre_connect_hook(gr::top_block_sptr top_block)
 {
     top_block->connect(file_source(), 0, unpack_samples_, 0);
-    DLOG(INFO) << "connected file source to unpack samples";
+    // DLOG(INFO) << "connected file source to unpack samples";
     top_block->connect(unpack_samples_, 0, char_to_float_, 0);
-    DLOG(INFO) << "connected unpack samples to char to float";
+    // DLOG(INFO) << "connected unpack samples to char to float";
 }
 
 void TwoBitPackedFileSignalSource::pre_disconnect_hook(gr::top_block_sptr top_block)
 {
     top_block->disconnect(file_source(), 0, unpack_samples_, 0);
-    DLOG(INFO) << "disconnected file source to unpack samples";
+    // DLOG(INFO) << "disconnected file source to unpack samples";
     top_block->disconnect(unpack_samples_, 0, char_to_float_, 0);
-    DLOG(INFO) << "disconnected unpack samples to char to float";
+    // DLOG(INFO) << "disconnected unpack samples to char to float";
 }

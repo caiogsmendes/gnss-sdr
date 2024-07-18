@@ -336,13 +336,13 @@ bool Galileo_Fnav_Message::have_new_ephemeris()  // Check if we have a new ephem
             // if all ephemeris pages have the same IOD, then they belong to the same block
             if ((FNAV_IODnav_1 == FNAV_IODnav_2) and (FNAV_IODnav_3 == FNAV_IODnav_4) and (FNAV_IODnav_1 == FNAV_IODnav_3))
                 {
-                    DLOG(INFO) << "Ephemeris (1, 2, 3) have been received and belong to the same batch";
+                    // DLOG(INFO) << "Ephemeris (1, 2, 3) have been received and belong to the same batch";
                     flag_ephemeris_1 = false;  // clear the flag
                     flag_ephemeris_2 = false;  // clear the flag
                     flag_ephemeris_3 = false;  // clear the flag
                     flag_all_ephemeris = true;
                     IOD_ephemeris = FNAV_IODnav_1;
-                    DLOG(INFO) << "Batch number: " << IOD_ephemeris;
+                    // DLOG(INFO) << "Batch number: " << IOD_ephemeris;
                     return true;
                 }
         }

@@ -29,11 +29,11 @@ SpirFileSignalSource::SpirFileSignalSource(const ConfigurationInterface* configu
 {
     if (in_streams > 0)
         {
-            LOG(ERROR) << "A signal source does not have an input stream";
+            // LOG(ERROR) << "A signal source does not have an input stream";
         }
     if (out_streams > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 
@@ -48,7 +48,7 @@ std::tuple<size_t, bool> SpirFileSignalSource::itemTypeToSize()
         }
     else
         {
-            LOG(WARNING) << item_type() << " unsupported item type. Using int.";
+            // LOG(WARNING) << item_type() << " unsupported item type. Using int.";
             item_size = sizeof(int);
         }
 
@@ -63,17 +63,17 @@ void SpirFileSignalSource::create_file_source_hook()
 {
     // connect the file to the decoder
     unpack_intspir_ = make_unpack_intspir_1bit_samples();
-    DLOG(INFO) << "unpack_intspir_1bit_samples(" << unpack_intspir_->unique_id() << ")";
+    // DLOG(INFO) << "unpack_intspir_1bit_samples(" << unpack_intspir_->unique_id() << ")";
 }
 
 void SpirFileSignalSource::pre_connect_hook(gr::top_block_sptr top_block)
 {
     top_block->connect(file_source(), 0, unpack_intspir_, 0);
-    DLOG(INFO) << "connected file_source to unpacker";
+    // DLOG(INFO) << "connected file_source to unpacker";
 }
 
 void SpirFileSignalSource::post_disconnect_hook(gr::top_block_sptr top_block)
 {
     top_block->disconnect(file_source(), 0, unpack_intspir_, 0);
-    DLOG(INFO) << "disconnected file_source from unpacker";
+    // DLOG(INFO) << "disconnected file_source from unpacker";
 }

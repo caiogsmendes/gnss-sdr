@@ -39,7 +39,7 @@ void Dll_Pll_Conf::SetFromConfiguration(const ConfigurationInterface *configurat
     item_type = configuration->property(role + ".item_type", item_type);
     if (!item_type_valid(item_type))
         {
-            LOG(WARNING) << "Unknown item type: " + item_type << ". Set to gr_complex";
+            // LOG(WARNING) << "Unknown item type: " + item_type << ". Set to gr_complex";
             item_type = "gr_complex";
         }
 
@@ -66,22 +66,22 @@ void Dll_Pll_Conf::SetFromConfiguration(const ConfigurationInterface *configurat
     pll_filter_order = configuration->property(role + ".pll_filter_order", pll_filter_order);
     if (dll_filter_order < 1)
         {
-            LOG(WARNING) << "dll_filter_order parameter must be 1, 2 or 3. Set to 1.";
+            // LOG(WARNING) << "dll_filter_order parameter must be 1, 2 or 3. Set to 1.";
             dll_filter_order = 1;
         }
     if (dll_filter_order > 3)
         {
-            LOG(WARNING) << "dll_filter_order parameter must be 1, 2 or 3. Set to 3.";
+            // LOG(WARNING) << "dll_filter_order parameter must be 1, 2 or 3. Set to 3.";
             dll_filter_order = 3;
         }
     if (pll_filter_order < 2)
         {
-            LOG(WARNING) << "pll_filter_order parameter must be 2 or 3. Set to 2.";
+            // LOG(WARNING) << "pll_filter_order parameter must be 2 or 3. Set to 2.";
             pll_filter_order = 2;
         }
     if (pll_filter_order > 3)
         {
-            LOG(WARNING) << "pll_filter_order parameter must be 2 or 3. Set to 3.";
+            // LOG(WARNING) << "pll_filter_order parameter must be 2 or 3. Set to 3.";
             pll_filter_order = 3;
         }
 
@@ -119,7 +119,7 @@ void Dll_Pll_Conf::SetFromConfiguration(const ConfigurationInterface *configurat
     if (smoother_length < 1)
         {
             smoother_length = 1;
-            LOG(WARNING) << "smoother_length must be bigger than 0. It has been set to 1";
+            // LOG(WARNING) << "smoother_length must be bigger than 0. It has been set to 1";
         }
     carrier_lock_test_smoother_samples = configuration->property(role + ".carrier_lock_test_smoother_samples", carrier_lock_test_smoother_samples);
     carrier_lock_test_smoother_alpha = configuration->property(role + ".carrier_lock_test_smoother_alpha", carrier_lock_test_smoother_alpha);

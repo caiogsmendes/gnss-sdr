@@ -274,7 +274,7 @@ void galileo_e5a_noncoherentIQ_acquisition_caf_cc::set_state(int state)
         }
     else
         {
-            LOG(ERROR) << "State can only be set to 0 or 1";
+            // LOG(ERROR) << "State can only be set to 0 or 1";
         }
 }
 
@@ -375,11 +375,11 @@ int galileo_e5a_noncoherentIQ_acquisition_caf_cc::general_work(int noutput_items
                 d_mag = 0.0;
                 d_well_count++;
 
-                DLOG(INFO) << "Channel: " << d_channel
-                           << " , doing acquisition of satellite: " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
-                           << " ,sample stamp: " << d_sample_counter << ", threshold: "
-                           << d_threshold << ", doppler_max: " << d_doppler_max
-                           << ", doppler_step: " << d_doppler_step;
+                // DLOG(INFO) << "Channel: " << d_channel
+                        //    << " , doing acquisition of satellite: " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
+                        //    << " ,sample stamp: " << d_sample_counter << ", threshold: "
+                        //    << d_threshold << ", doppler_max: " << d_doppler_max
+                        //    << ", doppler_step: " << d_doppler_step;
 
                 // 1- Compute the input signal power estimation
                 volk_32fc_magnitude_squared_32f(d_magnitudeIA.data(), d_inbuffer.data(), d_fft_size);
@@ -594,7 +594,7 @@ int galileo_e5a_noncoherentIQ_acquisition_caf_cc::general_work(int noutput_items
                                 d_dump_file.close();
                             }
                     }
-                // std::cout << "d_mag " << d_mag << ".d_sample_counter " << d_sample_counter << ". acq delay " << d_gnss_synchro->Acq_delay_samples<< " indext "<< indext << '\n';
+                // // std::cout << "d_mag " << d_mag << ".d_sample_counter " << d_sample_counter << ". acq delay " << d_gnss_synchro->Acq_delay_samples<< " indext "<< indext << '\n';
                 // 6 OPTIONAL: CAF filter to avoid Doppler ambiguity in bit transition.
                 if (d_CAF_window_hz > 0)
                     {
@@ -604,7 +604,7 @@ int galileo_e5a_noncoherentIQ_acquisition_caf_cc::general_work(int noutput_items
                         float weighting_factor;
                         weighting_factor = 0.5F / static_cast<float>(CAF_bins_half);
                         // weighting_factor = 0;
-                        // std::cout << "weighting_factor " << weighting_factor << '\n';
+                        // // std::cout << "weighting_factor " << weighting_factor << '\n';
                         // Initialize first iterations
                         for (int doppler_index = 0; doppler_index < CAF_bins_half; doppler_index++)
                             {
@@ -706,15 +706,15 @@ int galileo_e5a_noncoherentIQ_acquisition_caf_cc::general_work(int noutput_items
         case 3:
             {
                 // 7.1- Declare positive acquisition using a message port
-                DLOG(INFO) << "positive acquisition";
-                DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
-                DLOG(INFO) << "sample_stamp " << d_sample_counter;
-                DLOG(INFO) << "test statistics value " << d_test_statistics;
-                DLOG(INFO) << "test statistics threshold " << d_threshold;
-                DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
-                DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
-                DLOG(INFO) << "magnitude " << d_mag;
-                DLOG(INFO) << "input signal power " << d_input_power;
+                // DLOG(INFO) << "positive acquisition";
+                // DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
+                // DLOG(INFO) << "sample_stamp " << d_sample_counter;
+                // DLOG(INFO) << "test statistics value " << d_test_statistics;
+                // DLOG(INFO) << "test statistics threshold " << d_threshold;
+                // DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
+                // DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
+                // DLOG(INFO) << "magnitude " << d_mag;
+                // DLOG(INFO) << "input signal power " << d_input_power;
 
                 d_active = false;
                 d_state = 0;
@@ -739,15 +739,15 @@ int galileo_e5a_noncoherentIQ_acquisition_caf_cc::general_work(int noutput_items
         case 4:
             {
                 // 7.2- Declare negative acquisition using a message port
-                DLOG(INFO) << "negative acquisition";
-                DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
-                DLOG(INFO) << "sample_stamp " << d_sample_counter;
-                DLOG(INFO) << "test statistics value " << d_test_statistics;
-                DLOG(INFO) << "test statistics threshold " << d_threshold;
-                DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
-                DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
-                DLOG(INFO) << "magnitude " << d_mag;
-                DLOG(INFO) << "input signal power " << d_input_power;
+                // DLOG(INFO) << "negative acquisition";
+                // DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
+                // DLOG(INFO) << "sample_stamp " << d_sample_counter;
+                // DLOG(INFO) << "test statistics value " << d_test_statistics;
+                // DLOG(INFO) << "test statistics threshold " << d_threshold;
+                // DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
+                // DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
+                // DLOG(INFO) << "magnitude " << d_mag;
+                // DLOG(INFO) << "input signal power " << d_input_power;
 
                 d_active = false;
                 d_state = 0;

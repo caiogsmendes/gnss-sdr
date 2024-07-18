@@ -38,17 +38,17 @@ FifoSignalSource::FifoSignalSource(ConfigurationInterface const* configuration,
 {
     if (dump_)
         {
-            DLOG(INFO) << "Dumping output into file " << (dump_filename_ + ".bin"s);
+            // DLOG(INFO) << "Dumping output into file " << (dump_filename_ + ".bin"s);
             file_sink_ = gr::blocks::file_sink::make(item_size_, (dump_filename_ + ".bin").c_str());
         }
 
     if (in_streams > 0)
         {
-            LOG(ERROR) << "A signal source does not have an input stream";
+            // LOG(ERROR) << "A signal source does not have an input stream";
         }
     if (out_streams > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 
@@ -59,7 +59,7 @@ void FifoSignalSource::connect(gr::top_block_sptr top_block)
     if (dump_)
         {
             top_block->connect(fifo_reader_, 0, file_sink_, 0);
-            DLOG(INFO) << "connected source to file sink";
+            // DLOG(INFO) << "connected source to file sink";
         }
 }
 
@@ -69,7 +69,7 @@ void FifoSignalSource::disconnect(gr::top_block_sptr top_block)
     if (dump_)
         {
             top_block->disconnect(fifo_reader_, 0, file_sink_, 0);
-            DLOG(INFO) << "disconnected source from file sink";
+            // DLOG(INFO) << "disconnected source from file sink";
         }
 }
 
@@ -82,7 +82,7 @@ size_t FifoSignalSource::item_size()
 
 gr::basic_block_sptr FifoSignalSource::get_left_block()
 {
-    LOG(WARNING) << "Left block of a signal source should not be retrieved";
+    // LOG(WARNING) << "Left block of a signal source should not be retrieved";
     return gr::blocks::file_source::sptr();
 }
 

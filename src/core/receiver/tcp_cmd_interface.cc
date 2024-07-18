@@ -320,7 +320,7 @@ void TcpCmdInterface::run_cmd_server(int tcp_port)
                 {
                     try
                         {
-                            std::cout << "TcpCmdInterface: Telecommand TCP interface listening on port " << tcp_port << '\n';
+                            // std::cout << "TcpCmdInterface: Telecommand TCP interface listening on port " << tcp_port << '\n';
 
                             boost::asio::ip::tcp::socket socket(context);
                             acceptor.accept(socket, not_throw);

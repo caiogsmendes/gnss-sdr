@@ -104,7 +104,7 @@ void pcps_acquisition_fpga::set_state(int32_t state)
         }
     else
         {
-            LOG(ERROR) << "State can only be set to 0 or 1";
+            // LOG(ERROR) << "State can only be set to 0 or 1";
         }
 }
 
@@ -113,7 +113,7 @@ void pcps_acquisition_fpga::send_positive_acquisition()
 {
     // Declare positive acquisition using a message port
     // 0=STOP_CHANNEL 1=ACQ_SUCCEES 2=ACQ_FAIL
-    DLOG(INFO) << "positive acquisition"
+    // DLOG(INFO) << "positive acquisition"
                << ", satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
                << ", sample_stamp " << d_gnss_synchro->Acq_samplestamp_samples
                << ", test statistics value " << d_test_statistics
@@ -132,7 +132,7 @@ void pcps_acquisition_fpga::send_positive_acquisition()
 void pcps_acquisition_fpga::send_negative_acquisition()
 {
     // Declare negative acquisition using a message port
-    DLOG(INFO) << "negative acquisition"
+    // DLOG(INFO) << "negative acquisition"
                << ", satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
                << ", sample_stamp " << d_gnss_synchro->Acq_samplestamp_samples
                << ", test statistics value " << d_test_statistics
@@ -221,7 +221,7 @@ void pcps_acquisition_fpga::set_active(bool active)
     d_input_power = 0.0;
     d_mag = 0.0;
 
-    DLOG(INFO) << "Channel: " << d_channel
+    // DLOG(INFO) << "Channel: " << d_channel
                << " , doing acquisition of satellite: " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
                << " ,sample stamp: " << d_sample_counter << ", threshold: "
                << d_threshold << ", doppler_max: " << d_doppler_max

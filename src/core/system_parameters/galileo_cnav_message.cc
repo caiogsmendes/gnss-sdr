@@ -112,7 +112,7 @@ void Galileo_Cnav_Message::read_HAS_page_header(const std::string& page_string)
     if (page_string == "101011110011101111000011")  // Equivalent to AF3BC3
         {
             d_page_dummy = true;
-            DLOG(INFO) << "HAS page with dummy header received.";
+            // DLOG(INFO) << "HAS page with dummy header received.";
         }
     else
         {
@@ -129,13 +129,13 @@ void Galileo_Cnav_Message::read_HAS_page_header(const std::string& page_string)
             d_received_message_size = read_has_page_header_parameter(has_page_header, GALILEO_HAS_MESSAGE_SIZE) + 1;  // "0" means 1
             d_received_message_page_id = read_has_page_header_parameter(has_page_header, GALILEO_HAS_MESSAGE_PAGE_ID);
 
-            DLOG(INFO) << "HAS page header received " << page_string << ":\n"
-                       << "d_has_page_status: " << static_cast<float>(d_has_page_status) << "\n"
-                       << "d_has_reserved: " << static_cast<float>(d_has_reserved) << "\n"
-                       << "d_received_message_type: " << static_cast<float>(d_received_message_type) << "\n"
-                       << "d_received_message_id: " << static_cast<float>(d_received_message_id) << "\n"
-                       << "d_received_message_size: " << static_cast<float>(d_received_message_size) << "\n"
-                       << "d_received_message_page_id: " << static_cast<float>(d_received_message_page_id);
+            // DLOG(INFO) << "HAS page header received " << page_string << ":\n"
+                    //    << "d_has_page_status: " << static_cast<float>(d_has_page_status) << "\n"
+                    //    << "d_has_reserved: " << static_cast<float>(d_has_reserved) << "\n"
+                    //    << "d_received_message_type: " << static_cast<float>(d_received_message_type) << "\n"
+                    //    << "d_received_message_id: " << static_cast<float>(d_received_message_id) << "\n"
+                    //    << "d_received_message_size: " << static_cast<float>(d_received_message_size) << "\n"
+                    //    << "d_received_message_page_id: " << static_cast<float>(d_received_message_page_id);
         }
 }
 

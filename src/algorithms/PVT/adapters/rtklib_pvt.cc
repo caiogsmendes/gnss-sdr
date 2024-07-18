@@ -27,7 +27,7 @@
 #include "pvt_conf.h"                  // for Pvt_Conf
 #include "rtklib_rtkpos.h"             // for rtkfree, rtkinit
 #include <glog/logging.h>              // for LOG
-#include <iostream>                    // for std::cout
+#include <iostream>                    // for // std::cout
 #if USE_STD_COMMON_FACTOR
 #include <numeric>
 namespace bc = std;
@@ -56,7 +56,7 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
     const std::string default_nmea_dump_filename("./nmea_pvt.nmea");
     const std::string default_nmea_dump_devname("/dev/tty1");
     const std::string default_rtcm_dump_devname("/dev/pts/1");
-    DLOG(INFO) << "role " << role;
+    // DLOG(INFO) << "role " << role;
     pvt_output_parameters.dump = configuration->property(role + ".dump", false);
     pvt_output_parameters.dump_filename = configuration->property(role + ".dump_filename", default_dump_filename);
     pvt_output_parameters.dump_mat = configuration->property(role + ".dump_mat", true);
@@ -489,11 +489,11 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
     if (positioning_mode == -1)
         {
             // warn user and set the default
-            std::cout << "WARNING: Bad specification of positioning mode.\n"
-                      << "positioning_mode possible values: Single / Static / Kinematic / PPP_Static / PPP_Kinematic\n"
-                      << "positioning_mode specified value: " << positioning_mode_str << "\n"
-                      << "Setting positioning_mode to Single\n"
-                      << std::flush;
+            // std::cout << "WARNING: Bad specification of positioning mode.\n"
+                    //   << "positioning_mode possible values: Single / Static / Kinematic / PPP_Static / PPP_Kinematic\n"
+                    //   << "positioning_mode specified value: " << positioning_mode_str << "\n"
+                    //   << "Setting positioning_mode to Single\n"
+                    //   << std::flush;
             positioning_mode = PMODE_SINGLE;
         }
 
@@ -521,7 +521,7 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
         }
     if (num_bands > 3)
         {
-            LOG(WARNING) << "Too much bands: The PVT engine can only handle 3 bands, but " << num_bands << " were set";
+            // LOG(WARNING) << "Too much bands: The PVT engine can only handle 3 bands, but " << num_bands << " were set";
             num_bands = 3;
         }
 
@@ -536,7 +536,7 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
     if ((elevation_mask < 0.0) || (elevation_mask > 90.0))
         {
             // warn user and set the default
-            LOG(WARNING) << "Erroneous Elevation Mask. Setting to default value of 15.0 degrees";
+            // LOG(WARNING) << "Erroneous Elevation Mask. Setting to default value of 15.0 degrees";
             elevation_mask = 15.0;
         }
 
@@ -544,7 +544,7 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
     if ((dynamics_model < 0) || (dynamics_model > 2))
         {
             // warn user and set the default
-            LOG(WARNING) << "Erroneous Dynamics Model configuration. Setting to default value of (0:none)";
+            // LOG(WARNING) << "Erroneous Dynamics Model configuration. Setting to default value of (0:none)";
             dynamics_model = 0;
         }
 
@@ -578,11 +578,11 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
     if (iono_model == -1)
         {
             // warn user and set the default
-            std::cout << "WARNING: Bad specification of ionospheric model.\n"
-                      << "iono_model possible values: OFF / Broadcast / SBAS / Iono-Free-LC / Estimate_STEC / IONEX\n"
-                      << "iono_model specified value: " << iono_model_str << "\n"
-                      << "Setting iono_model to OFF\n"
-                      << std::flush;
+            // std::cout << "WARNING: Bad specification of ionospheric model.\n"
+                    //   << "iono_model possible values: OFF / Broadcast / SBAS / Iono-Free-LC / Estimate_STEC / IONEX\n"
+                    //   << "iono_model specified value: " << iono_model_str << "\n"
+                    //   << "Setting iono_model to OFF\n"
+                    //   << std::flush;
             iono_model = IONOOPT_OFF; /* 0: ionosphere option: correction off */
         }
 
@@ -612,11 +612,11 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
     if (trop_model == -1)
         {
             // warn user and set the default
-            std::cout << "WARNING: Bad specification of tropospheric model.\n"
-                      << "trop_model possible values: OFF / Saastamoinen / SBAS / Estimate_ZTD / Estimate_ZTD_Grad\n"
-                      << "trop_model specified value: " << trop_model_str << "\n"
-                      << "Setting trop_model to OFF\n"
-                      << std::flush;
+            // std::cout << "WARNING: Bad specification of tropospheric model.\n"
+                    //   << "trop_model possible values: OFF / Saastamoinen / SBAS / Estimate_ZTD / Estimate_ZTD_Grad\n"
+                    //   << "trop_model specified value: " << trop_model_str << "\n"
+                    //   << "Setting trop_model to OFF\n"
+                    //   << std::flush;
             trop_model = TROPOPT_OFF;
         }
 
@@ -660,7 +660,7 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
     if ((navigation_system < 1) || (navigation_system > 255))                           /* GPS: 1   SBAS: 2   GPS+SBAS: 3 Galileo: 8  Galileo+GPS: 9 GPS+SBAS+Galileo: 11 All: 255 */
         {
             // warn user and set the default
-            LOG(WARNING) << "Erroneous Navigation System. Setting to default value of (0:none)";
+            // LOG(WARNING) << "Erroneous Navigation System. Setting to default value of (0:none)";
             navigation_system = nsys;
         }
 
@@ -691,11 +691,11 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
     if (integer_ambiguity_resolution_gps == -1)
         {
             // warn user and set the default
-            std::cout << "WARNING: Bad specification of GPS ambiguity resolution method.\n"
-                      << "AR_GPS possible values: OFF / Continuous / Instantaneous / Fix-and-Hold / PPP-AR\n"
-                      << "AR_GPS specified value: " << integer_ambiguity_resolution_gps_str << "\n"
-                      << "Setting AR_GPS to OFF\n"
-                      << std::flush;
+            // std::cout << "WARNING: Bad specification of GPS ambiguity resolution method.\n"
+                    //   << "AR_GPS possible values: OFF / Continuous / Instantaneous / Fix-and-Hold / PPP-AR\n"
+                    //   << "AR_GPS specified value: " << integer_ambiguity_resolution_gps_str << "\n"
+                    //   << "Setting AR_GPS to OFF\n"
+                    //   << std::flush;
             integer_ambiguity_resolution_gps = ARMODE_OFF;
         }
 
@@ -703,7 +703,7 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
     if ((integer_ambiguity_resolution_glo < 0) || (integer_ambiguity_resolution_glo > 3))
         {
             // warn user and set the default
-            LOG(WARNING) << "Erroneous Integer Ambiguity Resolution for GLONASS . Setting to default value of (1:on)";
+            // LOG(WARNING) << "Erroneous Integer Ambiguity Resolution for GLONASS . Setting to default value of (1:on)";
             integer_ambiguity_resolution_glo = 1;
         }
 
@@ -711,7 +711,7 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
     if ((integer_ambiguity_resolution_bds < 0) || (integer_ambiguity_resolution_bds > 1))
         {
             // warn user and set the default
-            LOG(WARNING) << "Erroneous Integer Ambiguity Resolution for BEIDOU . Setting to default value of (1:on)";
+            // LOG(WARNING) << "Erroneous Integer Ambiguity Resolution for BEIDOU . Setting to default value of (1:on)";
             integer_ambiguity_resolution_bds = 1;
         }
 
@@ -890,17 +890,17 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
 
     // make PVT object
     pvt_ = rtklib_make_pvt_gs(in_streams_, pvt_output_parameters, rtk);
-    DLOG(INFO) << "pvt(" << pvt_->unique_id() << ")";
+    // DLOG(INFO) << "pvt(" << pvt_->unique_id() << ")";
     if (out_streams_ > 0)
         {
-            LOG(ERROR) << "The PVT block does not have an output stream";
+            // LOG(ERROR) << "The PVT block does not have an output stream";
         }
 }
 
 
 Rtklib_Pvt::~Rtklib_Pvt()
 {
-    DLOG(INFO) << "PVT adapter destructor called.";
+    // DLOG(INFO) << "PVT adapter destructor called.";
     rtkfree(&rtk);
 }
 
@@ -1019,7 +1019,7 @@ void Rtklib_Pvt::connect(gr::top_block_sptr top_block)
         { /* top_block is not null */
         };
     // Nothing to connect internally
-    DLOG(INFO) << "nothing to connect internally";
+    // DLOG(INFO) << "nothing to connect internally";
 }
 
 

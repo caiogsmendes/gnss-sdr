@@ -67,7 +67,7 @@ labsat23_source::labsat23_source(const char *signal_file_basename,
     if (d_is_ls3w)
         {
             d_labsat_version = 3;
-            std::cout << "LabSat file version 3 Wideband detected.\n";
+            // std::cout << "LabSat file version 3 Wideband detected.\n";
             // Read ini file
             std::string ini_file = signal_file.substr(0, signal_file.length() - 4) + std::string("ini");
             if (read_ls3w_ini(ini_file) != 0)
@@ -80,11 +80,11 @@ labsat23_source::labsat23_source(const char *signal_file_basename,
 
     if (binary_input_file.is_open())
         {
-            std::cout << "LabSat file source is reading samples from " << signal_file << '\n';
+            // std::cout << "LabSat file source is reading samples from " << signal_file << '\n';
         }
     else
         {
-            std::cout << "LabSat file " << signal_file << " could not be opened!\n";
+            // std::cout << "LabSat file " << signal_file << " could not be opened!\n";
             exit(1);
         }
 }
@@ -159,7 +159,7 @@ int labsat23_source::parse_header()
 
             if (preamble_ok == false)
                 {
-                    std::cout << "LabSat source do not detect the preamble in the selected file\n";
+                    // std::cout << "LabSat source do not detect the preamble in the selected file\n";
                     return -1;
                 }
 
@@ -167,18 +167,18 @@ int labsat23_source::parse_header()
             if (memblock[byte_counter] == 0x4C and memblock[byte_counter + 1] == 0x53 and memblock[byte_counter + 2] == 0x32)
                 {
                     d_labsat_version = 2;
-                    std::cout << "LabSat file version 2 detected\n";
+                    // std::cout << "LabSat file version 2 detected\n";
                 }
 
             if (memblock[byte_counter] == 0x4C and memblock[byte_counter + 1] == 0x53 and memblock[byte_counter + 2] == 0x33)
                 {
                     d_labsat_version = 3;
-                    std::cout << "LabSat file version 3 detected\n";
+                    // std::cout << "LabSat file version 3 detected\n";
                 }
 
             if (d_labsat_version == 0)
                 {
-                    std::cout << "LabSat source do not detect the version number in the file header\n";
+                    // std::cout << "LabSat source do not detect the version number in the file header\n";
                     return -1;
                 }
 
@@ -186,7 +186,7 @@ int labsat23_source::parse_header()
 
             int sub_version = static_cast<int>(memblock[byte_counter]);
 
-            std::cout << "LabSat file sub version " << sub_version << '\n';
+            // std::cout << "LabSat file sub version " << sub_version << '\n';
 
             byte_counter++;
 
@@ -210,32 +210,33 @@ int labsat23_source::parse_header()
                     switch (d_ref_clock)
                         {
                         case 0:
-                            std::cout << "LabSat reference clock: internal OCXO\n";
+                            // std::cout << "LabSat reference clock: internal OCXO\n";
                             break;
                         case 1:
-                            std::cout << "LabSat reference clock: internal TCXO\n";
+                            // std::cout << "LabSat reference clock: internal TCXO\n";
                             break;
                         case 2:
-                            std::cout << "LabSat reference clock: external 10 MHz\n";
+                            // std::cout << "LabSat reference clock: external 10 MHz\n";
                             break;
                         case 3:
-                            std::cout << "LabSat reference clock: external 16.386 MHz\n";
+                            // std::cout << "LabSat reference clock: external 16.386 MHz\n";
                             break;
                         default:
-                            std::cout << "LabSat Unknown reference clock ID " << static_cast<int>(d_ref_clock) << '\n';
+                            // std::cout << "LabSat Unknown reference clock ID " << static_cast<int>(d_ref_clock) << '\n';
+                            break;
                         }
                     byte_counter++;
                     d_bits_per_sample = static_cast<uint8_t>(memblock[byte_counter]);
                     switch (d_bits_per_sample)
                         {
                         case 2:
-                            std::cout << "LabSat is using 2 bits per sample\n";
+                            // std::cout << "LabSat is using 2 bits per sample\n";
                             break;
                         case 4:
-                            std::cout << "LabSat is using 4 bits per sample\n";
+                            // std::cout << "LabSat is using 4 bits per sample\n";
                             break;
                         default:
-                            std::cout << "LabSat Unknown bits per sample ID " << static_cast<int>(d_bits_per_sample) << '\n';
+                            // std::cout << "LabSat Unknown bits per sample ID " << static_cast<int>(d_bits_per_sample) << '\n';
                             return -1;
                         }
 
@@ -244,36 +245,36 @@ int labsat23_source::parse_header()
                     switch (d_channel_selector)
                         {
                         case 0:
-                            std::cout << "Available channels: Channel A + B, 1 bit quantisation (I & Q)\n";
+                            // std::cout << "Available channels: Channel A + B, 1 bit quantisation (I & Q)\n";
                             break;
                         case 1:
-                            std::cout << "Available channels: Channel A, 1 bit quantisation (I & Q)\n";
+                            // std::cout << "Available channels: Channel A, 1 bit quantisation (I & Q)\n";
                             break;
                         case 2:
-                            std::cout << "Available channels: Channel B, 1 bit quantisation (I & Q)\n";
+                            // std::cout << "Available channels: Channel B, 1 bit quantisation (I & Q)\n";
                             break;
                         case 3:
-                            std::cout << "Available channels: Channel A, 2 bit quantisation (I & Q)\n";
+                            // std::cout << "Available channels: Channel A, 2 bit quantisation (I & Q)\n";
                             break;
                         case 4:
-                            std::cout << "Available channels: Channel B, 2 bit quantisation (I & Q)\n";
+                            // std::cout << "Available channels: Channel B, 2 bit quantisation (I & Q)\n";
                             break;
                         default:
-                            std::cout << "Unknown channel selection ID " << static_cast<int>(d_channel_selector) << '\n';
+                            // std::cout << "Unknown channel selection ID " << static_cast<int>(d_channel_selector) << '\n';
                             return -1;
                         }
 
                     // check if the selected channel in config file match the file encoding
                     if (d_channel_selector_config[0] == 2 and d_channel_selector != 0)
                         {
-                            std::cout << "LabSat source channel config inconsistency: channel 2 is selected but the file has only one channel.\n";
+                            // std::cout << "LabSat source channel config inconsistency: channel 2 is selected but the file has only one channel.\n";
                             return -1;
                         }
 
                     // todo: Add support for dual channel files
                     if (d_channel_selector == 0)
                         {
-                            std::cout << "ERROR: LabSat file contains more than one channel and this is not currently supported for LabSat version " << d_labsat_version << ".\n";
+                            // std::cout << "ERROR: LabSat file contains more than one channel and this is not currently supported for LabSat version " << d_labsat_version << ".\n";
                             return -1;
                         }
                     byte_counter++;
@@ -283,48 +284,51 @@ int labsat23_source::parse_header()
                         case 0:
                             break;
                         case 1:
-                            std::cout << "1 bit per sample\n";
+                            // std::cout << "1 bit per sample\n";
                             break;
                         case 2:
-                            std::cout << "2 bit per sample\n";
+                            // std::cout << "2 bit per sample\n";
                             break;
                         default:
-                            std::cout << "Unknown quantization ID " << static_cast<int>(quantization) << '\n';
+                            // std::cout << "Unknown quantization ID " << static_cast<int>(quantization) << '\n';
+                            break;
                         }
                     byte_counter++;
                     auto channel_a_constellation = static_cast<uint8_t>(memblock[byte_counter]);
                     switch (channel_a_constellation)
                         {
                         case 0:
-                            std::cout << "LabSat Channel A is GPS\n";
+                            // std::cout << "LabSat Channel A is GPS\n";
                             break;
                         case 1:
-                            std::cout << "LabSat Channel A is GLONASS\n";
+                            // std::cout << "LabSat Channel A is GLONASS\n";
                             break;
                         case 2:
-                            std::cout << "LabSat Channel A is BDS\n";
+                            // std::cout << "LabSat Channel A is BDS\n";
                             break;
                         default:
-                            std::cout << "Unknown channel A constellation ID " << static_cast<int>(channel_a_constellation) << '\n';
+                            // std::cout << "Unknown channel A constellation ID " << static_cast<int>(channel_a_constellation) << '\n';
+                            break;
                         }
                     byte_counter++;
                     auto channel_b_constellation = static_cast<uint8_t>(memblock[byte_counter]);
                     switch (channel_b_constellation)
                         {
                         case 0:
-                            std::cout << "LabSat Channel B is GPS\n";
+                            // std::cout << "LabSat Channel B is GPS\n";
                             break;
                         case 1:
-                            std::cout << "LabSat Channel B is GLONASS\n";
+                            // std::cout << "LabSat Channel B is GLONASS\n";
                             break;
                         case 2:
-                            std::cout << "LabSat Channel B is BDS\n";
+                            // std::cout << "LabSat Channel B is BDS\n";
                             break;
                         case 255:
                             // No channel B
                             break;
                         default:
-                            std::cout << "Unknown channel B constellation ID " << static_cast<int>(channel_b_constellation) << '\n';
+                            // std::cout << "Unknown channel B constellation ID " << static_cast<int>(channel_b_constellation) << '\n';
+                            break;
                         }
 
                     // end of header
@@ -353,10 +357,10 @@ int labsat23_source::parse_header()
                         }
                     return 0;
                 }
-            std::cout << "LabSat file header error: section 2 is not available.\n";
+            // std::cout << "LabSat file header error: section 2 is not available.\n";
             return -1;
         }
-    std::cout << "LabSat file read error: file is empty.\n";
+    // std::cout << "LabSat file read error: file is empty.\n";
     return -1;
 }
 
@@ -438,7 +442,7 @@ void labsat23_source::decode_samples_one_channel(int16_t input_short, gr_complex
 
 int labsat23_source::read_ls3w_ini(const std::string &filename)
 {
-    std::cout << "Reading " << filename << " file ...\n";
+    // std::cout << "Reading " << filename << " file ...\n";
     auto ini_reader = std::make_unique<INIReader>(filename);
     int error_ = ini_reader->ParseError();
 
@@ -470,7 +474,7 @@ int labsat23_source::read_ls3w_ini(const std::string &filename)
                         }
                     else
                         {
-                            std::cout << "LabSat reference clock: " << d_ls3w_OSC << '\n';
+                            // std::cout << "LabSat reference clock: " << d_ls3w_OSC << '\n';
                         }
                 }
 
@@ -480,7 +484,7 @@ int labsat23_source::read_ls3w_ini(const std::string &filename)
                 {
                     std::stringstream smp_ss(ls3w_SMP_aux);
                     smp_ss >> d_ls3w_SMP;
-                    std::cout << "LabSat sample rate: " << d_ls3w_SMP << " Sps\n";
+                    // std::cout << "LabSat sample rate: " << d_ls3w_SMP << " Sps\n";
                 }
 
             // Quantization
@@ -498,7 +502,7 @@ int labsat23_source::read_ls3w_ini(const std::string &filename)
                         }
                     else
                         {
-                            std::cout << "LabSat sample quantization: " << d_ls3w_QUA << " bits for I + " << d_ls3w_QUA << " bits for Q.\n";
+                            // std::cout << "LabSat sample quantization: " << d_ls3w_QUA << " bits for I + " << d_ls3w_QUA << " bits for Q.\n";
                         }
                 }
 
@@ -517,7 +521,7 @@ int labsat23_source::read_ls3w_ini(const std::string &filename)
                         }
                     else
                         {
-                            std::cout << "LabSat data file contains " << d_ls3w_CHN << " RF channels.\n";
+                            // std::cout << "LabSat data file contains " << d_ls3w_CHN << " RF channels.\n";
                         }
                 }
 
@@ -545,7 +549,7 @@ int labsat23_source::read_ls3w_ini(const std::string &filename)
                 {
                     std::stringstream cfa_ss(ls3w_CFA_aux);
                     cfa_ss >> d_ls3w_CFA;
-                    std::cout << "LabSat center frequency for RF channel A: " << d_ls3w_CFA << " Hz\n";
+                    // std::cout << "LabSat center frequency for RF channel A: " << d_ls3w_CFA << " Hz\n";
                 }
 
             std::string ls3w_BWA_aux = ini_reader->Get("channel A", "BWA", empty_string);
@@ -553,7 +557,7 @@ int labsat23_source::read_ls3w_ini(const std::string &filename)
                 {
                     std::stringstream bwa_ss(ls3w_BWA_aux);
                     bwa_ss >> d_ls3w_BWA;
-                    std::cout << "LabSat RF filter bandwidth for RF channel A: " << d_ls3w_BWA << " Hz\n";
+                    // std::cout << "LabSat RF filter bandwidth for RF channel A: " << d_ls3w_BWA << " Hz\n";
                 }
         }
 
@@ -565,7 +569,7 @@ int labsat23_source::read_ls3w_ini(const std::string &filename)
                 {
                     std::stringstream cfb_ss(ls3w_CFB_aux);
                     cfb_ss >> d_ls3w_CFB;
-                    std::cout << "LabSat center frequency for RF channel B: " << d_ls3w_CFB << " Hz\n";
+                    // std::cout << "LabSat center frequency for RF channel B: " << d_ls3w_CFB << " Hz\n";
                 }
 
             std::string ls3w_BWB_aux = ini_reader->Get("channel B", "BWB", empty_string);
@@ -573,7 +577,7 @@ int labsat23_source::read_ls3w_ini(const std::string &filename)
                 {
                     std::stringstream bwb_ss(ls3w_BWB_aux);
                     bwb_ss >> d_ls3w_BWB;
-                    std::cout << "LabSat RF filter bandwidth for RF channel B: " << d_ls3w_BWB << " Hz\n";
+                    // std::cout << "LabSat RF filter bandwidth for RF channel B: " << d_ls3w_BWB << " Hz\n";
                 }
         }
 
@@ -585,7 +589,7 @@ int labsat23_source::read_ls3w_ini(const std::string &filename)
                 {
                     std::stringstream cfc_ss(ls3w_CFC_aux);
                     cfc_ss >> d_ls3w_CFC;
-                    std::cout << "LabSat center frequency for RF channel C: " << d_ls3w_CFC << " Hz\n";
+                    // std::cout << "LabSat center frequency for RF channel C: " << d_ls3w_CFC << " Hz\n";
                 }
 
             std::string ls3w_BWC_aux = ini_reader->Get("channel C", "BWC", empty_string);
@@ -593,14 +597,14 @@ int labsat23_source::read_ls3w_ini(const std::string &filename)
                 {
                     std::stringstream bwc_ss(ls3w_BWC_aux);
                     bwc_ss >> d_ls3w_BWC;
-                    std::cout << "LabSat RF filter bandwidth for RF channel C: " << d_ls3w_BWC << " Hz\n";
+                    // std::cout << "LabSat RF filter bandwidth for RF channel C: " << d_ls3w_BWC << " Hz\n";
                 }
         }
 
-    std::cout << "LabSat selected channel" << ((d_channel_selector_config.size() > 1) ? "s" : "") << ": ";
+    // std::cout << "LabSat selected channel" << ((d_channel_selector_config.size() > 1) ? "s" : "") << ": ";
     if (std::find(d_channel_selector_config.begin(), d_channel_selector_config.end(), 1) != d_channel_selector_config.end())
         {
-            std::cout << "A";
+            // std::cout << "A";
         }
     if (std::find(d_channel_selector_config.begin(), d_channel_selector_config.end(), 2) != d_channel_selector_config.end())
         {
@@ -608,11 +612,11 @@ int labsat23_source::read_ls3w_ini(const std::string &filename)
                 {
                     if (d_channel_selector_config.size() == 1)
                         {
-                            std::cout << "B";
+                            // std::cout << "B";
                         }
                     else
                         {
-                            std::cout << ", B";
+                            // std::cout << ", B";
                         }
                 }
             else
@@ -628,11 +632,11 @@ int labsat23_source::read_ls3w_ini(const std::string &filename)
                 {
                     if (d_channel_selector_config.size() == 1)
                         {
-                            std::cout << "C";
+                            // std::cout << "C";
                         }
                     else
                         {
-                            std::cout << ", C";
+                            // std::cout << ", C";
                         }
                 }
             else
@@ -642,7 +646,7 @@ int labsat23_source::read_ls3w_ini(const std::string &filename)
                     return -1;
                 }
         }
-    std::cout << '\n';
+    // std::cout << '\n';
 
     d_ls3w_samples_per_register = this->number_of_samples_per_ls3w_register();
     d_ls3w_spare_bits = 64 - d_ls3w_samples_per_register * d_ls3w_QUA * 2;
@@ -977,23 +981,23 @@ int labsat23_source::general_work(int noutput_items,
                                     d_current_file_number++;
                                     if (d_labsat_version == 3)
                                         {
-                                            std::cout << "End of current file, reading the next LabSat file in sequence: " << generate_filename() << '\n';
+                                            // std::cout << "End of current file, reading the next LabSat file in sequence: " << generate_filename() << '\n';
                                         }
                                     binary_input_file.close();
                                     binary_input_file.open(generate_filename().c_str(), std::ios::in | std::ios::binary);
                                     if (binary_input_file.is_open())
                                         {
-                                            std::cout << "LabSat file source is reading samples from " << generate_filename() << '\n';
+                                            // std::cout << "LabSat file source is reading samples from " << generate_filename() << '\n';
                                             return 0;
                                         }
 
                                     if (d_labsat_version == 3)
                                         {
-                                            std::cout << "Last file reached, LabSat source stop\n";
+                                            // std::cout << "Last file reached, LabSat source stop\n";
                                         }
                                     else
                                         {
-                                            std::cout << "End of file reached, LabSat source stop\n";
+                                            // std::cout << "End of file reached, LabSat source stop\n";
                                         }
 
                                     d_queue->push(pmt::make_any(command_event_make(200, 0)));
@@ -1035,23 +1039,23 @@ int labsat23_source::general_work(int noutput_items,
                                     d_current_file_number++;
                                     if (d_labsat_version == 3)
                                         {
-                                            std::cout << "End of current file, reading the next Labsat file in sequence: " << generate_filename() << '\n';
+                                            // std::cout << "End of current file, reading the next Labsat file in sequence: " << generate_filename() << '\n';
                                         }
                                     binary_input_file.close();
                                     binary_input_file.open(generate_filename().c_str(), std::ios::in | std::ios::binary);
                                     if (binary_input_file.is_open())
                                         {
-                                            std::cout << "Labsat file source is reading samples from " << generate_filename() << '\n';
+                                            // std::cout << "Labsat file source is reading samples from " << generate_filename() << '\n';
                                             return 0;
                                         }
 
                                     if (d_labsat_version == 3)
                                         {
-                                            std::cout << "Last file reached, LabSat source stop\n";
+                                            // std::cout << "Last file reached, LabSat source stop\n";
                                         }
                                     else
                                         {
-                                            std::cout << "End of file reached, LabSat source stop\n";
+                                            // std::cout << "End of file reached, LabSat source stop\n";
                                         }
                                     d_queue->push(pmt::make_any(command_event_make(200, 0)));
                                     return -1;
@@ -1101,7 +1105,7 @@ int labsat23_source::general_work(int noutput_items,
                                 }
                             else
                                 {
-                                    std::cout << "End of file reached, LabSat source stop.\n";
+                                    // std::cout << "End of file reached, LabSat source stop.\n";
                                     d_queue->push(pmt::make_any(command_event_make(200, 0)));
                                     return -1;
                                 }
@@ -1110,12 +1114,12 @@ int labsat23_source::general_work(int noutput_items,
                 }
             else
                 {
-                    std::cout << "End of file reached, LabSat source stop.\n";
+                    // std::cout << "End of file reached, LabSat source stop.\n";
                     d_queue->push(pmt::make_any(command_event_make(200, 0)));
                     return -1;
                 }
         }
 
-    std::cout << "Warning!!\n";
+    // std::cout << "Warning!!\n";
     return 0;
 }

@@ -59,7 +59,7 @@ sbas_l1_telemetry_decoder_gs::sbas_l1_telemetry_decoder_gs(
     // initialize internal vars
 
     d_satellite = Gnss_Satellite(satellite.get_system(), satellite.get_PRN());
-    LOG(INFO) << "SBAS L1 TELEMETRY PROCESSING: satellite " << d_satellite;
+   // LOG(INFO) << "SBAS L1 TELEMETRY PROCESSING: satellite " << d_satellite;
     set_output_multiple(1);
 }
 
@@ -74,7 +74,7 @@ sbas_l1_telemetry_decoder_gs::~sbas_l1_telemetry_decoder_gs()
                 }
             catch (const std::exception &ex)
                 {
-                    LOG(WARNING) << "Exception in destructor closing the dump file " << ex.what();
+                    // LOG(WARNING) << "Exception in destructor closing the dump file " << ex.what();
                 }
         }
 }
@@ -83,14 +83,14 @@ sbas_l1_telemetry_decoder_gs::~sbas_l1_telemetry_decoder_gs()
 void sbas_l1_telemetry_decoder_gs::set_satellite(const Gnss_Satellite &satellite)
 {
     d_satellite = Gnss_Satellite(satellite.get_system(), satellite.get_PRN());
-    LOG(INFO) << "SBAS telemetry decoder in channel " << this->d_channel << " set to satellite " << d_satellite;
+   // LOG(INFO) << "SBAS telemetry decoder in channel " << this->d_channel << " set to satellite " << d_satellite;
 }
 
 
 void sbas_l1_telemetry_decoder_gs::set_channel(int32_t channel)
 {
     d_channel = channel;
-    LOG(INFO) << "SBAS channel set to " << channel;
+   // LOG(INFO) << "SBAS channel set to " << channel;
 }
 
 
@@ -459,7 +459,7 @@ int sbas_l1_telemetry_decoder_gs::general_work(int noutput_items __attribute__((
             // and send them to the SBAS raw message queue
             // for(std::vector<Sbas_Raw_Msg>::iterator it = sbas_raw_msgs.begin(); it != sbas_raw_msgs.end(); it++)
             //    {
-            // std::cout << "SBAS message type " << it->get_msg_type() << " from PRN" << it->get_prn() << " received\n";
+            // // std::cout << "SBAS message type " << it->get_msg_type() << " from PRN" << it->get_prn() << " received\n";
             // sbas_telemetry_data.update(*it);
             //    }
 

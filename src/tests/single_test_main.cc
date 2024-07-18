@@ -55,7 +55,7 @@ int main(int argc, char **argv)
         }
     catch (...)
         {
-            LOG(WARNING) << "Unexpected catch";
+            // LOG(WARNING) << "Unexpected catch";
         }
     gflags::ShutDownCommandLineFlags();
     return res;

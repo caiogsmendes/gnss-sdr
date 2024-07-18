@@ -48,11 +48,11 @@ void FileConfiguration::init()
     error_ = ini_reader_->ParseError();
     if (error_ == 0)
         {
-            DLOG(INFO) << "Configuration file " << filename_ << " opened with no errors";
+            // DLOG(INFO) << "Configuration file " << filename_ << " opened with no errors";
         }
     else if (error_ > 0)
         {
-            LOG(WARNING) << "Configuration file " << filename_ << " contains errors in line " << error_;
+            // LOG(WARNING) << "Configuration file " << filename_ << " contains errors in line " << error_;
         }
     else
         {

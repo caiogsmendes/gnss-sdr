@@ -65,8 +65,8 @@ Channel::Channel(const ConfigurationInterface* configuration,
             const int64_t deprecation_warning = configuration->property("GNSS-SDR.internal_fs_hz", 0);
             if (deprecation_warning != 0)
                 {
-                    std::cout << "WARNING: The global parameter name GNSS-SDR.internal_fs_hz has been DEPRECATED.\n";
-                    std::cout << "WARNING: Please replace it by GNSS-SDR.internal_fs_sps in your configuration file.\n";
+                    // std::cout << "WARNING: The global parameter name GNSS-SDR.internal_fs_hz has been DEPRECATED.\n";
+                    // std::cout << "WARNING: Please replace it by GNSS-SDR.internal_fs_sps in your configuration file.\n";
                 }
         }
 
@@ -81,7 +81,7 @@ Channel::Channel(const ConfigurationInterface* configuration,
         {
             doppler_step = static_cast<uint32_t>(FLAGS_doppler_step);
         }
-    DLOG(INFO) << "Channel " << channel_ << " Doppler_step = " << doppler_step;
+    // DLOG(INFO) << "Channel " << channel_ << " Doppler_step = " << doppler_step;
 
     acq_->set_doppler_step(doppler_step);
 
@@ -132,7 +132,7 @@ void Channel::connect(gr::top_block_sptr top_block)
         {
             top_block->msg_connect(nav_->get_left_block(), pmt::mp("preamble_timestamp_samples"), trk_->get_right_block(), pmt::mp("preamble_timestamp_samples"));
         }
-    DLOG(INFO) << "tracking -> telemetry_decoder";
+    // DLOG(INFO) << "tracking -> telemetry_decoder";
 
     // Message ports
     if (!flag_enable_fpga_)
@@ -149,7 +149,7 @@ void Channel::disconnect(gr::top_block_sptr top_block)
 {
     if (!connected_)
         {
-            LOG(WARNING) << "Channel already disconnected internally";
+            // LOG(WARNING) << "Channel already disconnected internally";
             return;
         }
 
@@ -177,7 +177,7 @@ void Channel::disconnect(gr::top_block_sptr top_block)
 
 gr::basic_block_sptr Channel::get_left_block()
 {
-    LOG(ERROR) << "Deprecated call to get_left_block() in channel interface";
+    // LOG(ERROR) << "Deprecated call to get_left_block() in channel interface";
     return nullptr;
 }
 
@@ -237,10 +237,10 @@ void Channel::stop_channel()
     const bool result = channel_fsm_->Event_stop_channel();
     if (!result)
         {
-            LOG(WARNING) << "Invalid channel event";
+            // LOG(WARNING) << "Invalid channel event";
             return;
         }
-    DLOG(INFO) << "Channel stop_channel()";
+    // DLOG(INFO) << "Channel stop_channel()";
 }
 
 
@@ -265,10 +265,10 @@ void Channel::start_acquisition()
         }
     if (!result)
         {
-            LOG(WARNING) << "Invalid channel event";
+            // LOG(WARNING) << "Invalid channel event";
             return;
         }
-    DLOG(INFO) << "Channel start_acquisition()";
+    // DLOG(INFO) << "Channel start_acquisition()";
 }
 
 bool Channel::glonass_dll_pll_c_aid_tracking_check() const

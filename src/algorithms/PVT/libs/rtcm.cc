@@ -31,7 +31,7 @@
 #include <algorithm>  // for std::reverse
 #include <cmath>      // for std::fmod, std::lround
 #include <cstdlib>    // for strtol
-#include <iostream>   // for std::cout
+#include <iostream>   // for // std::cout
 
 
 Rtcm::Rtcm(uint16_t port) : RTCM_port(port), server_is_running(false)
@@ -46,7 +46,7 @@ Rtcm::Rtcm(uint16_t port) : RTCM_port(port), server_is_running(false)
 
 Rtcm::~Rtcm()
 {
-    DLOG(INFO) << "RTCM object destructor called.";
+    // DLOG(INFO) << "RTCM object destructor called.";
     if (server_is_running)
         {
             try
@@ -55,11 +55,11 @@ Rtcm::~Rtcm()
                 }
             catch (const boost::exception& e)
                 {
-                    LOG(WARNING) << "Boost exception: " << boost::diagnostic_information(e);
+                    // LOG(WARNING) << "Boost exception: " << boost::diagnostic_information(e);
                 }
             catch (const std::exception& ex)
                 {
-                    LOG(WARNING) << "STD exception: " << ex.what();
+                    // LOG(WARNING) << "STD exception: " << ex.what();
                 }
         }
 }
@@ -73,7 +73,7 @@ Rtcm::~Rtcm()
 void Rtcm::run_server()
 {
     #ifdef EN_CONSOLE_OUTPUT
-    std::cout << "Starting a TCP/IP server of RTCM messages on port " << RTCM_port << '\n';
+    // std::cout << "Starting a TCP/IP server of RTCM messages on port " << RTCM_port << '\n';
     #endif
     try
         {
@@ -97,7 +97,7 @@ void Rtcm::stop_service()
 void Rtcm::stop_server()
 {
     #ifdef EN_CONSOLE_OUTPUT
-    std::cout << "Stopping TCP/IP server on port " << RTCM_port << '\n';
+    // std::cout << "Stopping TCP/IP server on port " << RTCM_port << '\n';
     #endif
     Rtcm::stop_service();
     servers.front().close_server();
@@ -271,7 +271,7 @@ uint32_t Rtcm::bin_to_uint(const std::string& s) const
 {
     if (s.length() > 32)
         {
-            LOG(WARNING) << "Cannot convert to a uint32_t";
+            // LOG(WARNING) << "Cannot convert to a uint32_t";
             return 0;
         }
     const uint32_t reading = strtoul(s.c_str(), nullptr, 2);
@@ -283,7 +283,7 @@ int32_t Rtcm::bin_to_int(const std::string& s) const
 {
     if (s.length() > 32)
         {
-            LOG(WARNING) << "Cannot convert to a int32_t";
+            // LOG(WARNING) << "Cannot convert to a int32_t";
             return 0;
         }
     int32_t reading;
@@ -308,7 +308,7 @@ int32_t Rtcm::bin_to_sint(const std::string& s) const
 {
     if (s.length() > 32)
         {
-            LOG(WARNING) << "Cannot convert to a int32_t";
+            // LOG(WARNING) << "Cannot convert to a int32_t";
             return 0;
         }
     int32_t reading;
@@ -350,7 +350,7 @@ double Rtcm::bin_to_double(const std::string& s) const
     double reading;
     if (s.length() > 64)
         {
-            LOG(WARNING) << "Cannot convert to a double";
+            // LOG(WARNING) << "Cannot convert to a double";
             return 0;
         }
 
@@ -380,7 +380,7 @@ uint64_t Rtcm::hex_to_uint(const std::string& s) const
 {
     if (s.length() > 32)
         {
-            LOG(WARNING) << "Cannot convert to a uint64_t";
+            // LOG(WARNING) << "Cannot convert to a uint64_t";
             return 0;
         }
     const uint64_t reading = strtoul(s.c_str(), nullptr, 16);
@@ -392,7 +392,7 @@ int64_t Rtcm::hex_to_int(const std::string& s) const
 {
     if (s.length() > 32)
         {
-            LOG(WARNING) << "Cannot convert to a int64_t";
+            // LOG(WARNING) << "Cannot convert to a int64_t";
             return 0;
         }
     const int64_t reading = strtol(s.c_str(), nullptr, 16);
@@ -924,7 +924,7 @@ int32_t Rtcm::read_MT1005(const std::string& message, uint32_t& ref_id, double& 
 
     if (!Rtcm::check_CRC(message))
         {
-            LOG(WARNING) << " Bad CRC detected in RTCM message MT1005";
+            // LOG(WARNING) << " Bad CRC detected in RTCM message MT1005";
             return 1;
         }
 
@@ -937,7 +937,7 @@ int32_t Rtcm::read_MT1005(const std::string& message, uint32_t& ref_id, double& 
     index += 10;
     if (read_message_length != 19)
         {
-            LOG(WARNING) << " Message MT1005 with wrong length (19 bytes expected, " << read_message_length << " received)";
+            // LOG(WARNING) << " Message MT1005 with wrong length (19 bytes expected, " << read_message_length << " received)";
             return 1;
         }
 
@@ -948,7 +948,7 @@ int32_t Rtcm::read_MT1005(const std::string& message, uint32_t& ref_id, double& 
 
     if (DF002 != read_msg_number)
         {
-            LOG(WARNING) << " This is not a MT1005 message";
+            // LOG(WARNING) << " This is not a MT1005 message";
             return 1;
         }
 
@@ -1578,7 +1578,7 @@ std::string Rtcm::print_MT1019(const Gps_Ephemeris& gps_eph)
 
     if (data.length() != 488)
         {
-            LOG(WARNING) << "Bad-formatted RTCM MT1019 (488 bits expected, found " << data.length() << ")";
+            // LOG(WARNING) << "Bad-formatted RTCM MT1019 (488 bits expected, found " << data.length() << ")";
         }
 
     std::string msg = build_message(data);
@@ -1597,7 +1597,7 @@ int32_t Rtcm::read_MT1019(const std::string& message, Gps_Ephemeris& gps_eph) co
 
     if (!Rtcm::check_CRC(message))
         {
-            LOG(WARNING) << " Bad CRC detected in RTCM message MT1019";
+            // LOG(WARNING) << " Bad CRC detected in RTCM message MT1019";
             return 1;
         }
 
@@ -1610,7 +1610,7 @@ int32_t Rtcm::read_MT1019(const std::string& message, Gps_Ephemeris& gps_eph) co
 
     if (read_message_length != 61)
         {
-            LOG(WARNING) << " Message MT1019 seems too long (61 bytes expected, " << read_message_length << " received)";
+            // LOG(WARNING) << " Message MT1019 seems too long (61 bytes expected, " << read_message_length << " received)";
             return 1;
         }
 
@@ -1620,7 +1620,7 @@ int32_t Rtcm::read_MT1019(const std::string& message, Gps_Ephemeris& gps_eph) co
 
     if (1019 != read_msg_number)
         {
-            LOG(WARNING) << " This is not a MT1019 message";
+            // LOG(WARNING) << " This is not a MT1019 message";
             return 1;
         }
 
@@ -1809,7 +1809,7 @@ std::string Rtcm::print_MT1020(const Glonass_Gnav_Ephemeris& glonass_gnav_eph, c
 
     if (data.length() != 360)
         {
-            LOG(WARNING) << "Bad-formatted RTCM MT1020 (360 bits expected, found " << data.length() << ")";
+            // LOG(WARNING) << "Bad-formatted RTCM MT1020 (360 bits expected, found " << data.length() << ")";
         }
 
     std::string msg = build_message(data);
@@ -1831,7 +1831,7 @@ int32_t Rtcm::read_MT1020(const std::string& message, Glonass_Gnav_Ephemeris& gl
 
     if (!Rtcm::check_CRC(message))
         {
-            LOG(WARNING) << " Bad CRC detected in RTCM message MT1020";
+            // LOG(WARNING) << " Bad CRC detected in RTCM message MT1020";
             return 1;
         }
 
@@ -1844,7 +1844,7 @@ int32_t Rtcm::read_MT1020(const std::string& message, Glonass_Gnav_Ephemeris& gl
 
     if (read_message_length != 45)  // 360 bits = 45 bytes
         {
-            LOG(WARNING) << " Message MT1020 seems too long (61 bytes expected, " << read_message_length << " received)";
+            // LOG(WARNING) << " Message MT1020 seems too long (61 bytes expected, " << read_message_length << " received)";
             return 1;
         }
 
@@ -1854,7 +1854,7 @@ int32_t Rtcm::read_MT1020(const std::string& message, Glonass_Gnav_Ephemeris& gl
 
     if (1020 != read_msg_number)
         {
-            LOG(WARNING) << " This is not a MT1020 message";
+            // LOG(WARNING) << " This is not a MT1020 message";
             return 1;
         }
 
@@ -2115,7 +2115,7 @@ std::string Rtcm::print_MT1045(const Galileo_Ephemeris& gal_eph)
 
     if (data.length() != 496)
         {
-            LOG(WARNING) << "Bad-formatted RTCM MT1045 (496 bits expected, found " << data.length() << ")";
+            // LOG(WARNING) << "Bad-formatted RTCM MT1045 (496 bits expected, found " << data.length() << ")";
         }
 
     std::string msg = build_message(data);
@@ -2134,7 +2134,7 @@ int32_t Rtcm::read_MT1045(const std::string& message, Galileo_Ephemeris& gal_eph
 
     if (!Rtcm::check_CRC(message))
         {
-            LOG(WARNING) << " Bad CRC detected in RTCM message MT1045";
+            // LOG(WARNING) << " Bad CRC detected in RTCM message MT1045";
             return 1;
         }
 
@@ -2147,7 +2147,7 @@ int32_t Rtcm::read_MT1045(const std::string& message, Galileo_Ephemeris& gal_eph
 
     if (read_message_length != 62)
         {
-            LOG(WARNING) << " Message MT1045 seems too long (62 bytes expected, " << read_message_length << " received)";
+            // LOG(WARNING) << " Message MT1045 seems too long (62 bytes expected, " << read_message_length << " received)";
             return 1;
         }
 
@@ -2157,7 +2157,7 @@ int32_t Rtcm::read_MT1045(const std::string& message, Galileo_Ephemeris& gal_eph
 
     if (1045 != read_msg_number)
         {
-            LOG(WARNING) << " This is not a MT1045 message";
+            // LOG(WARNING) << " This is not a MT1045 message";
             return 1;
         }
 
@@ -2284,11 +2284,11 @@ std::string Rtcm::print_MSM_1(const Gps_Ephemeris& gps_eph,
         }
     if (((gps_eph.PRN != 0) || (gps_cnav_eph.PRN != 0)) && (gal_eph.PRN != 0) && (glo_gnav_eph.PRN != 0))
         {
-            LOG(WARNING) << "MSM messages for observables from different systems are not defined";  // print two messages?
+            // LOG(WARNING) << "MSM messages for observables from different systems are not defined";  // print two messages?
         }
     if (msg_number == 0)
         {
-            LOG(WARNING) << "Invalid ephemeris provided";
+            // LOG(WARNING) << "Invalid ephemeris provided";
             msg_number = 1071;
         }
 
@@ -2482,11 +2482,11 @@ std::string Rtcm::print_MSM_2(const Gps_Ephemeris& gps_eph,
         }
     if (((gps_eph.PRN != 0) || (gps_cnav_eph.PRN != 0)) && (gal_eph.PRN != 0) && (glo_gnav_eph.PRN != 0))
         {
-            LOG(WARNING) << "MSM messages for observables from different systems are not defined";  // print two messages?
+            // LOG(WARNING) << "MSM messages for observables from different systems are not defined";  // print two messages?
         }
     if (msg_number == 0)
         {
-            LOG(WARNING) << "Invalid ephemeris provided";
+            // LOG(WARNING) << "Invalid ephemeris provided";
             msg_number = 1072;
         }
 
@@ -2596,11 +2596,11 @@ std::string Rtcm::print_MSM_3(const Gps_Ephemeris& gps_eph,
         }
     if (((gps_eph.PRN != 0) || (gps_cnav_eph.PRN != 0)) && (gal_eph.PRN != 0) && (glo_gnav_eph.PRN != 0))
         {
-            LOG(WARNING) << "MSM messages for observables from different systems are not defined";  // print two messages?
+            // LOG(WARNING) << "MSM messages for observables from different systems are not defined";  // print two messages?
         }
     if (msg_number == 0)
         {
-            LOG(WARNING) << "Invalid ephemeris provided";
+            // LOG(WARNING) << "Invalid ephemeris provided";
             msg_number = 1073;
         }
 
@@ -2713,11 +2713,11 @@ std::string Rtcm::print_MSM_4(const Gps_Ephemeris& gps_eph,
         }
     if (((gps_eph.PRN != 0) || (gps_cnav_eph.PRN != 0)) && (gal_eph.PRN != 0) && (glo_gnav_eph.PRN != 0))
         {
-            LOG(WARNING) << "MSM messages for observables from different systems are not defined";  // print two messages?
+            // LOG(WARNING) << "MSM messages for observables from different systems are not defined";  // print two messages?
         }
     if (msg_number == 0)
         {
-            LOG(WARNING) << "Invalid ephemeris provided";
+            // LOG(WARNING) << "Invalid ephemeris provided";
             msg_number = 1074;
         }
 
@@ -2876,11 +2876,11 @@ std::string Rtcm::print_MSM_5(const Gps_Ephemeris& gps_eph,
         }
     if (((gps_eph.PRN != 0) || (gps_cnav_eph.PRN != 0)) && (gal_eph.PRN != 0) && (glo_gnav_eph.PRN != 0))
         {
-            LOG(WARNING) << "MSM messages for observables from different systems are not defined";  // print two messages?
+            // LOG(WARNING) << "MSM messages for observables from different systems are not defined";  // print two messages?
         }
     if (msg_number == 0)
         {
-            LOG(WARNING) << "Invalid ephemeris provided";
+            // LOG(WARNING) << "Invalid ephemeris provided";
             msg_number = 1075;
         }
 
@@ -3048,11 +3048,11 @@ std::string Rtcm::print_MSM_6(const Gps_Ephemeris& gps_eph,
         }
     if (((gps_eph.PRN != 0) || (gps_cnav_eph.PRN != 0)) && (gal_eph.PRN != 0) && (glo_gnav_eph.PRN != 0))
         {
-            LOG(WARNING) << "MSM messages for observables from different systems are not defined";  // print two messages?
+            // LOG(WARNING) << "MSM messages for observables from different systems are not defined";  // print two messages?
         }
     if (msg_number == 0)
         {
-            LOG(WARNING) << "Invalid ephemeris provided";
+            // LOG(WARNING) << "Invalid ephemeris provided";
             msg_number = 1076;
         }
 
@@ -3168,11 +3168,11 @@ std::string Rtcm::print_MSM_7(const Gps_Ephemeris& gps_eph,
         }
     if (((gps_eph.PRN != 0) || (gps_cnav_eph.PRN != 0)) && (glo_gnav_eph.PRN != 0) && (gal_eph.PRN != 0))
         {
-            LOG(WARNING) << "MSM messages for observables from different systems are not defined";  // print two messages?
+            // LOG(WARNING) << "MSM messages for observables from different systems are not defined";  // print two messages?
         }
     if (msg_number == 0)
         {
-            LOG(WARNING) << "Invalid ephemeris provided";
+            // LOG(WARNING) << "Invalid ephemeris provided";
             msg_number = 1076;
         }
 
@@ -4056,7 +4056,7 @@ uint32_t Rtcm::lock_time(const Gps_Ephemeris& eph, double obs_time, const Gnss_S
     boost::posix_time::time_duration lock_duration = current_time - Rtcm::gps_L1_last_lock_time[65 - gnss_synchro.PRN];
     const auto lock_time_in_seconds = static_cast<uint32_t>(lock_duration.total_seconds());
     // Debug:
-    // std::cout << "lock time PRN " << gnss_synchro.PRN << ": " << lock_time_in_seconds <<  "  current time: " << current_time << '\n';
+    // // std::cout << "lock time PRN " << gnss_synchro.PRN << ": " << lock_time_in_seconds <<  "  current time: " << current_time << '\n';
     return lock_time_in_seconds;
 }
 
@@ -4301,7 +4301,7 @@ int32_t Rtcm::set_DF002(uint32_t message_number)
 {
     if (message_number > 4095)
         {
-            LOG(WARNING) << "RTCM message number must be between 0 and 4095, but it has been set to " << message_number;
+            // LOG(WARNING) << "RTCM message number must be between 0 and 4095, but it has been set to " << message_number;
         }
     DF002 = std::bitset<12>(message_number);
     return 0;
@@ -4313,7 +4313,7 @@ int32_t Rtcm::set_DF003(uint32_t ref_station_ID)
     // uint32_t station_ID = ref_station_ID;
     if (ref_station_ID > 4095)
         {
-            LOG(WARNING) << "RTCM reference station ID must be between 0 and 4095, but it has been set to " << ref_station_ID;
+            // LOG(WARNING) << "RTCM reference station ID must be between 0 and 4095, but it has been set to " << ref_station_ID;
         }
     DF003 = std::bitset<12>(ref_station_ID);
     return 0;
@@ -4326,7 +4326,7 @@ int32_t Rtcm::set_DF004(double obs_time)
     auto tow = static_cast<uint64_t>(std::round(obs_time * 1000));
     if (tow > 604799999)
         {
-            LOG(WARNING) << "To large TOW! Set to the last millisecond of the week";
+            // LOG(WARNING) << "To large TOW! Set to the last millisecond of the week";
             tow = 604799999;
         }
     DF004 = std::bitset<30>(tow);
@@ -4357,7 +4357,7 @@ int32_t Rtcm::set_DF006(const std::map<int32_t, Gnss_Synchro>& observables)
         }
     if (nsats > 31)
         {
-            LOG(WARNING) << "The number of processed GPS satellites must be between 0 and 31, but it seems that you are processing " << nsats;
+            // LOG(WARNING) << "The number of processed GPS satellites must be between 0 and 31, but it seems that you are processing " << nsats;
             nsats = 31;
         }
     DF006 = std::bitset<5>(nsats);
@@ -4385,7 +4385,7 @@ int32_t Rtcm::set_DF009(const Gnss_Synchro& gnss_synchro)
     const uint32_t prn_ = gnss_synchro.PRN;
     if (prn_ > 32)
         {
-            LOG(WARNING) << "GPS satellite ID must be between 1 and 32, but PRN " << prn_ << " was found";
+            // LOG(WARNING) << "GPS satellite ID must be between 1 and 32, but PRN " << prn_ << " was found";
         }
     DF009 = std::bitset<6>(prn_);
     return 0;
@@ -4397,7 +4397,7 @@ int32_t Rtcm::set_DF009(const Gps_Ephemeris& gps_eph)
     const uint32_t prn_ = gps_eph.PRN;
     if (prn_ > 32)
         {
-            LOG(WARNING) << "GPS satellite ID must be between 1 and 32, but PRN " << prn_ << " was found";
+            // LOG(WARNING) << "GPS satellite ID must be between 1 and 32, but PRN " << prn_ << " was found";
         }
     DF009 = std::bitset<6>(prn_);
     return 0;
@@ -4596,7 +4596,7 @@ int32_t Rtcm::set_DF034(double obs_time)
     auto tk = static_cast<uint64_t>(std::round(obs_time * 1000));
     if (tk > 86400999)
         {
-            LOG(WARNING) << "To large GLONASS Epoch Time (tk)! Set to the last millisecond of the day";
+            // LOG(WARNING) << "To large GLONASS Epoch Time (tk)! Set to the last millisecond of the day";
             tk = 86400999;
         }
     DF034 = std::bitset<27>(tk);
@@ -4617,7 +4617,7 @@ int32_t Rtcm::set_DF035(const std::map<int32_t, Gnss_Synchro>& observables)
         }
     if (nsats > 31)
         {
-            LOG(WARNING) << "The number of processed GLONASS satellites must be between 0 and 31, but it seems that you are processing " << nsats;
+            // LOG(WARNING) << "The number of processed GLONASS satellites must be between 0 and 31, but it seems that you are processing " << nsats;
             nsats = 31;
         }
     DF035 = std::bitset<5>(nsats);
@@ -4645,7 +4645,7 @@ int32_t Rtcm::set_DF038(const Gnss_Synchro& gnss_synchro)
     const uint32_t prn_ = gnss_synchro.PRN;
     if (prn_ > 24)
         {
-            LOG(WARNING) << "GLONASS satellite ID (Slot Number) must be between 1 and 24, but PRN " << prn_ << " was found";
+            // LOG(WARNING) << "GLONASS satellite ID (Slot Number) must be between 1 and 24, but PRN " << prn_ << " was found";
         }
     DF038 = std::bitset<6>(prn_);
     return 0;
@@ -4657,7 +4657,7 @@ int32_t Rtcm::set_DF038(const Glonass_Gnav_Ephemeris& glonass_gnav_eph)
     const uint32_t prn_ = glonass_gnav_eph.i_satellite_slot_number;
     if (prn_ > 24)
         {
-            LOG(WARNING) << "GLONASS satellite ID (Slot Number) must be between 0 and 24, but PRN " << prn_ << " was found";
+            // LOG(WARNING) << "GLONASS satellite ID (Slot Number) must be between 0 and 24, but PRN " << prn_ << " was found";
         }
     DF038 = std::bitset<6>(prn_);
     return 0;
@@ -4676,9 +4676,9 @@ int32_t Rtcm::set_DF040(int32_t frequency_channel_number)
     const uint32_t freq_ = frequency_channel_number + 7;
     if (freq_ > 20)
         {
-            LOG(WARNING) << "GLONASS Satellite Frequency Number Conversion Error."
-                         << "Value must be between 0 and 20, but converted channel"
-                         << "frequency number " << freq_ << " was found";
+            // LOG(WARNING) << "GLONASS Satellite Frequency Number Conversion Error."
+                        //  << "Value must be between 0 and 20, but converted channel"
+                        //  << "frequency number " << freq_ << " was found";
         }
 
     DF040 = std::bitset<5>(freq_);
@@ -4691,9 +4691,9 @@ int32_t Rtcm::set_DF040(const Glonass_Gnav_Ephemeris& glonass_gnav_eph)
     const uint32_t freq_ = glonass_gnav_eph.i_satellite_freq_channel + 7;
     if (freq_ > 20)
         {
-            LOG(WARNING) << "GLONASS Satellite Frequency Number Conversion Error."
-                         << "Value must be between 0 and 20, but converted channel"
-                         << "frequency number " << freq_ << " was found";
+            // LOG(WARNING) << "GLONASS Satellite Frequency Number Conversion Error."
+                        //  << "Value must be between 0 and 20, but converted channel"
+                        //  << "frequency number " << freq_ << " was found";
         }
 
     DF040 = std::bitset<5>(freq_);
@@ -4746,7 +4746,7 @@ int32_t Rtcm::set_DF045(const Gnss_Synchro& gnss_synchro)
     double CN0_dB_Hz_est = gnss_synchro.CN0_dB_hz;
     if (CN0_dB_Hz_est > 63.75)
         {
-            LOG(WARNING) << "GLONASS L1 CNR must be between 0 and 63.75, but CNR " << CN0_dB_Hz_est << " was found. Setting to 63.75 dB-Hz";
+            // LOG(WARNING) << "GLONASS L1 CNR must be between 0 and 63.75, but CNR " << CN0_dB_Hz_est << " was found. Setting to 63.75 dB-Hz";
             CN0_dB_Hz_est = 63.75;
         }
     const auto CN0_dB_Hz = static_cast<uint32_t>(std::round(CN0_dB_Hz_est / 0.25));
@@ -5417,7 +5417,7 @@ int32_t Rtcm::set_DF248(double obs_time)
     auto tow = static_cast<uint64_t>(std::round(obs_time * 1000));
     if (tow > 604799999)
         {
-            LOG(WARNING) << "To large TOW! Set to the last millisecond of the week";
+            // LOG(WARNING) << "To large TOW! Set to the last millisecond of the week";
             tow = 604799999;
         }
     DF248 = std::bitset<30>(tow);
@@ -5430,7 +5430,7 @@ int32_t Rtcm::set_DF252(const Galileo_Ephemeris& gal_eph)
     const uint32_t prn_ = gal_eph.PRN;
     if (prn_ > 63)
         {
-            LOG(WARNING) << "Galileo satellite ID must be between 0 and 63, but PRN " << prn_ << " was found";
+            // LOG(WARNING) << "Galileo satellite ID must be between 0 and 63, but PRN " << prn_ << " was found";
         }
     DF252 = std::bitset<6>(prn_);
     return 0;
@@ -5442,7 +5442,7 @@ int32_t Rtcm::set_DF289(const Galileo_Ephemeris& gal_eph)
     const auto galileo_week_number = static_cast<uint32_t>(gal_eph.WN);
     if (galileo_week_number > 4095)
         {
-            LOG(WARNING) << "Error decoding Galileo week number (it has a 4096 roll-off, but " << galileo_week_number << " was detected)";
+            // LOG(WARNING) << "Error decoding Galileo week number (it has a 4096 roll-off, but " << galileo_week_number << " was detected)";
         }
     DF289 = std::bitset<12>(galileo_week_number);
     return 0;
@@ -5454,7 +5454,7 @@ int32_t Rtcm::set_DF290(const Galileo_Ephemeris& gal_eph)
     const auto iod_nav = static_cast<uint32_t>(gal_eph.IOD_nav);
     if (iod_nav > 1023)
         {
-            LOG(WARNING) << "Error decoding Galileo IODnav (it has a max of 1023, but " << iod_nav << " was detected)";
+            // LOG(WARNING) << "Error decoding Galileo IODnav (it has a max of 1023, but " << iod_nav << " was detected)";
         }
     DF290 = std::bitset<10>(iod_nav);
     return 0;
@@ -5483,7 +5483,7 @@ int32_t Rtcm::set_DF293(const Galileo_Ephemeris& gal_eph)
     const auto toc = static_cast<uint32_t>(gal_eph.toc);
     if (toc > 604740)
         {
-            LOG(WARNING) << "Error decoding Galileo ephemeris time (max of 604740, but " << toc << " was detected)";
+            // LOG(WARNING) << "Error decoding Galileo ephemeris time (max of 604740, but " << toc << " was detected)";
         }
     DF293 = std::bitset<14>(toc);
     return 0;
@@ -6363,7 +6363,7 @@ void Rtcm::set_IDF001(uint8_t version)
     uint8_t igm_version = version;
     if (igm_version > max_value)  // not defined
         {
-            LOG(WARNING) << "RTCM SSR messages are probably wrong: bad IGM/IM Version";
+            // LOG(WARNING) << "RTCM SSR messages are probably wrong: bad IGM/IM Version";
             igm_version = 0;
         }
     IDF001 = std::bitset<3>(igm_version);
@@ -6382,7 +6382,7 @@ void Rtcm::set_IDF003(uint32_t tow)
     uint32_t ssr_epoch_time = tow;
     if (ssr_epoch_time > max_value)
         {
-            LOG(WARNING) << "RTCM SSR messages are probably wrong: bad SSR Epoch Time";
+            // LOG(WARNING) << "RTCM SSR messages are probably wrong: bad SSR Epoch Time";
             ssr_epoch_time = 0;
         }
     IDF003 = std::bitset<20>(ssr_epoch_time);
@@ -6395,7 +6395,7 @@ void Rtcm::set_IDF004(uint8_t ssr_update_interval)
     uint8_t update_interval = ssr_update_interval;
     if (update_interval > max_value)
         {
-            LOG(WARNING) << "RTCM SSR messages are probably wrong: bad SSR Update Interval";
+            // LOG(WARNING) << "RTCM SSR messages are probably wrong: bad SSR Update Interval";
             update_interval = 0;
         }
     IDF004 = std::bitset<4>(update_interval);
@@ -6420,7 +6420,7 @@ void Rtcm::set_IDF007(uint8_t ssr_iod)
     uint8_t iod = ssr_iod;
     if (iod > max_value)
         {
-            LOG(WARNING) << "RTCM SSR messages are probably wrong: bad IOD SSR";
+            // LOG(WARNING) << "RTCM SSR messages are probably wrong: bad IOD SSR";
             iod = 0;
         }
     IDF007 = std::bitset<4>(iod);
@@ -6439,7 +6439,7 @@ void Rtcm::set_IDF009(uint8_t ssr_solution_id)
     uint8_t sol_id = ssr_solution_id;
     if (sol_id > max_value)
         {
-            LOG(WARNING) << "RTCM SSR messages are probably wrong: bad SSR Solution ID";
+            // LOG(WARNING) << "RTCM SSR messages are probably wrong: bad SSR Solution ID";
             sol_id = 0;
         }
     IDF009 = std::bitset<4>(sol_id);
@@ -6452,7 +6452,7 @@ void Rtcm::set_IDF010(uint8_t num_satellites)
     uint8_t num_sats = num_satellites;
     if (num_sats > max_value)
         {
-            LOG(WARNING) << "RTCM SSR messages are probably wrong: bad number of satellites";
+            // LOG(WARNING) << "RTCM SSR messages are probably wrong: bad number of satellites";
             num_sats = 0;
         }
     IDF010 = std::bitset<6>(num_sats);
@@ -6465,7 +6465,7 @@ void Rtcm::set_IDF011(uint8_t gnss_satellite_id)
     uint8_t sat_id = gnss_satellite_id;
     if (sat_id > max_value)
         {
-            LOG(WARNING) << "RTCM SSR messages are probably wrong: bad GNSS Satellite ID";
+            // LOG(WARNING) << "RTCM SSR messages are probably wrong: bad GNSS Satellite ID";
             sat_id = 0;
         }
     IDF011 = std::bitset<6>(sat_id);
@@ -6637,7 +6637,7 @@ void Rtcm::set_IDF023(uint8_t num_bias_processed)
     uint8_t num_bias = num_bias_processed;
     if (num_bias > max_value)
         {
-            LOG(WARNING) << "RTCM SSR messages are probably wrong: bad number of biases processed";
+            // LOG(WARNING) << "RTCM SSR messages are probably wrong: bad number of biases processed";
             num_bias = 0;
         }
     IDF023 = std::bitset<5>(num_bias);
@@ -6650,7 +6650,7 @@ void Rtcm::set_IDF024(uint8_t gnss_signal_tracking_mode_id)
     uint8_t tracking_mode = gnss_signal_tracking_mode_id;
     if (tracking_mode > max_value)  // error
         {
-            LOG(WARNING) << "RTCM SSR messages are probably wrong: bad GNSS Signal and Tracking Mode Identifier";
+            // LOG(WARNING) << "RTCM SSR messages are probably wrong: bad GNSS Signal and Tracking Mode Identifier";
             tracking_mode = 0;
         }
     IDF024 = std::bitset<5>(tracking_mode);

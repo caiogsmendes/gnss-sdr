@@ -248,26 +248,27 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
 
     std::string dump_ls_pvt_filename = conf_.dump_filename;
 
-    // char device[] = {"/dev/ttyUSB0"};
-    char device[] = {"/dev/ttyLP2"};
-    comms = HEserial_connect(&device[0], B115200, O_RDWR|O_NDELAY|O_NOCTTY|O_NONBLOCK);
+
+    char device[] = {"/dev/ttyUSB0"};
+    // char device[] = {"/dev/ttyLP2"};
+    comms = HEserial_connect(&device[0], B115200, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
     if (comms.fd == -1)
         {
-            std::cout << TEXT_BOLD_RED << "Falha ao abrir Porta Serial" << TEXT_RESET << "\n";
+            // std::cout << TEXT_BOLD_RED << "Falha ao abrir Porta Serial" << TEXT_RESET << "\n";
         }
     else
         {
-            std::cout << TEXT_BOLD_GREEN << "Port UART aberta: " << comms.fd << TEXT_RESET << "\n";
+            // std::cout << TEXT_BOLD_GREEN << "Port UART aberta: " << comms.fd << TEXT_RESET << "\n";
         }
 
-    // // Caio
-    // serial_temp_thread_ = std::thread(&rtklib_pvt_gs::serialcmd_, this);
-    // sched_param sch_params;
-    // int policy;
-    // pthread_getschedparam(serial_temp_thread_.native_handle(), &policy, &sch_params);
-    // sch_params.sched_priority = 80;
-    // if (pthread_setschedparam(serial_temp_thread_.native_handle(), SCHED_RR, &sch_params))
-    //     std::cout << "Failed to setschedparam: " << std::strerror(errno) << '\n';
+    // // // Caio
+    serial_temp_thread_ = std::thread(&rtklib_pvt_gs::serialcmd_, this);
+    sched_param sch_params;
+    int policy;
+    pthread_getschedparam(serial_temp_thread_.native_handle(), &policy, &sch_params);
+    sch_params.sched_priority = 97;
+    if (pthread_setschedparam(serial_temp_thread_.native_handle(), SCHED_FIFO, &sch_params))
+        std::cout << "Failed to setschedparam: " << std::strerror(errno) << '\n';
 
 
     if (d_dump)
@@ -301,209 +302,7 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
                     std::cerr << "GNSS-SDR cannot create dump file for the PVT block. Wrong permissions?\n";
                     d_dump = false;
                 }
-        }
-
-    // // initialize kml_printer
-    // const std::string kml_dump_filename = d_dump_filename;
-    // if (d_kml_rate_ms == 0)
-    //     {
-    //         d_kml_output_enabled = false;
-    //     }
-    // if (d_kml_output_enabled)
-    //     {
-    //         d_kml_dump = std::make_unique<Kml_Printer>(conf_.kml_output_path);
-    //         d_kml_dump->set_headers(kml_dump_filename);
-    //     }
-    // else
-    //     {
-    //         d_kml_dump = nullptr;
-    //     }
-
-    // // initialize gpx_printer
-    // const std::string gpx_dump_filename = d_dump_filename;
-    // if (d_gpx_rate_ms == 0)
-    //     {
-    //         d_gpx_output_enabled = false;
-    //     }
-    // if (d_gpx_output_enabled)
-    //     {
-    //         d_gpx_dump = std::make_unique<Gpx_Printer>(conf_.gpx_output_path);
-    //         d_gpx_dump->set_headers(gpx_dump_filename);
-    //     }
-    // else
-    //     {
-    //         d_gpx_dump = nullptr;
-    //     }
-
-    // // initialize geojson_printer
-    // const std::string geojson_dump_filename = d_dump_filename;
-    // if (d_geojson_rate_ms == 0)
-    //     {
-    //         d_geojson_output_enabled = false;
-    //     }
-    // if (d_geojson_output_enabled)
-    //     {
-    //         d_geojson_printer = std::make_unique<GeoJSON_Printer>(conf_.geojson_output_path);
-    //         d_geojson_printer->set_headers(geojson_dump_filename);
-    //     }
-    // else
-    //     {
-    //         d_geojson_printer = nullptr;
-    //     }
-
-    // // initialize nmea_printer
-    // if (d_nmea_rate_ms == 0)
-    //     {
-    //         d_nmea_output_file_enabled = false;
-    //     }
-
-    // if (d_nmea_output_file_enabled)
-    //     {
-    //         d_nmea_printer = std::make_unique<Nmea_Printer>(conf_.nmea_dump_filename, conf_.nmea_output_file_enabled, conf_.flag_nmea_tty_port, conf_.nmea_dump_devname, conf_.nmea_output_file_path);
-    //     }
-    // else
-    //     {
-    //         d_nmea_printer = nullptr;
-    //     }
-
-    // // initialize rtcm_printer
-    // const std::string rtcm_dump_filename = d_dump_filename;
-    // if (conf_.flag_rtcm_server || conf_.flag_rtcm_tty_port || conf_.rtcm_output_file_enabled)
-    //     {
-    //         d_rtcm_printer = std::make_unique<Rtcm_Printer>(rtcm_dump_filename, conf_.rtcm_output_file_enabled, conf_.flag_rtcm_server, conf_.flag_rtcm_tty_port, conf_.rtcm_tcp_port, conf_.rtcm_station_id, conf_.rtcm_dump_devname, true, conf_.rtcm_output_file_path);
-    //         std::map<int, int> rtcm_msg_rate_ms = conf_.rtcm_msg_rate_ms;
-    //         if (rtcm_msg_rate_ms.find(1019) != rtcm_msg_rate_ms.end())
-    //             {
-    //                 d_rtcm_MT1019_rate_ms = rtcm_msg_rate_ms[1019];
-    //             }
-    //         else
-    //             {
-    //                 d_rtcm_MT1019_rate_ms = bc::lcm(5000, d_output_rate_ms);  // default value if not set
-    //             }
-    //         if (rtcm_msg_rate_ms.find(1020) != rtcm_msg_rate_ms.end())
-    //             {
-    //                 d_rtcm_MT1020_rate_ms = rtcm_msg_rate_ms[1020];
-    //             }
-    //         else
-    //             {
-    //                 d_rtcm_MT1020_rate_ms = bc::lcm(5000, d_output_rate_ms);  // default value if not set
-    //             }
-    //         if (rtcm_msg_rate_ms.find(1045) != rtcm_msg_rate_ms.end())
-    //             {
-    //                 d_rtcm_MT1045_rate_ms = rtcm_msg_rate_ms[1045];
-    //             }
-    //         else
-    //             {
-    //                 d_rtcm_MT1045_rate_ms = bc::lcm(5000, d_output_rate_ms);  // default value if not set
-    //             }
-    //         if (rtcm_msg_rate_ms.find(1077) != rtcm_msg_rate_ms.end())  // whatever between 1071 and 1077
-    //             {
-    //                 d_rtcm_MT1077_rate_ms = rtcm_msg_rate_ms[1077];
-    //             }
-    //         else
-    //             {
-    //                 d_rtcm_MT1077_rate_ms = bc::lcm(1000, d_output_rate_ms);  // default value if not set
-    //             }
-    //         if (rtcm_msg_rate_ms.find(1087) != rtcm_msg_rate_ms.end())  // whatever between 1081 and 1087
-    //             {
-    //                 d_rtcm_MT1087_rate_ms = rtcm_msg_rate_ms[1087];
-    //             }
-    //         else
-    //             {
-    //                 d_rtcm_MT1087_rate_ms = bc::lcm(1000, d_output_rate_ms);  // default value if not set
-    //             }
-    //         if (rtcm_msg_rate_ms.find(1097) != rtcm_msg_rate_ms.end())  // whatever between 1091 and 1097
-    //             {
-    //                 d_rtcm_MT1097_rate_ms = rtcm_msg_rate_ms[1097];
-    //                 d_rtcm_MSM_rate_ms = rtcm_msg_rate_ms[1097];
-    //             }
-    //         else
-    //             {
-    //                 d_rtcm_MT1097_rate_ms = bc::lcm(1000, d_output_rate_ms);  // default value if not set
-    //                 d_rtcm_MSM_rate_ms = bc::lcm(1000, d_output_rate_ms);     // default value if not set
-    //             }
-    //         d_rtcm_enabled = true;
-    //     }
-    // else
-    //     {
-    //         d_rtcm_MT1019_rate_ms = 0;
-    //         d_rtcm_MT1045_rate_ms = 0;
-    //         d_rtcm_MT1020_rate_ms = 0;
-    //         d_rtcm_MT1077_rate_ms = 0;
-    //         d_rtcm_MT1087_rate_ms = 0;
-    //         d_rtcm_MT1097_rate_ms = 0;
-    //         d_rtcm_MSM_rate_ms = 0;
-    //         d_rtcm_enabled = false;
-    //         d_rtcm_printer = nullptr;
-    //     }
-
-    // // initialize RINEX printer
-    // if (d_rinex_output_enabled)
-    //     {
-    //         d_rp = std::make_unique<Rinex_Printer>(d_rinex_version, conf_.rinex_output_path, conf_.rinex_name);
-    //         d_rp->set_pre_2009_file(conf_.pre_2009_file);
-    //     }
-    // else
-    //     {
-    //         d_rp = nullptr;
-    //     }
-
-    // XML printer
-    if (d_xml_storage)
-        {
-            d_xml_base_path = conf_.xml_output_path;
-            fs::path full_path(fs::current_path());
-            const fs::path p(d_xml_base_path);
-            if (!fs::exists(p))
-                {
-                    std::string new_folder;
-                    for (const auto& folder : fs::path(d_xml_base_path))
-                        {
-                            new_folder += folder.string();
-                            errorlib::error_code ec;
-                            if (!fs::exists(new_folder))
-                                {
-                                    if (!fs::create_directory(new_folder, ec))
-                                        {
-                                            std::cout << "Could not create the " << new_folder << " folder.\n";
-                                            d_xml_base_path = full_path.string();
-                                        }
-                                }
-                            new_folder += fs::path::preferred_separator;
-                        }
-                }
-            else
-                {
-                    d_xml_base_path = p.string();
-                }
-            if (d_xml_base_path != ".")
-                {
-                    std::cout << "XML files will be stored at " << d_xml_base_path << '\n';
-                }
-
-            d_xml_base_path = d_xml_base_path + fs::path::preferred_separator;
-        }
-
-    // Initialize HAS simple printer
-    d_enable_has_messages = (((d_type_of_rx >= 100) && (d_type_of_rx < 107)) && (conf_.output_enabled));
-    if (d_enable_has_messages)
-        {
-            d_has_simple_printer = std::make_unique<Has_Simple_Printer>();
-        }
-    else
-        {
-            d_has_simple_printer = nullptr;
-        }
-
-    // // Initialize AN printer
-    // if (d_an_printer_enabled)
-    //     {
-    //         d_an_printer = std::make_unique<An_Packet_Printer>(conf_.an_dump_devname);
-    //     }
-    // else
-    //     {
-    //         d_an_printer = nullptr;
-    //     }
+        }   
 
     // PVT MONITOR
     if (d_flag_monitor_pvt_enabled)
@@ -535,14 +334,14 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
             d_eph_udp_sink_ptr = nullptr;
         }
 
-    // Create Sys V message queue
+    // // Create Sys V message queue
     d_first_fix = true;
     d_sysv_msg_key = 1101;
     const int msgflg = IPC_CREAT | 0666;
     if ((d_sysv_msqid = msgget(d_sysv_msg_key, msgflg)) == -1)
         {
-            std::cout << "GNSS-SDR cannot create System V message queues.\n";
-            LOG(WARNING) << "The System V message queue is not available. Error: " << errno << " - " << strerror(errno);
+            // std::cout << "GNSS-SDR cannot create System V message queues.\n";
+            // LOG(WARNING) << "The System V message queue is not available. Error: " << errno << " - " << strerror(errno);
         }
 
     // Display time in local time zone
@@ -614,7 +413,7 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
             try
                 {
                     d_log_timetag_file.open(conf_.log_source_timetag_file, std::ios::out | std::ios::binary);
-                    std::cout << "Log PVT timetag metadata enabled, log file: " << conf_.log_source_timetag_file << '\n';
+                    // std::cout << "Log PVT timetag metadata enabled, log file: " << conf_.log_source_timetag_file << '\n';
                 }
             catch (const std::exception& e)
                 {
@@ -629,7 +428,8 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
 
 rtklib_pvt_gs::~rtklib_pvt_gs()
 {
-    DLOG(INFO) << "PVT block destructor called.";
+    flag_interrupt_serial = true;
+    // DLOG(INFO) << "PVT block destructor called.";
     if (d_sysv_msqid != -1)
         {
             msgctl(d_sysv_msqid, IPC_RMID, nullptr);
@@ -637,554 +437,15 @@ rtklib_pvt_gs::~rtklib_pvt_gs()
     try
         {
             HEserial_disconnect(&comms);
-            // if (serial_temp_thread_.joinable())
-            //     {
-            //         serial_temp_thread_.join();
-            //         std::cout << TEXT_CYAN << "serial_temp_thread_rtklib joined.." << TEXT_RESET << "\n";
-            //     }
-            // pthread_t id6 = serial_temp_thread_.native_handle();
-            // serial_temp_thread_.detach();
-            // pthread_cancel(id6);
-
-            if (d_xml_storage)
+            if (serial_temp_thread_.joinable())
                 {
-                    // save GPS L2CM ephemeris to XML file
-                    std::string file_name = d_xml_base_path + "gps_cnav_ephemeris.xml";
-                    if (d_internal_pvt_solver->gps_cnav_ephemeris_map.empty() == false)
-                        {
-                            std::ofstream ofs;
-                            try
-                                {
-                                    ofs.open(file_name.c_str(), std::ofstream::trunc | std::ofstream::out);
-                                    boost::archive::xml_oarchive xml(ofs);
-                                    xml << boost::serialization::make_nvp("GNSS-SDR_cnav_ephemeris_map", d_internal_pvt_solver->gps_cnav_ephemeris_map);
-                                    LOG(INFO) << "Saved GPS L2CM or L5 Ephemeris map data";
-                                }
-                            catch (const boost::archive::archive_exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                            catch (const std::exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                        }
-                    else
-                        {
-                            LOG(INFO) << "Failed to save GPS L2CM or L5 Ephemeris, map is empty";
-                        }
-
-                    // save GPS L1 CA ephemeris to XML file
-                    file_name = d_xml_base_path + "gps_ephemeris.xml";
-                    if (d_internal_pvt_solver->gps_ephemeris_map.empty() == false)
-                        {
-                            std::ofstream ofs;
-                            try
-                                {
-                                    ofs.open(file_name.c_str(), std::ofstream::trunc | std::ofstream::out);
-                                    boost::archive::xml_oarchive xml(ofs);
-                                    xml << boost::serialization::make_nvp("GNSS-SDR_ephemeris_map", d_internal_pvt_solver->gps_ephemeris_map);
-                                    LOG(INFO) << "Saved GPS L1 CA Ephemeris map data";
-                                }
-                            catch (const boost::archive::archive_exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                            catch (const std::exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                        }
-                    else
-                        {
-                            LOG(INFO) << "Failed to save GPS L1 CA Ephemeris, map is empty";
-                        }
-
-                    // save Galileo E1 ephemeris to XML file
-                    file_name = d_xml_base_path + "gal_ephemeris.xml";
-                    if (d_internal_pvt_solver->galileo_ephemeris_map.empty() == false)
-                        {
-                            std::ofstream ofs;
-                            try
-                                {
-                                    ofs.open(file_name.c_str(), std::ofstream::trunc | std::ofstream::out);
-                                    boost::archive::xml_oarchive xml(ofs);
-                                    // Annotate as full GPS week number
-                                    for (auto& gal_eph_iter : d_internal_pvt_solver->galileo_ephemeris_map)
-                                        {
-                                            gal_eph_iter.second.WN += 1024;
-                                        }
-                                    xml << boost::serialization::make_nvp("GNSS-SDR_gal_ephemeris_map", d_internal_pvt_solver->galileo_ephemeris_map);
-                                    LOG(INFO) << "Saved Galileo E1 Ephemeris map data";
-                                }
-                            catch (const boost::archive::archive_exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                            catch (const std::ofstream::failure& e)
-                                {
-                                    LOG(WARNING) << "Problem opening output XML file";
-                                }
-                            catch (const std::exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                        }
-                    else
-                        {
-                            LOG(INFO) << "Failed to save Galileo E1 Ephemeris, map is empty";
-                        }
-
-                    // save GLONASS GNAV ephemeris to XML file
-                    file_name = d_xml_base_path + "eph_GLONASS_GNAV.xml";
-                    if (d_internal_pvt_solver->glonass_gnav_ephemeris_map.empty() == false)
-                        {
-                            std::ofstream ofs;
-                            try
-                                {
-                                    ofs.open(file_name.c_str(), std::ofstream::trunc | std::ofstream::out);
-                                    boost::archive::xml_oarchive xml(ofs);
-                                    xml << boost::serialization::make_nvp("GNSS-SDR_gnav_ephemeris_map", d_internal_pvt_solver->glonass_gnav_ephemeris_map);
-                                    LOG(INFO) << "Saved GLONASS GNAV Ephemeris map data";
-                                }
-                            catch (const boost::archive::archive_exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                            catch (const std::ofstream::failure& e)
-                                {
-                                    LOG(WARNING) << "Problem opening output XML file";
-                                }
-                            catch (const std::exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                        }
-                    else
-                        {
-                            LOG(INFO) << "Failed to save GLONASS GNAV Ephemeris, map is empty";
-                        }
-
-                    // Save GPS UTC model parameters
-                    file_name = d_xml_base_path + "gps_utc_model.xml";
-                    if (d_internal_pvt_solver->gps_utc_model.valid)
-                        {
-                            std::ofstream ofs;
-                            try
-                                {
-                                    ofs.open(file_name.c_str(), std::ofstream::trunc | std::ofstream::out);
-                                    boost::archive::xml_oarchive xml(ofs);
-                                    xml << boost::serialization::make_nvp("GNSS-SDR_utc_model", d_internal_pvt_solver->gps_utc_model);
-                                    LOG(INFO) << "Saved GPS UTC model parameters";
-                                }
-                            catch (const std::ofstream::failure& e)
-                                {
-                                    LOG(WARNING) << "Problem opening output XML file";
-                                }
-                            catch (const boost::archive::archive_exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                            catch (const std::exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                        }
-                    else
-                        {
-                            LOG(INFO) << "Failed to save GPS UTC model parameters, not valid data";
-                        }
-
-                    // Save Galileo UTC model parameters
-                    file_name = d_xml_base_path + "gal_utc_model.xml";
-                    if (d_internal_pvt_solver->galileo_utc_model.Delta_tLS != 0.0)
-                        {
-                            std::ofstream ofs;
-                            try
-                                {
-                                    ofs.open(file_name.c_str(), std::ofstream::trunc | std::ofstream::out);
-                                    boost::archive::xml_oarchive xml(ofs);
-                                    xml << boost::serialization::make_nvp("GNSS-SDR_gal_utc_model", d_internal_pvt_solver->galileo_utc_model);
-                                    LOG(INFO) << "Saved Galileo UTC model parameters";
-                                }
-                            catch (const boost::archive::archive_exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                            catch (const std::ofstream::failure& e)
-                                {
-                                    LOG(WARNING) << "Problem opening output XML file";
-                                }
-                            catch (const std::exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                        }
-                    else
-                        {
-                            LOG(INFO) << "Failed to save Galileo UTC model parameters, not valid data";
-                        }
-
-                    // Save GPS iono parameters
-                    file_name = d_xml_base_path + "gps_iono.xml";
-                    if (d_internal_pvt_solver->gps_iono.valid == true)
-                        {
-                            std::ofstream ofs;
-                            try
-                                {
-                                    ofs.open(file_name.c_str(), std::ofstream::trunc | std::ofstream::out);
-                                    boost::archive::xml_oarchive xml(ofs);
-                                    xml << boost::serialization::make_nvp("GNSS-SDR_iono_model", d_internal_pvt_solver->gps_iono);
-                                    LOG(INFO) << "Saved GPS ionospheric model parameters";
-                                }
-                            catch (const boost::archive::archive_exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                            catch (const std::ofstream::failure& e)
-                                {
-                                    LOG(WARNING) << "Problem opening output XML file";
-                                }
-                            catch (const std::exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                        }
-                    else
-                        {
-                            LOG(INFO) << "Failed to save GPS ionospheric model parameters, not valid data";
-                        }
-
-                    // Save GPS CNAV iono parameters
-                    file_name = d_xml_base_path + "gps_cnav_iono.xml";
-                    if (d_internal_pvt_solver->gps_cnav_iono.valid == true)
-                        {
-                            std::ofstream ofs;
-                            try
-                                {
-                                    ofs.open(file_name.c_str(), std::ofstream::trunc | std::ofstream::out);
-                                    boost::archive::xml_oarchive xml(ofs);
-                                    xml << boost::serialization::make_nvp("GNSS-SDR_cnav_iono_model", d_internal_pvt_solver->gps_cnav_iono);
-                                    LOG(INFO) << "Saved GPS CNAV ionospheric model parameters";
-                                }
-                            catch (const boost::archive::archive_exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                            catch (const std::ofstream::failure& e)
-                                {
-                                    LOG(WARNING) << "Problem opening output XML file";
-                                }
-                            catch (const std::exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                        }
-                    else
-                        {
-                            LOG(INFO) << "Failed to save GPS CNAV ionospheric model parameters, not valid data";
-                        }
-
-                    // Save Galileo iono parameters
-                    file_name = d_xml_base_path + "gal_iono.xml";
-                    if (d_internal_pvt_solver->galileo_iono.ai0 != 0.0)
-                        {
-                            std::ofstream ofs;
-                            try
-                                {
-                                    ofs.open(file_name.c_str(), std::ofstream::trunc | std::ofstream::out);
-                                    boost::archive::xml_oarchive xml(ofs);
-                                    xml << boost::serialization::make_nvp("GNSS-SDR_gal_iono_model", d_internal_pvt_solver->galileo_iono);
-                                    LOG(INFO) << "Saved Galileo ionospheric model parameters";
-                                }
-                            catch (const boost::archive::archive_exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                            catch (const std::ofstream::failure& e)
-                                {
-                                    LOG(WARNING) << "Problem opening output XML file";
-                                }
-                            catch (const std::exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                        }
-                    else
-                        {
-                            LOG(INFO) << "Failed to save Galileo ionospheric model parameters, not valid data";
-                        }
-
-                    // save GPS almanac to XML file
-                    file_name = d_xml_base_path + "gps_almanac.xml";
-                    if (d_internal_pvt_solver->gps_almanac_map.empty() == false)
-                        {
-                            std::ofstream ofs;
-                            try
-                                {
-                                    ofs.open(file_name.c_str(), std::ofstream::trunc | std::ofstream::out);
-                                    boost::archive::xml_oarchive xml(ofs);
-                                    xml << boost::serialization::make_nvp("GNSS-SDR_gps_almanac_map", d_internal_pvt_solver->gps_almanac_map);
-                                    LOG(INFO) << "Saved GPS almanac map data";
-                                }
-                            catch (const boost::archive::archive_exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                            catch (const std::ofstream::failure& e)
-                                {
-                                    LOG(WARNING) << "Problem opening output XML file";
-                                }
-                            catch (const std::exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                        }
-                    else
-                        {
-                            LOG(INFO) << "Failed to save GPS almanac, map is empty";
-                        }
-
-                    // Save Galileo almanac
-                    file_name = d_xml_base_path + "gal_almanac.xml";
-                    if (d_internal_pvt_solver->galileo_almanac_map.empty() == false)
-                        {
-                            std::ofstream ofs;
-                            try
-                                {
-                                    ofs.open(file_name.c_str(), std::ofstream::trunc | std::ofstream::out);
-                                    boost::archive::xml_oarchive xml(ofs);
-                                    xml << boost::serialization::make_nvp("GNSS-SDR_gal_almanac_map", d_internal_pvt_solver->galileo_almanac_map);
-                                    LOG(INFO) << "Saved Galileo almanac data";
-                                }
-                            catch (const boost::archive::archive_exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                            catch (const std::ofstream::failure& e)
-                                {
-                                    LOG(WARNING) << "Problem opening output XML file";
-                                }
-                            catch (const std::exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                        }
-                    else
-                        {
-                            LOG(INFO) << "Failed to save Galileo almanac, not valid data";
-                        }
-
-                    // Save GPS CNAV UTC model parameters
-                    file_name = d_xml_base_path + "gps_cnav_utc_model.xml";
-                    if (d_internal_pvt_solver->gps_cnav_utc_model.valid)
-                        {
-                            std::ofstream ofs;
-                            try
-                                {
-                                    ofs.open(file_name.c_str(), std::ofstream::trunc | std::ofstream::out);
-                                    boost::archive::xml_oarchive xml(ofs);
-                                    xml << boost::serialization::make_nvp("GNSS-SDR_cnav_utc_model", d_internal_pvt_solver->gps_cnav_utc_model);
-                                    LOG(INFO) << "Saved GPS CNAV UTC model parameters";
-                                }
-                            catch (const boost::archive::archive_exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                            catch (const std::ofstream::failure& e)
-                                {
-                                    LOG(WARNING) << "Problem opening output XML file";
-                                }
-                            catch (const std::exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                        }
-                    else
-                        {
-                            LOG(INFO) << "Failed to save GPS CNAV UTC model parameters, not valid data";
-                        }
-
-                    // save GLONASS GNAV ephemeris to XML file
-                    file_name = d_xml_base_path + "glo_gnav_ephemeris.xml";
-                    if (d_internal_pvt_solver->glonass_gnav_ephemeris_map.empty() == false)
-                        {
-                            std::ofstream ofs;
-                            try
-                                {
-                                    ofs.open(file_name.c_str(), std::ofstream::trunc | std::ofstream::out);
-                                    boost::archive::xml_oarchive xml(ofs);
-                                    xml << boost::serialization::make_nvp("GNSS-SDR_gnav_ephemeris_map", d_internal_pvt_solver->glonass_gnav_ephemeris_map);
-                                    LOG(INFO) << "Saved GLONASS GNAV ephemeris map data";
-                                }
-                            catch (const boost::archive::archive_exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                            catch (const std::ofstream::failure& e)
-                                {
-                                    LOG(WARNING) << "Problem opening output XML file";
-                                }
-                            catch (const std::exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                        }
-                    else
-                        {
-                            LOG(INFO) << "Failed to save GLONASS GNAV ephemeris, map is empty";
-                        }
-
-                    // save GLONASS UTC model parameters to XML file
-                    file_name = d_xml_base_path + "glo_utc_model.xml";
-                    if (d_internal_pvt_solver->glonass_gnav_utc_model.valid)
-                        {
-                            std::ofstream ofs;
-                            try
-                                {
-                                    ofs.open(file_name.c_str(), std::ofstream::trunc | std::ofstream::out);
-                                    boost::archive::xml_oarchive xml(ofs);
-                                    xml << boost::serialization::make_nvp("GNSS-SDR_gnav_utc_model", d_internal_pvt_solver->glonass_gnav_utc_model);
-                                    LOG(INFO) << "Saved GLONASS UTC model parameters";
-                                }
-                            catch (const boost::archive::archive_exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                            catch (const std::ofstream::failure& e)
-                                {
-                                    LOG(WARNING) << "Problem opening output XML file";
-                                }
-                            catch (const std::exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                        }
-                    else
-                        {
-                            LOG(INFO) << "Failed to save GLONASS GNAV ephemeris, not valid data";
-                        }
-
-                    // save BeiDou DNAV ephemeris to XML file
-                    file_name = d_xml_base_path + "bds_dnav_ephemeris.xml";
-                    if (d_internal_pvt_solver->beidou_dnav_ephemeris_map.empty() == false)
-                        {
-                            std::ofstream ofs;
-                            try
-                                {
-                                    ofs.open(file_name.c_str(), std::ofstream::trunc | std::ofstream::out);
-                                    boost::archive::xml_oarchive xml(ofs);
-                                    xml << boost::serialization::make_nvp("GNSS-SDR_bds_dnav_ephemeris_map", d_internal_pvt_solver->beidou_dnav_ephemeris_map);
-                                    LOG(INFO) << "Saved BeiDou DNAV Ephemeris map data";
-                                }
-                            catch (const boost::archive::archive_exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                            catch (const std::ofstream::failure& e)
-                                {
-                                    LOG(WARNING) << "Problem opening output XML file";
-                                }
-                            catch (const std::exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                        }
-                    else
-                        {
-                            LOG(INFO) << "Failed to save BeiDou DNAV Ephemeris, map is empty";
-                        }
-
-                    // Save BeiDou DNAV iono parameters
-                    file_name = d_xml_base_path + "bds_dnav_iono.xml";
-                    if (d_internal_pvt_solver->beidou_dnav_iono.valid)
-                        {
-                            std::ofstream ofs;
-                            try
-                                {
-                                    ofs.open(file_name.c_str(), std::ofstream::trunc | std::ofstream::out);
-                                    boost::archive::xml_oarchive xml(ofs);
-                                    xml << boost::serialization::make_nvp("GNSS-SDR_bds_dnav_iono_model", d_internal_pvt_solver->beidou_dnav_iono);
-                                    LOG(INFO) << "Saved BeiDou DNAV ionospheric model parameters";
-                                }
-                            catch (const boost::archive::archive_exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                            catch (const std::ofstream::failure& e)
-                                {
-                                    LOG(WARNING) << "Problem opening output XML file";
-                                }
-                            catch (const std::exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                        }
-                    else
-                        {
-                            LOG(INFO) << "Failed to save BeiDou DNAV ionospheric model parameters, not valid data";
-                        }
-
-                    // save BeiDou DNAV almanac to XML file
-                    file_name = d_xml_base_path + "bds_dnav_almanac.xml";
-                    if (d_internal_pvt_solver->beidou_dnav_almanac_map.empty() == false)
-                        {
-                            std::ofstream ofs;
-                            try
-                                {
-                                    ofs.open(file_name.c_str(), std::ofstream::trunc | std::ofstream::out);
-                                    boost::archive::xml_oarchive xml(ofs);
-                                    xml << boost::serialization::make_nvp("GNSS-SDR_bds_dnav_almanac_map", d_internal_pvt_solver->beidou_dnav_almanac_map);
-                                    LOG(INFO) << "Saved BeiDou DNAV almanac map data";
-                                }
-                            catch (const boost::archive::archive_exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                            catch (const std::ofstream::failure& e)
-                                {
-                                    LOG(WARNING) << "Problem opening output XML file";
-                                }
-                            catch (const std::exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                        }
-                    else
-                        {
-                            LOG(INFO) << "Failed to save BeiDou DNAV almanac, map is empty";
-                        }
-
-                    // Save BeiDou UTC model parameters
-                    file_name = d_xml_base_path + "bds_dnav_utc_model.xml";
-                    if (d_internal_pvt_solver->beidou_dnav_utc_model.valid)
-                        {
-                            std::ofstream ofs;
-                            try
-                                {
-                                    ofs.open(file_name.c_str(), std::ofstream::trunc | std::ofstream::out);
-                                    boost::archive::xml_oarchive xml(ofs);
-                                    xml << boost::serialization::make_nvp("GNSS-SDR_bds_dnav_utc_model", d_internal_pvt_solver->beidou_dnav_utc_model);
-                                    LOG(INFO) << "Saved BeiDou DNAV UTC model parameters";
-                                }
-                            catch (const boost::archive::archive_exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                            catch (const std::ofstream::failure& e)
-                                {
-                                    LOG(WARNING) << "Problem opening output XML file";
-                                }
-                            catch (const std::exception& e)
-                                {
-                                    LOG(WARNING) << e.what();
-                                }
-                        }
-                    else
-                        {
-                            LOG(INFO) << "Failed to save BeiDou DNAV UTC model parameters, not valid data";
-                        }
+                    serial_temp_thread_.join();
+                    std::cout << TEXT_CYAN << "serial_temp_thread_rtklib joined.." << TEXT_RESET << "\n";
                 }
+            
+            pthread_t id6 = serial_temp_thread_.native_handle();
+            serial_temp_thread_.detach();
+            pthread_cancel(id6);
 
             if (d_log_timetag_file.is_open())
                 {
@@ -1194,35 +455,17 @@ rtklib_pvt_gs::~rtklib_pvt_gs()
                         }
                     catch (const std::exception& e)
                         {
-                            LOG(WARNING) << "Problem closing Log PVT timetag metadata file: " << e.what();
+                            // LOG(WARNING) << "Problem closing Log PVT timetag metadata file: " << e.what();
                         }
                 }
         }
     catch (const std::exception& e)
         {
-            LOG(WARNING) << e.what();
+            // LOG(WARNING) << e.what();
         }
 }
 
-void rtklib_pvt_gs::serialcmd_(void)
-{
-    // while (!flag_interrupt_serial)
-    //     {
-    //         int bitts;
-    //         // uint8_t msg;
-    //         uint8_t msg[2];
-    //         // int biit = HEserial_leitura_2(&comms,2);
-    //         uint8_t biit = 0;
-    //         biit = HEserial_leitura_byte(&comms);
-    //         // uint32_t cmd{0};
-    //         // Hex2IntegerAlt(&cmd, &msg);
-    //         if (biit == 0xdf)
-    //             {
-    //                 // serialcmd_enabled_ = false;
-    //                 flag_interrupt_serial = true;
-    //             }
-    //     }
-}
+
 
 void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
 {
@@ -1234,11 +477,11 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
                 {
                     // ### GPS EPHEMERIS ###
                     const auto gps_eph = wht::any_cast<std::shared_ptr<Gps_Ephemeris>>(pmt::any_ref(msg));
-                    DLOG(INFO) << "Ephemeris record has arrived from SAT ID "
-                               << gps_eph->PRN << " (Block "
-                               << gps_eph->satelliteBlock[gps_eph->PRN] << ")"
-                               << "inserted with Toe=" << gps_eph->toe << " and GPS Week="
-                               << gps_eph->WN;
+                    // DLOG(INFO) << "Ephemeris record has arrived from SAT ID "
+                    //    << gps_eph->PRN << " (Block "
+                    //    << gps_eph->satelliteBlock[gps_eph->PRN] << ")"
+                    //    << "inserted with Toe=" << gps_eph->toe << " and GPS Week="
+                    //    << gps_eph->WN;
 
                     // todo: Send only new sets of ephemeris (new TOE), not sent to the client
                     // send the new eph to the eph monitor (if enabled)
@@ -1276,15 +519,15 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
                         }
                     if (gps_eph->SV_health != 0)
                         {
-                            std::cout << TEXT_RED << "Satellite " << Gnss_Satellite(std::string("GPS"), gps_eph->PRN)
-                                      << " reports an unhealthy status,";
+                            // std::cout << TEXT_RED << "Satellite " << Gnss_Satellite(std::string("GPS"), gps_eph->PRN)
+                            //   << " reports an unhealthy status,";
                             if (d_use_unhealthy_sats)
                                 {
-                                    std::cout << " use PVT solutions at your own risk" << TEXT_RESET << '\n';
+                                    // std::cout << " use PVT solutions at your own risk" << TEXT_RESET << '\n';
                                 }
                             else
                                 {
-                                    std::cout << " not used for navigation" << TEXT_RESET << '\n';
+                                    // std::cout << " not used for navigation" << TEXT_RESET << '\n';
                                 }
                         }
                 }
@@ -1297,7 +540,7 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
                         {
                             d_user_pvt_solver->gps_iono = *gps_iono;
                         }
-                    DLOG(INFO) << "New IONO record has arrived";
+                    // DLOG(INFO) << "New IONO record has arrived";
                 }
             else if (msg_type_hash_code == d_gps_utc_model_sptr_type_hash_code)
                 {
@@ -1308,7 +551,7 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
                         {
                             d_user_pvt_solver->gps_utc_model = *gps_utc_model;
                         }
-                    DLOG(INFO) << "New UTC record has arrived";
+                    // DLOG(INFO) << "New UTC record has arrived";
                 }
             else if (msg_type_hash_code == d_gps_cnav_ephemeris_sptr_type_hash_code)
                 {
@@ -1344,18 +587,18 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
                         }
                     if (gps_cnav_ephemeris->signal_health != 0)
                         {
-                            std::cout << "Satellite " << Gnss_Satellite(std::string("GPS"), gps_cnav_ephemeris->PRN)
-                                      << " reports an unhealthy status in the CNAV message,";
+                            // std::cout << "Satellite " << Gnss_Satellite(std::string("GPS"), gps_cnav_ephemeris->PRN)
+                            //   << " reports an unhealthy status in the CNAV message,";
                             if (d_use_unhealthy_sats)
                                 {
-                                    std::cout << " use PVT solutions at your own risk.\n";
+                                    // std::cout << " use PVT solutions at your own risk.\n";
                                 }
                             else
                                 {
-                                    std::cout << " not used for navigation.\n";
+                                    // std::cout << " not used for navigation.\n";
                                 }
                         }
-                    DLOG(INFO) << "New GPS CNAV ephemeris record has arrived";
+                    // DLOG(INFO) << "New GPS CNAV ephemeris record has arrived";
                 }
             else if (msg_type_hash_code == d_gps_cnav_iono_sptr_type_hash_code)
                 {
@@ -1366,7 +609,7 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
                         {
                             d_user_pvt_solver->gps_cnav_iono = *gps_cnav_iono;
                         }
-                    DLOG(INFO) << "New CNAV IONO record has arrived";
+                    // DLOG(INFO) << "New CNAV IONO record has arrived";
                 }
             else if (msg_type_hash_code == d_gps_cnav_utc_model_sptr_type_hash_code)
                 {
@@ -1376,7 +619,7 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
                     {
                         d_user_pvt_solver->gps_cnav_utc_model = *gps_cnav_utc_model;
                     }
-                    DLOG(INFO) << "New CNAV UTC record has arrived";
+                    // DLOG(INFO) << "New CNAV UTC record has arrived";
                 }
 
             else if (msg_type_hash_code == d_gps_almanac_sptr_type_hash_code)
@@ -1388,7 +631,7 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
                         {
                             d_user_pvt_solver->gps_almanac_map[gps_almanac->PRN] = *gps_almanac;
                         }
-                    DLOG(INFO) << "New GPS almanac record has arrived";
+                    // DLOG(INFO) << "New GPS almanac record has arrived";
                 }
 
             // *********************** Galileo telemetry ***********************
@@ -1397,9 +640,9 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
                     // ### Galileo EPHEMERIS ###
                     const auto galileo_eph = wht::any_cast<std::shared_ptr<Galileo_Ephemeris>>(pmt::any_ref(msg));
                     // insert new ephemeris record
-                    DLOG(INFO) << "Galileo New Ephemeris record inserted in global map with TOW =" << galileo_eph->tow
-                               << ", GALILEO Week Number =" << galileo_eph->WN
-                               << " and Ephemeris IOD = " << galileo_eph->IOD_ephemeris;
+                    // DLOG(INFO) << "Galileo New Ephemeris record inserted in global map with TOW =" << galileo_eph->tow
+                    //    << ", GALILEO Week Number =" << galileo_eph->WN
+                    //    << " and Ephemeris IOD = " << galileo_eph->IOD_ephemeris;
                     // todo: Send only new sets of ephemeris (new TOE), not sent to the client
                     // send the new eph to the eph monitor (if enabled)
                     if (d_flag_monitor_ephemeris_enabled)
@@ -1438,15 +681,15 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
                         ((galileo_eph->E5a_HS != 0) || (galileo_eph->E5a_DVS == true)) ||
                         ((galileo_eph->E5b_HS != 0) || (galileo_eph->E5b_DVS == true)))
                         {
-                            std::cout << TEXT_RED << "Satellite " << Gnss_Satellite(std::string("Galileo"), galileo_eph->PRN)
-                                      << " reports an unhealthy status,";
+                            // std::cout << TEXT_RED << "Satellite " << Gnss_Satellite(std::string("Galileo"), galileo_eph->PRN)
+                            //   << " reports an unhealthy status,";
                             if (d_use_unhealthy_sats)
                                 {
-                                    std::cout << " use PVT solutions at your own risk" << TEXT_RESET << '\n';
+                                    // std::cout << " use PVT solutions at your own risk" << TEXT_RESET << '\n';
                                 }
                             else
                                 {
-                                    std::cout << " not used for navigation" << TEXT_RESET << '\n';
+                                    // std::cout << " not used for navigation" << TEXT_RESET << '\n';
                                 }
                         }
                 }
@@ -1459,7 +702,7 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
                         {
                             d_user_pvt_solver->galileo_iono = *galileo_iono;
                         }
-                    DLOG(INFO) << "New IONO record has arrived";
+                    // DLOG(INFO) << "New IONO record has arrived";
                 }
             else if (msg_type_hash_code == d_galileo_utc_model_sptr_type_hash_code)
                 {
@@ -1470,7 +713,7 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
                         {
                             d_user_pvt_solver->galileo_utc_model = *galileo_utc_model;
                         }
-                    DLOG(INFO) << "New UTC record has arrived";
+                    // DLOG(INFO) << "New UTC record has arrived";
                 }
             else if (msg_type_hash_code == d_galileo_almanac_helper_sptr_type_hash_code)
                 {
@@ -1504,7 +747,7 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
                                     d_user_pvt_solver->galileo_almanac_map[sv3.PRN] = sv3;
                                 }
                         }
-                    DLOG(INFO) << "New Galileo Almanac data have arrived";
+                    // DLOG(INFO) << "New Galileo Almanac data have arrived";
                 }
             else if (msg_type_hash_code == d_galileo_almanac_sptr_type_hash_code)
                 {
@@ -1525,7 +768,7 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
             //         const auto glonass_gnav_eph = wht::any_cast<std::shared_ptr<Glonass_Gnav_Ephemeris>>(pmt::any_ref(msg));
             //         // TODO Add GLONASS with gps week number and tow,
             //         // insert new ephemeris record
-            //         DLOG(INFO) << "GLONASS GNAV New Ephemeris record inserted in global map with TOW =" << glonass_gnav_eph->d_TOW
+            //         // DLOG(INFO) << "GLONASS GNAV New Ephemeris record inserted in global map with TOW =" << glonass_gnav_eph->d_TOW
             //                    << ", Week Number =" << glonass_gnav_eph->d_WN
             //                    << " and Ephemeris IOD in UTC = " << glonass_gnav_eph->compute_GLONASS_time(glonass_gnav_eph->d_t_b)
             //                    << " from SV = " << glonass_gnav_eph->i_satellite_slot_number;
@@ -1567,7 +810,7 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
             //             {
             //                 d_user_pvt_solver->glonass_gnav_utc_model = *glonass_gnav_utc_model;
             //             }
-            //         DLOG(INFO) << "New GLONASS GNAV UTC record has arrived";
+            //         // DLOG(INFO) << "New GLONASS GNAV UTC record has arrived";
             //     }
             // else if (msg_type_hash_code == d_glonass_gnav_almanac_sptr_type_hash_code)
             //     {
@@ -1578,7 +821,7 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
             //             {
             //                 d_user_pvt_solver->glonass_gnav_almanac = *glonass_gnav_almanac;
             //             }
-            //         DLOG(INFO) << "New GLONASS GNAV Almanac has arrived"
+            //         // DLOG(INFO) << "New GLONASS GNAV Almanac has arrived"
             //                    << ", GLONASS GNAV Slot Number =" << glonass_gnav_almanac->d_n_A;
             //     }
 
@@ -1587,7 +830,7 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
             //     {
             //         // ### Beidou EPHEMERIS ###
             //         const auto bds_dnav_eph = wht::any_cast<std::shared_ptr<Beidou_Dnav_Ephemeris>>(pmt::any_ref(msg));
-            //         DLOG(INFO) << "Ephemeris record has arrived from SAT ID "
+            //         // DLOG(INFO) << "Ephemeris record has arrived from SAT ID "
             //                    << bds_dnav_eph->PRN << " (Block "
             //                    << bds_dnav_eph->satelliteBlock[bds_dnav_eph->PRN] << ")"
             //                    << "inserted with Toe=" << bds_dnav_eph->toe << " and BDS Week="
@@ -1622,15 +865,15 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
             //             }
             //         if (bds_dnav_eph->SV_health != 0)
             //             {
-            //                 std::cout << TEXT_RED << "Satellite " << Gnss_Satellite(std::string("Beidou"), bds_dnav_eph->PRN)
+            //                 // std::cout << TEXT_RED << "Satellite " << Gnss_Satellite(std::string("Beidou"), bds_dnav_eph->PRN)
             //                           << " reports an unhealthy status,";
             //                 if (d_use_unhealthy_sats)
             //                     {
-            //                         std::cout << " use PVT solutions at your own risk" << TEXT_RESET << '\n';
+            //                         // std::cout << " use PVT solutions at your own risk" << TEXT_RESET << '\n';
             //                     }
             //                 else
             //                     {
-            //                         std::cout << " not used for navigation" << TEXT_RESET << '\n';
+            //                         // std::cout << " not used for navigation" << TEXT_RESET << '\n';
             //                     }
             //             }
             //     }
@@ -1643,7 +886,7 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
             //             {
             //                 d_user_pvt_solver->beidou_dnav_iono = *bds_dnav_iono;
             //             }
-            //         DLOG(INFO) << "New BeiDou DNAV IONO record has arrived";
+            //         // DLOG(INFO) << "New BeiDou DNAV IONO record has arrived";
             //     }
             // else if (msg_type_hash_code == d_beidou_dnav_utc_model_sptr_type_hash_code)
             //     {
@@ -1654,7 +897,7 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
             //             {
             //                 d_user_pvt_solver->beidou_dnav_utc_model = *bds_dnav_utc_model;
             //             }
-            //         DLOG(INFO) << "New BeiDou DNAV UTC record has arrived";
+            //         // DLOG(INFO) << "New BeiDou DNAV UTC record has arrived";
             //     }
             // else if (msg_type_hash_code == d_beidou_dnav_almanac_sptr_type_hash_code)
             //     {
@@ -1665,16 +908,16 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
             //             {
             //                 d_user_pvt_solver->beidou_dnav_almanac_map[bds_dnav_almanac->PRN] = *bds_dnav_almanac;
             //             }
-            //         DLOG(INFO) << "New BeiDou DNAV almanac record has arrived";
+            //         // DLOG(INFO) << "New BeiDou DNAV almanac record has arrived";
             //     }
             else
                 {
-                    LOG(WARNING) << "msg_handler_telemetry unknown object type!";
+                    // LOG(WARNING) << "msg_handler_telemetry unknown object type!";
                 }
         }
     catch (const wht::bad_any_cast& e)
         {
-            LOG(WARNING) << "msg_handler_telemetry Bad any_cast: " << e.what();
+            // LOG(WARNING) << "msg_handler_telemetry Bad any_cast: " << e.what();
         }
 }
 
@@ -1707,7 +950,7 @@ void rtklib_pvt_gs::msg_handler_has_data(const pmt::pmt_t& msg)
         }
     catch (const wht::bad_any_cast& e)
         {
-            LOG(WARNING) << "msg_handler_has_data Bad any_cast: " << e.what();
+            // LOG(WARNING) << "msg_handler_has_data Bad any_cast: " << e.what();
         }
 }
 
@@ -1803,17 +1046,17 @@ bool rtklib_pvt_gs::save_gnss_synchro_map_xml(const std::string& file_name)
                     ofs.open(file_name.c_str(), std::ofstream::trunc | std::ofstream::out);
                     boost::archive::xml_oarchive xml(ofs);
                     xml << boost::serialization::make_nvp("GNSS-SDR_gnss_synchro_map", d_gnss_observables_map);
-                    LOG(INFO) << "Saved gnss_sychro map data";
+                    // LOG(INFO) << "Saved gnss_sychro map data";
                 }
             catch (const std::exception& e)
                 {
-                    LOG(WARNING) << e.what();
+                    // LOG(WARNING) << e.what();
                     return false;
                 }
             return true;
         }
 
-    LOG(WARNING) << "Failed to save gnss_synchro, map is empty";
+    // LOG(WARNING) << "Failed to save gnss_synchro, map is empty";
     return false;
 }
 
@@ -1845,11 +1088,11 @@ bool rtklib_pvt_gs::load_gnss_synchro_map_xml(const std::string& file_name)
             boost::archive::xml_iarchive xml(ifs);
             d_gnss_observables_map.clear();
             xml >> boost::serialization::make_nvp("GNSS-SDR_gnss_synchro_map", d_gnss_observables_map);
-            // std::cout << "Loaded gnss_synchro map data with " << gnss_synchro_map.size() << " pseudoranges\n";
+            // // std::cout << "Loaded gnss_synchro map data with " << gnss_synchro_map.size() << " pseudoranges\n";
         }
     catch (const std::exception& e)
         {
-            std::cout << e.what() << "File: " << file_name;
+            // std::cout << e.what() << "File: " << file_name;
             return false;
         }
     return true;
@@ -2124,7 +1367,7 @@ void rtklib_pvt_gs::initialize_and_apply_carrier_phase_offset()
                     const double wrap_carrier_phase_rad = fmod(observables_iter->second.Carrier_phase_rads, TWO_PI);
                     d_initial_carrier_phase_offset_estimation_rads.at(observables_iter->second.Channel_ID) = TWO_PI * round(observables_iter->second.Pseudorange_m / wavelength_m) - observables_iter->second.Carrier_phase_rads + wrap_carrier_phase_rad;
                     d_channel_initialized.at(observables_iter->second.Channel_ID) = true;
-                    DLOG(INFO) << "initialized carrier phase at channel " << observables_iter->second.Channel_ID;
+                    // DLOG(INFO) << "initialized carrier phase at channel " << observables_iter->second.Channel_ID;
                 }
             // apply the carrier phase offset to this satellite
             observables_iter->second.Carrier_phase_rads = observables_iter->second.Carrier_phase_rads + d_initial_carrier_phase_offset_estimation_rads.at(observables_iter->second.Channel_ID);
@@ -2162,17 +1405,17 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                             if (pmt::any_ref(it.value).type().hash_code() == typeid(const std::shared_ptr<GnssTime>).hash_code())
                                 {
                                     const auto timetag = wht::any_cast<const std::shared_ptr<GnssTime>>(pmt::any_ref(it.value));
-                                    // std::cout << "PVT timetag: " << timetag->rx_time << '\n';
+                                    // // std::cout << "PVT timetag: " << timetag->rx_time << '\n';
                                     d_TimeChannelTagTimestamps.push(*timetag);
                                 }
                             else
                                 {
-                                    std::cout << "hash code not match\n";
+                                    // std::cout << "hash code not match\n";
                                 }
                         }
                     catch (const wht::bad_any_cast& e)
                         {
-                            std::cout << "msg Bad any_cast: " << e.what();
+                            // std::cout << "msg Bad any_cast: " << e.what();
                         }
                 }
         }
@@ -2292,13 +1535,13 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                             //             }
                             //         catch (const boost::exception& ex)
                             //             {
-                            //                 std::cout << "RTCM boost exception: " << boost::diagnostic_information(ex) << '\n';
-                            //                 LOG(ERROR) << "RTCM boost exception: " << boost::diagnostic_information(ex);
+                            //                 // std::cout << "RTCM boost exception: " << boost::diagnostic_information(ex) << '\n';
+                            //                 // LOG(ERROR) << "RTCM boost exception: " << boost::diagnostic_information(ex);
                             //             }
                             //         catch (const std::exception& ex)
                             //             {
-                            //                 std::cout << "RTCM std exception: " << ex.what() << '\n';
-                            //                 LOG(ERROR) << "RTCM std exception: " << ex.what();
+                            //                 // std::cout << "RTCM std exception: " << ex.what() << '\n';
+                            //                 // LOG(ERROR) << "RTCM std exception: " << ex.what();
                             //             }
                             //     }
                         }
@@ -2316,11 +1559,13 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
 
             // ############ 2 COMPUTE THE PVT ################################
             bool flag_pvt_valid = false;
+            flag_new_pvt_data = flag_pvt_valid;
             if (d_gnss_observables_map.empty() == false)
                 {
-                    // LOG(INFO) << "diff raw obs time: " << d_gnss_observables_map.cbegin()->second.RX_time * 1000.0 - old_time_debug;
+                    //// LOG(INFO) << "diff raw obs time: " << d_gnss_observables_map.cbegin()->second.RX_time * 1000.0 - old_time_debug;
                     // old_time_debug = d_gnss_observables_map.cbegin()->second.RX_time * 1000.0;
-                    uint32_t current_RX_time_ms = 0;
+                    // uint32_t current_RX_time_ms = 0;
+                    current_RX_time_ms = 0;
                     // #### solve PVT and store the corrected observable set
                     if (d_internal_pvt_solver->get_PVT(d_gnss_observables_map, false))
                         {
@@ -2348,17 +1593,17 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                             // 2. If both timestamps (relative to the receiver's start) are closer than 100 ms (the granularituy of the PVT)
                                             if (fabs(delta_rxtime_to_tag_ms) <= 100)  // [ms]
                                                 {
-                                                    std::cout << "GNSS-SDR RX TIME: " << d_rx_time << " TAG RX TIME: " << current_tag.rx_time / 1000.0 << " [s]\n";
+                                                    // std::cout << "GNSS-SDR RX TIME: " << d_rx_time << " TAG RX TIME: " << current_tag.rx_time / 1000.0 << " [s]\n";
                                                     if (d_log_timetag == true)
                                                         {
                                                             double current_corrected_RX_clock_ns = (d_rx_time - Rx_clock_offset_s) * 1e9;
                                                             double TAG_time_ns = (static_cast<double>(current_tag.tow_ms) + current_tag.tow_ms_fraction + delta_rxtime_to_tag_ms) * 1e6;
                                                             log_source_timetag_info(current_corrected_RX_clock_ns, TAG_time_ns);
                                                             double tow_error_ns = current_corrected_RX_clock_ns - TAG_time_ns;
-                                                            std::cout << "[Time ch] RX TimeTag Week: " << current_tag.week
-                                                                      << ", TOW: " << current_tag.tow_ms
-                                                                      << " [ms], TOW fraction: " << current_tag.tow_ms_fraction
-                                                                      << " [ms], GNSS-SDR OBS CORRECTED TOW - EXTERNAL TIMETAG TOW: " << tow_error_ns << " [ns] \n";
+                                                            // std::cout << "[Time ch] RX TimeTag Week: " << current_tag.week
+                                                            //   << ", TOW: " << current_tag.tow_ms
+                                                            //   << " [ms], TOW fraction: " << current_tag.tow_ms_fraction
+                                                            //   << " [ms], GNSS-SDR OBS CORRECTED TOW - EXTERNAL TIMETAG TOW: " << tow_error_ns << " [ns] \n";
                                                         }
                                                 }
                                         }
@@ -2372,7 +1617,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                         {
                                             this->message_port_pub(pmt::mp("pvt_to_observables"), pmt::make_any(Rx_clock_offset_s));
                                             d_timestamp_rx_clock_offset_correction_msg_ms = d_local_counter_ms;
-                                            LOG(INFO) << "PVT: Sent clock offset correction to observables: " << Rx_clock_offset_s << "[s]";
+                                            // LOG(INFO) << "PVT: Sent clock offset correction to observables: " << Rx_clock_offset_s << "[s]";
                                         }
                                 }
                             else
@@ -2393,7 +1638,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                     if (current_RX_time_ms % d_output_rate_ms == 0)
                                                         {
                                                             d_rx_time = static_cast<double>(current_RX_time_ms) / 1000.0;
-                                                            // std::cout << " obs time t0: " << d_gnss_observables_map_t0.cbegin()->second.RX_time
+                                                            // // std::cout << " obs time t0: " << d_gnss_observables_map_t0.cbegin()->second.RX_time
                                                             //           << " t1: " << d_gnss_observables_map_t1.cbegin()->second.RX_time
                                                             //           << " interp time: " << d_rx_time << '\n';
                                                             d_gnss_observables_map = interpolate_observables(d_gnss_observables_map_t0,
@@ -2401,8 +1646,8 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                                 d_rx_time);
                                                             flag_compute_pvt_output = true;
                                                             // d_rx_time = current_RX_time;
-                                                            // std::cout.precision(17);
-                                                            // std::cout << "current_RX_time: " << current_RX_time << " map time: " << d_gnss_observables_map.begin()->second.RX_time << '\n';
+                                                            // // std::cout.precision(17);
+                                                            // // std::cout << "current_RX_time: " << current_RX_time << " map time: " << d_gnss_observables_map.begin()->second.RX_time << '\n';
                                                         }
                                                 }
                                         }
@@ -2413,10 +1658,11 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                             if (current_RX_time_ms % d_output_rate_ms == 0)
                                                 {
                                                     flag_compute_pvt_output = true;
-                                                    // std::cout.precision(17);
-                                                    // std::cout << "current_RX_time: " << current_RX_time_ms << " map time: " << d_gnss_observables_map.begin()->second.RX_time << '\n';
+                                                    // // std::cout.precision(17);
+                                                    // // std::cout << "current_RX_time: " << current_RX_time_ms << " map time: " << d_gnss_observables_map.begin()->second.RX_time << '\n';
                                                 }
                                             flag_pvt_valid = true;
+                                            flag_new_pvt_data = flag_pvt_valid;
                                         }
                                 }
                         }
@@ -2428,7 +1674,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                 {
                                     int command = 1;
                                     this->message_port_pub(pmt::mp("pvt_to_observables"), pmt::make_any(command));
-                                    LOG(INFO) << "PVT: Number of consecutive position solver error reached, Sent reset to observables.";
+                                    // LOG(INFO) << "PVT: Number of consecutive position solver error reached, Sent reset to observables.";
                                     d_pvt_errors_counter = 0;
                                 }
                         }
@@ -2441,6 +1687,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
 
                     if (flag_pvt_valid == true)
                         {
+                            flag_new_pvt_data = true;
                             // experimental VTL tests
                             // send tracking command
                             //                            const std::shared_ptr<TrackingCmd> trk_cmd_test = std::make_shared<TrackingCmd>(TrackingCmd());
@@ -2455,15 +1702,15 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                             const double Rx_clock_offset_s = d_user_pvt_solver->get_time_offset_s();
                             if (d_enable_rx_clock_correction == true and fabs(Rx_clock_offset_s) > 0.000001)  // 1us !!
                                 {
-                                    LOG(INFO) << "Warning: Rx clock offset at interpolated RX time: " << Rx_clock_offset_s * 1000.0 << "[ms]"
-                                              << " at RX time: " << static_cast<uint32_t>(d_rx_time * 1000.0) << " [ms]";
+                                    // LOG(INFO) << "Warning: Rx clock offset at interpolated RX time: " << Rx_clock_offset_s * 1000.0 << "[ms]"
+                                    //   << " at RX time: " << static_cast<uint32_t>(d_rx_time * 1000.0) << " [ms]";
                                 }
                             else
                                 {
-                                    DLOG(INFO) << "Rx clock offset at interpolated RX time: " << Rx_clock_offset_s * 1000.0 << "[s]"
-                                               << " at RX time: " << static_cast<uint32_t>(d_rx_time * 1000.0) << " [ms]";
+                                    // DLOG(INFO) << "Rx clock offset at interpolated RX time: " << Rx_clock_offset_s * 1000.0 << "[s]"
+                                    //    << " at RX time: " << static_cast<uint32_t>(d_rx_time * 1000.0) << " [ms]";
                                     // Optional debug code: export observables snapshot for rtklib unit testing
-                                    // std::cout << "step 1: save gnss_synchro map\n";
+                                    // // std::cout << "step 1: save gnss_synchro map\n";
                                     // save_gnss_synchro_map_xml("./gnss_synchro_map.xml");
                                     // getchar(); // stop the execution
                                     // end debug
@@ -2621,480 +1868,345 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                     time_solution = d_user_pvt_solver->get_position_UTC_time();
                                     UTC_solution_str = " UTC";
                                 }
-                            // std::streamsize ss = std::cout.precision();  // save current precision
-                            std::cout.setf(std::ios::fixed, std::ios::floatfield);
+                            // std::streamsize ss = // std::cout.precision();  // save current precision
+                            // std::cout.setf(std::ios::fixed, std::ios::floatfield);
                             auto* facet = new boost::posix_time::time_facet("%Y-%b-%d %H:%M:%S.%f %z");
-                            std::cout.imbue(std::locale(std::cout.getloc(), facet));
-                            // Caio
+                            // std::cout.imbue(std::locale(// std::cout.getloc(), facet));
 
+                            // Caio
                             // fileRx<<d_user_pvt_solver->get_latitude()<<" "<<d_user_pvt_solver->get_longitude()<<" "<<d_user_pvt_solver->get_height();
                             // fileRx << std::fixed << std::setprecision(24)
                             // << contadorrx << " "
                             // << d_user_pvt_solver->get_time_offset_s() << "  "
                             // << d_user_pvt_solver->get_clock_drift_ppm() << "\n";
                             // contadorrx++;
-                            int numsat_check = d_user_pvt_solver->get_num_valid_observations();
+                            // int numsat_check = d_user_pvt_solver->get_num_valid_observations();
+
+
                             /**
                              * Caio:
                              * Salvar dados Para Teste
                              */
-                            if (numsat_check >= 4)
+                            // auto tStartSteady = std::chrono::high_resolution_clock::now();
+                            // auto StartTime = tStartSteady;
+                            // auto tEndSteady = std::chrono::high_resolution_clock::now();
+                            // std::chrono::duration<double, std::milli> tempo_ligado_ms = tEndSteady - tStartSteady;
+                            //             // std::chrono::duration<double, std::micro> Uptempo1 = tEndSteady - tStartSteady;
+                            //             // std::chrono::duration<double, std::nano> Uptempo2 = tEndSteady - tStartSteady;
+                            //             double tempo_ligado_ms = Uptempo.count();
+                            //             // double tempo_ligado1 = Uptempo1.count();
+                            //             // double tempo_ligado2 = Uptempo2.count();
+                            //             // // std::cout<<std::setprecision(24)<< tempo_ligado_ms <<" ms || "<< tempo_ligado1 <<" us || "<<tempo_ligado2<<" ns"<<"\n";
+                            // std::chrono::milliseconds diff = tEndSteady - tStartSteady;
+                            // float tempo = diff.count();
+                            // float tempo = tempo_ligado_ms.count();
+                            //             // std::time_t endWallTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+
+                            // if (numsat_check >= 4)
+                            //     {
+                            std::cout
+                                << TEXT_BOLD_YELLOW
+                                // << std::fixed << std::setprecision(24)
+                                //     << " Time Offset: "<<d_user_pvt_solver->get_time_offset_s() << "[s]"
+                                //     << " User Clock Drift[ppm]: "<< d_user_pvt_solver->get_clock_drift_ppm()<< TEXT_RESET <<"\n"
+                                // << TEXT_BOLD_GREEN
+                                << "Position at " << time_solution << UTC_solution_str
+                                << " using " << d_user_pvt_solver->get_num_valid_observations() << " Sat"
+                                << std::fixed << std::setprecision(9)
+                                << " observations is Lat = " << d_user_pvt_solver->get_latitude() << " [deg], Long = " << d_user_pvt_solver->get_longitude()
+                                << std::fixed << std::setprecision(3)
+                                << " [deg], Height = " << d_user_pvt_solver->get_height() << " [m]" << TEXT_RESET << '\n';
+                            // for(const auto &x:d_gnss_observables_map){}
+                            // // std::cout<<TEXT_BOLD_CYAN
+                            // <<"Channel_ID:  "
+                            // <<d_gnss_observables_map[0].Channel_ID
+                            // <<"  PRN:  "
+                            // <<d_gnss_observables_map[0].PRN
+                            // <<"  PseudoRange:  "
+                            // <<d_gnss_observables_map[0].Pseudorange_m
+                            // << TEXT_RESET
+                            // << "\n";
+                            // // std::cout << std::setprecision(ss);
+
+
+                            d_internal_pvt_solver->gnss_observables_map = d_gnss_observables_map;
+
+                            // d_internal_pvt_solver->gps_ephemeris_map.at(0).satellitePosition();
+
+                            gps_ephem = d_internal_pvt_solver->gps_ephemeris_map;
+
+                            // d_internal_pvt_solver->Gnss_Ephemeris_map = d_internal_pvt_solver->gps_ephemeris_map;
+                            // gps_ephem.at(0).satellitePosition(gps_ephem.at(0).toe);
+                            // if(d_internal_pvt_solver->gps_ephemeris_map.empty() == false)
+                            // uint32_t last_toe = 0;
+                            // uint32_t last_tow = 0;
+                            // double last_interp_TOW_ms = 0;
+                            // double last_RX_time = 0;
+                            // uint8_t buffer[1000];
+                            // // uint32_t last_TOW_at_current_symbol_ms = 0;
+                            // memset(&buffer, '\0', sizeof(buffer));
+                            // int msg = 0xd4;
+                            // char tmp[200];
+                            // // uint8_t test[tam + sizeof(int)];
+                            // memset(tmp, '\0', sizeof(char));
+                            // // sprintf(&buffer[0], "%d", msg);
+                            // int sizemsg = 0;
+                            // uint8_t test[8];
+                            // pid_t pid = fork();
+                            // if (pid == 0)
+                            //     {
+                            num_sat = d_user_pvt_solver->get_num_valid_observations();
+                            tam = num_sat * 65;
+                            uint8_t msgVec[tam + 3 + 3 + 56]{0};  // +1 por causa do CRC
+                            // uint8_t msgPVT[56 + 3]{0};            // +1 por causa do CRC
+                            // double desmsgVec[tam]{0};
+                            // uint32_t dessmsgVec{0};
+                            // double desmsgPVT[6]{0};
+                            // HEtechOut_t StorageSat[num_sat];
+                            jdex = 0;
+                            rx_pos = d_user_pvt_solver->get_rx_pos();
+                            rx_vel = d_user_pvt_solver->get_rx_vel();
+                            double rx_clk_deslize{0};
+                            sync_map = get_observables_map();
+
+                            // if (!flag_interrupt_serial)
+                            //     {
+                            msgVec[0] = 0xd4;
+                            msgVec[1] = 0x4f;
+                            index = 2;
+                            for (const auto& y : sync_map)
                                 {
-                                    std::cout
-                                        << TEXT_BOLD_YELLOW
-                                        // << std::fixed << std::setprecision(24)
-                                        //     << " Time Offset: "<<d_user_pvt_solver->get_time_offset_s() << "[s]"
-                                        //     << " User Clock Drift[ppm]: "<< d_user_pvt_solver->get_clock_drift_ppm()<< TEXT_RESET <<"\n"
-                                        // << TEXT_BOLD_GREEN
-                                        << "Position at " << time_solution << UTC_solution_str
-                                        << " using " << numsat_check << " Sat"
-                                        // << std::fixed << std::setprecision(9)
-                                        // << " observations is Lat = " << d_user_pvt_solver->get_latitude() << " [deg], Long = " << d_user_pvt_solver->get_longitude()
-                                        // << std::fixed << std::setprecision(3)
-                                        // << " [deg], Height = " << d_user_pvt_solver->get_height() << " [m]" << TEXT_RESET << '\n';
-                                        // for(const auto &x:d_gnss_observables_map){}
-                                        // std::cout<<TEXT_BOLD_CYAN
-                                        // <<"Channel_ID:  "
-                                        // <<d_gnss_observables_map[0].Channel_ID
-                                        // <<"  PRN:  "
-                                        // <<d_gnss_observables_map[0].PRN
-                                        // <<"  PseudoRange:  "
-                                        // <<d_gnss_observables_map[0].Pseudorange_m
-                                        << TEXT_RESET
-                                        << "\n";
-                                    // std::cout << std::setprecision(ss);
-
-
-                                    d_internal_pvt_solver->gnss_observables_map = d_gnss_observables_map;
-                                    // d_internal_pvt_solver->gps_ephemeris_map.at(0).satellitePosition();
-                                    std::map<int, Gps_Ephemeris> gps_ephem = d_internal_pvt_solver->gps_ephemeris_map;
-                                    // d_internal_pvt_solver->Gnss_Ephemeris_map = d_internal_pvt_solver->gps_ephemeris_map;
-                                    // gps_ephem.at(0).satellitePosition(gps_ephem.at(0).toe);
-                                    // if(d_internal_pvt_solver->gps_ephemeris_map.empty() == false)
-                                    // uint32_t last_toe = 0;
-                                    // uint32_t last_tow = 0;
-                                    // double last_interp_TOW_ms = 0;
-                                    double last_RX_time = 0;
-                                    uint8_t buffer[1000];
-                                    // uint32_t last_TOW_at_current_symbol_ms = 0;
-                                    memset(&buffer, '\0', sizeof(buffer));
-                                    int msg = 0xd4;
-                                    char tmp[200];
-                                    // uint8_t test[tam + sizeof(int)];
-                                    memset(tmp, '\0', sizeof(char));
-                                    // sprintf(&buffer[0], "%d", msg);
-                                    int sizemsg = 0;
-                                    uint8_t test[8];
-                                    int num_sat = d_user_pvt_solver->get_num_valid_observations();
-                                    int tam = num_sat * 65;
-                                    uint8_t msgVec[tam + 3 + 3 + 56]{0};  // +1 por causa do CRC
-                                    // uint8_t msgVec[12*65+56+6];
-                                    uint8_t msgPVT[56+3]{0};   // +1 por causa do CRC
-                                    double desmsgVec[tam]{0};
-                                    uint32_t dessmsgVec{0};
-                                    double desmsgPVT[6]{0};
-                                    int index = 0;
-                                    double variavelTempo;
-                                    // if(num_sat<4){
-                                    uint8_t checks{0};
-                                    uint8_t PRN;
-                                    double Carrier_Doppler_Hz;
-                                    double satPosX;
-                                    double satPosY;
-                                    double satPosZ;
-                                    double satVelX;
-                                    double satVelY;
-                                    double satVelZ;
-                                    std::array<double, 3> rx_pos;
-                                    std::array<double, 3> rx_vel;
-                                    double deltaprange;
-                                    rx_pos = d_user_pvt_solver->get_rx_pos();
-                                    rx_vel = d_user_pvt_solver->get_rx_vel();
-                                    double rx_clk_deslize{0};
-                                    std::map<int, Gnss_Synchro> sync_map = get_observables_map();
-                                    if (!flag_interrupt_serial)
+                                    for (const auto& x : gps_ephem)
                                         {
-                                            msgVec[0] = 0xd4;
-                                            msgVec[1] = 0x4f; index = 2;
-                                            for (const auto& y : sync_map)
+                                            if (y.second.System == 'G')
                                                 {
-                                                    for (const auto& x : gps_ephem)
+                                                    last_RX_time = y.second.RX_time;
+                                                    if (y.second.PRN == x.second.PRN)
                                                         {
-                                                            if (y.second.System == 'G')
+                                                            if ((x.second.SV_health == 0))  // && (y.second.CN0_dB_hz<50.0))
                                                                 {
-                                                                    last_RX_time = y.second.RX_time;
-                                                                    if (y.second.PRN == x.second.PRN)
+                                                                    // auto tStartSteady = std::chrono::high_resolution_clock::now();
+                                                                    // auto StartTime = tStartSteady;
+                                                                    // // std::cout<<x.second.PRN<<" "<<x.second.SV_health<<"\n";
+                                                                    // // std::cout<<x.first<<"\n";
+                                                                    // double variavel = x.second.tow - y.second.Pseudorange_m/SPEED_OF_LIGHT_M_S;
+                                                                    // double variavel = (y.second.interp_TOW_ms / 1000.0) - y.second.Pseudorange_m / SPEED_OF_LIGHT_M_S;
+                                                                    // double variavel = (y.second.RX_time) - y.second.Pseudorange_m / SPEED_OF_LIGHT_M_S - x.second.af0;
+                                                                    // double variavel = (y.second.RX_time) - (y.second.Pseudorange_m / SPEED_OF_LIGHT_M_S);
+                                                                    // double variavel = (y.second.TOW_at_current_symbol_ms) - y.second.Pseudorange_m / SPEED_OF_LIGHT_M_S - x.second.af0;
+                                                                    // y.second.TOW_at_current_symbol_ms
+
+                                                                    // // #########################   Geometrical Approuch on Transmit time:  #################################
+                                                                    double tempoo = y.second.RX_time;
+                                                                    double diffSATREC, diffSATSAT = 1000;
+                                                                    double delta_tempo;
+                                                                    double nvotempo;
+                                                                    double limiar = 0.2;
+                                                                    // int iter = 0;
+                                                                    std::vector<double> LastSatPos(3);
+                                                                    // gps_ephem.at(x.first).satellitePosition(y.second.RX_time);
+                                                                    // while(limiar<diffSATSAT)
+                                                                    gps_ephem.at(x.first).satellitePosition(tempoo);
+                                                                    //  Step 1
+                                                                    LastSatPos[0] = x.second.satpos_X;
+                                                                    LastSatPos[1] = x.second.satpos_Y;
+                                                                    LastSatPos[2] = x.second.satpos_Z;
+
+                                                                    while (diffSATSAT > limiar)
                                                                         {
-                                                                            if ((x.second.SV_health == 0))  // && (y.second.CN0_dB_hz<50.0))
-                                                                                {
-                                                                                    // std::cout<<x.second.PRN<<" "<<x.second.SV_health<<"\n";
-                                                                                    // std::cout<<x.first<<"\n";
-                                                                                    // double variavel = x.second.tow - y.second.Pseudorange_m/SPEED_OF_LIGHT_M_S;
-                                                                                    // double variavel = (y.second.interp_TOW_ms / 1000.0) - y.second.Pseudorange_m / SPEED_OF_LIGHT_M_S;
-                                                                                    // double variavel = (y.second.RX_time) - y.second.Pseudorange_m / SPEED_OF_LIGHT_M_S - x.second.af0;
-                                                                                    // double variavel = (y.second.RX_time) - (y.second.Pseudorange_m / SPEED_OF_LIGHT_M_S);
-                                                                                    // double variavel = (y.second.TOW_at_current_symbol_ms) - y.second.Pseudorange_m / SPEED_OF_LIGHT_M_S - x.second.af0;
-                                                                                    // y.second.TOW_at_current_symbol_ms
-
-                                                                                    // // #########################   Geometrical Approuch on Transmit time:  #################################
-                                                                                    double tempoo = y.second.RX_time;
-                                                                                    double diffSATREC, diffSATSAT = 1000;
-                                                                                    double delta_tempo;
-                                                                                    double nvotempo;
-                                                                                    double limiar = 0.2;
-                                                                                    // int iter = 0;
-                                                                                    std::vector<double> LastSatPos(3);
-                                                                                    // gps_ephem.at(x.first).satellitePosition(y.second.RX_time);
-                                                                                    // while(limiar<diffSATSAT)
-                                                                                    gps_ephem.at(x.first).satellitePosition(tempoo);
-                                                                                    //  Step 1
-                                                                                    LastSatPos[0] = x.second.satpos_X;
-                                                                                    LastSatPos[1] = x.second.satpos_Y;
-                                                                                    LastSatPos[2] = x.second.satpos_Z;
-
-                                                                                    while (diffSATSAT > limiar)
-                                                                                        {
-                                                                                            //  Step 2
-                                                                                            diffSATREC = sqrt(
-                                                                                                // (pow(d_internal_pvt_solver->get_rx_pos()[0] - LastSatPos[0], 2)) + (pow(d_internal_pvt_solver->get_rx_pos()[1] - LastSatPos[1], 2)) + (pow(d_internal_pvt_solver->get_rx_pos()[2] - LastSatPos[2], 2)));
-                                                                                                pow(rx_pos[0] - LastSatPos[0], 2) + pow(rx_pos[1] - LastSatPos[1], 2) + pow(rx_pos[2] - LastSatPos[2], 2));
-                                                                                            delta_tempo = diffSATREC / SPEED_OF_LIGHT_M_S;
-                                                                                            // Step 3
-                                                                                            nvotempo = tempoo - delta_tempo;
-                                                                                            gps_ephem.at(x.first).satellitePosition(nvotempo);
-                                                                                            diffSATSAT = sqrt(
-                                                                                                (pow(LastSatPos[0] - x.second.satpos_X, 2)) + (pow(LastSatPos[1] - x.second.satpos_Y, 2)) + (pow(LastSatPos[2] - x.second.satpos_Z, 2)));
-                                                                                            // iter++;
-                                                                                            // std::cout << "Iter: " << iter <<"\n";
-                                                                                            LastSatPos[0] = x.second.satpos_X;
-                                                                                            LastSatPos[1] = x.second.satpos_Y;
-                                                                                            LastSatPos[2] = x.second.satpos_Z;
-                                                                                        }
-                                                                                    // Step 4
-                                                                                    variavelTempo = nvotempo - d_user_pvt_solver->get_time_offset_s();
-                                                                                    gps_ephem.at(x.first).satellitePosition(variavelTempo);
-                                                                                    // gps_ephem.at(x.first).satellitePosition(variavel);
-                                                                                    // ########################################################################################################
-                                                                                    // memset(tmp,'\0',sizeof(tmp));
-                                                                                    // sizemsg=sprintf(&tmp[0],
-                                                                                    // "%d%lf%lf%lf%lf%lf%lf%lf%lf",
-                                                                                    // x.second.PRN,
-                                                                                    // y.second.Pseudorange_m,
-                                                                                    // y.second.Pseudorange_m,
-                                                                                    // double temp = x.second.satpos_X;
-                                                                                    // double deltaprange = -SPEED_OF_LIGHT_M_S * (y.second.Carrier_Doppler_hz / 1575420000);
-                                                                                    //
-                                                                                    /*std::array<double,3UL> POS;
-                                                                                    std::array<double,3UL> input;
-                                                                                    input[0] = x.second.satpos_X; input[1] = x.second.satpos_Y; input[2] = x.second.satpos_Z;
-                                                                                    ecef2pos(input.data(),POS.data());
-                                                                                    // for(int i=0;i<3;i++){std::cout<<POS[i]<<"\n";}
-                                                                                    if(POS[2]<10000000){std::cout<<TEXT_BOLD_RED<<last_RX_time<<" "<<x.second.PRN<<" "<< POS[2]<<TEXT_RESET<<"\n";
-                                                                                    fileRx<<last_RX_time<<" "<<x.second.PRN<<" "<<POS[2]<<"\n";}*/
-
-                                                                                    PRN = (uint8_t)x.second.PRN;
-                                                                                    Carrier_Doppler_Hz = y.second.Carrier_Doppler_hz;
-                                                                                    satPosX = x.second.satpos_X;
-                                                                                    satPosY = x.second.satpos_Y;
-                                                                                    satPosZ = x.second.satpos_Z;
-                                                                                    satVelX = x.second.satvel_X;
-                                                                                    satVelY = x.second.satvel_Y;
-                                                                                    satVelZ = x.second.satvel_Z;
-
-                                                                                    double m1, m2, m3;
-
-
-                                                                                    deltaprange = -SPEED_OF_LIGHT_M_S * (Carrier_Doppler_Hz / 1575420000) - d_user_pvt_solver->get_clock_drift_ppm() * SPEED_OF_LIGHT_M_S * 1e-6;
-
-                                                                                    // double prange = sqrt(
-                                                                                    //     (x.second.satpos_X - d_user_pvt_solver->get_rx_pos()[0]) * (x.second.satpos_X - d_user_pvt_solver->get_rx_pos()[0]) +
-                                                                                    //     (x.second.satpos_Y - d_user_pvt_solver->get_rx_pos()[1]) * (x.second.satpos_Y - d_user_pvt_solver->get_rx_pos()[1]) +
-                                                                                    //     (x.second.satpos_Z - d_user_pvt_solver->get_rx_pos()[2]) * (x.second.satpos_Z - d_user_pvt_solver->get_rx_pos()[2]));
-                                                                                    m1 = (satPosX - rx_pos[0]) * (satPosX - rx_pos[0]);
-                                                                                    m2 = (satPosY - rx_pos[1]) * (satPosY - rx_pos[1]);
-                                                                                    m3 = (satPosZ - rx_pos[2]) * (satPosZ - rx_pos[2]);
-                                                                                    double prange = sqrt((m1 + m2 + m3));
-
-                                                                                    // Teste de Conversão p/ hexadecimal
-                                                                                    // uint8_t vec[8];
-                                                                                    // double ExVec;
-                                                                                    // Double2Hex(&vec[0],&temp);
-                                                                                    // Hex2Double(&ExVec,&vec[0]);
-                                                                                    // Double2Hex(&test[0] , &temp);
-                                                                                    //
-
-                                                                                    // Integer2Hex(&msgVec[index+0], &PRN);
-                                                                                    msgVec[index + 0] = PRN;
-                                                                                    Double2HexAlt(&msgVec[index + 1], &prange);
-                                                                                    Double2HexAlt(&msgVec[index + 9], &deltaprange);
-                                                                                    Double2HexAlt(&msgVec[index + 17], &satPosX);
-                                                                                    Double2HexAlt(&msgVec[index + 25], &satPosY);
-                                                                                    Double2HexAlt(&msgVec[index + 33], &satPosZ);
-                                                                                    Double2HexAlt(&msgVec[index + 41], &satVelX);
-                                                                                    Double2HexAlt(&msgVec[index + 49], &satVelY);
-                                                                                    Double2HexAlt(&msgVec[index + 57], &satVelZ);
-                                                                                    index = index + 65;
-                                                                                    // // Hex2Integer(&desmsgVec[],&msgVec[0]);
-                                                                                    // Hex2Double(&desmsgVec[0],&msgVec[1]);
-                                                                                    // Hex2Double(&desmsgVec[1],&msgVec[9]);
-                                                                                    // Hex2Double(&desmsgVec[2],&msgVec[17]);
-
-                                                                                    //
-                                                                                    // double prange = sqrt(
-                                                                                    //     (satPosX - rx_pos[0]) * (satPosX - rx_pos[0]) +
-                                                                                    //     (satPosY - rx_pos[1]) * (satPosY - rx_pos[1]) +
-                                                                                    //     (satPosZ - rx_pos[2]) * (satPosZ - rx_pos[2]));
-                                                                                    //
-                                                                                    // Hex2Integer((uint32_t*)&desmsgVec[0],&msgVec[0]);
-                                                                                    // Hex2Double(&desmsgVec[1], &msgVec[1]);
-                                                                                    // Hex2Double(&desmsgVec[2], &msgVec[9]);
-                                                                                    // Hex2Double(&desmsgVec[3], &msgVec[17]);
-                                                                                    // ###############################
-                                                                                    // // std::cout
-                                                                                    // fileRx
-                                                                                    //     //     // << TEXT_BOLD_CYAN
-                                                                                    //     //     // << " PRN: "
-                                                                                    //     << std::fixed << std::setprecision(10)
-                                                                                    //     << " "
-                                                                                    //     << PRN//x.second.PRN
-                                                                                    //     //     // << " PseudoRange: "
-                                                                                    //     << " "
-                                                                                    //     // << y.second.Pseudorange_m
-                                                                                    //     << prange
-                                                                                    //     // //     // << " Delta_Range: "
-                                                                                    //     << " "
-                                                                                    //     //     << y.second.Pseudorange_m
-                                                                                    //     << deltaprange
-                                                                                    //     // //     // << " satposX: "
-                                                                                    //     << " "
-                                                                                    //     // << x.second.satpos_X
-                                                                                    //     << satPosX
-                                                                                    //     // //     // << " satposY: "
-                                                                                    //     << " "
-                                                                                    //     // << x.second.satpos_Y
-                                                                                    //     << satPosY
-                                                                                    //     << " "
-                                                                                    //     // //     // << " satposZ: "
-                                                                                    //     // << x.second.satpos_Z
-                                                                                    //     << satPosZ
-                                                                                    //     << " "
-                                                                                    //     // //     // << " satVelX: "
-                                                                                    //     // << x.second.satvel_X
-                                                                                    //     << satVelX
-                                                                                    //     // //     // << " satVelY: "
-                                                                                    //     << " "
-                                                                                    //     // << x.second.satvel_Y
-                                                                                    //     << satVelY
-                                                                                    //     << " "
-                                                                                    //     // //     // << " satVelZ: "
-                                                                                    //     // << x.second.satvel_Z
-                                                                                    //     << satVelZ;
-                                                                                    //     // << " " << y.second.High_d;  // << "  "<<diffSATSAT; */
-                                                                                    //     // << " " << /y.second.rx_clk_offset;
-                                                                                    // fileRxx
-                                                                                    //     << " "
-                                                                                    //     << x.second.PRN
-                                                                                    //     //     // << " PseudoRange: "
-                                                                                    //     << " "
-                                                                                    //     << y.second.Pseudorange_m
-                                                                                    //     // //     // << " Delta_Range: "
-                                                                                    //     << " "
-                                                                                    //     //     << y.second.Pseudorange_m
-                                                                                    //     << deltaprange
-                                                                                    //     // //     // << " satposX: "
-                                                                                    //     << " "
-                                                                                    //     << x.second.satpos_X
-                                                                                    //     // //     // << " satposY: "
-                                                                                    //     << " "
-                                                                                    //     << x.second.satpos_Y
-                                                                                    //     << " "
-                                                                                    //     // //     // << " satposZ: "
-                                                                                    //     << x.second.satpos_Z
-                                                                                    //     << " "
-                                                                                    //     // //     // << " satVelX: "
-                                                                                    //     << x.second.satvel_X
-                                                                                    //     // //     // << " satVelY: "
-                                                                                    //     << " "
-                                                                                    //     << x.second.satvel_Y
-                                                                                    //     << " "
-                                                                                    //     // //     // << " satVelZ: "
-                                                                                    //     << x.second.satvel_Z
-                                                                                    //     << " ";
-                                                                                    // << variavelTempo;  // << "  "<<diffSATSAT; */
-                                                                                    // last_toe = x.second.toe;
-                                                                                    // last_tow = x.second.tow;
-                                                                                    // last_interp_TOW_ms = y.second.interp_TOW_ms;
-                                                                                    // last_RX_time = y.second.RX_time;
-                                                                                    // last_TOW_at_current_symbol_ms = y.second.TOW_at_current_symbol_ms;
-                                                                                    // << " Mod Vel: "
-                                                                                    // << modVel
-                                                                                    // << "\n"
-                                                                                    // << " SqrtA: "
-                                                                                    // // << " "
-                                                                                    // << x.second.sqrtA
-                                                                                    // << " Ecc: "
-                                                                                    // // << " "
-                                                                                    // << x.second.ecc
-                                                                                    // << " Inc: "
-                                                                                    // // << " "
-                                                                                    // << x.second.i_0
-                                                                                    // << " OMEGA: "
-                                                                                    // // << " "
-                                                                                    // << x.second.OMEGA_0
-                                                                                    // << " omega: "
-                                                                                    // // << " "
-                                                                                    // << x.second.omega
-                                                                                    // << " Mean Anom.: "
-                                                                                    // // << " "
-                                                                                    // << x.second.M_0
-                                                                                    // <<TEXT_RESET
-                                                                                    // <<"\n";
-                                                                                }
+                                                                            //  Step 2
+                                                                            diffSATREC = sqrt(
+                                                                                // (pow(d_internal_pvt_solver->get_rx_pos()[0] - LastSatPos[0], 2)) + (pow(d_internal_pvt_solver->get_rx_pos()[1] - LastSatPos[1], 2)) + (pow(d_internal_pvt_solver->get_rx_pos()[2] - LastSatPos[2], 2)));
+                                                                                pow(rx_pos[0] - LastSatPos[0], 2) + pow(rx_pos[1] - LastSatPos[1], 2) + pow(rx_pos[2] - LastSatPos[2], 2));
+                                                                            delta_tempo = diffSATREC / SPEED_OF_LIGHT_M_S;
+                                                                            // Step 3
+                                                                            nvotempo = tempoo - delta_tempo;
+                                                                            gps_ephem.at(x.first).satellitePosition(nvotempo);
+                                                                            diffSATSAT = sqrt(
+                                                                                (pow(LastSatPos[0] - x.second.satpos_X, 2)) + (pow(LastSatPos[1] - x.second.satpos_Y, 2)) + (pow(LastSatPos[2] - x.second.satpos_Z, 2)));
+                                                                            // iter++;
+                                                                            // // std::cout << "Iter: " << iter <<"\n";
+                                                                            LastSatPos[0] = x.second.satpos_X;
+                                                                            LastSatPos[1] = x.second.satpos_Y;
+                                                                            LastSatPos[2] = x.second.satpos_Z;
                                                                         }
+                                                                    // Step 4
+                                                                    variavelTempo = nvotempo - d_user_pvt_solver->get_time_offset_s();
+                                                                    gps_ephem.at(x.first).satellitePosition(variavelTempo);
+                                                                    // gps_ephem.at(x.first).satellitePosition(variavel);
+                                                                    // ########################################################################################################
+                                                                    // memset(tmp,'\0',sizeof(tmp));
+                                                                    // sizemsg=sprintf(&tmp[0],
+                                                                    // "%d%lf%lf%lf%lf%lf%lf%lf%lf",
+                                                                    // x.second.PRN,
+                                                                    // y.second.Pseudorange_m,
+                                                                    // y.second.Pseudorange_m,
+                                                                    // double temp = x.second.satpos_X;
+                                                                    // double deltaprange = -SPEED_OF_LIGHT_M_S * (y.second.Carrier_Doppler_hz / 1575420000);
+                                                                    //
+                                                                    // std::array<double,3UL> POS;
+                                                                    // std::array<double,3UL> input;
+                                                                    // input[0] = x.second.satpos_X; input[1] = x.second.satpos_Y; input[2] = x.second.satpos_Z;
+                                                                    // ecef2pos(input.data(),POS.data());
+                                                                    // for(int i=0;i<3;i++){// std::cout<<POS[i]<<"\n";}
+                                                                    // if(POS[2]<10000000){// std::cout<<TEXT_BOLD_RED<<last_RX_time<<" "<<x.second.PRN<<" "<< POS[2]<<TEXT_RESET<<"\n";
+                                                                    // fileRx<<last_RX_time<<" "<<x.second.PRN<<" "<<POS[2]<<"\n";}
+
+                                                                    PRN = (uint8_t)x.second.PRN;
+                                                                    Carrier_Doppler_Hz = y.second.Carrier_Doppler_hz;
+                                                                    satPosX = x.second.satpos_X;
+                                                                    satPosY = x.second.satpos_Y;
+                                                                    satPosZ = x.second.satpos_Z;
+                                                                    satVelX = x.second.satvel_X;
+                                                                    satVelY = x.second.satvel_Y;
+                                                                    satVelZ = x.second.satvel_Z;
+
+                                                                    double m1, m2, m3;
+
+                                                                    deltaprange = -SPEED_OF_LIGHT_M_S * (Carrier_Doppler_Hz / 1575420000) - d_user_pvt_solver->get_clock_drift_ppm() * SPEED_OF_LIGHT_M_S * 1e-6;
+
+                                                                    // double prange = sqrt(
+                                                                    //     (x.second.satpos_X - d_user_pvt_solver->get_rx_pos()[0]) * (x.second.satpos_X - d_user_pvt_solver->get_rx_pos()[0]) +
+                                                                    //     (x.second.satpos_Y - d_user_pvt_solver->get_rx_pos()[1]) * (x.second.satpos_Y - d_user_pvt_solver->get_rx_pos()[1]) +
+                                                                    //     (x.second.satpos_Z - d_user_pvt_solver->get_rx_pos()[2]) * (x.second.satpos_Z - d_user_pvt_solver->get_rx_pos()[2]));
+                                                                    m1 = (satPosX - rx_pos[0]) * (satPosX - rx_pos[0]);
+                                                                    m2 = (satPosY - rx_pos[1]) * (satPosY - rx_pos[1]);
+                                                                    m3 = (satPosZ - rx_pos[2]) * (satPosZ - rx_pos[2]);
+                                                                    double prange = sqrt((m1 + m2 + m3));
+                                                                    mtx.lock();
+                                                                    // ######## Gravar na Struct #########
+                                                                    StorageSat[jdex].PRN = PRN;
+                                                                    StorageSat[jdex].prang = prange;
+                                                                    StorageSat[jdex].deltaprange = deltaprange;
+                                                                    StorageSat[jdex].satPosX = satPosX;
+                                                                    StorageSat[jdex].satPosY = satPosY;
+                                                                    StorageSat[jdex].satPosZ = satPosZ;
+                                                                    StorageSat[jdex].satVelX = satVelX;
+                                                                    StorageSat[jdex].satVelY = satVelY;
+                                                                    StorageSat[jdex].satVelZ = satVelZ;
+                                                                    jdex++;
+                                                                    // ###################################
+                                                                    mtx.unlock();
+                                                                    // Teste de Conversão p/ hexadecimal
+                                                                    // uint8_t vec[8];
+                                                                    // double ExVec;
+                                                                    // Double2Hex(&vec[0],&temp);
+                                                                    // Hex2Double(&ExVec,&vec[0]);
+                                                                    // Double2Hex(&test[0] , &temp);
+                                                                    //
+
+                                                                    // Integer2Hex(&msgVec[index+0], &PRN);
+                                                                    // msgVec[index + 0] = PRN;
+                                                                    // Double2HexAlt(&msgVec[index + 1], &prange);
+                                                                    // Double2HexAlt(&msgVec[index + 9], &deltaprange);
+                                                                    // Double2HexAlt(&msgVec[index + 17], &satPosX);
+                                                                    // Double2HexAlt(&msgVec[index + 25], &satPosY);
+                                                                    // Double2HexAlt(&msgVec[index + 33], &satPosZ);
+                                                                    // Double2HexAlt(&msgVec[index + 41], &satVelX);
+                                                                    // Double2HexAlt(&msgVec[index + 49], &satVelY);
+                                                                    // Double2HexAlt(&msgVec[index + 57], &satVelZ);
+                                                                    // index = index + 65;
+
+                                                                    // ###############################
+                                                                    // auto tEndSteady = std::chrono::high_resolution_clock::now();
+                                                                    // std::chrono::duration<double, std::milli> tempo_ligado_ms = tEndSteady - tStartSteady;
+                                                                    // std::cout << tempo_ligado_ms.count() << "\n";
                                                                 }
                                                         }
                                                 }
                                         }
-
-                                    for (int i = 0; i < index; i++)
-                                        {
-                                            // msgVec[index + 1] = msgVec[index + 1] ^ msgVec[i];  // CRC
-                                            checks ^= msgVec[i];
-                                            if(msgVec[i]){
-
-                                            }
-                                        }
-                                    msgVec[index] = checks; index++;
-                                    // int sendedEphem = write(comms.fd, &msgVec[0], tam + 3);
-                                    // int sended = serial4send(&msgVec[0], &tam);
-
-                                    // fileRx << "\n";
-                                    // fileRxx << variavelTempo << "\n";
-                                    // serial4send(&buffer[0]);
-                                    // filePosRecp
-                                    //     << std::fixed << std::setprecision(10)
-                                    //     << " "
-                                    //     // << d_user_pvt_solver->get_rx_pos()[0]
-                                    //     // << " "
-                                    //     // << d_user_pvt_solver->get_rx_pos()[1]
-                                    //     // << " "
-                                    //     // << d_user_pvt_solver->get_rx_pos()[2]
-                                    //     // << " "
-                                    //     // << d_user_pvt_solver->get_rx_vel()[0]
-                                    //     // << " "
-                                    //     // << d_user_pvt_solver->get_rx_vel()[1]
-                                    //     // << " "
-                                    //     // << d_user_pvt_solver->get_rx_vel()[2]
-                                    //     << rx_pos[0]
-                                    //     << " "
-                                    //     << rx_pos[1]
-                                    //     << " "
-                                    //     << rx_pos[2]
-                                    //     << " "
-                                    //     << rx_vel[0]
-                                    //     << " "
-                                    //     << rx_vel[1]
-                                    //     << " "
-                                    //     << rx_vel[2]
-                                    //     << " "
-                                    //     << last_RX_time
-                                    // << " "
-                                    // << d_user_pvt_solver->get_clock_drift_ppm()
-                                    // << d_user_pvt_solver->get_gdop()
-                                    // << " "
-                                    // << d_user_pvt_solver->get_hdop()
-                                    // << " "
-                                    // << d_user_pvt_solver->get_vdop()
-                                    // << " "
-                                    // << d_user_pvt_solver->get_pdop()
-                                    // << " "
-                                    // << d_user_pvt_solver->is_valid_position()
-                                    // //     // << std::fixed << std::setprecision(24)
-                                    // //     // << " "
-                                    // //     // << last_toe
-                                    // //     // << " "
-                                    // //     // << last_tow
-                                    // //     << " "
-                                    // //     << last_interp_TOW_ms / 1000
-
-                                    // //     // << " "
-                                    // //     // << last_TOW_at_current_symbol_ms
-                                    // << "\n";
-                                    msgVec[index + 0] = 0xd4;
-                                    msgVec[index + 1] = 0x4f;
-                                    Double2HexAlt(&msgVec[index + 2], &rx_pos[0]);
-                                    Double2HexAlt(&msgVec[index + 10], &rx_pos[1]);
-                                    Double2HexAlt(&msgVec[index + 18], &rx_pos[2]);
-                                    Double2HexAlt(&msgVec[index + 26], &rx_vel[0]);
-                                    Double2HexAlt(&msgVec[index + 34], &rx_vel[1]);
-                                    Double2HexAlt(&msgVec[index + 42], &rx_vel[2]);
-                                    Double2HexAlt(&msgVec[index + 50], &last_RX_time);
-                                    checks = 0;
-                                    for (int i = index + 0; i < index + 58; i++)
-                                        {
-                                            checks ^= msgVec[i];
-                                        }
-                                    msgVec[index + 58] = checks;
-                                    // Hex2Double(&desmsgPVT[0],&msgPVT[0]);
-                                    // Hex2Double(&desmsgPVT[1],&msgPVT[8]);
-                                    // Hex2Double(&desmsgPVT[2],&msgPVT[16]);
-                                    // Hex2Double(&desmsgPVT[3],&msgPVT[24]);
-                                    // Hex2Double(&desmsgPVT[4],&msgPVT[32]);
-                                    // Hex2Double(&desmsgPVT[5],&msgPVT[40]);
-                                    // Hex2Double(&desmsgPVT[6],&msgPVT[48]);
-                                    tcdrain(comms.fd);
-                                    tcflush(comms.fd, TCIOFLUSH);
-                                    if (last_RX_time != ultimo_rx_time)
-                                        {
-                                            int sended_PVT = write(comms.fd, &msgVec[0], tam + 3 + 3 + 56);
-                                            std::cout << TEXT_BOLD_GREEN << "Amostra: " << contadorgrav++ << TEXT_RESET << "\n";
-                                            ultimo_rx_time = last_RX_time;
-                                        }
-                                    // fileRx
-                                    //     << d_internal_pvt_solver->get_rx_pos()[0]
-                                    //     << " "
-                                    //     << d_internal_pvt_solver->get_rx_pos()[1]
-                                    //     << " "
-                                    //     << d_internal_pvt_solver->get_rx_pos()[2]
-                                    //     << " "
-                                    //     << d_internal_pvt_solver->get_rx_vel()[0]
-                                    //     << " "
-                                    //     << d_internal_pvt_solver->get_rx_vel()[1]
-                                    //     << " "
-                                    //     << d_internal_pvt_solver->get_rx_vel()[2]
-                                    //     << "\n";
-                                    // ##################################################
                                 }
+                            // for (int i = 0; i < index; i++)
+                            //     {
+                            //         // msgVec[index + 1] = msgVec[index + 1] ^ msgVec[i];  // CRC
+                            //         checks ^= msgVec[i];
+                            //         // if (msgVec[i])
+                            //         //     {
+                            //         //     }
+                            //     }
+                            // msgVec[index] = checks;
+                            // index++;
+                            // int sendedEphem = write(comms.fd, &msgVec[0], tam + 3);
+                            // int sended = serial4send(&msgVec[0], &tam);
+
+
+                            // msgVec[index + 0] = 0xd4;
+                            // msgVec[index + 1] = 0x4f;
+                            // Double2HexAlt(&msgVec[index + 2], &rx_pos[0]);
+                            // Double2HexAlt(&msgVec[index + 10], &rx_pos[1]);
+                            // Double2HexAlt(&msgVec[index + 18], &rx_pos[2]);
+                            // Double2HexAlt(&msgVec[index + 26], &rx_vel[0]);
+                            // Double2HexAlt(&msgVec[index + 34], &rx_vel[1]);
+                            // Double2HexAlt(&msgVec[index + 42], &rx_vel[2]);
+                            // Double2HexAlt(&msgVec[index + 50], &last_RX_time);
+                            // checks = 0;
+                            // for (int i = index + 0; i < index + 58; i++)
+                            //     {
+                            //         checks ^= msgVec[i];
+                            //     }
+                            // msgVec[index + 58] = checks;
+                            // Check
+                            //  Hex2Double(&desmsgPVT[0],&msgPVT[0]);
+                            //  Hex2Double(&desmsgPVT[1],&msgPVT[8]);
+                            //  Hex2Double(&desmsgPVT[2],&msgPVT[16]);
+                            //  Hex2Double(&desmsgPVT[3],&msgPVT[24]);
+                            //  Hex2Double(&desmsgPVT[4],&msgPVT[32]);
+                            //  Hex2Double(&desmsgPVT[5],&msgPVT[40]);
+                            //  Hex2Double(&desmsgPVT[6],&msgPVT[48]);
+                            // check end
+                            //  tcdrain(comms.fd);
+                            //  tcflush(comms.fd, TCIOFLUSH);
+                            // if (last_RX_time != ultimo_rx_time)
+                            //     {
+                            // int sended_PVT = write(comms.fd, &msgVec[0], tam + 3 + 3 + 56);
+                            // // std::cout << TEXT_BOLD_GREEN << "Amostra: " << contadorgrav++ << TEXT_RESET << "\n";
+                            // ultimo_rx_time = last_RX_time;
+
+                            mtx.lock();
+                            StoragePVT.rx_pos[0] = rx_pos[0];
+                            StoragePVT.rx_pos[1] = rx_pos[1];
+                            StoragePVT.rx_pos[2] = rx_pos[2];
+                            StoragePVT.rx_vel[0] = rx_vel[0];
+                            StoragePVT.rx_vel[1] = rx_vel[1];
+                            StoragePVT.rx_vel[2] = rx_vel[2];
+                            StoragePVT.last_RX_time = last_RX_time;
+                            mtx.unlock();
+                            // ##################################################
+                            // }
 
 
                             // ##################################################
                             //  Salvar Dados para Teste
-                            DLOG(INFO) << "RX clock offset: " << d_user_pvt_solver->get_time_offset_s() << "[s]";
+                            // DLOG(INFO) << "RX clock offset: " << d_user_pvt_solver->get_time_offset_s() << "[s]";
 
-                            // std::cout
+                            // // std::cout
                             //     << TEXT_BOLD_GREEN
                             //     << "Velocity: " << std::fixed << std::setprecision(3)
                             //     << "East: " << d_user_pvt_solver->get_rx_vel()[0] << " [m/s], North: " << d_user_pvt_solver->get_rx_vel()[1]
                             //     << " [m/s], Up = " << d_user_pvt_solver->get_rx_vel()[2] << " [m/s]" << TEXT_RESET << '\n';
 
-                            // std::cout << std::setprecision(ss);
-                            DLOG(INFO) << "RX clock drift: " << d_user_pvt_solver->get_clock_drift_ppm() << " [ppm]";
+                            // // std::cout << std::setprecision(ss);
+                            // DLOG(INFO) << "RX clock drift: " << d_user_pvt_solver->get_clock_drift_ppm() << " [ppm]";
 
                             // boost::posix_time::ptime p_time;
                             // gtime_t rtklib_utc_time = gpst2time(adjgpsweek(d_user_pvt_solver->gps_ephemeris_map.cbegin()->second.i_GPS_week), d_rx_time);
                             // p_time = boost::posix_time::from_time_t(rtklib_utc_time.time);
                             // p_time += boost::posix_time::microseconds(round(rtklib_utc_time.sec * 1e6));
-                            // std::cout << TEXT_MAGENTA << "Observable RX time (GPST) " << boost::posix_time::to_simple_string(p_time) << TEXT_RESET << '\n';
+                            // // std::cout << TEXT_MAGENTA << "Observable RX time (GPST) " << boost::posix_time::to_simple_string(p_time) << TEXT_RESET << '\n';
 
-                            LOG(INFO) << "Position at " << boost::posix_time::to_simple_string(d_user_pvt_solver->get_position_UTC_time())
-                                      << " UTC using " << d_user_pvt_solver->get_num_valid_observations() << " observations is Lat = " << d_user_pvt_solver->get_latitude() << " [deg], Long = " << d_user_pvt_solver->get_longitude()
-                                      << " [deg], Height = " << d_user_pvt_solver->get_height() << " [m]";
-                            LOG(INFO) << "geohash=" << d_geohash->encode(d_user_pvt_solver->get_latitude(), d_user_pvt_solver->get_longitude());
-                            /* std::cout << "Dilution of Precision at " << boost::posix_time::to_simple_string(d_user_pvt_solver->get_position_UTC_time())
+                            // LOG(INFO) << "Position at " << boost::posix_time::to_simple_string(d_user_pvt_solver->get_position_UTC_time())
+                            //   << " UTC using " << d_user_pvt_solver->get_num_valid_observations() << " observations is Lat = " << d_user_pvt_solver->get_latitude() << " [deg], Long = " << d_user_pvt_solver->get_longitude()
+                            //   << " [deg], Height = " << d_user_pvt_solver->get_height() << " [m]";
+                            // LOG(INFO) << "geohash=" << d_geohash->encode(d_user_pvt_solver->get_latitude(), d_user_pvt_solver->get_longitude());
+                            /* // std::cout << "Dilution of Precision at " << boost::posix_time::to_simple_string(d_user_pvt_solver->get_position_UTC_time())
                                          << " UTC using "<< d_user_pvt_solver->get_num_valid_observations() <<" observations is HDOP = " << d_user_pvt_solver->get_hdop() << " VDOP = "
                                          << d_user_pvt_solver->get_vdop()
                                          << " GDOP = " << d_user_pvt_solver->get_gdop() << '\n'; */
                         }
+                    // }
+                    // else{
+                    //     kill(pid, SIGTERM);
+                    // }
 
                     // PVT MONITOR
                     if (d_user_pvt_solver->is_valid_position())
@@ -3111,63 +2223,272 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                     d_udp_sink_ptr->write_monitor_pvt(monitor_pvt.get());
                                 }
                         }
+                    // }
+
+                    flag_new_pvt_data = flag_pvt_valid;
                 }
-            // if (d_an_printer_enabled)
-            //     {
-            //         if (d_local_counter_ms % static_cast<uint64_t>(d_an_rate_ms) == 0)
-            //             {
-            //                 d_an_printer->print_packet(d_user_pvt_solver.get(), d_gnss_observables_map);
-            //             }
-            //     }
+
+            return noutput_items;
         }
-
-    return noutput_items;
 }
 
+    // bool save4matlab(
+    //     std::shared_ptr<Rtklib_Solver> __d_internal_pvt_solver,
+    //     std::map<int, Gnss_Synchro> d_gnss_observables_map)
+    // {
+    //     std::string filename = "sample_rx_rgl_icd";
+    //     mat_t* matfp = Mat_CreateVer(filename.c_str(), nullptr, MAT_FT_MAT73);
+    //     if (matfp == nullptr)
+    //         {
+    //             // std::cout << "Unable to create or open Acquisition dump file\n";
+    //             return false;
+    //         }
+    //     else
+    //         {
+    //             // std::array<size_t, 2> dims{static_cast<size_t>(1), static_cast<size_t>(d_num_doppler_points)};
+    //             size_t dims[2] = {10, 1};
+    //             matvar_t* matvar = Mat_VarCreate("RGL_samples", MAT_C_CELL, MAT_T_CELL, 2, dims, NULL, 0);
+    //             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
+    //             Mat_VarFree(matvar);
 
-// bool save4matlab(
-//     std::shared_ptr<Rtklib_Solver> __d_internal_pvt_solver,
-//     std::map<int, Gnss_Synchro> d_gnss_observables_map)
-// {
-//     std::string filename = "sample_rx_rgl_icd";
-//     mat_t* matfp = Mat_CreateVer(filename.c_str(), nullptr, MAT_FT_MAT73);
-//     if (matfp == nullptr)
-//         {
-//             std::cout << "Unable to create or open Acquisition dump file\n";
-//             return false;
-//         }
-//     else
-//         {
-//             // std::array<size_t, 2> dims{static_cast<size_t>(1), static_cast<size_t>(d_num_doppler_points)};
-//             size_t dims[2] = {10, 1};
-//             matvar_t* matvar = Mat_VarCreate("RGL_samples", MAT_C_CELL, MAT_T_CELL, 2, dims, NULL, 0);
-//             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
-//             Mat_VarFree(matvar);
+    //             dims[0] = static_cast<size_t>(1);
+    //             dims[1] = static_cast<size_t>(1);
 
-//             dims[0] = static_cast<size_t>(1);
-//             dims[1] = static_cast<size_t>(1);
-
-//             matvar = Mat_VarCreate("doppler_max", MAT_C_INT32, MAT_T_INT32, 1, dims.data(), &d_config_doppler_max, 0);
-//             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
-//             Mat_VarFree(matvar);
-
-
-//         }
-
-// void Aux_Ephem2ECEF(std::shared_ptr<Rtklib_Solver> d_internal_pvt_solver)
-// {
-//     // d_internal_pvt_solver->gps_ephemeris_map.at(0).satellitePosition()
-//     int counter = 0;
-//     d_internal_pvt_solver->gps_ephemeris_map.at(counter).satellitePosition()
-// }
+    //             matvar = Mat_VarCreate("doppler_max", MAT_C_INT32, MAT_T_INT32, 1, dims.data(), &d_config_doppler_max, 0);
+    //             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
+    //             Mat_VarFree(matvar);
 
 
-bool rtklib_pvt_gs::set_flag_serial_interp(bool status)
-{
-    flag_interrupt_serial = status;
-}
+    //         }
 
-// void rtklib_pvt_gs::set_pvt(std::shared_ptr<PvtInterface> PVT_sptr)
-// {
-//     PVT_sptr_ = std::move(PVT_sptr);
-// }
+    // void Aux_Ephem2ECEF(std::shared_ptr<Rtklib_Solver> d_internal_pvt_solver)
+    // {
+    //     // d_internal_pvt_solver->gps_ephemeris_map.at(0).satellitePosition()
+    //     int counter = 0;
+    //     d_internal_pvt_solver->gps_ephemeris_map.at(counter).satellitePosition()
+    // }
+
+
+    bool rtklib_pvt_gs::set_flag_serial_interp(bool status)
+    {
+        flag_interrupt_serial = status;
+    }
+
+    // void rtklib_pvt_gs::set_pvt(std::shared_ptr<PvtInterface> PVT_sptr)
+    // {
+    //     PVT_sptr_ = std::move(PVT_sptr);
+    // }
+
+    void rtklib_pvt_gs::serialcmd_(void)
+    {
+        bool flag_fix_first = false;
+        // std::ofstream filele("ArqTest.bin",std::ios::out|std::ios::app|std::ios::binary);
+        auto tStartSteady = std::chrono::system_clock::now();
+        auto StartTime = tStartSteady;
+        while (!flag_interrupt_serial)
+            {
+                // bool teste = d_user_pvt_solver->is_valid_position();
+                // if (teste == true)
+                // {
+                // if ((static_cast<uint32_t>(d_rx_time * 1000.0) % d_output_rate_ms) == 0)
+
+                auto tEndSteady = std::chrono::system_clock::now();
+                std::chrono::duration<double, std::milli> tempo_ligado_ms = tEndSteady - tStartSteady;
+                //             // std::chrono::duration<double, std::micro> Uptempo1 = tEndSteady - tStartSteady;
+                //             // std::chrono::duration<double, std::nano> Uptempo2 = tEndSteady - tStartSteady;
+                //             double tempo_ligado_ms = Uptempo.count();
+                //             // double tempo_ligado1 = Uptempo1.count();
+                //             // double tempo_ligado2 = Uptempo2.count();
+                //             // // std::cout<<std::setprecision(24)<< tempo_ligado_ms <<" ms || "<< tempo_ligado1 <<" us || "<<tempo_ligado2<<" ns"<<"\n";
+                // std::chrono::milliseconds diff = tEndSteady - tStartSteady;
+                // float tempo = diff.count();
+                double tttt = tempo_ligado_ms.count();
+                int32_t tempo = (int32_t)tttt;
+                // std::time_t endWallTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+
+                // if((first_fix)&&(tempo % d_report_rate_ms) == 0)
+                if((first_fix)&&(tttt > 1000))
+                    {
+                        tStartSteady = std::chrono::system_clock::now();
+                        num_sat = jdex;
+                        // if (num_sat > 3)
+                        //     {
+                                // if (get_latest_PVT_(
+                                //         &longitude_deg,
+                                //         &latitude_deg,
+                                //         &height_m,
+                                //         &UTC_time,
+                                //         &gps_time_offset,
+                                //         &rx_pos[0],
+                                //         &rx_pos[1],
+                                //         &rx_pos[2],
+                                //         &rx_vel[0],
+                                //         &rx_vel[1],
+                                //         &rx_vel[2]) == true)
+                                // {
+                                        //
+                                        // num_sat = d_user_pvt_solver->get_num_valid_observations();
+                                        // sync_map = get_observables_map();
+                                        // gps_ephem = d_internal_pvt_solver->gps_ephemeris_map;
+                                        //
+                                        uint8_t checks{0};
+
+                                        int sended_PVT = 0;
+
+                                        int numsatt = num_sat;
+                                        index = 0;
+                                        tam = num_sat * 65;
+                                        uint8_t msgVec[tam + 3 + 3 + 56]{0};  // +1 por causa do CRC
+                                        msgVec[0] = 0xd4;
+                                        msgVec[1] = 0x4f;
+                                        index = 2;
+                                        // mtx.lock();
+                                        for (int j = 0; j < num_sat; j++)
+                                            {
+                                                // Integer2Hex(&msgVec[index+0], &PRN);
+                                                msgVec[index + 0] = StorageSat[j].PRN;
+                                                Double2HexAlt(&msgVec[index + 1], &StorageSat[j].prang);
+                                                Double2HexAlt(&msgVec[index + 9], &StorageSat[j].deltaprange);
+                                                Double2HexAlt(&msgVec[index + 17], &StorageSat[j].satPosX);
+                                                Double2HexAlt(&msgVec[index + 25], &StorageSat[j].satPosY);
+                                                Double2HexAlt(&msgVec[index + 33], &StorageSat[j].satPosZ);
+                                                Double2HexAlt(&msgVec[index + 41], &StorageSat[j].satVelX);
+                                                Double2HexAlt(&msgVec[index + 49], &StorageSat[j].satVelY);
+                                                Double2HexAlt(&msgVec[index + 57], &StorageSat[j].satVelZ);
+                                                index = index + 65;
+
+                                                // ###############################
+                                            }
+                                        for (int i = 0; i < index; i++)
+                                            {
+                                                // msgVec[index + 1] = msgVec[index + 1] ^ msgVec[i];  // CRC
+                                                checks ^= msgVec[i];
+                                            }
+                                        msgVec[index] = checks;
+                                        index++;
+
+                                        msgVec[index + 0] = 0xd4;
+                                        msgVec[index + 1] = 0x4f;
+
+                                        Double2HexAlt(&msgVec[index + 2], &StoragePVT.rx_pos[0]);
+                                        Double2HexAlt(&msgVec[index + 10], &StoragePVT.rx_pos[1]);
+                                        Double2HexAlt(&msgVec[index + 18], &StoragePVT.rx_pos[2]);
+                                        Double2HexAlt(&msgVec[index + 26], &StoragePVT.rx_vel[0]);
+                                        Double2HexAlt(&msgVec[index + 34], &StoragePVT.rx_vel[1]);
+                                        Double2HexAlt(&msgVec[index + 42], &StoragePVT.rx_vel[2]);
+                                        Double2HexAlt(&msgVec[index + 50], &StoragePVT.last_RX_time);
+                                        // mtx.unlock();
+                                        checks = 0;
+                                        for (int i = index + 0; i < index + 58; i++)
+                                            {
+                                                checks ^= msgVec[i];
+                                            }
+                                        msgVec[index + 58] = checks;
+                                        sended_PVT = write(comms.fd, &msgVec[0], tam + 3 + 3 + 56);
+                                        std::cout<<TEXT_BOLD_GREEN<<num_sat<<"  "<<"Bytes: "<<sended_PVT<<" Time: "<<tttt<<TEXT_RESET<<"\n";
+                                        sended_PVT= 0;
+                                        // for (int i = 0; i < (tam + 6 + 56); i++)
+                                        //     {
+                                        //         filele << msgVec[i];
+                                        //     }
+                                            // filele<<"\n";
+                                    // }
+
+
+                                // sync_map.clear();
+                                // gps_ephem.clear();
+                            // }
+                    }
+            }
+        // }
+        //
+
+        // int bitts;
+        // // uint8_t msg;
+        // uint8_t msg[2];
+        // // int biit = HEserial_leitura_2(&comms,2);
+        // uint8_t biit = 0;
+        // biit = HEserial_leitura_byte(&comms);
+        // // uint32_t cmd{0};
+        // // Hex2IntegerAlt(&cmd, &msg);
+        // if (biit == 0xdf)
+        //     {
+        //         // serialcmd_enabled_ = false;
+        //         flag_interrupt_serial = true;
+        //     }
+        // flag_new_pvt_data = false;
+        // usleep(100);
+            // }
+        // filele.close();
+    }
+
+
+                                            // for (const auto& y : sync_map)
+                                            // {
+                                            //     for (const auto& x : gps_ephem)
+                                            //         {
+                                            //             if (y.second.System == 'G')
+                                            //                 {
+                                            //                     last_RX_time = y.second.RX_time;
+                                            //                     if (y.second.PRN == x.second.PRN)
+                                            //                         {
+                                            //                             if ((x.second.SV_health == 0))  // && (y.second.CN0_dB_hz<50.0))
+                                            //                                 {
+                                            //                                     auto tStartSteady = std::chrono::high_resolution_clock::now();
+                                            //                                     auto StartTime = tStartSteady;
+
+                                            //                                     // // #########################   Geometrical Approuch on Transmit time:  #################################
+                                            //                                     double tempoo = y.second.RX_time;
+                                            //                                     double diffSATREC, diffSATSAT = 1000;
+                                            //                                     double delta_tempo;
+                                            //                                     double nvotempo;
+                                            //                                     double limiar = 0.2;
+                                            //                                     // int iter = 0;
+                                            //                                     std::vector<double> LastSatPos(3);
+                                            //                                     // gps_ephem.at(x.first).satellitePosition(y.second.RX_time); //Usar .at(x.first) throw out of range in std::map
+                                            //                                     // while(limiar<diffSATSAT)
+                                            //                                     gps_ephem[x.first].satellitePosition(tempoo);
+
+                                            //                                     //  Step 1
+                                            //                                     LastSatPos[0] = x.second.satpos_X;
+                                            //                                     LastSatPos[1] = x.second.satpos_Y;
+                                            //                                     LastSatPos[2] = x.second.satpos_Z;
+
+                                            //                                     while (diffSATSAT > limiar)
+                                            //                                         {
+                                            //                                             //  Step 2
+                                            //                                             diffSATREC = sqrt(
+                                            //                                                 // (pow(d_internal_pvt_solver->get_rx_pos()[0] - LastSatPos[0], 2)) + (pow(d_internal_pvt_solver->get_rx_pos()[1] - LastSatPos[1], 2)) + (pow(d_internal_pvt_solver->get_rx_pos()[2] - LastSatPos[2], 2)));
+                                            //                                                 pow(rx_pos[0] - LastSatPos[0], 2) + pow(rx_pos[1] - LastSatPos[1], 2) + pow(rx_pos[2] - LastSatPos[2], 2));
+                                            //                                             delta_tempo = diffSATREC / SPEED_OF_LIGHT_M_S;
+                                            //                                             // Step 3
+                                            //                                             nvotempo = tempoo - delta_tempo;
+                                            //                                             gps_ephem[x.first].satellitePosition(nvotempo);
+                                            //                                             diffSATSAT = sqrt(
+                                            //                                                 (pow(LastSatPos[0] - x.second.satpos_X, 2)) + (pow(LastSatPos[1] - x.second.satpos_Y, 2)) + (pow(LastSatPos[2] - x.second.satpos_Z, 2)));
+                                            //                                             // iter++;
+                                            //                                             // // std::cout << "Iter: " << iter <<"\n";
+                                            //                                             LastSatPos[0] = x.second.satpos_X;
+                                            //                                             LastSatPos[1] = x.second.satpos_Y;
+                                            //                                             LastSatPos[2] = x.second.satpos_Z;
+                                            //                                         }
+                                            //                                     // Step 4
+                                            //                                     variavelTempo = nvotempo - d_user_pvt_solver->get_time_offset_s();
+                                            //                                     gps_ephem[x.first].satellitePosition(variavelTempo);
+
+                                            //                                     PRN = (uint8_t)x.second.PRN;
+                                            //                                     Carrier_Doppler_Hz = y.second.Carrier_Doppler_hz;
+                                            //                                     satPosX = x.second.satpos_X;
+                                            //                                     satPosY = x.second.satpos_Y;
+                                            //                                     satPosZ = x.second.satpos_Z;
+                                            //                                     satVelX = x.second.satvel_X;
+                                            //                                     satVelY = x.second.satvel_Y;
+                                            //                                     satVelZ = x.second.satvel_Z;
+
+                                            //                                     double m1, m2, m3;
+
+                                            //                                     deltaprange = -SPEED_OF_LIGHT_M_S * (Carrier_Doppler_Hz / 1575420000) - d_user_pvt_solver->get_clock_drift_ppm() * SPEED_OF_LIGHT_M_S * 1e-6;
+                                            //                                     m1 = (satPosX - rx_pos[0]) * (satPosX - rx_pos[0]);
+                                            //                                     m2 = (satPosY - rx_pos[1]) * (satPosY - rx_pos[1]);
+                                            //                                     m3 = (satPosZ - rx_pos[2]) * (satPosZ - rx_pos[2]);
+                                            //                                     double prange = sqrt((m1 + m2 + m3));

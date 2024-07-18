@@ -48,7 +48,7 @@ GlonassL2CaPcpsAcquisition::GlonassL2CaPcpsAcquisition(
     acq_parameters_.ms_per_code = 1;
     acq_parameters_.SetFromConfiguration(configuration, role, GLONASS_L2_CA_CODE_RATE_CPS, 100e6);
 
-    DLOG(INFO) << "role " << role;
+    // DLOG(INFO) << "role " << role;
 
     if (FLAGS_doppler_max != 0)
         {
@@ -67,7 +67,7 @@ GlonassL2CaPcpsAcquisition::GlonassL2CaPcpsAcquisition(
     sampled_ms_ = acq_parameters_.sampled_ms;
 
     acquisition_ = pcps_make_acquisition(acq_parameters_);
-    DLOG(INFO) << "acquisition(" << acquisition_->unique_id() << ")";
+    // DLOG(INFO) << "acquisition(" << acquisition_->unique_id() << ")";
 
     if (item_type_ == "cbyte")
         {
@@ -77,11 +77,11 @@ GlonassL2CaPcpsAcquisition::GlonassL2CaPcpsAcquisition(
 
     if (in_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_streams_ > 0)
         {
-            LOG(ERROR) << "This implementation does not provide an output stream";
+            // LOG(ERROR) << "This implementation does not provide an output stream";
         }
 }
 
@@ -182,7 +182,7 @@ void GlonassL2CaPcpsAcquisition::connect(gr::top_block_sptr top_block)
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unknown acquisition item type";
+            // LOG(WARNING) << item_type_ << " unknown acquisition item type";
         }
 }
 
@@ -201,7 +201,7 @@ void GlonassL2CaPcpsAcquisition::disconnect(gr::top_block_sptr top_block)
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unknown acquisition item type";
+            // LOG(WARNING) << item_type_ << " unknown acquisition item type";
         }
 }
 
@@ -217,7 +217,7 @@ gr::basic_block_sptr GlonassL2CaPcpsAcquisition::get_left_block()
             return cbyte_to_float_x2_;
         }
 
-    LOG(WARNING) << item_type_ << " unknown acquisition item type";
+    // LOG(WARNING) << item_type_ << " unknown acquisition item type";
     return nullptr;
 }
 

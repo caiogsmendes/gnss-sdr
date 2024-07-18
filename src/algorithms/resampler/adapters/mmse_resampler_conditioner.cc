@@ -45,8 +45,8 @@ MmseResamplerConditioner::MmseResamplerConditioner(
     if (std::fabs(fs_in - sample_freq_out_) > std::numeric_limits<double>::epsilon())
         {
             std::string aux_warn = "CONFIGURATION WARNING: Parameters GNSS-SDR.internal_fs_sps and " + role_ + ".sample_freq_out are not set to the same value!";
-            LOG(WARNING) << aux_warn;
-            std::cout << aux_warn << '\n';
+            // LOG(WARNING) << aux_warn;
+            // std::cout << aux_warn << '\n';
         }
 
     if (item_type_ == "gr_complex")
@@ -58,7 +58,7 @@ MmseResamplerConditioner::MmseResamplerConditioner(
                 sample_freq_in_,
                 sample_freq_out_ / 2.1,
                 sample_freq_out_ / 5);
-            std::cout << "Enabled fractional resampler low pass filter with " << taps.size() << " taps\n";
+            // std::cout << "Enabled fractional resampler low pass filter with " << taps.size() << " taps\n";
             fir_filter_ccf_ = gr::filter::fir_filter_ccf::make(1, taps);
 
 #ifdef GR_GREATER_38
@@ -66,29 +66,29 @@ MmseResamplerConditioner::MmseResamplerConditioner(
 #else
             resampler_ = gr::filter::fractional_resampler_cc::make(0.0, static_cast<float>(sample_freq_in_ / sample_freq_out_));
 #endif
-            DLOG(INFO) << "sample_freq_in " << sample_freq_in_;
-            DLOG(INFO) << "sample_freq_out" << sample_freq_out_;
-            DLOG(INFO) << "Item size " << item_size_;
-            DLOG(INFO) << "resampler(" << resampler_->unique_id() << ")";
+            // DLOG(INFO) << "sample_freq_in " << sample_freq_in_;
+            // DLOG(INFO) << "sample_freq_out" << sample_freq_out_;
+            // DLOG(INFO) << "Item size " << item_size_;
+            // DLOG(INFO) << "resampler(" << resampler_->unique_id() << ")";
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unrecognized item type for resampler";
+            // LOG(WARNING) << item_type_ << " unrecognized item type for resampler";
             item_size_ = sizeof(gr_complex);
         }
     if (dump_)
         {
-            DLOG(INFO) << "Dumping output into file " << dump_filename_;
+            // DLOG(INFO) << "Dumping output into file " << dump_filename_;
             file_sink_ = gr::blocks::file_sink::make(item_size_, dump_filename_.c_str());
-            DLOG(INFO) << "file_sink(" << file_sink_->unique_id() << ")";
+            // DLOG(INFO) << "file_sink(" << file_sink_->unique_id() << ")";
         }
     if (in_stream_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_stream_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 
@@ -99,7 +99,7 @@ void MmseResamplerConditioner::connect(gr::top_block_sptr top_block)
         {
             top_block->connect(fir_filter_ccf_, 0, resampler_, 0);
             top_block->connect(resampler_, 0, file_sink_, 0);
-            DLOG(INFO) << "connected resampler to file sink";
+            // DLOG(INFO) << "connected resampler to file sink";
         }
     else
         {

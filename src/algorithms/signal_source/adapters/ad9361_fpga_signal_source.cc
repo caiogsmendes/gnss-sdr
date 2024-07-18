@@ -40,7 +40,7 @@
 #include <fcntl.h>    // for open, O_WRONLY
 #include <fstream>    // for std::ifstream
 #include <iomanip>    // for std::setprecision
-#include <iostream>   // for std::cout
+#include <iostream>   // for // std::cout
 #include <unistd.h>   // for write
 #include <vector>     // fr std::vector
 
@@ -166,8 +166,8 @@ Ad9361FpgaSignalSource::Ad9361FpgaSignalSource(const ConfigurationInterface *con
 
     if (switch_position_ != 0 && switch_position_ != 2)
         {
-            std::cout << "SignalSource.switch_position configuration parameter must be either 0: read from file(s) via DMA, or 2: read from AD9361\n";
-            std::cout << "SignalSource.switch_position configuration parameter set to its default value switch_position=0 - read from file(s)\n";
+            // std::cout << "SignalSource.switch_position configuration parameter must be either 0: read from file(s) via DMA, or 2: read from AD9361\n";
+            // std::cout << "SignalSource.switch_position configuration parameter set to its default value switch_position=0 - read from file(s)\n";
             switch_position_ = 0;
         }
 
@@ -191,7 +191,7 @@ Ad9361FpgaSignalSource::Ad9361FpgaSignalSource(const ConfigurationInterface *con
                     if (file.is_open())
                         {
                             size = file.tellg();
-                            DLOG(INFO) << "Total samples in the file= " << floor(static_cast<double>(size) / static_cast<double>(item_size_));
+                            // DLOG(INFO) << "Total samples in the file= " << floor(static_cast<double>(size) / static_cast<double>(item_size_));
                         }
                     else
                         {
@@ -199,10 +199,10 @@ Ad9361FpgaSignalSource::Ad9361FpgaSignalSource(const ConfigurationInterface *con
                             item_size_ = 0;
                             return;
                         }
-                    std::streamsize ss = std::cout.precision();
-                    std::cout << std::setprecision(16);
-                    std::cout << "Processing file " << filename0_ << ", which contains " << static_cast<double>(size) << " [bytes]\n";
-                    std::cout.precision(ss);
+                    std::streamsize ss = // std::cout.precision();
+                    // std::cout << std::setprecision(16);
+                    // std::cout << "Processing file " << filename0_ << ", which contains " << static_cast<double>(size) << " [bytes]\n";
+                    // std::cout.precision(ss);
 
                     if (size > 0)
                         {
@@ -219,7 +219,7 @@ Ad9361FpgaSignalSource::Ad9361FpgaSignalSource(const ConfigurationInterface *con
                             if (file.is_open())
                                 {
                                     size = file.tellg();
-                                    DLOG(INFO) << "Total samples in the file= " << floor(static_cast<double>(size) / static_cast<double>(item_size_));
+                                    // DLOG(INFO) << "Total samples in the file= " << floor(static_cast<double>(size) / static_cast<double>(item_size_));
                                 }
                             else
                                 {
@@ -227,10 +227,10 @@ Ad9361FpgaSignalSource::Ad9361FpgaSignalSource(const ConfigurationInterface *con
                                     item_size_ = 0;
                                     return;
                                 }
-                            std::streamsize ss = std::cout.precision();
-                            std::cout << std::setprecision(16);
-                            std::cout << "Processing file " << filename1_ << ", which contains " << static_cast<double>(size) << " [bytes]\n";
-                            std::cout.precision(ss);
+                            std::streamsize ss = // std::cout.precision();
+                            // std::cout << std::setprecision(16);
+                            // std::cout << "Processing file " << filename1_ << ", which contains " << static_cast<double>(size) << " [bytes]\n";
+                            // std::cout.precision(ss);
 
                             int64_t samples_rx2 = 0;
                             if (size > 0)
@@ -246,70 +246,70 @@ Ad9361FpgaSignalSource::Ad9361FpgaSignalSource(const ConfigurationInterface *con
             CHECK(samples_ > 0) << "File does not contain enough samples to process.";
             double signal_duration_s = (static_cast<double>(samples_) * (1 / static_cast<double>(sample_rate_))) / 2.0;
 
-            DLOG(INFO) << "Total number samples to be processed= " << samples_ << " GNSS signal duration= " << signal_duration_s << " [s]";
-            std::cout << "GNSS signal recorded time to be processed: " << signal_duration_s << " [s]\n";
+            // DLOG(INFO) << "Total number samples to be processed= " << samples_ << " GNSS signal duration= " << signal_duration_s << " [s]";
+            // std::cout << "GNSS signal recorded time to be processed: " << signal_duration_s << " [s]\n";
 
             if (filename1_.empty())
                 {
-                    DLOG(INFO) << "File source filename " << filename0_;
+                    // DLOG(INFO) << "File source filename " << filename0_;
                 }
             else
                 {
-                    DLOG(INFO) << "File source filename rx1 " << filename0_;
-                    DLOG(INFO) << "File source filename rx2 " << filename1_;
+                    // DLOG(INFO) << "File source filename rx1 " << filename0_;
+                    // DLOG(INFO) << "File source filename rx2 " << filename1_;
                 }
-            DLOG(INFO) << "Samples " << samples_;
-            DLOG(INFO) << "Sampling frequency " << sample_rate_;
-            DLOG(INFO) << "Item type " << std::string("ibyte");
-            DLOG(INFO) << "Item size " << item_size_;
-            DLOG(INFO) << "Repeat " << repeat_;
+            // DLOG(INFO) << "Samples " << samples_;
+            // DLOG(INFO) << "Sampling frequency " << sample_rate_;
+            // DLOG(INFO) << "Item type " << std::string("ibyte");
+            // DLOG(INFO) << "Item size " << item_size_;
+            // DLOG(INFO) << "Repeat " << repeat_;
         }
     if (switch_position_ == 2)  // Real-time via AD9361
         {
-            std::cout << "Sample rate: " << sample_rate_ << " Sps\n";
+            // std::cout << "Sample rate: " << sample_rate_ << " Sps\n";
 
             enable_ovf_check_buffer_monitor_active_ = false;  // check buffer overflow and buffer monitor disabled by default
 
             // some basic checks
             if ((rf_port_select_ != "A_BALANCED") && (rf_port_select_ != "B_BALANCED") && (rf_port_select_ != "A_N") && (rf_port_select_ != "B_N") && (rf_port_select_ != "B_P") && (rf_port_select_ != "C_N") && (rf_port_select_ != "C_P") && (rf_port_select_ != "TX_MONITOR1") && (rf_port_select_ != "TX_MONITOR2") && (rf_port_select_ != "TX_MONITOR1_2"))
                 {
-                    std::cout << "Configuration parameter rf_port_select should take one of these values:\n";
-                    std::cout << " A_BALANCED, B_BALANCED, A_N, B_N, B_P, C_N, C_P, TX_MONITOR1, TX_MONITOR2, TX_MONITOR1_2\n";
-                    std::cout << "Error: provided value rf_port_select=" << rf_port_select_ << " is not among valid values\n";
-                    std::cout << " This parameter has been set to its default value rf_port_select=" << default_rf_port_select << '\n';
+                    // std::cout << "Configuration parameter rf_port_select should take one of these values:\n";
+                    // std::cout << " A_BALANCED, B_BALANCED, A_N, B_N, B_P, C_N, C_P, TX_MONITOR1, TX_MONITOR2, TX_MONITOR1_2\n";
+                    // std::cout << "Error: provided value rf_port_select=" << rf_port_select_ << " is not among valid values\n";
+                    // std::cout << " This parameter has been set to its default value rf_port_select=" << default_rf_port_select << '\n';
                     rf_port_select_ = default_rf_port_select;
-                    LOG(WARNING) << "Invalid configuration value for rf_port_select parameter. Set to rf_port_select=" << default_rf_port_select;
+                    // LOG(WARNING) << "Invalid configuration value for rf_port_select parameter. Set to rf_port_select=" << default_rf_port_select;
                 }
 
             if ((gain_mode_rx1_ != "manual") && (gain_mode_rx1_ != "slow_attack") && (gain_mode_rx1_ != "fast_attack") && (gain_mode_rx1_ != "hybrid"))
                 {
-                    std::cout << "Configuration parameter gain_mode_rx1 should take one of these values:\n";
-                    std::cout << " manual, slow_attack, fast_attack, hybrid\n";
-                    std::cout << "Error: provided value gain_mode_rx1=" << gain_mode_rx1_ << " is not among valid values\n";
-                    std::cout << " This parameter has been set to its default value gain_mode_rx1=" << default_gain_mode << '\n';
+                    // std::cout << "Configuration parameter gain_mode_rx1 should take one of these values:\n";
+                    // std::cout << " manual, slow_attack, fast_attack, hybrid\n";
+                    // std::cout << "Error: provided value gain_mode_rx1=" << gain_mode_rx1_ << " is not among valid values\n";
+                    // std::cout << " This parameter has been set to its default value gain_mode_rx1=" << default_gain_mode << '\n';
                     gain_mode_rx1_ = default_gain_mode;
-                    LOG(WARNING) << "Invalid configuration value for gain_mode_rx1 parameter. Set to gain_mode_rx1=" << default_gain_mode;
+                    // LOG(WARNING) << "Invalid configuration value for gain_mode_rx1 parameter. Set to gain_mode_rx1=" << default_gain_mode;
                 }
 
             if ((gain_mode_rx2_ != "manual") && (gain_mode_rx2_ != "slow_attack") && (gain_mode_rx2_ != "fast_attack") && (gain_mode_rx2_ != "hybrid"))
                 {
-                    std::cout << "Configuration parameter gain_mode_rx2 should take one of these values:\n";
-                    std::cout << " manual, slow_attack, fast_attack, hybrid\n";
-                    std::cout << "Error: provided value gain_mode_rx2=" << gain_mode_rx2_ << " is not among valid values\n";
-                    std::cout << " This parameter has been set to its default value gain_mode_rx2=" << default_gain_mode << '\n';
+                    // std::cout << "Configuration parameter gain_mode_rx2 should take one of these values:\n";
+                    // std::cout << " manual, slow_attack, fast_attack, hybrid\n";
+                    // std::cout << "Error: provided value gain_mode_rx2=" << gain_mode_rx2_ << " is not among valid values\n";
+                    // std::cout << " This parameter has been set to its default value gain_mode_rx2=" << default_gain_mode << '\n';
                     gain_mode_rx2_ = default_gain_mode;
-                    LOG(WARNING) << "Invalid configuration value for gain_mode_rx2 parameter. Set to gain_mode_rx2=" << default_gain_mode;
+                    // LOG(WARNING) << "Invalid configuration value for gain_mode_rx2 parameter. Set to gain_mode_rx2=" << default_gain_mode;
                 }
 
             if (gain_mode_rx1_ == "manual")
                 {
                     if (rf_gain_rx1_ > 73.0 || rf_gain_rx1_ < -1.0)
                         {
-                            std::cout << "Configuration parameter rf_gain_rx1 should take values between -1.0 and 73 dB\n";
-                            std::cout << "Error: provided value rf_gain_rx1=" << rf_gain_rx1_ << " is not among valid values\n";
-                            std::cout << " This parameter has been set to its default value rf_gain_rx1=" << default_manual_gain_rx1 << '\n';
+                            // std::cout << "Configuration parameter rf_gain_rx1 should take values between -1.0 and 73 dB\n";
+                            // std::cout << "Error: provided value rf_gain_rx1=" << rf_gain_rx1_ << " is not among valid values\n";
+                            // std::cout << " This parameter has been set to its default value rf_gain_rx1=" << default_manual_gain_rx1 << '\n';
                             rf_gain_rx1_ = default_manual_gain_rx1;
-                            LOG(WARNING) << "Invalid configuration value for rf_gain_rx1 parameter. Set to rf_gain_rx1=" << default_manual_gain_rx1;
+                            // LOG(WARNING) << "Invalid configuration value for rf_gain_rx1 parameter. Set to rf_gain_rx1=" << default_manual_gain_rx1;
                         }
                 }
 
@@ -317,37 +317,37 @@ Ad9361FpgaSignalSource::Ad9361FpgaSignalSource(const ConfigurationInterface *con
                 {
                     if (rf_gain_rx2_ > 73.0 || rf_gain_rx2_ < -1.0)
                         {
-                            std::cout << "Configuration parameter rf_gain_rx2 should take values between -1.0 and 73 dB\n";
-                            std::cout << "Error: provided value rf_gain_rx2=" << rf_gain_rx2_ << " is not among valid values\n";
-                            std::cout << " This parameter has been set to its default value rf_gain_rx2=" << default_manual_gain_rx2 << '\n';
+                            // std::cout << "Configuration parameter rf_gain_rx2 should take values between -1.0 and 73 dB\n";
+                            // std::cout << "Error: provided value rf_gain_rx2=" << rf_gain_rx2_ << " is not among valid values\n";
+                            // std::cout << " This parameter has been set to its default value rf_gain_rx2=" << default_manual_gain_rx2 << '\n';
                             rf_gain_rx2_ = default_manual_gain_rx2;
-                            LOG(WARNING) << "Invalid configuration value for rf_gain_rx2 parameter. Set to rf_gain_rx2=" << default_manual_gain_rx2;
+                            // LOG(WARNING) << "Invalid configuration value for rf_gain_rx2 parameter. Set to rf_gain_rx2=" << default_manual_gain_rx2;
                         }
                 }
 
             if ((filter_source_ != "Off") && (filter_source_ != "Auto") && (filter_source_ != "File") && (filter_source_ != "Design"))
                 {
-                    std::cout << "Configuration parameter filter_source should take one of these values:\n";
-                    std::cout << "  Off: Disable filter\n";
-                    std::cout << "  Auto: Use auto-generated filters\n";
-                    std::cout << "  File: User-provided filter in filter_filename parameter\n";
-                    std::cout << "  Design: Create filter from Fpass, Fstop, sampling_frequency and bandwidth parameters\n";
-                    std::cout << "Error: provided value filter_source=" << filter_source_ << " is not among valid values\n";
-                    std::cout << " This parameter has been set to its default value filter_source=Off\n";
+                    // std::cout << "Configuration parameter filter_source should take one of these values:\n";
+                    // std::cout << "  Off: Disable filter\n";
+                    // std::cout << "  Auto: Use auto-generated filters\n";
+                    // std::cout << "  File: User-provided filter in filter_filename parameter\n";
+                    // std::cout << "  Design: Create filter from Fpass, Fstop, sampling_frequency and bandwidth parameters\n";
+                    // std::cout << "Error: provided value filter_source=" << filter_source_ << " is not among valid values\n";
+                    // std::cout << " This parameter has been set to its default value filter_source=Off\n";
                     filter_source_ = std::string("Off");
-                    LOG(WARNING) << "Invalid configuration value for filter_source parameter. Set to filter_source=Off";
+                    // LOG(WARNING) << "Invalid configuration value for filter_source parameter. Set to filter_source=Off";
                 }
 
             if (bandwidth_ < 200000 || bandwidth_ > 56000000)
                 {
-                    std::cout << "Configuration parameter bandwidth should take values between 200000 and 56000000 Hz\n";
-                    std::cout << "Error: provided value bandwidth=" << bandwidth_ << " is not among valid values\n";
-                    std::cout << " This parameter has been set to its default value bandwidth=" << default_bandwidth << '\n';
+                    // std::cout << "Configuration parameter bandwidth should take values between 200000 and 56000000 Hz\n";
+                    // std::cout << "Error: provided value bandwidth=" << bandwidth_ << " is not among valid values\n";
+                    // std::cout << " This parameter has been set to its default value bandwidth=" << default_bandwidth << '\n';
                     bandwidth_ = default_bandwidth;
-                    LOG(WARNING) << "Invalid configuration value for bandwidth parameter. Set to bandwidth=" << default_bandwidth;
+                    // LOG(WARNING) << "Invalid configuration value for bandwidth parameter. Set to bandwidth=" << default_bandwidth;
                 }
 
-            std::cout << "LO frequency : " << freq0_ << " Hz\n";
+            // std::cout << "LO frequency : " << freq0_ << " Hz\n";
             try
                 {
                     config_ad9361_rx_local(bandwidth_,
@@ -380,19 +380,19 @@ Ad9361FpgaSignalSource::Ad9361FpgaSignalSource(const ConfigurationInterface *con
                 {
                     if (tx_bandwidth_ < static_cast<uint64_t>(std::floor(static_cast<float>(freq_dds_tx_hz_) * 1.1)) || (tx_bandwidth_ < 200000) || (tx_bandwidth_ > 1000000))
                         {
-                            std::cout << "Configuration parameter tx_bandwidth value should be between " << std::max(static_cast<float>(freq_dds_tx_hz_) * 1.1, 200000.0) << " and 1000000 Hz\n";
-                            std::cout << "Error: provided value tx_bandwidth=" << tx_bandwidth_ << " is not among valid values\n";
-                            std::cout << " This parameter has been set to its default value tx_bandwidth=500000\n";
+                            // std::cout << "Configuration parameter tx_bandwidth value should be between " << std::max(static_cast<float>(freq_dds_tx_hz_) * 1.1, 200000.0) << " and 1000000 Hz\n";
+                            // std::cout << "Error: provided value tx_bandwidth=" << tx_bandwidth_ << " is not among valid values\n";
+                            // std::cout << " This parameter has been set to its default value tx_bandwidth=500000\n";
                             tx_bandwidth_ = 500000;
-                            LOG(WARNING) << "Invalid configuration value for tx_bandwidth parameter. Set to tx_bandwidth=500000";
+                            // LOG(WARNING) << "Invalid configuration value for tx_bandwidth parameter. Set to tx_bandwidth=500000";
                         }
                     if (tx_attenuation_db_ > 0.0 || tx_attenuation_db_ < -89.75)
                         {
-                            std::cout << "Configuration parameter tx_attenuation_db should take values between 0.0 and -89.95 in 0.25 dB steps\n";
-                            std::cout << "Error: provided value tx_attenuation_db=" << tx_attenuation_db_ << " is not among valid values\n";
-                            std::cout << " This parameter has been set to its default value tx_attenuation_db=" << default_tx_attenuation_db << '\n';
+                            // std::cout << "Configuration parameter tx_attenuation_db should take values between 0.0 and -89.95 in 0.25 dB steps\n";
+                            // std::cout << "Error: provided value tx_attenuation_db=" << tx_attenuation_db_ << " is not among valid values\n";
+                            // std::cout << " This parameter has been set to its default value tx_attenuation_db=" << default_tx_attenuation_db << '\n';
                             tx_attenuation_db_ = default_tx_attenuation_db;
-                            LOG(WARNING) << "Invalid configuration value for tx_attenuation_db parameter. Set to tx_attenuation_db=" << default_tx_attenuation_db;
+                            // LOG(WARNING) << "Invalid configuration value for tx_attenuation_db parameter. Set to tx_attenuation_db=" << default_tx_attenuation_db;
                         }
                     try
                         {
@@ -459,11 +459,11 @@ Ad9361FpgaSignalSource::Ad9361FpgaSignalSource(const ConfigurationInterface *con
 
     if (in_stream_ > 0)
         {
-            LOG(ERROR) << "A signal source does not have an input stream";
+            // LOG(ERROR) << "A signal source does not have an input stream";
         }
     if (out_stream_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 
@@ -486,10 +486,10 @@ Ad9361FpgaSignalSource::~Ad9361FpgaSignalSource()
         {
             if (rf_shutdown_)
                 {
-                    std::cout << "* AD9361 Disabling RX streaming channels\n";
+                    // std::cout << "* AD9361 Disabling RX streaming channels\n";
                     if (!disable_ad9361_rx_local())
                         {
-                            LOG(WARNING) << "Problem shutting down the AD9361 RX channels";
+                            // LOG(WARNING) << "Problem shutting down the AD9361 RX channels";
                         }
                     if (enable_dds_lo_)
                         {
@@ -499,7 +499,7 @@ Ad9361FpgaSignalSource::~Ad9361FpgaSignalSource()
                                 }
                             catch (const std::exception &e)
                                 {
-                                    LOG(WARNING) << "Problem shutting down the AD9361 TX stream: " << e.what();
+                                    // LOG(WARNING) << "Problem shutting down the AD9361 TX stream: " << e.what();
                                 }
                         }
                 }
@@ -861,7 +861,7 @@ void Ad9361FpgaSignalSource::connect(gr::top_block_sptr top_block)
     if (top_block)
         { /* top_block is not null */
         };
-    DLOG(INFO) << "AD9361 FPGA source nothing to connect";
+    // DLOG(INFO) << "AD9361 FPGA source nothing to connect";
 }
 
 
@@ -870,13 +870,13 @@ void Ad9361FpgaSignalSource::disconnect(gr::top_block_sptr top_block)
     if (top_block)
         { /* top_block is not null */
         };
-    DLOG(INFO) << "AD9361 FPGA source nothing to disconnect";
+    // DLOG(INFO) << "AD9361 FPGA source nothing to disconnect";
 }
 
 
 gr::basic_block_sptr Ad9361FpgaSignalSource::get_left_block()
 {
-    LOG(WARNING) << "Trying to get signal source left block.";
+    // LOG(WARNING) << "Trying to get signal source left block.";
     return {};
 }
 

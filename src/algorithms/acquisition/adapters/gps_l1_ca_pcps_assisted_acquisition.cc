@@ -64,7 +64,7 @@ GpsL1CaPcpsAssistedAcquisition::GpsL1CaPcpsAssistedAcquisition(
 
     code_ = std::vector<std::complex<float>>(vector_length_);
 
-    DLOG(INFO) << "role " << role_;
+    // DLOG(INFO) << "role " << role_;
     if (item_type_ == "gr_complex")
         {
             acquisition_cc_ = pcps_make_assisted_acquisition_cc(max_dwells_, sampled_ms_,
@@ -75,16 +75,16 @@ GpsL1CaPcpsAssistedAcquisition::GpsL1CaPcpsAssistedAcquisition(
         {
             item_size_ = 0;
             acquisition_cc_ = nullptr;
-            LOG(WARNING) << item_type_ << " unknown acquisition item type";
+            // LOG(WARNING) << item_type_ << " unknown acquisition item type";
         }
 
     if (in_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_streams_ > 0)
         {
-            LOG(ERROR) << "This implementation does not provide an output stream";
+            // LOG(ERROR) << "This implementation does not provide an output stream";
         }
 }
 

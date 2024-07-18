@@ -29,7 +29,7 @@
 #include <exception>  // for std::exception
 #include <iomanip>    // for std::setw, std::setprecision
 #include <ios>        // for std::fixed
-#include <iostream>   // for std::cout, std::cerr
+#include <iostream>   // for // std::cout, std::cerr
 #include <sstream>    // for std::stringstream
 
 
@@ -65,7 +65,7 @@ Has_Simple_Printer::Has_Simple_Printer(const std::string& base_path,
         }
     if (d_has_base_path != ".")
         {
-            std::cout << "HAS Message file will be stored at " << d_has_base_path << '\n';
+            // std::cout << "HAS Message file will be stored at " << d_has_base_path << '\n';
         }
 
     d_has_base_path = d_has_base_path + fs::path::preferred_separator;
@@ -122,7 +122,7 @@ Has_Simple_Printer::Has_Simple_Printer(const std::string& base_path,
 
 Has_Simple_Printer::~Has_Simple_Printer()
 {
-    DLOG(INFO) << "HAS Message printer destructor called.";
+    // DLOG(INFO) << "HAS Message printer destructor called.";
     try
         {
             close_file();
@@ -136,7 +136,7 @@ Has_Simple_Printer::~Has_Simple_Printer()
             errorlib::error_code ec;
             if (!fs::remove(fs::path(d_has_filename), ec))
                 {
-                    LOG(INFO) << "Error deleting temporary HAS Message file.";
+                   // LOG(INFO) << "Error deleting temporary HAS Message file.";
                 }
         }
 }

@@ -137,19 +137,19 @@ Gr_Complex_Ip_Packet_Source::Gr_Complex_Ip_Packet_Source(std::string src_device,
         }
     else
         {
-            std::cout << "Unknown wire sample type\n";
+            // std::cout << "Unknown wire sample type\n";
             exit(0);
         }
-    std::cout << "Start Ethernet packet capture\n";
-    std::cout << "Overflow events will be indicated by o's\n";
-    std::cout << "d_wire_sample_type:" << d_wire_sample_type << '\n';
+    // std::cout << "Start Ethernet packet capture\n";
+    // std::cout << "Overflow events will be indicated by o's\n";
+    // std::cout << "d_wire_sample_type:" << d_wire_sample_type << '\n';
 }
 
 
 // Called by gnuradio to enable drivers, etc for i/o devices.
 bool Gr_Complex_Ip_Packet_Source::start()
 {
-    std::cout << "gr_complex_ip_packet_source START\n";
+    // std::cout << "gr_complex_ip_packet_source START\n";
     // open the ethernet device
     if (open() == true)
         {
@@ -169,7 +169,7 @@ bool Gr_Complex_Ip_Packet_Source::start()
 // Called by gnuradio to disable drivers, etc for i/o devices.
 bool Gr_Complex_Ip_Packet_Source::stop()
 {
-    std::cout << "gr_complex_ip_packet_source STOP\n";
+    // std::cout << "gr_complex_ip_packet_source STOP\n";
     if (descr != nullptr)
         {
             pcap_breakloop(descr);
@@ -188,15 +188,15 @@ bool Gr_Complex_Ip_Packet_Source::open()
     descr = pcap_open_live(d_src_device.c_str(), 1500, 1, 1000, errbuf.data());
     if (descr == nullptr)
         {
-            std::cout << "Error opening Ethernet device " << d_src_device << '\n';
-            std::cout << "Fatal Error in pcap_open_live(): " << std::string(errbuf.data()) << '\n';
+            // std::cout << "Error opening Ethernet device " << d_src_device << '\n';
+            // std::cout << "Fatal Error in pcap_open_live(): " << std::string(errbuf.data()) << '\n';
             return false;
         }
     // bind UDP port to avoid automatic reply with ICMP port unreachable packets from kernel
     d_sock_raw = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (d_sock_raw == -1)
         {
-            std::cout << "Error opening UDP socket\n";
+            // std::cout << "Error opening UDP socket\n";
             return false;
         }
 
@@ -210,7 +210,7 @@ bool Gr_Complex_Ip_Packet_Source::open()
     // bind socket to port
     if (bind(d_sock_raw, reinterpret_cast<struct sockaddr *>(&si_me), sizeof(si_me)) == -1)
         {
-            std::cout << "Error opening UDP socket\n";
+            // std::cout << "Error opening UDP socket\n";
             return false;
         }
     return true;
@@ -224,7 +224,7 @@ Gr_Complex_Ip_Packet_Source::~Gr_Complex_Ip_Packet_Source()
             delete d_pcap_thread;
         }
     delete[] fifo_buff;
-    std::cout << "Stop Ethernet packet capture\n";
+    // std::cout << "Stop Ethernet packet capture\n";
 }
 
 
@@ -275,7 +275,7 @@ void Gr_Complex_Ip_Packet_Source::pcap_callback(__attribute__((unused)) u_char *
                     //                   ih->daddr.byte3,
                     //                   ih->daddr.byte4,
                     //                   dport);
-                    //            std::cout<<"uh->len:"<<ntohs(uh->len)<< '\n';
+                    //            // std::cout<<"uh->len:"<<ntohs(uh->len)<< '\n';
 
                     int payload_length_bytes = ntohs(uh->len) - 8;  // total udp packet length minus the header length
                     // read the payload bytes and insert them into the shared circular buffer
@@ -306,7 +306,7 @@ void Gr_Complex_Ip_Packet_Source::pcap_callback(__attribute__((unused)) u_char *
                     else
                         {
                             // notify overflow
-                            std::cout << "o" << std::flush;
+                            // std::cout << "o" << std::flush;
                         }
                 }
         }
@@ -416,7 +416,7 @@ void Gr_Complex_Ip_Packet_Source::demux_samples(const gr_vector_void_star &outpu
                         }
                     break;
                 default:
-                    std::cout << "Unknown wire sample type\n";
+                    // std::cout << "Unknown wire sample type\n";
                     exit(0);
                 }
             if (fifo_read_ptr == FIFO_SIZE)
@@ -440,7 +440,7 @@ int Gr_Complex_Ip_Packet_Source::work(int noutput_items,
 
     if (output_items.size() > static_cast<uint64_t>(d_n_baseband_channels))
         {
-            std::cout << "Configuration error: more baseband channels connected than available in the UDP source\n";
+            // std::cout << "Configuration error: more baseband channels connected than available in the UDP source\n";
             exit(0);
         }
     int num_samples_readed;

@@ -73,11 +73,11 @@ void nav_message_monitor::msg_handler_nav_message(const pmt::pmt_t& msg)
                 }
             else
                 {
-                    LOG(WARNING) << "nav_message_monitor received an unknown object type!";
+                    // LOG(WARNING) << "nav_message_monitor received an unknown object type!";
                 }
         }
     catch (const wht::bad_any_cast& e)
         {
-            LOG(WARNING) << "nav_message_monitor Bad any_cast: " << e.what();
+            // LOG(WARNING) << "nav_message_monitor Bad any_cast: " << e.what();
         }
 }

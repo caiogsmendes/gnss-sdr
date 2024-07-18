@@ -32,7 +32,7 @@
 #include <glog/logging.h>
 #include <algorithm>  // for std::max
 #include <cmath>      // for ceil, floor
-#include <iostream>   // for std::cout, std:cerr
+#include <iostream>   // for // std::cout, std:cerr
 #include <utility>    // for std::move
 
 
@@ -88,8 +88,8 @@ FileSourceBase::FileSourceBase(ConfigurationInterface const* configuration, std:
             if (seconds_to_skip_ != 0.0)
                 {
                     seconds_to_skip_ = 0.0;
-                    std::cout << "Warning: since " << role_ << ".repeat is set to true, "
-                              << role_ << ".seconds_to_skip parameter will be ignored.\n";
+                    // std::cout << "Warning: since " << role_ << ".repeat is set to true, "
+                            //   << role_ << ".seconds_to_skip parameter will be ignored.\n";
                 }
         }
 
@@ -126,18 +126,18 @@ void FileSourceBase::init()
             signal_duration_s /= 2.0;
         }
 
-    DLOG(INFO) << "Total number samples to be processed= " << samples_ << " GNSS signal duration= " << signal_duration_s << " [s]";
-    std::cout << "GNSS signal recorded time to be processed: " << signal_duration_s << " [s]\n";
+    // DLOG(INFO) << "Total number samples to be processed= " << samples_ << " GNSS signal duration= " << signal_duration_s << " [s]";
+    // std::cout << "GNSS signal recorded time to be processed: " << signal_duration_s << " [s]\n";
 
-    DLOG(INFO) << "File source filename " << filename_;
-    DLOG(INFO) << "Samples " << samples_;
-    DLOG(INFO) << "Sampling frequency " << sampling_frequency_;
-    DLOG(INFO) << "Item type " << item_type_;
-    DLOG(INFO) << "Item size " << item_size_;
-    DLOG(INFO) << "Repeat " << repeat_;
+    // DLOG(INFO) << "File source filename " << filename_;
+    // DLOG(INFO) << "Samples " << samples_;
+    // DLOG(INFO) << "Sampling frequency " << sampling_frequency_;
+    // DLOG(INFO) << "Item type " << item_type_;
+    // DLOG(INFO) << "Item size " << item_size_;
+    // DLOG(INFO) << "Repeat " << repeat_;
 
-    DLOG(INFO) << "Dump " << dump_;
-    DLOG(INFO) << "Dump filename " << dump_filename_;
+    // DLOG(INFO) << "Dump " << dump_;
+    // DLOG(INFO) << "Dump filename " << dump_filename_;
 
     create_throttle();
     create_valve();
@@ -158,7 +158,7 @@ void FileSourceBase::connect(gr::top_block_sptr top_block)
         {
             // if we are throttling...
             top_block->connect(source(), 0, throttle(), 0);
-            DLOG(INFO) << "connected file source to throttle";
+            // DLOG(INFO) << "connected file source to throttle";
 
             input = throttle();
         }
@@ -172,7 +172,7 @@ void FileSourceBase::connect(gr::top_block_sptr top_block)
     if (valve())
         {
             top_block->connect(input, 0, valve(), 0);
-            DLOG(INFO) << "connected source to valve";
+            // DLOG(INFO) << "connected source to valve";
 
             output = valve();
         }
@@ -187,7 +187,7 @@ void FileSourceBase::connect(gr::top_block_sptr top_block)
     if (sink())
         {
             top_block->connect(output, 0, sink(), 0);
-            DLOG(INFO) << "connected output to file sink";
+            // DLOG(INFO) << "connected output to file sink";
         }
 
     post_connect_hook(top_block);
@@ -206,7 +206,7 @@ void FileSourceBase::disconnect(gr::top_block_sptr top_block)
         {
             // if we are throttling...
             top_block->disconnect(source(), 0, throttle(), 0);
-            DLOG(INFO) << "disconnected file source from throttle";
+            // DLOG(INFO) << "disconnected file source from throttle";
 
             input = throttle();
         }
@@ -220,7 +220,7 @@ void FileSourceBase::disconnect(gr::top_block_sptr top_block)
     if (valve())
         {
             top_block->disconnect(input, 0, valve(), 0);
-            DLOG(INFO) << "disconnected source to valve";
+            // DLOG(INFO) << "disconnected source to valve";
 
             output = valve();
         }
@@ -235,7 +235,7 @@ void FileSourceBase::disconnect(gr::top_block_sptr top_block)
     if (sink())
         {
             top_block->disconnect(output, 0, sink(), 0);
-            DLOG(INFO) << "disconnected output to file sink";
+            // DLOG(INFO) << "disconnected output to file sink";
         }
 
     post_disconnect_hook(top_block);
@@ -245,7 +245,7 @@ void FileSourceBase::disconnect(gr::top_block_sptr top_block)
 gr::basic_block_sptr FileSourceBase::get_left_block()
 {
     // TODO: is this right? Shouldn't the left block be a nullptr?
-    LOG(WARNING) << "Left block of a signal source should not be retrieved";
+    // LOG(WARNING) << "Left block of a signal source should not be retrieved";
     return gr::blocks::file_source::sptr();
 }
 
@@ -337,8 +337,8 @@ std::tuple<size_t, bool> FileSourceBase::itemTypeToSize()
         }
     else
         {
-            LOG(WARNING) << item_type_
-                         << " unrecognized item type. Using gr_complex.";
+            // LOG(WARNING) << item_type_
+                        //  << " unrecognized item type. Using gr_complex.";
             item_size = sizeof(gr_complex);
         }
 
@@ -399,12 +399,12 @@ size_t FileSourceBase::computeSamplesInFile() const
 
     if (tail > size)
         {
-            std::cout << "Warning: file " << filename() << " has " << size << " samples (it is too short).\n";
+            // std::cout << "Warning: file " << filename() << " has " << size << " samples (it is too short).\n";
             return 1;
         }
     if (to_skip + tail > size)
         {
-            std::cout << "Warning: " << role_ << ".seconds_to_skip is larger than file duration.\n";
+            // std::cout << "Warning: " << role_ << ".seconds_to_skip is larger than file duration.\n";
             return 1;
         }
 
@@ -414,8 +414,8 @@ size_t FileSourceBase::computeSamplesInFile() const
             // if there is some kind of compression/encoding, figure out the uncompressed number of samples
             n_samples = std::floor(packetsPerSample() * size / item_size());
 
-            DLOG(INFO) << "Total samples in the file= " << n_samples;
-            std::cout << "Processing file " << filename() << ", which contains " << n_samples << " samples (" << size << " bytes)\n";
+            // DLOG(INFO) << "Total samples in the file= " << n_samples;
+            // std::cout << "Processing file " << filename() << ", which contains " << n_samples << " samples (" << size << " bytes)\n";
 
             if (n_samples > (to_skip + tail))
                 {
@@ -424,8 +424,8 @@ size_t FileSourceBase::computeSamplesInFile() const
                 }
             else
                 {
-                    std::cout << "Warning: Skipping " << to_skip << " samples from the front and truncating " << tail << " samples\n"
-                              << "is greater than the number of samples in the file (" << size << ")\n";
+                    // std::cout << "Warning: Skipping " << to_skip << " samples from the front and truncating " << tail << " samples\n"
+                            //   << "is greater than the number of samples in the file (" << size << ")\n";
                     return 1;
                 }
         }
@@ -433,13 +433,13 @@ size_t FileSourceBase::computeSamplesInFile() const
         {
             if (n_samples > size - to_skip - tail)
                 {
-                    std::cout << "Warning: file " << filename() << " has " << size - to_skip
-                              << " samples, but " << role_ << ".samples has been set to " << n_samples << ".\n"
-                              << " Setting " << role_ << ".samples to " << size - to_skip - tail
-                              << " (" << to_skip << " samples skipped at header and " << tail << " samples skipped at the tail).\n";
+                    // std::cout << "Warning: file " << filename() << " has " << size - to_skip
+                            //   << " samples, but " << role_ << ".samples has been set to " << n_samples << ".\n"
+                            //   << " Setting " << role_ << ".samples to " << size - to_skip - tail
+                            //   << " (" << to_skip << " samples skipped at header and " << tail << " samples skipped at the tail).\n";
                     n_samples = size - to_skip - tail;
                 }
-            std::cout << "Processing " << n_samples << " samples from file " << filename() << '\n';
+            // std::cout << "Processing " << n_samples << " samples from file " << filename() << '\n';
         }
 
     return n_samples;
@@ -449,7 +449,7 @@ size_t FileSourceBase::computeSamplesInFile() const
 size_t FileSourceBase::source_item_size() const
 {
     // delegate the size of the source to the source() object, so sub-classes have less work to do
-    DLOG(INFO) << "source_item_size is " << source()->output_signature()->sizeof_stream_item(0);
+    // DLOG(INFO) << "source_item_size is " << source()->output_signature()->sizeof_stream_item(0);
     return source()->output_signature()->sizeof_stream_item(0);
 }
 
@@ -480,10 +480,10 @@ gr::blocks::file_source::sptr FileSourceBase::create_file_source()
 
             if (samples_to_skip > 0)
                 {
-                    LOG(INFO) << "Skipping " << samples_to_skip << " samples of the input file";
+                   // LOG(INFO) << "Skipping " << samples_to_skip << " samples of the input file";
                     if (!file_source_->seek(samples_to_skip, SEEK_SET))
                         {
-                            LOG(ERROR) << "Error skipping bytes!";
+                            // LOG(ERROR) << "Error skipping bytes!";
                         }
                 }
         }
@@ -501,12 +501,12 @@ gr::blocks::file_source::sptr FileSourceBase::create_file_source()
                 << GNSSSDR_INSTALL_DIR "/share/gnss-sdr/conf/\n"
                 << std::endl;
 
-            LOG(ERROR) << "file_signal_source: Unable to open the samples file "
-                       << filename() << ", exiting the program.";
+            // LOG(ERROR) << "file_signal_source: Unable to open the samples file "
+                    //    << filename() << ", exiting the program.";
             throw;
         }
 
-    DLOG(INFO) << implementation() << "(" << file_source_->unique_id() << ")";
+    // DLOG(INFO) << implementation() << "(" << file_source_->unique_id() << ")";
 
     // enable subclass hooks
     create_file_source_hook();
@@ -521,7 +521,7 @@ gr::blocks::throttle::sptr FileSourceBase::create_throttle()
         {
             // if we are throttling...
             throttle_ = gr::blocks::throttle::make(source_item_size(), sampling_frequency());
-            DLOG(INFO) << "throttle(" << throttle_->unique_id() << ")";
+            // DLOG(INFO) << "throttle(" << throttle_->unique_id() << ")";
 
             // enable subclass hooks
             create_throttle_hook();
@@ -537,7 +537,7 @@ gnss_shared_ptr<gr::block> FileSourceBase::create_valve()
             // if a number of samples is specified, honor it by creating a valve
             // in practice, this is always true
             valve_ = gnss_sdr_make_valve(source_item_size(), samples(), queue_);
-            DLOG(INFO) << "valve(" << valve_->unique_id() << ")";
+            // DLOG(INFO) << "valve(" << valve_->unique_id() << ")";
 
             // enable subclass hooks
             create_valve_hook();
@@ -551,7 +551,7 @@ gr::blocks::file_sink::sptr FileSourceBase::create_sink()
     if (dump_)
         {
             sink_ = gr::blocks::file_sink::make(source_item_size(), dump_filename_.c_str());
-            DLOG(INFO) << "file_sink(" << sink_->unique_id() << ")";
+            // DLOG(INFO) << "file_sink(" << sink_->unique_id() << ")";
 
             // enable subclass hooks
             create_sink_hook();

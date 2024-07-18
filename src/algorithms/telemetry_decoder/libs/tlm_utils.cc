@@ -34,7 +34,7 @@ int save_tlm_matfile(const std::string &dumpfile)
     std::ifstream dump_file;
     const std::string &dump_filename_(dumpfile);
 
-    std::cout << "Generating .mat file for " << std::string(dump_filename_.begin(), dump_filename_.end() - 4) << '\n';
+    // std::cout << "Generating .mat file for " << std::string(dump_filename_.begin(), dump_filename_.end() - 4) << '\n';
     dump_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     try
         {

@@ -60,7 +60,7 @@ GlonassL2CaDllPllTracking::GlonassL2CaDllPllTracking(
     const auto vector_length = static_cast<int>(std::round(fs_in / (GLONASS_L2_CA_CODE_RATE_CPS / GLONASS_L2_CA_CODE_LENGTH_CHIPS)));
 
     // ################# MAKE TRACKING GNURadio object ###################
-    DLOG(INFO) << "role " << role_;
+    // DLOG(INFO) << "role " << role_;
     if (item_type == "gr_complex")
         {
             tracking_sptr_ = glonass_l2_ca_dll_pll_make_tracking_cc(
@@ -71,22 +71,22 @@ GlonassL2CaDllPllTracking::GlonassL2CaDllPllTracking(
                 pll_bw_hz,
                 dll_bw_hz,
                 early_late_space_chips);
-            DLOG(INFO) << "tracking(" << tracking_sptr_->unique_id() << ")";
+            // DLOG(INFO) << "tracking(" << tracking_sptr_->unique_id() << ")";
         }
     else
         {
             item_size_ = 0;
             tracking_sptr_ = nullptr;
-            LOG(WARNING) << item_type << " unknown tracking item type.";
+            // LOG(WARNING) << item_type << " unknown tracking item type.";
         }
 
     if (in_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 

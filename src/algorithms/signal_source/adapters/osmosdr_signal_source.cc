@@ -63,30 +63,30 @@ OsmosdrSignalSource::OsmosdrSignalSource(const ConfigurationInterface* configura
             if (!antenna_.empty())
                 {
                     osmosdr_source_->set_antenna(antenna_, 0);
-                    std::cout << "Set RX Antenna: " << osmosdr_source_->get_antenna(0) << '\n';
-                    LOG(INFO) << "Set RX Antenna: " << osmosdr_source_->get_antenna(0);
+                    // std::cout << "Set RX Antenna: " << osmosdr_source_->get_antenna(0) << '\n';
+                   // LOG(INFO) << "Set RX Antenna: " << osmosdr_source_->get_antenna(0);
                 }
 
             // 2 set sampling rate
             osmosdr_source_->set_sample_rate(sample_rate_);
-            std::cout << "Actual RX Rate: " << osmosdr_source_->get_sample_rate() << " [SPS]...\n";
-            LOG(INFO) << "Actual RX Rate: " << osmosdr_source_->get_sample_rate() << " [SPS]...";
+            // std::cout << "Actual RX Rate: " << osmosdr_source_->get_sample_rate() << " [SPS]...\n";
+           // LOG(INFO) << "Actual RX Rate: " << osmosdr_source_->get_sample_rate() << " [SPS]...";
 
             // 3. set rx frequency
             osmosdr_source_->set_center_freq(freq_);
-            std::cout << "Actual RX Freq: " << osmosdr_source_->get_center_freq() << " [Hz]...\n";
-            LOG(INFO) << "Actual RX Freq: " << osmosdr_source_->get_center_freq() << " [Hz]...";
+            // std::cout << "Actual RX Freq: " << osmosdr_source_->get_center_freq() << " [Hz]...\n";
+           // LOG(INFO) << "Actual RX Freq: " << osmosdr_source_->get_center_freq() << " [Hz]...";
 
             // TODO: Assign the remnant IF from the PLL tune error
-            std::cout << "PLL Frequency tune error: " << osmosdr_source_->get_center_freq() - freq_ << " [Hz]...\n";
-            LOG(INFO) << "PLL Frequency tune error: " << osmosdr_source_->get_center_freq() - freq_ << " [Hz]...\n";
+            // std::cout << "PLL Frequency tune error: " << osmosdr_source_->get_center_freq() - freq_ << " [Hz]...\n";
+           // LOG(INFO) << "PLL Frequency tune error: " << osmosdr_source_->get_center_freq() - freq_ << " [Hz]...\n";
 
             // 4. set rx gain
             if (this->AGC_enabled_ == true)
                 {
                     osmosdr_source_->set_gain_mode(true);
-                    std::cout << "AGC enabled\n";
-                    LOG(INFO) << "AGC enabled";
+                    // std::cout << "AGC enabled\n";
+                   // LOG(INFO) << "AGC enabled";
                 }
             else
                 {
@@ -96,9 +96,9 @@ OsmosdrSignalSource::OsmosdrSignalSource(const ConfigurationInterface* configura
                     osmosdr_source_->set_bb_gain(if_gain_, 0);
                     if (!osmosdr_args_.empty() && (osmosdr_args_.find("bladerf") != std::string::npos))
                         {
-                            std::cout << "Actual LNA Gain: " << osmosdr_source_->get_gain("LNA", 0) << " dB...\n";
-                            std::cout << "Actual VGA1 Gain: " << osmosdr_source_->get_gain("VGA1", 0) << " dB...\n";
-                            std::cout << "Actual VGA2 Gain: " << osmosdr_source_->get_gain("VGA2", 0) << " dB...\n";
+                            // std::cout << "Actual LNA Gain: " << osmosdr_source_->get_gain("LNA", 0) << " dB...\n";
+                            // std::cout << "Actual VGA1 Gain: " << osmosdr_source_->get_gain("VGA1", 0) << " dB...\n";
+                            // std::cout << "Actual VGA2 Gain: " << osmosdr_source_->get_gain("VGA2", 0) << " dB...\n";
                         }
                     else
                         {
@@ -107,14 +107,14 @@ OsmosdrSignalSource::OsmosdrSignalSource(const ConfigurationInterface* configura
                                     osmosdr_source_->set_gain(gain_, "LNA", 0);
                                     osmosdr_source_->set_gain(rf_gain_, "TIA", 0);
                                     osmosdr_source_->set_gain(if_gain_, "PGA", 0);
-                                    std::cout << "Actual XTRX LNA Gain: " << osmosdr_source_->get_gain("LNA", 0) << " dB...\n";
-                                    std::cout << "Actual XTRX TIA Gain: " << osmosdr_source_->get_gain("TIA", 0) << " dB...\n";
-                                    std::cout << "Actual XTRX PGA Gain: " << osmosdr_source_->get_gain("PGA", 0) << " dB...\n";
+                                    // std::cout << "Actual XTRX LNA Gain: " << osmosdr_source_->get_gain("LNA", 0) << " dB...\n";
+                                    // std::cout << "Actual XTRX TIA Gain: " << osmosdr_source_->get_gain("TIA", 0) << " dB...\n";
+                                    // std::cout << "Actual XTRX PGA Gain: " << osmosdr_source_->get_gain("PGA", 0) << " dB...\n";
                                 }
                             else
                                 {
-                                    std::cout << "Actual RX Gain: " << osmosdr_source_->get_gain() << " dB...\n";
-                                    LOG(INFO) << "Actual RX Gain: " << osmosdr_source_->get_gain() << " dB...";
+                                    // std::cout << "Actual RX Gain: " << osmosdr_source_->get_gain() << " dB...\n";
+                                   // LOG(INFO) << "Actual RX Gain: " << osmosdr_source_->get_gain() << " dB...";
                                 }
                         }
                 }
@@ -126,34 +126,34 @@ OsmosdrSignalSource::OsmosdrSignalSource(const ConfigurationInterface* configura
                 }
 
             // Get actual bandwidth
-            std::cout << "Actual Bandwidth: " << osmosdr_source_->get_bandwidth(0) << " [Hz]...\n";
+            // std::cout << "Actual Bandwidth: " << osmosdr_source_->get_bandwidth(0) << " [Hz]...\n";
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unrecognized item type. Using short.";
+            // LOG(WARNING) << item_type_ << " unrecognized item type. Using short.";
             item_size_ = sizeof(int16_t);
         }
 
     if (samples_ != 0)
         {
-            DLOG(INFO) << "Send STOP signal after " << samples_ << " samples";
+            // DLOG(INFO) << "Send STOP signal after " << samples_ << " samples";
             valve_ = gnss_sdr_make_valve(item_size_, samples_, queue);
-            DLOG(INFO) << "valve(" << valve_->unique_id() << ")";
+            // DLOG(INFO) << "valve(" << valve_->unique_id() << ")";
         }
 
     if (dump_)
         {
-            DLOG(INFO) << "Dumping output into file " << dump_filename_;
+            // DLOG(INFO) << "Dumping output into file " << dump_filename_;
             file_sink_ = gr::blocks::file_sink::make(item_size_, dump_filename_.c_str());
-            DLOG(INFO) << "file_sink(" << file_sink_->unique_id() << ")";
+            // DLOG(INFO) << "file_sink(" << file_sink_->unique_id() << ")";
         }
     if (in_stream_ > 0)
         {
-            LOG(ERROR) << "A signal source does not have an input stream";
+            // LOG(ERROR) << "A signal source does not have an input stream";
         }
     if (out_stream_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 
@@ -164,14 +164,14 @@ void OsmosdrSignalSource::driver_instance()
         {
             if (!osmosdr_args_.empty())
                 {
-                    std::cout << "OsmoSdr arguments: " << osmosdr_args_ << '\n';
-                    LOG(INFO) << "OsmoSdr arguments: " << osmosdr_args_;
+                    // std::cout << "OsmoSdr arguments: " << osmosdr_args_ << '\n';
+                   // LOG(INFO) << "OsmoSdr arguments: " << osmosdr_args_;
                 }
             osmosdr_source_ = osmosdr::source::make(osmosdr_args_);
         }
     catch (const boost::exception& e)
         {
-            LOG(WARNING) << "Boost exception: " << boost::diagnostic_information(e);
+            // LOG(WARNING) << "Boost exception: " << boost::diagnostic_information(e);
             throw std::invalid_argument("Wrong OsmoSdr arguments");
         }
 }
@@ -182,11 +182,11 @@ void OsmosdrSignalSource::connect(gr::top_block_sptr top_block)
     if (samples_ != 0)
         {
             top_block->connect(osmosdr_source_, 0, valve_, 0);
-            DLOG(INFO) << "connected osmosdr source to valve";
+            // DLOG(INFO) << "connected osmosdr source to valve";
             if (dump_)
                 {
                     top_block->connect(valve_, 0, file_sink_, 0);
-                    DLOG(INFO) << "connected valve to file sink";
+                    // DLOG(INFO) << "connected valve to file sink";
                 }
         }
     else
@@ -194,7 +194,7 @@ void OsmosdrSignalSource::connect(gr::top_block_sptr top_block)
             if (dump_)
                 {
                     top_block->connect(osmosdr_source_, 0, file_sink_, 0);
-                    DLOG(INFO) << "connected osmosdr source to file sink";
+                    // DLOG(INFO) << "connected osmosdr source to file sink";
                 }
         }
 }
@@ -222,7 +222,7 @@ void OsmosdrSignalSource::disconnect(gr::top_block_sptr top_block)
 
 gr::basic_block_sptr OsmosdrSignalSource::get_left_block()
 {
-    LOG(WARNING) << "Trying to get signal source left block.";
+    // LOG(WARNING) << "Trying to get signal source left block.";
     return {};
 }
 

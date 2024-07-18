@@ -92,7 +92,7 @@ void GalileoE6PcpsAcquisitionTest_msg_rx::msg_handler_channel_events(const pmt::
         }
     catch (const wht::bad_any_cast& e)
         {
-            std::cout << "msg_handler_telemetry Bad any cast!" << std::endl;
+            // std::cout << "msg_handler_telemetry Bad any cast!" << std::endl;
             rx_message = 0;
         }
 }
@@ -284,9 +284,9 @@ void GalileoE6PcpsAcquisitionTest::process_message()
 
     realization_counter++;
 
-    // std::cout << correct_estimation_counter << "correct estimation counter\n";
-    std::cout << "Progress: " << round(static_cast<float>(realization_counter / num_of_realizations * 100)) << "% \r" << std::flush;
-    // std::cout << message << "message'\n'";
+    // // std::cout << correct_estimation_counter << "correct estimation counter\n";
+    // std::cout << "Progress: " << round(static_cast<float>(realization_counter / num_of_realizations * 100)) << "% \r" << std::flush;
+    // // std::cout << message << "message'\n'";
     if (realization_counter == num_of_realizations)
         {
             mse_delay /= num_of_realizations;
@@ -348,7 +348,7 @@ TEST_F(GalileoE6PcpsAcquisitionTest, ConnectAndRun)
         elapsed_seconds = end - begin;
     }) << "Failure running the top_block.";
 
-    std::cout << "Processed " << nsamples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds" << std::endl;
+    // std::cout << "Processed " << nsamples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds" << std::endl;
 }
 
 
@@ -435,8 +435,8 @@ TEST_F(GalileoE6PcpsAcquisitionTest, ValidationOfResults)
                     EXPECT_EQ(1, message) << "Acquisition failure. Expected message: 1=ACQ SUCCESS.";
                     if (message == 1)
                         {
-                            // std::cout << gnss_synchro.Acq_delay_samples << "acq delay'\n'";
-                            // std::cout << gnss_synchro.Acq_doppler_hz << "acq doppler'\n'";
+                            // // std::cout << gnss_synchro.Acq_delay_samples << "acq delay'\n'";
+                            // // std::cout << gnss_synchro.Acq_doppler_hz << "acq doppler'\n'";
                             EXPECT_EQ(static_cast<unsigned int>(1), correct_estimation_counter) << "Acquisition failure. Incorrect parameters estimation.";
                         }
                 }

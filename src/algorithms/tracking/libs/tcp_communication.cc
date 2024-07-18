@@ -35,7 +35,7 @@ int Tcp_Communication::listen_tcp_connection(size_t d_port_, size_t d_port_ch0_)
 
             if (d_port_ == d_port_ch0_)
                 {
-                    std::cout << "Server ready. Listening for TCP connections...\n";
+                    // std::cout << "Server ready. Listening for TCP connections...\n";
                 }
 
             // Reuse the IP address for each connection
@@ -45,7 +45,7 @@ int Tcp_Communication::listen_tcp_connection(size_t d_port_, size_t d_port_ch0_)
             acceptor.listen(12);
             acceptor.accept(tcp_socket_);
 
-            std::cout << "Socket accepted on port " << d_port_ << '\n';
+            // std::cout << "Socket accepted on port " << d_port_ << '\n';
         }
 
     catch (const std::exception& e)
@@ -145,5 +145,5 @@ void Tcp_Communication::close_tcp_connection(size_t d_port_)
 {
     // Close the TCP connection
     tcp_socket_.close();
-    std::cout << "Socket closed on port " << d_port_ << '\n';
+    // std::cout << "Socket closed on port " << d_port_ << '\n';
 }

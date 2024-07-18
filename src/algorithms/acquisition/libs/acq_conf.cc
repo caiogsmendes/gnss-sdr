@@ -47,8 +47,8 @@ void Acq_Conf::SetFromConfiguration(const ConfigurationInterface *configuration,
 
     if ((sampled_ms % ms_per_code) != 0)
         {
-            LOG(WARNING) << "Parameter coherent_integration_time_ms should be a multiple of "
-                         << ms_per_code << ". Setting it to " << ms_per_code;
+            // LOG(WARNING) << "Parameter coherent_integration_time_ms should be a multiple of "
+                        //  << ms_per_code << ". Setting it to " << ms_per_code;
             sampled_ms = ms_per_code;
         }
 
@@ -66,7 +66,7 @@ void Acq_Conf::SetFromConfiguration(const ConfigurationInterface *configuration,
     pfa = configuration->property(role + ".pfa", pfa);
     if ((pfa < 0.0) or (pfa > 1.0))
         {
-            LOG(WARNING) << "Parameter pfa should between 0.0 and 1.0. Setting it to 0.0";
+            // LOG(WARNING) << "Parameter pfa should between 0.0 and 1.0. Setting it to 0.0";
             pfa = 0.0;
         }
     pfa2 = configuration->property(role + ".pfa_second_step", pfa2);

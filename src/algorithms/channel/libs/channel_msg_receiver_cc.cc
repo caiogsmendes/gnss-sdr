@@ -88,16 +88,16 @@ void channel_msg_receiver_cc::msg_handler_channel_events(const pmt::pmt_t& msg)
                     result = d_channel_fsm->Event_failed_tracking_standby();
                     break;
                 default:
-                    LOG(WARNING) << "Default case, invalid message.";
+                    // LOG(WARNING) << "Default case, invalid message.";
                     break;
                 }
         }
     catch (const wht::bad_any_cast& e)
         {
-            LOG(WARNING) << "msg_handler_channel_events Bad any cast: " << e.what();
+            // LOG(WARNING) << "msg_handler_channel_events Bad any cast: " << e.what();
         }
     if (!result)
         {
-            LOG(WARNING) << "msg_handler_channel_events invalid event";
+            // LOG(WARNING) << "msg_handler_channel_events invalid event";
         }
 }

@@ -87,8 +87,8 @@ MultichannelFileSignalSource::MultichannelFileSignalSource(const ConfigurationIn
         }
     else
         {
-            LOG(WARNING) << item_type_
-                         << " unrecognized item type. Using gr_complex.";
+            // LOG(WARNING) << item_type_
+                        //  << " unrecognized item type. Using gr_complex.";
             item_size_ = sizeof(gr_complex);
         }
     try
@@ -113,10 +113,10 @@ MultichannelFileSignalSource::MultichannelFileSignalSource(const ConfigurationIn
 
                     if (samples_to_skip > 0)
                         {
-                            LOG(INFO) << "Skipping " << samples_to_skip << " samples of the input file #" << n;
+                           // LOG(INFO) << "Skipping " << samples_to_skip << " samples of the input file #" << n;
                             if (not file_source_vec_.back()->seek(samples_to_skip, SEEK_SET))
                                 {
-                                    LOG(INFO) << "Error skipping bytes!";
+                                   // LOG(INFO) << "Error skipping bytes!";
                                 }
                         }
                 }
@@ -143,8 +143,8 @@ MultichannelFileSignalSource::MultichannelFileSignalSource(const ConfigurationIn
                         << GNSSSDR_INSTALL_DIR "/share/gnss-sdr/conf/\n";
                 }
 
-            LOG(INFO) << "file_signal_source: Unable to open the samples file "
-                      << filename_vec_.at(0).c_str() << ", exiting the program.";
+           // LOG(INFO) << "file_signal_source: Unable to open the samples file "
+                    //   << filename_vec_.at(0).c_str() << ", exiting the program.";
             throw(e);
         }
 
@@ -162,17 +162,17 @@ MultichannelFileSignalSource::MultichannelFileSignalSource(const ConfigurationIn
             if (file.is_open())
                 {
                     size = file.tellg();
-                    DLOG(INFO) << "Total samples in the file= " << floor(static_cast<double>(size) / static_cast<double>(item_size()));
+                    // DLOG(INFO) << "Total samples in the file= " << floor(static_cast<double>(size) / static_cast<double>(item_size()));
                 }
             else
                 {
-                    std::cout << "file_signal_source: Unable to open the samples file " << filename_vec_.at(0).c_str() << '\n';
-                    LOG(ERROR) << "file_signal_source: Unable to open the samples file " << filename_vec_.at(0).c_str();
+                    // std::cout << "file_signal_source: Unable to open the samples file " << filename_vec_.at(0).c_str() << '\n';
+                    // LOG(ERROR) << "file_signal_source: Unable to open the samples file " << filename_vec_.at(0).c_str();
                 }
             std::streamsize ss = std::cout.precision();
-            std::cout << std::setprecision(16);
-            std::cout << "Processing file " << filename_vec_.at(0) << ", which contains " << static_cast<double>(size) << " [bytes]\n";
-            std::cout.precision(ss);
+            // std::cout << std::setprecision(16);
+            // std::cout << "Processing file " << filename_vec_.at(0) << ", which contains " << static_cast<double>(size) << " [bytes]\n";
+            // std::cout.precision(ss);
 
             if (size > 0)
                 {
@@ -190,11 +190,11 @@ MultichannelFileSignalSource::MultichannelFileSignalSource(const ConfigurationIn
             signal_duration_s /= 2.0;
         }
 
-    DLOG(INFO) << "Total number samples to be processed= " << samples_ << " GNSS signal duration= " << signal_duration_s << " [s]";
-    std::cout << "GNSS signal recorded time to be processed: " << signal_duration_s << " [s]\n";
+    // DLOG(INFO) << "Total number samples to be processed= " << samples_ << " GNSS signal duration= " << signal_duration_s << " [s]";
+    // std::cout << "GNSS signal recorded time to be processed: " << signal_duration_s << " [s]\n";
 
     valve_ = gnss_sdr_make_valve(item_size_, samples_, queue);
-    DLOG(INFO) << "valve(" << valve_->unique_id() << ")";
+    // DLOG(INFO) << "valve(" << valve_->unique_id() << ")";
 
     if (enable_throttle_control_)
         {
@@ -206,22 +206,22 @@ MultichannelFileSignalSource::MultichannelFileSignalSource(const ConfigurationIn
 
     for (int32_t n = 0; n < n_channels_; n++)
         {
-            LOG(INFO) << "Multichanne File source filename #" << n << filename_vec_.at(n);
+           // LOG(INFO) << "Multichanne File source filename #" << n << filename_vec_.at(n);
         }
 
-    DLOG(INFO) << "Samples " << samples_;
-    DLOG(INFO) << "Sampling frequency " << sampling_frequency_;
-    DLOG(INFO) << "Item type " << item_type_;
-    DLOG(INFO) << "Item size " << item_size_;
-    DLOG(INFO) << "Repeat " << repeat_;
+    // DLOG(INFO) << "Samples " << samples_;
+    // DLOG(INFO) << "Sampling frequency " << sampling_frequency_;
+    // DLOG(INFO) << "Item type " << item_type_;
+    // DLOG(INFO) << "Item size " << item_size_;
+    // DLOG(INFO) << "Repeat " << repeat_;
 
     if (in_streams_ > 0)
         {
-            LOG(ERROR) << "A signal source does not have an input stream";
+            // LOG(ERROR) << "A signal source does not have an input stream";
         }
     if (out_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 
@@ -233,9 +233,9 @@ void MultichannelFileSignalSource::connect(gr::top_block_sptr top_block)
             for (int32_t n = 0; n < n_channels_; n++)
                 {
                     top_block->connect(file_source_vec_.at(n), 0, throttle_vec_.at(n), 0);
-                    DLOG(INFO) << "connected file_source #" << n << " to throttle";
+                    // DLOG(INFO) << "connected file_source #" << n << " to throttle";
                     top_block->connect(throttle_vec_.at(n), 0, valve_, n);
-                    DLOG(INFO) << "connected throttle #" << n << " to valve_";
+                    // DLOG(INFO) << "connected throttle #" << n << " to valve_";
                 }
         }
     else
@@ -243,7 +243,7 @@ void MultichannelFileSignalSource::connect(gr::top_block_sptr top_block)
             for (int32_t n = 0; n < n_channels_; n++)
                 {
                     top_block->connect(file_source_vec_.at(n), 0, valve_, n);
-                    DLOG(INFO) << "connected file_source #" << n << " to valve_";
+                    // DLOG(INFO) << "connected file_source #" << n << " to valve_";
                 }
         }
 }
@@ -256,9 +256,9 @@ void MultichannelFileSignalSource::disconnect(gr::top_block_sptr top_block)
             for (int32_t n = 0; n < n_channels_; n++)
                 {
                     top_block->disconnect(file_source_vec_.at(n), 0, throttle_vec_.at(n), 0);
-                    DLOG(INFO) << "disconnected file_source #" << n << " to throttle";
+                    // DLOG(INFO) << "disconnected file_source #" << n << " to throttle";
                     top_block->disconnect(throttle_vec_.at(n), 0, valve_, n);
-                    DLOG(INFO) << "disconnected throttle #" << n << " to valve_";
+                    // DLOG(INFO) << "disconnected throttle #" << n << " to valve_";
                 }
         }
     else
@@ -266,7 +266,7 @@ void MultichannelFileSignalSource::disconnect(gr::top_block_sptr top_block)
             for (int32_t n = 0; n < n_channels_; n++)
                 {
                     top_block->disconnect(file_source_vec_.at(n), 0, valve_, n);
-                    DLOG(INFO) << "disconnected file_source #" << n << " to valve_";
+                    // DLOG(INFO) << "disconnected file_source #" << n << " to valve_";
                 }
         }
 }
@@ -274,7 +274,7 @@ void MultichannelFileSignalSource::disconnect(gr::top_block_sptr top_block)
 
 gr::basic_block_sptr MultichannelFileSignalSource::get_left_block()
 {
-    LOG(WARNING) << "Left block of a signal source should not be retrieved";
+    // LOG(WARNING) << "Left block of a signal source should not be retrieved";
     return gr::blocks::file_source::sptr();
 }
 

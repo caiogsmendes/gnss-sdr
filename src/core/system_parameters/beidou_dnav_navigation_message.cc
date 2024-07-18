@@ -40,7 +40,7 @@ Beidou_Dnav_Navigation_Message::Beidou_Dnav_Navigation_Message()
 
 void Beidou_Dnav_Navigation_Message::print_beidou_word_bytes(uint32_t BEIDOU_word) const
 {
-    std::cout << " Word =" << std::bitset<32>(BEIDOU_word) << '\n';
+    // std::cout << " Word =" << std::bitset<32>(BEIDOU_word) << '\n';
 }
 
 

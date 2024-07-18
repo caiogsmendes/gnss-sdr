@@ -72,12 +72,12 @@ LabsatSignalSource::LabsatSignalSource(const ConfigurationInterface* configurati
         {
             item_size_ = sizeof(gr_complex);
             labsat23_source_ = labsat23_make_source_sptr(filename_.c_str(), channels_selector_vec_, queue, digital_io_enabled);
-            DLOG(INFO) << "Item size " << item_size_;
-            DLOG(INFO) << "labsat23_source_(" << labsat23_source_->unique_id() << ")";
+            // DLOG(INFO) << "Item size " << item_size_;
+            // DLOG(INFO) << "labsat23_source_(" << labsat23_source_->unique_id() << ")";
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unrecognized item type for LabSat source";
+            // LOG(WARNING) << item_type_ << " unrecognized item type for LabSat source";
             item_size_ = sizeof(int16_t);
         }
     if (dump_)
@@ -108,9 +108,9 @@ LabsatSignalSource::LabsatSignalSource(const ConfigurationInterface* configurati
                                 }
                             dump_filename.push_back(aux + extension);
                         }
-                    std::cout << "Dumping output into file " << dump_filename.back() << '\n';
+                    // std::cout << "Dumping output into file " << dump_filename.back() << '\n';
                     file_sink_.push_back(gr::blocks::file_sink::make(item_size_, dump_filename.back().c_str()));
-                    DLOG(INFO) << "file_sink(" << file_sink_.back()->unique_id() << ")";
+                    // DLOG(INFO) << "file_sink(" << file_sink_.back()->unique_id() << ")";
                 }
         }
 
@@ -124,11 +124,11 @@ LabsatSignalSource::LabsatSignalSource(const ConfigurationInterface* configurati
 
     if (in_stream_ > 0)
         {
-            LOG(ERROR) << "A signal source does not have an input stream";
+            // LOG(ERROR) << "A signal source does not have an input stream";
         }
     if (out_stream_ > 3)
         {
-            LOG(ERROR) << "This implementation supports up to 3 output streams";
+            // LOG(ERROR) << "This implementation supports up to 3 output streams";
         }
 }
 
@@ -147,11 +147,11 @@ void LabsatSignalSource::connect(gr::top_block_sptr top_block)
             for (const auto& th : throttle_)
                 {
                     top_block->connect(labsat23_source_, rf_chan, th, 0);
-                    DLOG(INFO) << "connected labsat23_source_ to throttle";
+                    // DLOG(INFO) << "connected labsat23_source_ to throttle";
                     if (dump_)
                         {
                             top_block->connect(labsat23_source_, rf_chan, file_sink_[rf_chan], 0);
-                            DLOG(INFO) << "connected labsat23_source_to sink";
+                            // DLOG(INFO) << "connected labsat23_source_to sink";
                         }
                     rf_chan++;
                 }
@@ -164,11 +164,11 @@ void LabsatSignalSource::connect(gr::top_block_sptr top_block)
                     if (dump_)
                         {
                             top_block->connect(labsat23_source_, 0, file_sink_[rf_chan], 0);
-                            DLOG(INFO) << "connected labsat23_source_ to sink";
+                            // DLOG(INFO) << "connected labsat23_source_ to sink";
                         }
                     else
                         {
-                            DLOG(INFO) << "nothing to connect internally";
+                            // DLOG(INFO) << "nothing to connect internally";
                         }
                     rf_chan++;
                 }
@@ -184,11 +184,11 @@ void LabsatSignalSource::disconnect(gr::top_block_sptr top_block)
             for (const auto& th : throttle_)
                 {
                     top_block->disconnect(labsat23_source_, rf_chan, th, 0);
-                    DLOG(INFO) << "disconnected labsat23_source_ to throttle";
+                    // DLOG(INFO) << "disconnected labsat23_source_ to throttle";
                     if (dump_)
                         {
                             top_block->disconnect(labsat23_source_, rf_chan, file_sink_[rf_chan], 0);
-                            DLOG(INFO) << "disconnected labsat23_source_ to sink";
+                            // DLOG(INFO) << "disconnected labsat23_source_ to sink";
                         }
                     rf_chan++;
                 }
@@ -201,7 +201,7 @@ void LabsatSignalSource::disconnect(gr::top_block_sptr top_block)
                     if (dump_)
                         {
                             top_block->disconnect(labsat23_source_, rf_chan, file_sink_[rf_chan], 0);
-                            DLOG(INFO) << "disconnected labsat23_source_ to sink";
+                            // DLOG(INFO) << "disconnected labsat23_source_ to sink";
                         }
                     rf_chan++;
                 }
@@ -211,7 +211,7 @@ void LabsatSignalSource::disconnect(gr::top_block_sptr top_block)
 
 gr::basic_block_sptr LabsatSignalSource::get_left_block()
 {
-    LOG(WARNING) << "Left block of a signal source should not be retrieved";
+    // LOG(WARNING) << "Left block of a signal source should not be retrieved";
     return gr::block_sptr();
 }
 

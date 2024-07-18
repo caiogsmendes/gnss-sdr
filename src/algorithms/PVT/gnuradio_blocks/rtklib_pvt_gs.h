@@ -41,6 +41,7 @@
 
 
 #include "HEtechSerial.h"
+#include <mutex>
 
 /** \addtogroup PVT
  * \{ */
@@ -70,6 +71,9 @@ class An_Packet_Printer;
 class Has_Simple_Printer;
 class Rtklib_Solver;
 class rtklib_pvt_gs;
+
+class Gnss_Synchro;
+class Gnss_Ephemeris;
 
 using rtklib_pvt_gs_sptr = gnss_shared_ptr<rtklib_pvt_gs>;
 
@@ -333,6 +337,72 @@ private:
     void serialcmd_(void);
     serial_s_t comms;
     double ultimo_rx_time{0};
+    bool flag_new_pvt_data{false};
+    //
+
+    double last_RX_time{0};
+    double correct_time_RX{1.0};
+    // uint8_t buffer[1000]{0};
+    // uint32_t last_TOW_at_current_symbol_ms = 0;
+    int msg = 0xd4;
+    char tmp[200]{0};
+    // uint8_t test[tam + sizeof(int)];
+    // sprintf(&buffer[0], "%d", msg);
+    int sizemsg = 0;
+    uint8_t test[8]{0};
+    int num_sat{0};
+    int tam{0};
+    int index = 0;
+    double variavelTempo{0};
+    // uint8_t checks{0};
+    uint8_t PRN{0};
+    double latitude_deg{0};
+    double longitude_deg{0};
+    double height_m{0};
+    time_t UTC_time;
+    double gps_time_offset;
+    double Carrier_Doppler_Hz{0};
+    double satPosX{0};
+    double satPosY{0};
+    double satPosZ{0};
+    double satVelX{0};
+    double satVelY{0};
+    double satVelZ{0};
+    std::array<double, 3> rx_pos{0};
+    std::array<double, 3> rx_vel{0};
+    double deltaprange{0};
+    double rx_clk_deslize{0};
+    std::map<int, Gnss_Synchro> sync_map;
+    std::map<int, Gps_Ephemeris> gps_ephem;
+
+    uint32_t current_RX_time_ms = 0;
+
+    typedef struct 
+    {
+        uint8_t PRN{0};
+        double latitude_deg{0};
+        double longitude_deg{0};
+        double height_m{0};
+        time_t UTC_time;
+        double gps_time_offset;
+        double last_RX_time;
+        double Carrier_Doppler_Hz{0};
+        double satPosX{0};
+        double satPosY{0};
+        double satPosZ{0};
+        double satVelX{0};
+        double satVelY{0};
+        double satVelZ{0};
+        std::array<double, 3> rx_pos{0};
+        std::array<double, 3> rx_vel{0};
+        double prang{0};
+        double deltaprange{0};
+    }HEtechOut_t;
+
+    HEtechOut_t StoragePVT;
+    HEtechOut_t StorageSat[12];
+    int jdex{0}; //Número de Satélites Armazenados
+    std::mutex mtx;
 };
 
 

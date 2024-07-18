@@ -54,11 +54,11 @@ void Nav_Msg_Udp_Listener::print_message(gnss_sdr::navMsg &message) const
     int tow_at_current_symbol_ms = message.tow_at_current_symbol_ms();
     std::string nav_message = message.nav_message();
 
-    std::cout << "\nNew Data received:\n";
-    std::cout << "System: " << system << '\n';
-    std::cout << "Signal: " << signal << '\n';
-    std::cout << "PRN: " << prn << '\n';
-    std::cout << "TOW of last symbol [ms]: "
+    // std::cout << "\nNew Data received:\n";
+    // std::cout << "System: " << system << '\n';
+    // std::cout << "Signal: " << signal << '\n';
+    // std::cout << "PRN: " << prn << '\n';
+    // std::cout << "TOW of last symbol [ms]: "
               << tow_at_current_symbol_ms << '\n';
-    std::cout << "Nav message: " << nav_message << "\n\n";
+    // std::cout << "Nav message: " << nav_message << "\n\n";
 }

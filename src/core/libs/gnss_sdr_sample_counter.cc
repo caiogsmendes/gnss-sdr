@@ -123,7 +123,7 @@ int gnss_sdr_sample_counter::work(int noutput_items __attribute__((unused)),
 //                             day = " days ";
 //                         }
 // // #ifdef EN_CONSOLE_OUTPUT
-//                     std::cout << "Current receiver time: " << current_days << day << current_h << " h " << current_m << " min " << current_s << " s\n";
+//                     // std::cout << "Current receiver time: " << current_days << day << current_h << " h " << current_m << " min " << current_s << " s\n";
 // // #endif
 //                 }
 //             else
@@ -131,7 +131,7 @@ int gnss_sdr_sample_counter::work(int noutput_items __attribute__((unused)),
 //                     if (flag_h)
 //                         {
 // // #ifdef EN_CONSOLE_OUTPUT
-//                             std::cout << "Current receiver time: " << current_h << " h " << current_m << " min " << current_s << " s\n";
+//                             // std::cout << "Current receiver time: " << current_h << " h " << current_m << " min " << current_s << " s\n";
 // // #endif
 //                         }
 //                     else
@@ -139,13 +139,13 @@ int gnss_sdr_sample_counter::work(int noutput_items __attribute__((unused)),
 //                             if (flag_m)
 //                                 {
 // // #ifdef EN_CONSOLE_OUTPUT
-//                                     std::cout << "Current receiver time: " << current_m << " min " << current_s << " s\n";
+//                                     // std::cout << "Current receiver time: " << current_m << " min " << current_s << " s\n";
 // // #endif
 //                                 }
 //                             else
 //                                 {
 // // #ifdef EN_CONSOLE_OUTPUT
-//                                     std::cout << "Current receiver time: " << current_s << " s\n";
+//                                     // std::cout << "Current receiver time: " << current_s << " s\n";
 // // #endif
 //                                 }
 //                         }
@@ -178,18 +178,18 @@ int gnss_sdr_sample_counter::work(int noutput_items __attribute__((unused)),
                             last_timetag->tow_ms = last_timetag->tow_ms + static_cast<int>(intpart);
                             last_timetag->rx_time = static_cast<double>(out[0].Tracking_sample_counter) / fs;
                             add_item_tag(0, this->nitems_written(0) + 1, pmt::mp("timetag"), pmt::make_any(last_timetag));
-                            // std::cout << "COUNTER TAG: this->nitems_read(0):" << this->nitems_read(0) << " sample_counter:" << sample_counter
+                            // // std::cout << "COUNTER TAG: this->nitems_read(0):" << this->nitems_read(0) << " sample_counter:" << sample_counter
                             //          << " it->offset:" << it->offset << " diff:" << diff_samplecount << "\n";
                             // getchar();
                         }
                     else
                         {
-                            std::cout << "hash code not match\n";
+                            // std::cout << "hash code not match\n";
                         }
                 }
             catch (const wht::bad_any_cast &e)
                 {
-                    std::cout << "msg Bad any_cast: " << e.what();
+                    // std::cout << "msg Bad any_cast: " << e.what();
                 }
             catch (const std::exception &ee)
                 {

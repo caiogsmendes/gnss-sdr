@@ -46,7 +46,7 @@ TEST(MagnitudeSquaredTest, StandardCComplexImplementation)
 
     end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
-    std::cout << "The squared magnitude of a " << FLAGS_size_magnitude_test
+    // std::cout << "The squared magnitude of a " << FLAGS_size_magnitude_test
               << "-length complex vector in standard C computed in " << elapsed_seconds.count() * 1e6
               << " microseconds\n";
     delete[] input;
@@ -70,7 +70,7 @@ TEST(MagnitudeSquaredTest, C11ComplexImplementation)
 
     end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
-    std::cout << "The squared magnitude of a " << FLAGS_size_magnitude_test
+    // std::cout << "The squared magnitude of a " << FLAGS_size_magnitude_test
               << " complex<float> vector (C++11-style) finished in " << elapsed_seconds.count() * 1e6
               << " microseconds\n";
     ASSERT_LE(0, elapsed_seconds.count() * 1e6);
@@ -96,7 +96,7 @@ TEST(MagnitudeSquaredTest, ArmadilloComplexImplementation)
 
     end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
-    std::cout << "The squared magnitude of a " << FLAGS_size_magnitude_test
+    // std::cout << "The squared magnitude of a " << FLAGS_size_magnitude_test
               << "-length vector using Armadillo computed in " << elapsed_seconds.count() * 1e6
               << " microseconds\n";
     ASSERT_LE(0, elapsed_seconds.count() * 1e6);
@@ -115,7 +115,7 @@ TEST(MagnitudeSquaredTest, VolkComplexImplementation)
 
     end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
-    std::cout << "The squared magnitude of a " << FLAGS_size_magnitude_test
+    // std::cout << "The squared magnitude of a " << FLAGS_size_magnitude_test
               << "-length vector using VOLK computed in " << elapsed_seconds.count() * 1e6
               << " microseconds\n";
     volk_gnsssdr_free(input);
@@ -137,7 +137,7 @@ TEST(MagnitudeSquaredTest, VolkComplexImplementationAlloc)
 
     end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
-    std::cout << "The squared magnitude of a " << FLAGS_size_magnitude_test
+    // std::cout << "The squared magnitude of a " << FLAGS_size_magnitude_test
               << "-length vector using VOLK ALLOC computed in " << elapsed_seconds.count() * 1e6
               << " microseconds\n";
     ASSERT_LE(0, elapsed_seconds.count() * 1e6);

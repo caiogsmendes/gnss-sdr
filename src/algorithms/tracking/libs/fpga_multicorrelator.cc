@@ -86,7 +86,7 @@ Fpga_Multicorrelator_8sc::Fpga_Multicorrelator_8sc(int32_t n_correlators,
             d_initial_interp_counter = volk_gnsssdr::vector<uint32_t>(n_correlators);
         }
 
-    DLOG(INFO) << "TRACKING FPGA CLASS CREATED";
+    // DLOG(INFO) << "TRACKING FPGA CLASS CREATED";
 }
 
 
@@ -163,8 +163,8 @@ void Fpga_Multicorrelator_8sc::Carrier_wipeoff_multicorrelator_resampler(
     nb = read(d_device_descriptor, &irq_count, sizeof(irq_count));
     if (nb != sizeof(irq_count))
         {
-            std::cout << "Tracking_module Read failed to retrieve 4 bytes!\n";
-            std::cout << "Tracking_module Interrupt number " << irq_count << '\n';
+            // std::cout << "Tracking_module Read failed to retrieve 4 bytes!\n";
+            // std::cout << "Tracking_module Interrupt number " << irq_count << '\n';
         }
 
     // release secondary code indices, keep channel locked
@@ -190,21 +190,21 @@ bool Fpga_Multicorrelator_8sc::free()
 
 void Fpga_Multicorrelator_8sc::open_channel(const std::string &device_io_name, uint32_t channel)
 {
-    std::cout << "trk device_io_name = " << device_io_name << '\n';
+    // std::cout << "trk device_io_name = " << device_io_name << '\n';
 
     if ((d_device_descriptor = open(device_io_name.c_str(), O_RDWR | O_SYNC)) == -1)
         {
-            LOG(WARNING) << "Cannot open deviceio" << device_io_name;
-            std::cout << "Cannot open deviceio" << device_io_name << '\n';
+            // LOG(WARNING) << "Cannot open deviceio" << device_io_name;
+            // std::cout << "Cannot open deviceio" << device_io_name << '\n';
         }
     d_map_base = reinterpret_cast<volatile uint32_t *>(mmap(nullptr, FPGA_PAGE_SIZE,
         PROT_READ | PROT_WRITE, MAP_SHARED, d_device_descriptor, 0));
 
     if (d_map_base == reinterpret_cast<void *>(-1))
         {
-            LOG(WARNING) << "Cannot map the FPGA tracking module "
+            // LOG(WARNING) << "Cannot map the FPGA tracking module "
                          << channel << "into user memory";
-            std::cout << "Cannot map deviceio" << device_io_name << '\n';
+            // std::cout << "Cannot map deviceio" << device_io_name << '\n';
         }
 
     // sanity check: check test register
@@ -213,12 +213,12 @@ void Fpga_Multicorrelator_8sc::open_channel(const std::string &device_io_name, u
     readval = Fpga_Multicorrelator_8sc::fpga_acquisition_test_register(writeval);
     if (writeval != readval)
         {
-            LOG(WARNING) << "Test register sanity check failed";
-            std::cout << "Tracking test register sanity check failed\n";
+            // LOG(WARNING) << "Test register sanity check failed";
+            // std::cout << "Tracking test register sanity check failed\n";
         }
     else
         {
-            LOG(INFO) << "Test register sanity check success !";
+           // LOG(INFO) << "Test register sanity check success !";
         }
 }
 
@@ -404,7 +404,7 @@ void Fpga_Multicorrelator_8sc::close_device()
     auto *aux = const_cast<uint32_t *>(d_map_base);
     if (munmap(static_cast<void *>(aux), FPGA_PAGE_SIZE) == -1)
         {
-            std::cout << "Failed to unmap memory uio\n";
+            // std::cout << "Failed to unmap memory uio\n";
         }
     close(d_device_descriptor);
 }

@@ -31,11 +31,11 @@ TwoBitCpxFileSignalSource::TwoBitCpxFileSignalSource(
 {
     if (in_streams > 0)
         {
-            LOG(ERROR) << "A signal source does not have an input stream";
+            // LOG(ERROR) << "A signal source does not have an input stream";
         }
     if (out_streams > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 
@@ -51,7 +51,7 @@ std::tuple<size_t, bool> TwoBitCpxFileSignalSource::itemTypeToSize()
         }
     else
         {
-            LOG(WARNING) << item_type() << " unrecognized item type. Using byte.";
+            // LOG(WARNING) << item_type() << " unrecognized item type. Using byte.";
         }
 
     return std::make_tuple(item_size, is_complex);
@@ -65,21 +65,21 @@ gnss_shared_ptr<gr::block> TwoBitCpxFileSignalSource::source() const { return in
 void TwoBitCpxFileSignalSource::create_file_source_hook()
 {
     unpack_byte_ = make_unpack_byte_2bit_cpx_samples();
-    DLOG(INFO) << "unpack_byte_2bit_cpx_samples(" << unpack_byte_->unique_id() << ")";
+    // DLOG(INFO) << "unpack_byte_2bit_cpx_samples(" << unpack_byte_->unique_id() << ")";
     inter_shorts_to_cpx_ = gr::blocks::interleaved_short_to_complex::make(false, true);  // I/Q swap enabled
-    DLOG(INFO) << "interleaved_short_to_complex(" << inter_shorts_to_cpx_->unique_id() << ")";
+    // DLOG(INFO) << "interleaved_short_to_complex(" << inter_shorts_to_cpx_->unique_id() << ")";
 }
 
 void TwoBitCpxFileSignalSource::pre_connect_hook(gr::top_block_sptr top_block)
 {
     top_block->connect(file_source(), 0, unpack_byte_, 0);
     top_block->connect(unpack_byte_, 0, inter_shorts_to_cpx_, 0);
-    DLOG(INFO) << "connected file_source to unpacker";
+    // DLOG(INFO) << "connected file_source to unpacker";
 }
 
 void TwoBitCpxFileSignalSource::pre_disconnect_hook(gr::top_block_sptr top_block)
 {
     top_block->disconnect(file_source(), 0, unpack_byte_, 0);
     top_block->disconnect(unpack_byte_, 0, inter_shorts_to_cpx_, 0);
-    DLOG(INFO) << "disconnected file_source from unpacker";
+    // DLOG(INFO) << "disconnected file_source from unpacker";
 }

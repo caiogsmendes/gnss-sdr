@@ -30,29 +30,29 @@ Fpga_dynamic_bit_selection::Fpga_dynamic_bit_selection(const std::string &device
     // dynamic bits selection corresponding to frequency band 1
     if ((d_device_descriptor1 = open(device_name1.c_str(), O_RDWR | O_SYNC)) == -1)
         {
-            LOG(WARNING) << "Cannot open deviceio" << device_name1;
+            // LOG(WARNING) << "Cannot open deviceio" << device_name1;
         }
     d_map_base1 = reinterpret_cast<volatile unsigned *>(mmap(nullptr, FPGA_PAGE_SIZE,
         PROT_READ | PROT_WRITE, MAP_SHARED, d_device_descriptor1, 0));
 
     if (d_map_base1 == reinterpret_cast<void *>(-1))
         {
-            LOG(WARNING) << "Cannot map the FPGA dynamic bit selection module in frequency band 1 into tracking memory";
-            std::cout << "Could not map dynamic bit selection memory corresponding to frequency band 1.\n";
+            // LOG(WARNING) << "Cannot map the FPGA dynamic bit selection module in frequency band 1 into tracking memory";
+            // std::cout << "Could not map dynamic bit selection memory corresponding to frequency band 1.\n";
         }
 
     // dynamic bits selection corresponding to frequency band 2
     if ((d_device_descriptor2 = open(device_name2.c_str(), O_RDWR | O_SYNC)) == -1)
         {
-            LOG(WARNING) << "Cannot open deviceio" << device_name2;
+            // LOG(WARNING) << "Cannot open deviceio" << device_name2;
         }
     d_map_base2 = reinterpret_cast<volatile unsigned *>(mmap(nullptr, FPGA_PAGE_SIZE,
         PROT_READ | PROT_WRITE, MAP_SHARED, d_device_descriptor2, 0));
 
     if (d_map_base2 == reinterpret_cast<void *>(-1))
         {
-            LOG(WARNING) << "Cannot map the FPGA dynamic bit selection module in frequency band 2 into tracking memory";
-            std::cout << "Could not map dynamic bit selection memory corresponding to frequency band 2.\n";
+            // LOG(WARNING) << "Cannot map the FPGA dynamic bit selection module in frequency band 2 into tracking memory";
+            // std::cout << "Could not map dynamic bit selection memory corresponding to frequency band 2.\n";
         }
 
     // initialize default bit selection
@@ -65,7 +65,7 @@ Fpga_dynamic_bit_selection::Fpga_dynamic_bit_selection(const std::string &device
     // init bit selection corresponding to frequency band 2
     d_map_base2[0] = shift_out_bits_band2;
 
-    DLOG(INFO) << "Dynamic bit selection FPGA class created";
+    // DLOG(INFO) << "Dynamic bit selection FPGA class created";
 }
 
 
@@ -127,13 +127,13 @@ void Fpga_dynamic_bit_selection::close_devices()
     auto *aux = const_cast<unsigned *>(d_map_base1);
     if (munmap(static_cast<void *>(aux), FPGA_PAGE_SIZE) == -1)
         {
-            std::cout << "Failed to unmap memory uio\n";
+            // std::cout << "Failed to unmap memory uio\n";
         }
 
     aux = const_cast<unsigned *>(d_map_base2);
     if (munmap(static_cast<void *>(aux), FPGA_PAGE_SIZE) == -1)
         {
-            std::cout << "Failed to unmap memory uio\n";
+            // std::cout << "Failed to unmap memory uio\n";
         }
 
     close(d_device_descriptor1);

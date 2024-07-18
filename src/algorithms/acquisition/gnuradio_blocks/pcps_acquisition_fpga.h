@@ -159,7 +159,7 @@ public:
     {
         if (doppler_center != d_doppler_center)
             {
-                DLOG(INFO) << " Doppler assistance for Channel: " << d_channel << " => Doppler: " << doppler_center << "[Hz]";
+                // DLOG(INFO) << " Doppler assistance for Channel: " << d_channel << " => Doppler: " << doppler_center << "[Hz]";
                 d_doppler_center = doppler_center;
             }
     }

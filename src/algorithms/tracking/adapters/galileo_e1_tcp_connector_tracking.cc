@@ -64,7 +64,7 @@ GalileoE1TcpConnectorTracking::GalileoE1TcpConnectorTracking(
     const auto vector_length = static_cast<int>(std::round(fs_in / (GALILEO_E1_CODE_CHIP_RATE_CPS / GALILEO_E1_B_CODE_LENGTH_CHIPS)));
 
     // ################# MAKE TRACKING GNURadio object ###################
-    DLOG(INFO) << "role " << role_;
+    // DLOG(INFO) << "role " << role_;
     if (item_type == "gr_complex")
         {
             tracking_sptr_ = galileo_e1_tcp_connector_make_tracking_cc(
@@ -77,22 +77,22 @@ GalileoE1TcpConnectorTracking::GalileoE1TcpConnectorTracking(
                 early_late_space_chips,
                 very_early_late_space_chips,
                 port_ch0);
-            DLOG(INFO) << "tracking(" << tracking_sptr_->unique_id() << ")";
+            // DLOG(INFO) << "tracking(" << tracking_sptr_->unique_id() << ")";
         }
     else
         {
             item_size_ = 0;
             tracking_sptr_ = nullptr;
-            LOG(WARNING) << item_type << " unknown tracking item type.";
+            // LOG(WARNING) << item_type << " unknown tracking item type.";
         }
 
     if (in_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 

@@ -47,7 +47,7 @@ Fpga_buffer_monitor::Fpga_buffer_monitor(const std::string &device_name,
     // open device descriptor
     if ((d_device_descriptor = open(device_name.c_str(), O_RDWR | O_SYNC)) == -1)
         {
-            LOG(WARNING) << "Cannot open deviceio" << device_name;
+            // LOG(WARNING) << "Cannot open deviceio" << device_name;
         }
 
     // device memory map
@@ -56,22 +56,22 @@ Fpga_buffer_monitor::Fpga_buffer_monitor(const std::string &device_name,
 
     if (d_map_base == reinterpret_cast<void *>(-1))
         {
-            LOG(WARNING) << "Cannot map the FPGA buffer monitor module";
-            std::cout << "Could not map the FPGA buffer monitor \n";
+            // LOG(WARNING) << "Cannot map the FPGA buffer monitor module";
+            // std::cout << "Could not map the FPGA buffer monitor \n";
         }
 
     // sanity check: check test register
     if (buffer_monitor_test_register() < 0)
         {
-            LOG(WARNING) << "FPGA buffer monitor test register sanity check failed";
-            std::cout << "FPGA buffer monitor test register sanity check failed\n";
+            // LOG(WARNING) << "FPGA buffer monitor test register sanity check failed";
+            // std::cout << "FPGA buffer monitor test register sanity check failed\n";
         }
     else
         {
-            LOG(INFO) << "FPGA buffer monitor test register sanity check success !";
+           // LOG(INFO) << "FPGA buffer monitor test register sanity check success !";
         }
 
-    DLOG(INFO) << "FPGA buffer monitor class created";
+    // DLOG(INFO) << "FPGA buffer monitor class created";
 
     if (d_dump)
         {
@@ -113,11 +113,11 @@ Fpga_buffer_monitor::Fpga_buffer_monitor(const std::string &device_name,
                         {
                             d_dump_file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
                             d_dump_file.open(dump_filename_.c_str(), std::ios::out | std::ios::binary);
-                            LOG(INFO) << "FPGA buffer monitor dump enabled. Log file: " << dump_filename_.c_str();
+                           // LOG(INFO) << "FPGA buffer monitor dump enabled. Log file: " << dump_filename_.c_str();
                         }
                     catch (const std::ofstream::failure &e)
                         {
-                            LOG(WARNING) << "Exception opening FPGA buffer monitor dump file " << e.what();
+                            // LOG(WARNING) << "Exception opening FPGA buffer monitor dump file " << e.what();
                         }
                 }
         }
@@ -138,7 +138,7 @@ Fpga_buffer_monitor::~Fpga_buffer_monitor()
                         }
                     catch (const std::exception &ex)
                         {
-                            LOG(WARNING) << "Exception in FPGA buffer monitor destructor: " << ex.what();
+                            // LOG(WARNING) << "Exception in FPGA buffer monitor destructor: " << ex.what();
                         }
                 }
         }
@@ -154,11 +154,11 @@ void Fpga_buffer_monitor::check_buffer_overflow_and_monitor_buffer_status()
         {
             if (d_num_freq_bands > 1)
                 {
-                    LOG(ERROR) << "FPGA Buffer overflow in frequency band 0";
+                    // LOG(ERROR) << "FPGA Buffer overflow in frequency band 0";
                 }
             else
                 {
-                    LOG(ERROR) << "FPGA Buffer overflow";
+                    // LOG(ERROR) << "FPGA Buffer overflow";
                 }
         }
 
@@ -166,7 +166,7 @@ void Fpga_buffer_monitor::check_buffer_overflow_and_monitor_buffer_status()
         {
             if ((buffer_overflow_status & overflow_freq_band_1_bit_pos) != 0)
                 {
-                    LOG(ERROR) << "FPGA Buffer overflow in frequency band 1";
+                    // LOG(ERROR) << "FPGA Buffer overflow in frequency band 1";
                 }
         }
 
@@ -251,7 +251,7 @@ void Fpga_buffer_monitor::close_device()
     auto *aux = const_cast<unsigned *>(d_map_base);
     if (munmap(static_cast<void *>(aux), FPGA_PAGE_SIZE) == -1)
         {
-            std::cout << "Failed to unmap memory uio\n";
+            // std::cout << "Failed to unmap memory uio\n";
         }
 
     close(d_device_descriptor);

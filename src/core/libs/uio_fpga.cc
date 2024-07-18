@@ -59,14 +59,14 @@ void get_uio_name(uint32_t uio_num, std::string &uio_name)
             std::getline(infile, uio_name);
             if (infile.bad())
                 {
-                    std::cout << "Could not read the FPGA uio device information file\n";
+                    // std::cout << "Could not read the FPGA uio device information file\n";
                     throw std::exception();
                 }
             infile.close();
         }
     else
         {
-            std::cout << "Could not open the FPGA uio device information file\n";
+            // std::cout << "Could not open the FPGA uio device information file\n";
             throw std::exception();
         }
 }

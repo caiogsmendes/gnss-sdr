@@ -32,7 +32,7 @@ FifoReader::FifoReader(const std::string &file_name, const std::string &sample_t
       file_name_(file_name),
       sample_type_(sample_type)
 {
-    DLOG(INFO) << "Starting FifoReader";
+    // DLOG(INFO) << "Starting FifoReader";
 }
 
 bool FifoReader::start()
@@ -40,7 +40,7 @@ bool FifoReader::start()
     fifo_.open(file_name_, std::ios::binary);
     if (!fifo_.is_open())
         {
-            LOG(ERROR) << "Error opening FIFO";
+            // LOG(ERROR) << "Error opening FIFO";
             return false;
         }
     return true;
@@ -54,7 +54,7 @@ int FifoReader::work(int noutput_items,
 {
     if (output_items.size() > 1)
         {
-            LOG(ERROR) << "FifoReader connected to too many outputs";
+            // LOG(ERROR) << "FifoReader connected to too many outputs";
         }
 
     // read samples out
@@ -77,7 +77,7 @@ int FifoReader::work(int noutput_items,
     else
         {
             // please see gr_complex_ip_packet_source for inspiration on how to implement other sample types
-            LOG(ERROR) << sample_type_ << " is unfortunately not yet implemented as sample type";
+            // LOG(ERROR) << sample_type_ << " is unfortunately not yet implemented as sample type";
         }
 
     // we return varying number of data -> call produce & return flag
@@ -116,5 +116,5 @@ size_t FifoReader::read_gr_complex(int noutput_items, gr_vector_void_star &outpu
 
 void FifoReader::fifo_error_output() const
 {
-    LOG(ERROR) << "unhandled FIFO event";
+    // LOG(ERROR) << "unhandled FIFO event";
 }

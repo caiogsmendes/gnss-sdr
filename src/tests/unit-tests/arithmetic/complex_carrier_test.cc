@@ -46,7 +46,7 @@ TEST(ComplexCarrierTest, StandardComplexImplementation)
 
     end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
-    std::cout << "A " << FLAGS_size_carrier_test
+    // std::cout << "A " << FLAGS_size_carrier_test
               << "-length complex carrier in standard C++ (dynamic allocation) generated in " << elapsed_seconds.count() * 1e6
               << " microseconds\n";
 
@@ -85,7 +85,7 @@ TEST(ComplexCarrierTest, C11ComplexImplementation)
         }
     end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
-    std::cout << "A " << FLAGS_size_carrier_test
+    // std::cout << "A " << FLAGS_size_carrier_test
               << "-length complex carrier in standard C++ (declaration) generated in " << elapsed_seconds.count() * 1e6
               << " microseconds\n";
     ASSERT_LE(0, elapsed_seconds.count() * 1e6);
@@ -112,7 +112,7 @@ TEST(ComplexCarrierTest, OwnComplexImplementation)
 
     end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
-    std::cout << "A " << FLAGS_size_carrier_test
+    // std::cout << "A " << FLAGS_size_carrier_test
               << "-length complex carrier using fixed point generated in " << elapsed_seconds.count() * 1e6
               << " microseconds\n";
 

@@ -32,7 +32,7 @@ GpsL1CaDllPllTrackingGPU::GpsL1CaDllPllTrackingGPU(
     const ConfigurationInterface* configuration, std::string role,
     unsigned int in_streams, unsigned int out_streams) : role_(role), in_streams_(in_streams), out_streams_(out_streams)
 {
-    DLOG(INFO) << "role " << role;
+    // DLOG(INFO) << "role " << role;
     // ################# CONFIGURATION PARAMETERS ########################
     int fs_in;
     int vector_length;
@@ -73,17 +73,17 @@ GpsL1CaDllPllTrackingGPU::GpsL1CaDllPllTrackingGPU(
     else
         {
             item_size_ = 0;
-            LOG(WARNING) << item_type << " unknown tracking item type.";
+            // LOG(WARNING) << item_type << " unknown tracking item type.";
         }
     channel_ = 0;
-    DLOG(INFO) << "tracking(" << tracking_->unique_id() << ")";
+    // DLOG(INFO) << "tracking(" << tracking_->unique_id() << ")";
     if (in_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 

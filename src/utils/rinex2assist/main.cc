@@ -358,7 +358,7 @@ int main(int argc, char** argv)
                     gflags::ShutDownCommandLineFlags();
                     return 1;
                 }
-            std::cout << "Generated file: " << xml_filename << '\n';
+            // std::cout << "Generated file: " << xml_filename << '\n';
         }
     if (j != 0)
         {
@@ -376,7 +376,7 @@ int main(int argc, char** argv)
                     gflags::ShutDownCommandLineFlags();
                     return 1;
                 }
-            std::cout << "Generated file: " << xml_filename << '\n';
+            // std::cout << "Generated file: " << xml_filename << '\n';
         }
 
     // Write XML UTC
@@ -396,7 +396,7 @@ int main(int argc, char** argv)
                     gflags::ShutDownCommandLineFlags();
                     return 1;
                 }
-            std::cout << "Generated file: " << xml_filename << '\n';
+            // std::cout << "Generated file: " << xml_filename << '\n';
         }
 
     // Write XML iono
@@ -416,7 +416,7 @@ int main(int argc, char** argv)
                     gflags::ShutDownCommandLineFlags();
                     return 1;
                 }
-            std::cout << "Generated file: " << xml_filename << '\n';
+            // std::cout << "Generated file: " << xml_filename << '\n';
         }
 
     if (gal_utc_model.A0 != 0)
@@ -435,7 +435,7 @@ int main(int argc, char** argv)
                     gflags::ShutDownCommandLineFlags();
                     return 1;
                 }
-            std::cout << "Generated file: " << xml_filename << '\n';
+            // std::cout << "Generated file: " << xml_filename << '\n';
         }
     if (gal_iono.ai0 != 0)
         {
@@ -453,7 +453,7 @@ int main(int argc, char** argv)
                     gflags::ShutDownCommandLineFlags();
                     return 1;
                 }
-            std::cout << "Generated file: " << xml_filename << '\n';
+            // std::cout << "Generated file: " << xml_filename << '\n';
         }
     gflags::ShutDownCommandLineFlags();
     return 0;

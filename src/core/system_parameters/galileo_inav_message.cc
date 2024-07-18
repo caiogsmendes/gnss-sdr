@@ -241,7 +241,7 @@ bool Galileo_Inav_Message::have_new_ephemeris()  // Check if we have a new ephem
             // if all ephemeris pages have the same IOD, then they belong to the same block
             if ((IOD_nav_1 == IOD_nav_2) and (IOD_nav_3 == IOD_nav_4) and (IOD_nav_1 == IOD_nav_3))
                 {
-                    DLOG(INFO) << "Ephemeris (1, 2, 3, 4) have been received and belong to the same batch";
+                    // DLOG(INFO) << "Ephemeris (1, 2, 3, 4) have been received and belong to the same batch";
                     flag_ephemeris_1 = false;  // clear the flag
                     flag_ephemeris_2 = false;  // clear the flag
                     flag_ephemeris_3 = false;  // clear the flag
@@ -249,7 +249,7 @@ bool Galileo_Inav_Message::have_new_ephemeris()  // Check if we have a new ephem
                     flag_all_ephemeris = true;
                     IOD_ephemeris = IOD_nav_1;
                     enable_rs = false;  // Do not retrieve reduced CED if we already have the full ephemeris set
-                    DLOG(INFO) << "Batch number: " << IOD_ephemeris;
+                    // DLOG(INFO) << "Batch number: " << IOD_ephemeris;
                     return true;
                 }
         }
@@ -359,7 +359,7 @@ bool Galileo_Inav_Message::have_new_ephemeris()  // Check if we have a new ephem
                             flag_all_ephemeris = true;
                             IOD_ephemeris = IOD_nav_1;
                             enable_rs = false;  // Retrieve reduced CED only once
-                            DLOG(INFO) << "Batch number: " << IOD_ephemeris;
+                            // DLOG(INFO) << "Batch number: " << IOD_ephemeris;
                             return true;
                         }
                 }
@@ -617,103 +617,103 @@ Galileo_Ephemeris Galileo_Inav_Message::get_reduced_ced() const
 void Galileo_Inav_Message::read_page_1(const std::bitset<GALILEO_DATA_JK_BITS>& data_bits)
 {
     IOD_nav_1 = static_cast<int32_t>(read_navigation_unsigned(data_bits, IOD_NAV_1_BIT));
-    DLOG(INFO) << "IOD_nav_1= " << IOD_nav_1;
+    // DLOG(INFO) << "IOD_nav_1= " << IOD_nav_1;
     t0e_1 = static_cast<int32_t>(read_navigation_unsigned(data_bits, T0_E_1_BIT));
     t0e_1 = t0e_1 * T0E_1_LSB;
-    DLOG(INFO) << "t0e_1= " << t0e_1;
+    // DLOG(INFO) << "t0e_1= " << t0e_1;
     M0_1 = static_cast<double>(read_navigation_signed(data_bits, M0_1_BIT));
     M0_1 = M0_1 * M0_1_LSB;
-    DLOG(INFO) << "M0_1= " << M0_1;
+    // DLOG(INFO) << "M0_1= " << M0_1;
     e_1 = static_cast<double>(read_navigation_unsigned(data_bits, E_1_BIT));
     e_1 = e_1 * E_1_LSB;
-    DLOG(INFO) << "e_1= " << e_1;
+    // DLOG(INFO) << "e_1= " << e_1;
     A_1 = static_cast<double>(read_navigation_unsigned(data_bits, A_1_BIT));
     A_1 = A_1 * A_1_LSB_GAL;
-    DLOG(INFO) << "A_1= " << A_1;
+    // DLOG(INFO) << "A_1= " << A_1;
     flag_ephemeris_1 = true;
-    DLOG(INFO) << "flag_tow_set" << flag_TOW_set;
+    // DLOG(INFO) << "flag_tow_set" << flag_TOW_set;
 }
 
 
 void Galileo_Inav_Message::read_page_2(const std::bitset<GALILEO_DATA_JK_BITS>& data_bits)
 {
     IOD_nav_2 = static_cast<int32_t>(read_navigation_unsigned(data_bits, IOD_NAV_2_BIT));
-    DLOG(INFO) << "IOD_nav_2= " << IOD_nav_2;
+    // DLOG(INFO) << "IOD_nav_2= " << IOD_nav_2;
     OMEGA_0_2 = static_cast<double>(read_navigation_signed(data_bits, OMEGA_0_2_BIT));
     OMEGA_0_2 = OMEGA_0_2 * OMEGA_0_2_LSB;
-    DLOG(INFO) << "OMEGA_0_2= " << OMEGA_0_2;
+    // DLOG(INFO) << "OMEGA_0_2= " << OMEGA_0_2;
     i_0_2 = static_cast<double>(read_navigation_signed(data_bits, I_0_2_BIT));
     i_0_2 = i_0_2 * I_0_2_LSB;
-    DLOG(INFO) << "i_0_2= " << i_0_2;
+    // DLOG(INFO) << "i_0_2= " << i_0_2;
     omega_2 = static_cast<double>(read_navigation_signed(data_bits, OMEGA_2_BIT));
     omega_2 = omega_2 * OMEGA_2_LSB;
-    DLOG(INFO) << "omega_2= " << omega_2;
+    // DLOG(INFO) << "omega_2= " << omega_2;
     iDot_2 = static_cast<double>(read_navigation_signed(data_bits, I_DOT_2_BIT));
     iDot_2 = iDot_2 * I_DOT_2_LSB;
-    DLOG(INFO) << "iDot_2= " << iDot_2;
+    // DLOG(INFO) << "iDot_2= " << iDot_2;
     flag_ephemeris_2 = true;
-    DLOG(INFO) << "flag_tow_set" << flag_TOW_set;
+    // DLOG(INFO) << "flag_tow_set" << flag_TOW_set;
 }
 
 
 void Galileo_Inav_Message::read_page_3(const std::bitset<GALILEO_DATA_JK_BITS>& data_bits)
 {
     IOD_nav_3 = static_cast<int32_t>(read_navigation_unsigned(data_bits, IOD_NAV_3_BIT));
-    DLOG(INFO) << "IOD_nav_3= " << IOD_nav_3;
+    // DLOG(INFO) << "IOD_nav_3= " << IOD_nav_3;
     OMEGA_dot_3 = static_cast<double>(read_navigation_signed(data_bits, OMEGA_DOT_3_BIT));
     OMEGA_dot_3 = OMEGA_dot_3 * OMEGA_DOT_3_LSB;
-    DLOG(INFO) << "OMEGA_dot_3= " << OMEGA_dot_3;
+    // DLOG(INFO) << "OMEGA_dot_3= " << OMEGA_dot_3;
     delta_n_3 = static_cast<double>(read_navigation_signed(data_bits, DELTA_N_3_BIT));
     delta_n_3 = delta_n_3 * DELTA_N_3_LSB;
-    DLOG(INFO) << "delta_n_3= " << delta_n_3;
+    // DLOG(INFO) << "delta_n_3= " << delta_n_3;
     C_uc_3 = static_cast<double>(read_navigation_signed(data_bits, C_UC_3_BIT));
     C_uc_3 = C_uc_3 * C_UC_3_LSB;
-    DLOG(INFO) << "C_uc_3= " << C_uc_3;
+    // DLOG(INFO) << "C_uc_3= " << C_uc_3;
     C_us_3 = static_cast<double>(read_navigation_signed(data_bits, C_US_3_BIT));
     C_us_3 = C_us_3 * C_US_3_LSB;
-    DLOG(INFO) << "C_us_3= " << C_us_3;
+    // DLOG(INFO) << "C_us_3= " << C_us_3;
     C_rc_3 = static_cast<double>(read_navigation_signed(data_bits, C_RC_3_BIT));
     C_rc_3 = C_rc_3 * C_RC_3_LSB;
-    DLOG(INFO) << "C_rc_3= " << C_rc_3;
+    // DLOG(INFO) << "C_rc_3= " << C_rc_3;
     C_rs_3 = static_cast<double>(read_navigation_signed(data_bits, C_RS_3_BIT));
     C_rs_3 = C_rs_3 * C_RS_3_LSB;
-    DLOG(INFO) << "C_rs_3= " << C_rs_3;
+    // DLOG(INFO) << "C_rs_3= " << C_rs_3;
     SISA_3 = static_cast<int32_t>(read_navigation_unsigned(data_bits, SISA_3_BIT));
-    DLOG(INFO) << "SISA_3= " << SISA_3;
+    // DLOG(INFO) << "SISA_3= " << SISA_3;
     flag_ephemeris_3 = true;
-    DLOG(INFO) << "flag_tow_set" << flag_TOW_set;
+    // DLOG(INFO) << "flag_tow_set" << flag_TOW_set;
 }
 
 
 void Galileo_Inav_Message::read_page_4(const std::bitset<GALILEO_DATA_JK_BITS>& data_bits)
 {
     IOD_nav_4 = static_cast<int32_t>(read_navigation_unsigned(data_bits, IOD_NAV_4_BIT));
-    DLOG(INFO) << "IOD_nav_4= " << IOD_nav_4;
+    // DLOG(INFO) << "IOD_nav_4= " << IOD_nav_4;
     SV_ID_PRN_4 = static_cast<int32_t>(read_navigation_unsigned(data_bits, SV_ID_PRN_4_BIT));
-    DLOG(INFO) << "SV_ID_PRN_4= " << SV_ID_PRN_4;
+    // DLOG(INFO) << "SV_ID_PRN_4= " << SV_ID_PRN_4;
     C_ic_4 = static_cast<double>(read_navigation_signed(data_bits, C_IC_4_BIT));
     C_ic_4 = C_ic_4 * C_IC_4_LSB;
-    DLOG(INFO) << "C_ic_4= " << C_ic_4;
+    // DLOG(INFO) << "C_ic_4= " << C_ic_4;
     C_is_4 = static_cast<double>(read_navigation_signed(data_bits, C_IS_4_BIT));
     C_is_4 = C_is_4 * C_IS_4_LSB;
-    DLOG(INFO) << "C_is_4= " << C_is_4;
+    // DLOG(INFO) << "C_is_4= " << C_is_4;
     // Clock correction parameters
     t0c_4 = static_cast<int32_t>(read_navigation_unsigned(data_bits, T0C_4_BIT));
     t0c_4 = t0c_4 * T0C_4_LSB;
-    DLOG(INFO) << "t0c_4= " << t0c_4;
+    // DLOG(INFO) << "t0c_4= " << t0c_4;
     af0_4 = static_cast<double>(read_navigation_signed(data_bits, AF0_4_BIT));
     af0_4 = af0_4 * AF0_4_LSB;
-    DLOG(INFO) << "af0_4 = " << af0_4;
+    // DLOG(INFO) << "af0_4 = " << af0_4;
     af1_4 = static_cast<double>(read_navigation_signed(data_bits, AF1_4_BIT));
     af1_4 = af1_4 * AF1_4_LSB;
-    DLOG(INFO) << "af1_4 = " << af1_4;
+    // DLOG(INFO) << "af1_4 = " << af1_4;
     af2_4 = static_cast<double>(read_navigation_signed(data_bits, AF2_4_BIT));
     af2_4 = af2_4 * AF2_4_LSB;
-    DLOG(INFO) << "af2_4 = " << af2_4;
+    // DLOG(INFO) << "af2_4 = " << af2_4;
     spare_4 = static_cast<double>(read_navigation_unsigned(data_bits, SPARE_4_BIT));
-    DLOG(INFO) << "spare_4 = " << spare_4;
+    // DLOG(INFO) << "spare_4 = " << spare_4;
     flag_ephemeris_4 = true;
-    DLOG(INFO) << "flag_tow_set" << flag_TOW_set;
+    // DLOG(INFO) << "flag_tow_set" << flag_TOW_set;
 }
 
 
@@ -842,7 +842,7 @@ int32_t Galileo_Inav_Message::page_jk_decoder(const char* data_jk)
     const std::bitset<GALILEO_DATA_JK_BITS> data_jk_bits(data_jk_string);
 
     const auto page_number = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, PAGE_TYPE_BIT));
-    DLOG(INFO) << "Page number = " << page_number;
+    // DLOG(INFO) << "Page number = " << page_number;
 
     switch (page_number)
         {
@@ -981,258 +981,258 @@ int32_t Galileo_Inav_Message::page_jk_decoder(const char* data_jk)
             // Ionospheric correction
             ai0_5 = static_cast<double>(read_navigation_unsigned(data_jk_bits, AI0_5_BIT));
             ai0_5 = ai0_5 * AI0_5_LSB;
-            DLOG(INFO) << "ai0_5= " << ai0_5;
+            // DLOG(INFO) << "ai0_5= " << ai0_5;
             ai1_5 = static_cast<double>(read_navigation_signed(data_jk_bits, AI1_5_BIT));
             ai1_5 = ai1_5 * AI1_5_LSB;
-            DLOG(INFO) << "ai1_5= " << ai1_5;
+            // DLOG(INFO) << "ai1_5= " << ai1_5;
             ai2_5 = static_cast<double>(read_navigation_signed(data_jk_bits, AI2_5_BIT));
             ai2_5 = ai2_5 * AI2_5_LSB;
-            DLOG(INFO) << "ai2_5= " << ai2_5;
+            // DLOG(INFO) << "ai2_5= " << ai2_5;
             // Ionospheric disturbance flag
             Region1_flag_5 = static_cast<bool>(read_navigation_bool(data_jk_bits, REGION1_5_BIT));
-            DLOG(INFO) << "Region1_flag_5= " << Region1_flag_5;
+            // DLOG(INFO) << "Region1_flag_5= " << Region1_flag_5;
             Region2_flag_5 = static_cast<bool>(read_navigation_bool(data_jk_bits, REGION2_5_BIT));
-            DLOG(INFO) << "Region2_flag_5= " << Region2_flag_5;
+            // DLOG(INFO) << "Region2_flag_5= " << Region2_flag_5;
             Region3_flag_5 = static_cast<bool>(read_navigation_bool(data_jk_bits, REGION3_5_BIT));
-            DLOG(INFO) << "Region3_flag_5= " << Region3_flag_5;
+            // DLOG(INFO) << "Region3_flag_5= " << Region3_flag_5;
             Region4_flag_5 = static_cast<bool>(read_navigation_bool(data_jk_bits, REGION4_5_BIT));
-            DLOG(INFO) << "Region4_flag_5= " << Region4_flag_5;
+            // DLOG(INFO) << "Region4_flag_5= " << Region4_flag_5;
             Region5_flag_5 = static_cast<bool>(read_navigation_bool(data_jk_bits, REGION5_5_BIT));
-            DLOG(INFO) << "Region5_flag_5= " << Region5_flag_5;
+            // DLOG(INFO) << "Region5_flag_5= " << Region5_flag_5;
             BGD_E1E5a_5 = static_cast<double>(read_navigation_signed(data_jk_bits, BGD_E1_E5A_5_BIT));
             BGD_E1E5a_5 = BGD_E1E5a_5 * BGD_E1_E5A_5_LSB;
-            DLOG(INFO) << "BGD_E1E5a_5= " << BGD_E1E5a_5;
+            // DLOG(INFO) << "BGD_E1E5a_5= " << BGD_E1E5a_5;
             BGD_E1E5b_5 = static_cast<double>(read_navigation_signed(data_jk_bits, BGD_E1_E5B_5_BIT));
             BGD_E1E5b_5 = BGD_E1E5b_5 * BGD_E1_E5B_5_LSB;
-            DLOG(INFO) << "BGD_E1E5b_5= " << BGD_E1E5b_5;
+            // DLOG(INFO) << "BGD_E1E5b_5= " << BGD_E1E5b_5;
             E5b_HS_5 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, E5B_HS_5_BIT));
-            DLOG(INFO) << "E5b_HS_5= " << E5b_HS_5;
+            // DLOG(INFO) << "E5b_HS_5= " << E5b_HS_5;
             E1B_HS_5 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, E1_B_HS_5_BIT));
-            DLOG(INFO) << "E1B_HS_5= " << E1B_HS_5;
+            // DLOG(INFO) << "E1B_HS_5= " << E1B_HS_5;
             E5b_DVS_5 = static_cast<bool>(read_navigation_unsigned(data_jk_bits, E5B_DVS_5_BIT));
-            DLOG(INFO) << "E5b_DVS_5= " << E5b_DVS_5;
+            // DLOG(INFO) << "E5b_DVS_5= " << E5b_DVS_5;
             E1B_DVS_5 = static_cast<bool>(read_navigation_unsigned(data_jk_bits, E1_B_DVS_5_BIT));
-            DLOG(INFO) << "E1B_DVS_5= " << E1B_DVS_5;
+            // DLOG(INFO) << "E1B_DVS_5= " << E1B_DVS_5;
             // GST
             WN_5 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, WN_5_BIT));
             WN_0 = WN_5;
-            DLOG(INFO) << "WN_5= " << WN_5;
+            // DLOG(INFO) << "WN_5= " << WN_5;
             TOW_5 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, TOW_5_BIT));
-            DLOG(INFO) << "TOW_5= " << TOW_5;
+            // DLOG(INFO) << "TOW_5= " << TOW_5;
             flag_TOW_5 = true;  // set to false externally
             spare_5 = static_cast<double>(read_navigation_unsigned(data_jk_bits, SPARE_5_BIT));
-            DLOG(INFO) << "spare_5= " << spare_5;
+            // DLOG(INFO) << "spare_5= " << spare_5;
             flag_iono_and_GST = true;  // set to false externally
             flag_TOW_set = true;       // set to false externally
-            DLOG(INFO) << "flag_tow_set" << flag_TOW_set;
+            // DLOG(INFO) << "flag_tow_set" << flag_TOW_set;
             break;
 
         case 6:  // Word type 6: GST-UTC conversion parameters
             A0_6 = static_cast<double>(read_navigation_signed(data_jk_bits, A0_6_BIT));
             A0_6 = A0_6 * A0_6_LSB;
-            DLOG(INFO) << "A0_6= " << A0_6;
+            // DLOG(INFO) << "A0_6= " << A0_6;
             A1_6 = static_cast<double>(read_navigation_signed(data_jk_bits, A1_6_BIT));
             A1_6 = A1_6 * A1_6_LSB;
-            DLOG(INFO) << "A1_6= " << A1_6;
+            // DLOG(INFO) << "A1_6= " << A1_6;
             Delta_tLS_6 = static_cast<int32_t>(read_navigation_signed(data_jk_bits, DELTA_T_LS_6_BIT));
-            DLOG(INFO) << "Delta_tLS_6= " << Delta_tLS_6;
+            // DLOG(INFO) << "Delta_tLS_6= " << Delta_tLS_6;
             t0t_6 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, T0T_6_BIT));
             t0t_6 = t0t_6 * T0T_6_LSB;
-            DLOG(INFO) << "t0t_6= " << t0t_6;
+            // DLOG(INFO) << "t0t_6= " << t0t_6;
             WNot_6 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, W_NOT_6_BIT));
-            DLOG(INFO) << "WNot_6= " << WNot_6;
+            // DLOG(INFO) << "WNot_6= " << WNot_6;
             WN_LSF_6 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, WN_LSF_6_BIT));
-            DLOG(INFO) << "WN_LSF_6= " << WN_LSF_6;
+            // DLOG(INFO) << "WN_LSF_6= " << WN_LSF_6;
             DN_6 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, DN_6_BIT));
-            DLOG(INFO) << "DN_6= " << DN_6;
+            // DLOG(INFO) << "DN_6= " << DN_6;
             Delta_tLSF_6 = static_cast<int32_t>(read_navigation_signed(data_jk_bits, DELTA_T_LSF_6_BIT));
-            DLOG(INFO) << "Delta_tLSF_6= " << Delta_tLSF_6;
+            // DLOG(INFO) << "Delta_tLSF_6= " << Delta_tLSF_6;
             TOW_6 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, TOW_6_BIT));
-            DLOG(INFO) << "TOW_6= " << TOW_6;
+            // DLOG(INFO) << "TOW_6= " << TOW_6;
             flag_TOW_6 = true;      // set to false externally
             flag_utc_model = true;  // set to false externally
             flag_TOW_set = true;    // set to false externally
-            DLOG(INFO) << "flag_tow_set" << flag_TOW_set;
+            // DLOG(INFO) << "flag_tow_set" << flag_TOW_set;
             break;
 
         case 7:  // Word type 7: Almanac for SVID1 (1/2), almanac reference time and almanac reference week number
             IOD_a_7 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, IOD_A_7_BIT));
-            DLOG(INFO) << "IOD_a_7= " << IOD_a_7;
+            // DLOG(INFO) << "IOD_a_7= " << IOD_a_7;
             WN_a_7 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, WN_A_7_BIT));
-            DLOG(INFO) << "WN_a_7= " << WN_a_7;
+            // DLOG(INFO) << "WN_a_7= " << WN_a_7;
             t0a_7 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, T0A_7_BIT));
             t0a_7 = t0a_7 * T0A_7_LSB;
-            DLOG(INFO) << "t0a_7= " << t0a_7;
+            // DLOG(INFO) << "t0a_7= " << t0a_7;
             SVID1_7 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, SVI_D1_7_BIT));
-            DLOG(INFO) << "SVID1_7= " << SVID1_7;
+            // DLOG(INFO) << "SVID1_7= " << SVID1_7;
             DELTA_A_7 = static_cast<double>(read_navigation_signed(data_jk_bits, DELTA_A_7_BIT));
             DELTA_A_7 = DELTA_A_7 * DELTA_A_7_LSB;
-            DLOG(INFO) << "DELTA_A_7= " << DELTA_A_7;
+            // DLOG(INFO) << "DELTA_A_7= " << DELTA_A_7;
             e_7 = static_cast<double>(read_navigation_unsigned(data_jk_bits, E_7_BIT));
             e_7 = e_7 * E_7_LSB;
-            DLOG(INFO) << "e_7= " << e_7;
+            // DLOG(INFO) << "e_7= " << e_7;
             omega_7 = static_cast<double>(read_navigation_signed(data_jk_bits, OMEGA_7_BIT));
             omega_7 = omega_7 * OMEGA_7_LSB;
-            DLOG(INFO) << "omega_7= " << omega_7;
+            // DLOG(INFO) << "omega_7= " << omega_7;
             delta_i_7 = static_cast<double>(read_navigation_signed(data_jk_bits, DELTA_I_7_BIT));
             delta_i_7 = delta_i_7 * DELTA_I_7_LSB;
-            DLOG(INFO) << "delta_i_7= " << delta_i_7;
+            // DLOG(INFO) << "delta_i_7= " << delta_i_7;
             Omega0_7 = static_cast<double>(read_navigation_signed(data_jk_bits, OMEGA0_7_BIT));
             Omega0_7 = Omega0_7 * OMEGA0_7_LSB;
-            DLOG(INFO) << "Omega0_7= " << Omega0_7;
+            // DLOG(INFO) << "Omega0_7= " << Omega0_7;
             Omega_dot_7 = static_cast<double>(read_navigation_signed(data_jk_bits, OMEGA_DOT_7_BIT));
             Omega_dot_7 = Omega_dot_7 * OMEGA_DOT_7_LSB;
-            DLOG(INFO) << "Omega_dot_7= " << Omega_dot_7;
+            // DLOG(INFO) << "Omega_dot_7= " << Omega_dot_7;
             M0_7 = static_cast<double>(read_navigation_signed(data_jk_bits, M0_7_BIT));
             M0_7 = M0_7 * M0_7_LSB;
-            DLOG(INFO) << "M0_7= " << M0_7;
+            // DLOG(INFO) << "M0_7= " << M0_7;
             flag_almanac_1 = true;
-            DLOG(INFO) << "flag_tow_set" << flag_TOW_set;
+            // DLOG(INFO) << "flag_tow_set" << flag_TOW_set;
             break;
 
         case 8:  // Word type 8: Almanac for SVID1 (2/2) and SVID2 (1/2)*/
             IOD_a_8 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, IOD_A_8_BIT));
-            DLOG(INFO) << "IOD_a_8= " << IOD_a_8;
+            // DLOG(INFO) << "IOD_a_8= " << IOD_a_8;
             af0_8 = static_cast<double>(read_navigation_signed(data_jk_bits, AF0_8_BIT));
             af0_8 = af0_8 * AF0_8_LSB;
-            DLOG(INFO) << "af0_8= " << af0_8;
+            // DLOG(INFO) << "af0_8= " << af0_8;
             af1_8 = static_cast<double>(read_navigation_signed(data_jk_bits, AF1_8_BIT));
             af1_8 = af1_8 * AF1_8_LSB;
-            DLOG(INFO) << "af1_8= " << af1_8;
+            // DLOG(INFO) << "af1_8= " << af1_8;
             E5b_HS_8 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, E5B_HS_8_BIT));
-            DLOG(INFO) << "E5b_HS_8= " << E5b_HS_8;
+            // DLOG(INFO) << "E5b_HS_8= " << E5b_HS_8;
             E1B_HS_8 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, E1_B_HS_8_BIT));
-            DLOG(INFO) << "E1B_HS_8= " << E1B_HS_8;
+            // DLOG(INFO) << "E1B_HS_8= " << E1B_HS_8;
             SVID2_8 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, SVI_D2_8_BIT));
-            DLOG(INFO) << "SVID2_8= " << SVID2_8;
+            // DLOG(INFO) << "SVID2_8= " << SVID2_8;
             DELTA_A_8 = static_cast<double>(read_navigation_signed(data_jk_bits, DELTA_A_8_BIT));
             DELTA_A_8 = DELTA_A_8 * DELTA_A_8_LSB;
-            DLOG(INFO) << "DELTA_A_8= " << DELTA_A_8;
+            // DLOG(INFO) << "DELTA_A_8= " << DELTA_A_8;
             e_8 = static_cast<double>(read_navigation_unsigned(data_jk_bits, E_8_BIT));
             e_8 = e_8 * E_8_LSB;
-            DLOG(INFO) << "e_8= " << e_8;
+            // DLOG(INFO) << "e_8= " << e_8;
             omega_8 = static_cast<double>(read_navigation_signed(data_jk_bits, OMEGA_8_BIT));
             omega_8 = omega_8 * OMEGA_8_LSB;
-            DLOG(INFO) << "omega_8= " << omega_8;
+            // DLOG(INFO) << "omega_8= " << omega_8;
             delta_i_8 = static_cast<double>(read_navigation_signed(data_jk_bits, DELTA_I_8_BIT));
             delta_i_8 = delta_i_8 * DELTA_I_8_LSB;
-            DLOG(INFO) << "delta_i_8= " << delta_i_8;
+            // DLOG(INFO) << "delta_i_8= " << delta_i_8;
             Omega0_8 = static_cast<double>(read_navigation_signed(data_jk_bits, OMEGA0_8_BIT));
             Omega0_8 = Omega0_8 * OMEGA0_8_LSB;
-            DLOG(INFO) << "Omega0_8= " << Omega0_8;
+            // DLOG(INFO) << "Omega0_8= " << Omega0_8;
             Omega_dot_8 = static_cast<double>(read_navigation_signed(data_jk_bits, OMEGA_DOT_8_BIT));
             Omega_dot_8 = Omega_dot_8 * OMEGA_DOT_8_LSB;
-            DLOG(INFO) << "Omega_dot_8= " << Omega_dot_8;
+            // DLOG(INFO) << "Omega_dot_8= " << Omega_dot_8;
             flag_almanac_2 = true;
-            DLOG(INFO) << "flag_tow_set" << flag_TOW_set;
+            // DLOG(INFO) << "flag_tow_set" << flag_TOW_set;
             break;
 
         case 9:  // Word type 9: Almanac for SVID2 (2/2) and SVID3 (1/2)
             IOD_a_9 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, IOD_A_9_BIT));
-            DLOG(INFO) << "IOD_a_9= " << IOD_a_9;
+            // DLOG(INFO) << "IOD_a_9= " << IOD_a_9;
             WN_a_9 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, WN_A_9_BIT));
-            DLOG(INFO) << "WN_a_9= " << WN_a_9;
+            // DLOG(INFO) << "WN_a_9= " << WN_a_9;
             t0a_9 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, T0A_9_BIT));
             t0a_9 = t0a_9 * T0A_9_LSB;
-            DLOG(INFO) << "t0a_9= " << t0a_9;
+            // DLOG(INFO) << "t0a_9= " << t0a_9;
             M0_9 = static_cast<double>(read_navigation_signed(data_jk_bits, M0_9_BIT));
             M0_9 = M0_9 * M0_9_LSB;
-            DLOG(INFO) << "M0_9= " << M0_9;
+            // DLOG(INFO) << "M0_9= " << M0_9;
             af0_9 = static_cast<double>(read_navigation_signed(data_jk_bits, AF0_9_BIT));
             af0_9 = af0_9 * AF0_9_LSB;
-            DLOG(INFO) << "af0_9= " << af0_9;
+            // DLOG(INFO) << "af0_9= " << af0_9;
             af1_9 = static_cast<double>(read_navigation_signed(data_jk_bits, AF1_9_BIT));
             af1_9 = af1_9 * AF1_9_LSB;
-            DLOG(INFO) << "af1_9= " << af1_9;
+            // DLOG(INFO) << "af1_9= " << af1_9;
             E5b_HS_9 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, E5B_HS_9_BIT));
-            DLOG(INFO) << "E5b_HS_9= " << E5b_HS_9;
+            // DLOG(INFO) << "E5b_HS_9= " << E5b_HS_9;
             E1B_HS_9 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, E1_B_HS_9_BIT));
-            DLOG(INFO) << "E1B_HS_9= " << E1B_HS_9;
+            // DLOG(INFO) << "E1B_HS_9= " << E1B_HS_9;
             SVID3_9 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, SVI_D3_9_BIT));
-            DLOG(INFO) << "SVID3_9= " << SVID3_9;
+            // DLOG(INFO) << "SVID3_9= " << SVID3_9;
             DELTA_A_9 = static_cast<double>(read_navigation_signed(data_jk_bits, DELTA_A_9_BIT));
             DELTA_A_9 = DELTA_A_9 * DELTA_A_9_LSB;
-            DLOG(INFO) << "DELTA_A_9= " << DELTA_A_9;
+            // DLOG(INFO) << "DELTA_A_9= " << DELTA_A_9;
             e_9 = static_cast<double>(read_navigation_unsigned(data_jk_bits, E_9_BIT));
             e_9 = e_9 * E_9_LSB;
-            DLOG(INFO) << "e_9= " << e_9;
+            // DLOG(INFO) << "e_9= " << e_9;
             omega_9 = static_cast<double>(read_navigation_signed(data_jk_bits, OMEGA_9_BIT));
             omega_9 = omega_9 * OMEGA_9_LSB;
-            DLOG(INFO) << "omega_9= " << omega_9;
+            // DLOG(INFO) << "omega_9= " << omega_9;
             delta_i_9 = static_cast<double>(read_navigation_signed(data_jk_bits, DELTA_I_9_BIT));
             delta_i_9 = delta_i_9 * DELTA_I_9_LSB;
-            DLOG(INFO) << "delta_i_9= " << delta_i_9;
+            // DLOG(INFO) << "delta_i_9= " << delta_i_9;
             flag_almanac_3 = true;
-            DLOG(INFO) << "flag_tow_set" << flag_TOW_set;
+            // DLOG(INFO) << "flag_tow_set" << flag_TOW_set;
             break;
 
         case 10:  // Word type 10: Almanac for SVID3 (2/2) and GST-GPS conversion parameters
             IOD_a_10 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, IOD_A_10_BIT));
-            DLOG(INFO) << "IOD_a_10= " << IOD_a_10;
+            // DLOG(INFO) << "IOD_a_10= " << IOD_a_10;
             Omega0_10 = static_cast<double>(read_navigation_signed(data_jk_bits, OMEGA0_10_BIT));
             Omega0_10 = Omega0_10 * OMEGA0_10_LSB;
-            DLOG(INFO) << "Omega0_10= " << Omega0_10;
+            // DLOG(INFO) << "Omega0_10= " << Omega0_10;
             Omega_dot_10 = static_cast<double>(read_navigation_signed(data_jk_bits, OMEGA_DOT_10_BIT));
             Omega_dot_10 = Omega_dot_10 * OMEGA_DOT_10_LSB;
-            DLOG(INFO) << "Omega_dot_10= " << Omega_dot_10;
+            // DLOG(INFO) << "Omega_dot_10= " << Omega_dot_10;
             M0_10 = static_cast<double>(read_navigation_signed(data_jk_bits, M0_10_BIT));
             M0_10 = M0_10 * M0_10_LSB;
-            DLOG(INFO) << "M0_10= " << M0_10;
+            // DLOG(INFO) << "M0_10= " << M0_10;
             af0_10 = static_cast<double>(read_navigation_signed(data_jk_bits, AF0_10_BIT));
             af0_10 = af0_10 * AF0_10_LSB;
-            DLOG(INFO) << "af0_10= " << af0_10;
+            // DLOG(INFO) << "af0_10= " << af0_10;
             af1_10 = static_cast<double>(read_navigation_signed(data_jk_bits, AF1_10_BIT));
             af1_10 = af1_10 * AF1_10_LSB;
-            DLOG(INFO) << "af1_10= " << af1_10;
+            // DLOG(INFO) << "af1_10= " << af1_10;
             E5b_HS_10 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, E5B_HS_10_BIT));
-            DLOG(INFO) << "E5b_HS_10= " << E5b_HS_10;
+            // DLOG(INFO) << "E5b_HS_10= " << E5b_HS_10;
             E1B_HS_10 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, E1_B_HS_10_BIT));
-            DLOG(INFO) << "E1B_HS_10= " << E1B_HS_10;
+            // DLOG(INFO) << "E1B_HS_10= " << E1B_HS_10;
             A_0G_10 = static_cast<double>(read_navigation_signed(data_jk_bits, A_0_G_10_BIT));
             A_0G_10 = A_0G_10 * A_0G_10_LSB;
             flag_GGTO_1 = true;
-            DLOG(INFO) << "A_0G_10= " << A_0G_10;
+            // DLOG(INFO) << "A_0G_10= " << A_0G_10;
             A_1G_10 = static_cast<double>(read_navigation_signed(data_jk_bits, A_1_G_10_BIT));
             A_1G_10 = A_1G_10 * A_1G_10_LSB;
             flag_GGTO_2 = true;
-            DLOG(INFO) << "A_1G_10= " << A_1G_10;
+            // DLOG(INFO) << "A_1G_10= " << A_1G_10;
             t_0G_10 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, T_0_G_10_BIT));
             t_0G_10 = t_0G_10 * T_0_G_10_LSB;
             flag_GGTO_3 = true;
-            DLOG(INFO) << "t_0G_10= " << t_0G_10;
+            // DLOG(INFO) << "t_0G_10= " << t_0G_10;
             WN_0G_10 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, WN_0_G_10_BIT));
             flag_GGTO_4 = true;
-            DLOG(INFO) << "WN_0G_10= " << WN_0G_10;
+            // DLOG(INFO) << "WN_0G_10= " << WN_0G_10;
             flag_almanac_4 = true;
-            DLOG(INFO) << "flag_tow_set" << flag_TOW_set;
+            // DLOG(INFO) << "flag_tow_set" << flag_TOW_set;
             break;
 
         case 16:  // Word type 16: Reduced Clock and Ephemeris Data (CED) parameters
-            DLOG(INFO) << "Word type 16 arrived";
+            // DLOG(INFO) << "Word type 16 arrived";
             ced_DeltaAred = static_cast<double>(read_navigation_signed(data_jk_bits, CED_DeltaAred_BIT));
             ced_DeltaAred = ced_DeltaAred * CED_DeltaAred_LSB;
-            DLOG(INFO) << "DeltaAred = " << ced_DeltaAred;
+            // DLOG(INFO) << "DeltaAred = " << ced_DeltaAred;
             ced_exred = static_cast<double>(read_navigation_signed(data_jk_bits, CED_exred_BIT));
             ced_exred = ced_exred * CED_exred_LSB;
-            DLOG(INFO) << "exred = " << ced_exred;
+            // DLOG(INFO) << "exred = " << ced_exred;
             ced_eyred = static_cast<double>(read_navigation_signed(data_jk_bits, CED_eyred_BIT));
             ced_eyred = ced_eyred * CED_eyred_LSB;
-            DLOG(INFO) << "eyred = " << ced_eyred;
+            // DLOG(INFO) << "eyred = " << ced_eyred;
             ced_Deltai0red = static_cast<double>(read_navigation_signed(data_jk_bits, CED_Deltai0red_BIT));
             ced_Deltai0red = ced_Deltai0red * CED_Deltai0red_LSB;
-            DLOG(INFO) << "Deltai0red = " << ced_Deltai0red;
+            // DLOG(INFO) << "Deltai0red = " << ced_Deltai0red;
             ced_Omega0red = static_cast<double>(read_navigation_signed(data_jk_bits, CED_Omega0red_BIT));
             ced_Omega0red = ced_Omega0red * CED_Omega0red_LSB;
-            DLOG(INFO) << "Omega0red = " << ced_Omega0red;
+            // DLOG(INFO) << "Omega0red = " << ced_Omega0red;
             ced_lambda0red = static_cast<double>(read_navigation_signed(data_jk_bits, CED_lambda0red_BIT));
             ced_lambda0red = ced_lambda0red * CED_lambda0red_LSB;
-            DLOG(INFO) << "lambda0red = " << ced_lambda0red;
+            // DLOG(INFO) << "lambda0red = " << ced_lambda0red;
             ced_af0red = static_cast<double>(read_navigation_signed(data_jk_bits, CED_af0red_BIT));
             ced_af0red = ced_af0red * CED_af0red_LSB;
-            DLOG(INFO) << "af0red = " << ced_af0red;
+            // DLOG(INFO) << "af0red = " << ced_af0red;
             ced_af1red = static_cast<double>(read_navigation_signed(data_jk_bits, CED_af1red_BIT));
             ced_af1red = ced_af1red * CED_af1red_LSB;
-            DLOG(INFO) << "af1red = " << ced_af1red;
+            // DLOG(INFO) << "af1red = " << ced_af1red;
             flag_CED = true;
             break;
 
@@ -1241,7 +1241,7 @@ int32_t Galileo_Inav_Message::page_jk_decoder(const char* data_jk)
                 if (enable_rs)
                     {
                         IODnav_LSB17 = read_octet_unsigned(data_jk_bits, RS_IODNAV_LSBS);
-                        DLOG(INFO) << "IODnav 2 LSBs in Word type 17: " << static_cast<float>(IODnav_LSB17);
+                        // DLOG(INFO) << "IODnav 2 LSBs in Word type 17: " << static_cast<float>(IODnav_LSB17);
                         if (IODnav_LSB17 != static_cast<uint8_t>((current_IODnav % 4)))
                             {
                                 // IODnav changed, information vector is invalid
@@ -1270,7 +1270,7 @@ int32_t Galileo_Inav_Message::page_jk_decoder(const char* data_jk)
                 if (enable_rs)
                     {
                         IODnav_LSB18 = read_octet_unsigned(data_jk_bits, RS_IODNAV_LSBS);
-                        DLOG(INFO) << "IODnav 2 LSBs in Word type 18: " << static_cast<float>(IODnav_LSB18);
+                        // DLOG(INFO) << "IODnav 2 LSBs in Word type 18: " << static_cast<float>(IODnav_LSB18);
                         if (IODnav_LSB18 != static_cast<uint8_t>((current_IODnav % 4)))
                             {
                                 // IODnav changed, information vector is invalid
@@ -1299,7 +1299,7 @@ int32_t Galileo_Inav_Message::page_jk_decoder(const char* data_jk)
                 if (enable_rs)
                     {
                         IODnav_LSB19 = read_octet_unsigned(data_jk_bits, RS_IODNAV_LSBS);
-                        DLOG(INFO) << "IODnav 2 LSBs in Word type 19: " << static_cast<float>(IODnav_LSB19);
+                        // DLOG(INFO) << "IODnav 2 LSBs in Word type 19: " << static_cast<float>(IODnav_LSB19);
                         if (IODnav_LSB19 != static_cast<uint8_t>((current_IODnav % 4)))
                             {
                                 // IODnav changed, information vector is invalid
@@ -1328,7 +1328,7 @@ int32_t Galileo_Inav_Message::page_jk_decoder(const char* data_jk)
                 if (enable_rs)
                     {
                         IODnav_LSB20 = read_octet_unsigned(data_jk_bits, RS_IODNAV_LSBS);
-                        DLOG(INFO) << "IODnav 2 LSBs in Word type 20: " << static_cast<float>(IODnav_LSB20);
+                        // DLOG(INFO) << "IODnav 2 LSBs in Word type 20: " << static_cast<float>(IODnav_LSB20);
                         if (IODnav_LSB20 != static_cast<uint8_t>((current_IODnav % 4)))
                             {
                                 // IODnav changed, information vector is invalid
@@ -1354,17 +1354,17 @@ int32_t Galileo_Inav_Message::page_jk_decoder(const char* data_jk)
 
         case 0:  // Word type 0: I/NAV Spare Word
             Time_0 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, TIME_0_BIT));
-            DLOG(INFO) << "Time_0= " << Time_0;
+            // DLOG(INFO) << "Time_0= " << Time_0;
             if (Time_0 == 2)  // valid data
                 {
                     WN_0 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, WN_0_BIT));
                     WN_5 = WN_0;
-                    DLOG(INFO) << "WN_0= " << WN_0;
+                    // DLOG(INFO) << "WN_0= " << WN_0;
                     TOW_0 = static_cast<int32_t>(read_navigation_unsigned(data_jk_bits, TOW_0_BIT));
                     flag_TOW_set = true;  // set to false externally
                     flag_TOW_0 = true;    // set to false externally
-                    DLOG(INFO) << "TOW_0= " << TOW_0;
-                    DLOG(INFO) << "flag_tow_set" << flag_TOW_set;
+                    // DLOG(INFO) << "TOW_0= " << TOW_0;
+                    // DLOG(INFO) << "flag_tow_set" << flag_TOW_set;
                 }
             break;
 

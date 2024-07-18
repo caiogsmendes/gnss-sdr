@@ -80,12 +80,12 @@ void channel_status_msg_receiver::msg_handler_channel_status(const pmt::pmt_t& m
                             d_channel_status_map.erase(gnss_synchro_obj->Channel_ID);
                         }
 
-                    // std::cout << "-------- \n" << '\n';
+                    // // std::cout << "-------- \n" << '\n';
                     // for (std::map<int, std::shared_ptr<Gnss_Synchro>>::iterator it = d_channel_status_map.begin(); it != d_channel_status_map.end(); ++it)
                     //     {
-                    //         std::cout << " Channel: " << it->first << " => Doppler: " << it->second->Carrier_Doppler_hz << "[Hz] \n";
+                    //         // std::cout << " Channel: " << it->first << " => Doppler: " << it->second->Carrier_Doppler_hz << "[Hz] \n";
                     //     }
-                    // std::cout << "-------- \n" << '\n';
+                    // // std::cout << "-------- \n" << '\n';
                 }
             else if (msg_type_hash_code == typeid(std::shared_ptr<Monitor_Pvt>).hash_code())
                 {
@@ -93,18 +93,18 @@ void channel_status_msg_receiver::msg_handler_channel_status(const pmt::pmt_t& m
                     const auto monitor_pvt_obj = wht::any_cast<std::shared_ptr<Monitor_Pvt>>(pmt::any_ref(msg));
                     d_pvt_status = *monitor_pvt_obj.get();
 
-                    // std::cout << "-------- \n" << '\n';
-                    // std::cout << "PVT TOW: " << d_pvt_status->TOW_at_current_symbol_ms << '\n';
-                    // std::cout << "-------- \n" << '\n';
+                    // // std::cout << "-------- \n" << '\n';
+                    // // std::cout << "PVT TOW: " << d_pvt_status->TOW_at_current_symbol_ms << '\n';
+                    // // std::cout << "-------- \n" << '\n';
                 }
             else
                 {
-                    LOG(WARNING) << "channel_status_msg_receiver unknown object type!";
+                    // LOG(WARNING) << "channel_status_msg_receiver unknown object type!";
                 }
         }
     catch (const wht::bad_any_cast& e)
         {
-            LOG(WARNING) << "channel_status_msg_receiver Bad any_cast: " << e.what();
+            // LOG(WARNING) << "channel_status_msg_receiver Bad any_cast: " << e.what();
         }
 }
 

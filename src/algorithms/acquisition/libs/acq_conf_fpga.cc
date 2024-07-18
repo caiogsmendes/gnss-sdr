@@ -54,7 +54,7 @@ void Acq_Conf_Fpga::SetFromConfiguration(const ConfigurationInterface *configura
     // find the uio device file corresponding to the acquisition
     if (find_uio_dev_file_name(device_io_name, acquisition_device_name, 0) < 0)
         {
-            std::cout << "Cannot find the FPGA uio device file corresponding to device name " << acquisition_device_name << std::endl;
+            // std::cout << "Cannot find the FPGA uio device file corresponding to device name " << acquisition_device_name << std::endl;
             throw std::exception();
         }
     device_name = device_io_name;

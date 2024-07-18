@@ -48,7 +48,7 @@ Kml_Printer::Kml_Printer(const std::string& base_path) : kml_base_path(base_path
                         {
                             if (!fs::create_directory(new_folder, ec))
                                 {
-                                    std::cout << "Could not create the " << new_folder << " folder.\n";
+                                    // std::cout << "Could not create the " << new_folder << " folder.\n";
                                     kml_base_path = full_path.string();
                                 }
                         }
@@ -61,7 +61,7 @@ Kml_Printer::Kml_Printer(const std::string& base_path) : kml_base_path(base_path
         }
     if (kml_base_path != ".")
         {
-            std::cout << "KML files will be stored at " << kml_base_path << '\n';
+            // std::cout << "KML files will be stored at " << kml_base_path << '\n';
         }
 
     kml_base_path = kml_base_path + fs::path::preferred_separator;
@@ -140,7 +140,7 @@ bool Kml_Printer::set_headers(const std::string& filename, bool time_tag_name)
 
     if (kml_file.is_open() && tmp_file.is_open())
         {
-            DLOG(INFO) << "KML printer writing on " << filename.c_str();
+            // DLOG(INFO) << "KML printer writing on " << filename.c_str();
             // Set iostream numeric format and precision
             kml_file.setf(kml_file.std::ofstream::fixed, kml_file.std::ofstream::floatfield);
             kml_file << std::setprecision(14);
@@ -205,7 +205,7 @@ bool Kml_Printer::set_headers(const std::string& filename, bool time_tag_name)
 
             return true;
         }
-    std::cout << "File " << kml_filename << " cannot be saved. Wrong permissions?\n";
+    // std::cout << "File " << kml_filename << " cannot be saved. Wrong permissions?\n";
     return false;
 }
 
@@ -319,7 +319,7 @@ bool Kml_Printer::close_file()
 
 Kml_Printer::~Kml_Printer()
 {
-    DLOG(INFO) << "KML printer destructor called.";
+    // DLOG(INFO) << "KML printer destructor called.";
     try
         {
             close_file();
@@ -333,7 +333,7 @@ Kml_Printer::~Kml_Printer()
             errorlib::error_code ec;
             if (!fs::remove(fs::path(kml_filename), ec))
                 {
-                    LOG(INFO) << "Error deleting temporary KML file";
+                   // LOG(INFO) << "Error deleting temporary KML file";
                 }
         }
 }

@@ -42,7 +42,7 @@ void GenSignalSource::connect(gr::top_block_sptr top_block)
 {
     if (connected_)
         {
-            LOG(WARNING) << "Signal conditioner already connected internally";
+            // LOG(WARNING) << "Signal conditioner already connected internally";
             return;
         }
 
@@ -52,7 +52,7 @@ void GenSignalSource::connect(gr::top_block_sptr top_block)
     top_block->connect(signal_generator_->get_right_block(), 0,
         filter_->get_left_block(), 0);
 
-    DLOG(INFO) << "signal_generator -> filter";
+    // DLOG(INFO) << "signal_generator -> filter";
 
     connected_ = true;
 }
@@ -62,7 +62,7 @@ void GenSignalSource::disconnect(gr::top_block_sptr top_block)
 {
     if (!connected_)
         {
-            LOG(WARNING) << "Signal conditioner already disconnected internally";
+            // LOG(WARNING) << "Signal conditioner already disconnected internally";
             return;
         }
 

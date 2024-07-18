@@ -250,7 +250,7 @@ public:
         Agnss_Ref_Location& ref_location);
 
     /*
-     * Prints SUPL data to std::cout. Use it for debug purposes only.
+     * Prints SUPL data to // std::cout. Use it for debug purposes only.
      */
     void print_assistance();
 

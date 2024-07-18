@@ -70,7 +70,7 @@ Fpga_Acquisition::Fpga_Acquisition(std::string device_name,
     Fpga_Acquisition::fpga_acquisition_test_register();
     Fpga_Acquisition::close_device();
 
-    DLOG(INFO) << "Acquisition FPGA class created";
+    // DLOG(INFO) << "Acquisition FPGA class created";
 }
 
 
@@ -98,16 +98,16 @@ void Fpga_Acquisition::open_device()
     // open communication with HW accelerator
     if ((d_fd = open(d_device_name.c_str(), O_RDWR | O_SYNC)) == -1)
         {
-            LOG(WARNING) << "Cannot open deviceio" << d_device_name;
-            std::cout << "Acq: cannot open deviceio" << d_device_name << '\n';
+            // LOG(WARNING) << "Cannot open deviceio" << d_device_name;
+            // std::cout << "Acq: cannot open deviceio" << d_device_name << '\n';
         }
     d_map_base = reinterpret_cast<volatile uint32_t *>(mmap(nullptr, FPGA_PAGE_SIZE,
         PROT_READ | PROT_WRITE, MAP_SHARED, d_fd, 0));
 
     if (d_map_base == reinterpret_cast<void *>(-1))
         {
-            LOG(WARNING) << "Cannot map the FPGA acquisition module into user memory";
-            std::cout << "Acq: cannot map deviceio" << d_device_name << '\n';
+            // LOG(WARNING) << "Cannot map the FPGA acquisition module into user memory";
+            // std::cout << "Acq: cannot map deviceio" << d_device_name << '\n';
         }
 }
 
@@ -124,11 +124,11 @@ void Fpga_Acquisition::fpga_acquisition_test_register()
 
     if (writeval != readval)
         {
-            LOG(WARNING) << "Acquisition test register sanity check failed";
+            // LOG(WARNING) << "Acquisition test register sanity check failed";
         }
     else
         {
-            LOG(INFO) << "Acquisition test register sanity check success!";
+           // LOG(INFO) << "Acquisition test register sanity check success!";
         }
 }
 
@@ -152,8 +152,8 @@ void Fpga_Acquisition::run_acquisition()
     const ssize_t nb = read(d_fd, &irq_count, sizeof(irq_count));
     if (nb != sizeof(irq_count))
         {
-            std::cout << "acquisition module Read failed to retrieve 4 bytes!\n";
-            std::cout << "acquisition module Interrupt number " << irq_count << '\n';
+            // std::cout << "acquisition module Read failed to retrieve 4 bytes!\n";
+            // std::cout << "acquisition module Interrupt number " << irq_count << '\n';
         }
 }
 
@@ -229,7 +229,7 @@ void Fpga_Acquisition::close_device()
     auto *aux = const_cast<uint32_t *>(d_map_base);
     if (munmap(static_cast<void *>(aux), FPGA_PAGE_SIZE) == -1)
         {
-            std::cout << "Failed to unmap memory uio\n";
+            // std::cout << "Failed to unmap memory uio\n";
         }
     close(d_fd);
 }

@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <iostream>
+
 
 // frontend::frontend()
 // {
@@ -47,6 +49,20 @@ void frontend_init(void)
 
     gpiod_ctxless_set_value(chip, offset, 0, false, "gpio-toggle", NULL, NULL);  // Lower the hackRF RST_pin
     gpiod_ctxless_set_value(chip, SODIMM129, 0, false, "gpio-toggle", NULL, NULL);
+
+    // if(fork()==0){
+    // char* const argin[] = {"hackrf_info"};
+    // char* cmd = "/usr/bin";
+    // int result = execvp(cmd, argin);
+    int result = system("/usr/bin/hackrf_info");
+    if (result < 0)
+        {
+            std::cout << "\33[31m" << "Front RF Initialization Failed!!! ... " << "\33[0m" << "\n";
+        }
+    else{
+        // perror("execvp");
+        std::cout<<"\33[32m"<<"Front RF Initialized!!..." <<"\33[0m"<<"\n";
+    }
 }
 
 void frontend_SOFT_rst(void)
@@ -65,7 +81,6 @@ void frontend_SOFT_rst(void)
     gpiod_ctxless_set_value(chip, offset, ~line_value, false, "gpio-toggle", NULL, NULL);
     usleep(1000);
     gpiod_ctxless_set_value(chip, offset, ~line_value, false, "gpio-toggle", NULL, NULL);
-
 }
 
 void frontend_HARD_rst(void)

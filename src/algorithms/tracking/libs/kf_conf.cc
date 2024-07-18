@@ -77,7 +77,7 @@ void Kf_Conf::SetFromConfiguration(const ConfigurationInterface *configuration,
     item_type = configuration->property(role + ".item_type", item_type);
     if (!item_type_valid(item_type))
         {
-            LOG(WARNING) << "Unknown item type: " + item_type << ". Set to gr_complex";
+            // LOG(WARNING) << "Unknown item type: " + item_type << ". Set to gr_complex";
             item_type = "gr_complex";
         }
 
@@ -109,7 +109,7 @@ void Kf_Conf::SetFromConfiguration(const ConfigurationInterface *configuration,
     if (smoother_length < 1)
         {
             smoother_length = 1;
-            LOG(WARNING) << "smoother_length must be bigger than 0. It has been set to 1";
+            // LOG(WARNING) << "smoother_length must be bigger than 0. It has been set to 1";
         }
     carrier_lock_test_smoother_samples = configuration->property(role + ".carrier_lock_test_smoother_samples", carrier_lock_test_smoother_samples);
     carrier_lock_test_smoother_alpha = configuration->property(role + ".carrier_lock_test_smoother_alpha", carrier_lock_test_smoother_alpha);

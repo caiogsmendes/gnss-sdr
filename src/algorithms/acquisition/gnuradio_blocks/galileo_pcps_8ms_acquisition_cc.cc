@@ -187,7 +187,7 @@ void galileo_pcps_8ms_acquisition_cc::set_state(int32_t state)
         }
     else
         {
-            LOG(ERROR) << "State can only be set to 0 or 1";
+            // LOG(ERROR) << "State can only be set to 0 or 1";
         }
 }
 
@@ -242,11 +242,11 @@ int galileo_pcps_8ms_acquisition_cc::general_work(int noutput_items,
 
                 d_well_count++;
 
-                DLOG(INFO) << "Channel: " << d_channel
-                           << " , doing acquisition of satellite: " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
-                           << " ,sample stamp: " << d_sample_counter << ", threshold: "
-                           << d_threshold << ", doppler_max: " << d_doppler_max
-                           << ", doppler_step: " << d_doppler_step;
+                // DLOG(INFO) << "Channel: " << d_channel
+                        //    << " , doing acquisition of satellite: " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
+                        //    << " ,sample stamp: " << d_sample_counter << ", threshold: "
+                        //    << d_threshold << ", doppler_max: " << d_doppler_max
+                        //    << ", doppler_step: " << d_doppler_step;
 
                 // 1- Compute the input signal power estimation
                 volk_32fc_magnitude_squared_32f(d_magnitude.data(), in, d_fft_size);
@@ -356,15 +356,15 @@ int galileo_pcps_8ms_acquisition_cc::general_work(int noutput_items,
         case 2:
             {
                 // 6.1- Declare positive acquisition using a message port
-                DLOG(INFO) << "positive acquisition";
-                DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
-                DLOG(INFO) << "sample_stamp " << d_sample_counter;
-                DLOG(INFO) << "test statistics value " << d_test_statistics;
-                DLOG(INFO) << "test statistics threshold " << d_threshold;
-                DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
-                DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
-                DLOG(INFO) << "magnitude " << d_mag;
-                DLOG(INFO) << "input signal power " << d_input_power;
+                // DLOG(INFO) << "positive acquisition";
+                // DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
+                // DLOG(INFO) << "sample_stamp " << d_sample_counter;
+                // DLOG(INFO) << "test statistics value " << d_test_statistics;
+                // DLOG(INFO) << "test statistics threshold " << d_threshold;
+                // DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
+                // DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
+                // DLOG(INFO) << "magnitude " << d_mag;
+                // DLOG(INFO) << "input signal power " << d_input_power;
 
                 d_active = false;
                 d_state = 0;
@@ -391,15 +391,15 @@ int galileo_pcps_8ms_acquisition_cc::general_work(int noutput_items,
         case 3:
             {
                 // 6.2- Declare negative acquisition using a message port
-                DLOG(INFO) << "negative acquisition";
-                DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
-                DLOG(INFO) << "sample_stamp " << d_sample_counter;
-                DLOG(INFO) << "test statistics value " << d_test_statistics;
-                DLOG(INFO) << "test statistics threshold " << d_threshold;
-                DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
-                DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
-                DLOG(INFO) << "magnitude " << d_mag;
-                DLOG(INFO) << "input signal power " << d_input_power;
+                // DLOG(INFO) << "negative acquisition";
+                // DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
+                // DLOG(INFO) << "sample_stamp " << d_sample_counter;
+                // DLOG(INFO) << "test statistics value " << d_test_statistics;
+                // DLOG(INFO) << "test statistics threshold " << d_threshold;
+                // DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
+                // DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
+                // DLOG(INFO) << "magnitude " << d_mag;
+                // DLOG(INFO) << "input signal power " << d_input_power;
 
                 d_active = false;
                 d_state = 0;

@@ -90,7 +90,7 @@ void GpsL2MPcpsAcquisitionTest_msg_rx::msg_handler_channel_events(const pmt::pmt
         }
     catch (const wht::bad_any_cast &e)
         {
-            LOG(WARNING) << "msg_handler_channel_events Bad any_cast: " << e.what();
+            // LOG(WARNING) << "msg_handler_channel_events Bad any_cast: " << e.what();
             rx_message = 0;
         }
 }
@@ -188,7 +188,7 @@ void GpsL2MPcpsAcquisitionTest::plot_grid()
     Acquisition_Dump_Reader acq_dump(basename, sat, doppler_max, doppler_step, samples_per_code, 1);
     if (!acq_dump.read_binary_acq())
         {
-            std::cout << "Error reading files\n";
+            // std::cout << "Error reading files\n";
         }
 
     std::vector<int> *doppler = &acq_dump.doppler;
@@ -198,13 +198,13 @@ void GpsL2MPcpsAcquisitionTest::plot_grid()
     const std::string gnuplot_executable(FLAGS_gnuplot_executable);
     if (gnuplot_executable.empty())
         {
-            std::cout << "WARNING: Although the flag plot_acq_grid has been set to TRUE,\n";
-            std::cout << "gnuplot has not been found in your system.\n";
-            std::cout << "Test results will not be plotted.\n";
+            // std::cout << "WARNING: Although the flag plot_acq_grid has been set to TRUE,\n";
+            // std::cout << "gnuplot has not been found in your system.\n";
+            // std::cout << "Test results will not be plotted.\n";
         }
     else
         {
-            std::cout << "Plotting the acquisition grid. This can take a while...\n";
+            // std::cout << "Plotting the acquisition grid. This can take a while...\n";
             try
                 {
                     fs::path p(gnuplot_executable);
@@ -232,7 +232,7 @@ void GpsL2MPcpsAcquisitionTest::plot_grid()
                 }
             catch (const GnuplotException &ge)
                 {
-                    std::cout << ge.what() << '\n';
+                    // std::cout << ge.what() << '\n';
                 }
         }
     std::string data_str = "./tmp-acq-gps2";
@@ -277,7 +277,7 @@ TEST_F(GpsL2MPcpsAcquisitionTest, ConnectAndRun)
         elapsed_seconds = end - start;
     }) << "Failure running the top_block.";
 
-    std::cout << "Processed " << nsamples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
+    // std::cout << "Processed " << nsamples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
 }
 
 
@@ -358,10 +358,10 @@ TEST_F(GpsL2MPcpsAcquisitionTest, ValidationOfResults)
         elapsed_seconds = end - start;
     }) << "Failure running the top_block.";
 
-    std::cout << "Acquisition process runtime duration: " << elapsed_seconds.count() * 1e6 << " microseconds\n";
+    // std::cout << "Acquisition process runtime duration: " << elapsed_seconds.count() * 1e6 << " microseconds\n";
 
-    std::cout << "gnss_synchro.Acq_doppler_hz = " << gnss_synchro.Acq_doppler_hz << " Hz\n";
-    std::cout << "gnss_synchro.Acq_delay_samples = " << gnss_synchro.Acq_delay_samples << " Samples\n";
+    // std::cout << "gnss_synchro.Acq_doppler_hz = " << gnss_synchro.Acq_doppler_hz << " Hz\n";
+    // std::cout << "gnss_synchro.Acq_delay_samples = " << gnss_synchro.Acq_delay_samples << " Samples\n";
 
     ASSERT_EQ(1, msg_rx->rx_message) << "Acquisition failure. Expected message: 1=ACQ SUCCESS.";
 

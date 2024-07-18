@@ -65,62 +65,62 @@ PlutosdrSignalSource::PlutosdrSignalSource(const ConfigurationInterface* configu
 
     if (item_type_ != "gr_complex")
         {
-            std::cout << "Configuration error: item_type must be gr_complex\n";
+            // std::cout << "Configuration error: item_type must be gr_complex\n";
             LOG(FATAL) << "Configuration error: item_type must be gr_complex!";
         }
 
     // basic check
     if ((gain_mode_ != "manual") && (gain_mode_ != "slow_attack") && (gain_mode_ != "fast_attack") && (gain_mode_ != "hybrid"))
         {
-            std::cout << "Configuration parameter gain_mode should take one of these values:\n";
-            std::cout << " manual, slow_attack, fast_attack, hybrid\n";
-            std::cout << "Error: provided value gain_mode=" << gain_mode_ << " is not among valid values\n";
-            std::cout << " This parameter has been set to its default value gain_mode=" << default_gain_mode << '\n';
+            // std::cout << "Configuration parameter gain_mode should take one of these values:\n";
+            // std::cout << " manual, slow_attack, fast_attack, hybrid\n";
+            // std::cout << "Error: provided value gain_mode=" << gain_mode_ << " is not among valid values\n";
+            // std::cout << " This parameter has been set to its default value gain_mode=" << default_gain_mode << '\n';
             gain_mode_ = default_gain_mode;
-            LOG(WARNING) << "Invalid configuration value for gain_mode parameter. Set to gain_mode=" << default_gain_mode;
+            // LOG(WARNING) << "Invalid configuration value for gain_mode parameter. Set to gain_mode=" << default_gain_mode;
         }
 
     if (gain_mode_ == "manual")
         {
             if (rf_gain_ > 73.0 || rf_gain_ < -1.0)
                 {
-                    std::cout << "Configuration parameter rf_gain should take values between -1.0 and 73 dB\n";
-                    std::cout << "Error: provided value rf_gain=" << rf_gain_ << " is not among valid values\n";
-                    std::cout << " This parameter has been set to its default value rf_gain=64.0\n";
+                    // std::cout << "Configuration parameter rf_gain should take values between -1.0 and 73 dB\n";
+                    // std::cout << "Error: provided value rf_gain=" << rf_gain_ << " is not among valid values\n";
+                    // std::cout << " This parameter has been set to its default value rf_gain=64.0\n";
                     rf_gain_ = 64.0;
-                    LOG(WARNING) << "Invalid configuration value for rf_gain parameter. Set to rf_gain=64.0";
+                    // LOG(WARNING) << "Invalid configuration value for rf_gain parameter. Set to rf_gain=64.0";
                 }
         }
 
     if ((filter_source_ != "Off") && (filter_source_ != "Auto") && (filter_source_ != "File") && (filter_source_ != "Design"))
         {
-            std::cout << "Configuration parameter filter_source should take one of these values:\n";
-            std::cout << "  Off: Disable filter\n";
-            std::cout << "  Auto: Use auto-generated filters\n";
-            std::cout << "  File: User-provided filter in filter_filename parameter\n";
+            // std::cout << "Configuration parameter filter_source should take one of these values:\n";
+            // std::cout << "  Off: Disable filter\n";
+            // std::cout << "  Auto: Use auto-generated filters\n";
+            // std::cout << "  File: User-provided filter in filter_filename parameter\n";
 #if LIBAD9361_VERSION_GREATER_THAN_01
-            std::cout << "  Design: Create filter from Fpass, Fstop, sampling_frequency and bandwidth parameters\n";
+            // std::cout << "  Design: Create filter from Fpass, Fstop, sampling_frequency and bandwidth parameters\n";
 #endif
-            std::cout << "Error: provided value filter_source=" << filter_source_ << " is not among valid values\n";
-            std::cout << " This parameter has been set to its default value filter_source=Off\n";
+            // std::cout << "Error: provided value filter_source=" << filter_source_ << " is not among valid values\n";
+            // std::cout << " This parameter has been set to its default value filter_source=Off\n";
             filter_source_ = std::string("Off");
-            LOG(WARNING) << "Invalid configuration value for filter_source parameter. Set to filter_source=Off";
+            // LOG(WARNING) << "Invalid configuration value for filter_source parameter. Set to filter_source=Off";
         }
 
     if (bandwidth_ < 200000 || bandwidth_ > 56000000)
         {
-            std::cout << "Configuration parameter bandwidth should take values between 200000 and 56000000 Hz\n";
-            std::cout << "Error: provided value bandwidth=" << bandwidth_ << " is not among valid values\n";
-            std::cout << " This parameter has been set to its default value bandwidth=2000000\n";
+            // std::cout << "Configuration parameter bandwidth should take values between 200000 and 56000000 Hz\n";
+            // std::cout << "Error: provided value bandwidth=" << bandwidth_ << " is not among valid values\n";
+            // std::cout << " This parameter has been set to its default value bandwidth=2000000\n";
             bandwidth_ = 2000000;
-            LOG(WARNING) << "Invalid configuration value for bandwidth parameter. Set to bandwidth=2000000";
+            // LOG(WARNING) << "Invalid configuration value for bandwidth parameter. Set to bandwidth=2000000";
         }
 
-    std::cout << "device address: " << uri_ << '\n';
-    std::cout << "frequency : " << freq_ << " Hz\n";
-    std::cout << "sample rate: " << sample_rate_ << " Sps\n";
-    std::cout << "gain mode: " << gain_mode_ << '\n';
-    std::cout << "item type: " << item_type_ << '\n';
+    // std::cout << "device address: " << uri_ << '\n';
+    // std::cout << "frequency : " << freq_ << " Hz\n";
+    // std::cout << "sample rate: " << sample_rate_ << " Sps\n";
+    // std::cout << "gain mode: " << gain_mode_ << '\n';
+    // std::cout << "item type: " << item_type_ << '\n';
 
 #if GNURADIO_API_IIO
 #if GR_IIO_TEMPLATIZED_API
@@ -145,24 +145,24 @@ PlutosdrSignalSource::PlutosdrSignalSource(const ConfigurationInterface* configu
 #endif
     if (samples_ != 0)
         {
-            DLOG(INFO) << "Send STOP signal after " << samples_ << " samples";
+            // DLOG(INFO) << "Send STOP signal after " << samples_ << " samples";
             valve_ = gnss_sdr_make_valve(item_size_, samples_, queue);
-            DLOG(INFO) << "valve(" << valve_->unique_id() << ")";
+            // DLOG(INFO) << "valve(" << valve_->unique_id() << ")";
         }
 
     if (dump_)
         {
-            DLOG(INFO) << "Dumping output into file " << dump_filename_;
+            // DLOG(INFO) << "Dumping output into file " << dump_filename_;
             file_sink_ = gr::blocks::file_sink::make(item_size_, dump_filename_.c_str());
-            DLOG(INFO) << "file_sink(" << file_sink_->unique_id() << ")";
+            // DLOG(INFO) << "file_sink(" << file_sink_->unique_id() << ")";
         }
     if (in_stream_ > 0)
         {
-            LOG(ERROR) << "A signal source does not have an input stream";
+            // LOG(ERROR) << "A signal source does not have an input stream";
         }
     if (out_stream_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 
@@ -172,11 +172,11 @@ void PlutosdrSignalSource::connect(gr::top_block_sptr top_block)
     if (samples_ != 0)
         {
             top_block->connect(plutosdr_source_, 0, valve_, 0);
-            DLOG(INFO) << "connected plutosdr source to valve";
+            // DLOG(INFO) << "connected plutosdr source to valve";
             if (dump_)
                 {
                     top_block->connect(valve_, 0, file_sink_, 0);
-                    DLOG(INFO) << "connected valve to file sink";
+                    // DLOG(INFO) << "connected valve to file sink";
                 }
         }
     else
@@ -184,7 +184,7 @@ void PlutosdrSignalSource::connect(gr::top_block_sptr top_block)
             if (dump_)
                 {
                     top_block->connect(plutosdr_source_, 0, file_sink_, 0);
-                    DLOG(INFO) << "connected plutosdr source to file sink";
+                    // DLOG(INFO) << "connected plutosdr source to file sink";
                 }
         }
 }
@@ -212,7 +212,7 @@ void PlutosdrSignalSource::disconnect(gr::top_block_sptr top_block)
 
 gr::basic_block_sptr PlutosdrSignalSource::get_left_block()
 {
-    LOG(WARNING) << "Trying to get signal source left block.";
+    // LOG(WARNING) << "Trying to get signal source left block.";
     return {};
 }
 

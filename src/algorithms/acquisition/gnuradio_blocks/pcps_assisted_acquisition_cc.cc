@@ -169,13 +169,13 @@ void pcps_assisted_acquisition_cc::get_assistance()
                     d_doppler_min = gps_acq_assisistance.Doppler0 - 1000;
                 }
             this->d_disable_assist = false;
-            std::cout << "Acq assist ENABLED for GPS SV " << this->d_gnss_synchro->PRN << " (Doppler max,Doppler min)=("
-                      << d_doppler_max << "," << d_doppler_min << ")\n";
+            // std::cout << "Acq assist ENABLED for GPS SV " << this->d_gnss_synchro->PRN << " (Doppler max,Doppler min)=("
+                    //   << d_doppler_max << "," << d_doppler_min << ")\n";
         }
     else
         {
             this->d_disable_assist = true;
-            std::cout << "Acq assist DISABLED for GPS SV " << this->d_gnss_synchro->PRN << '\n';
+            // std::cout << "Acq assist DISABLED for GPS SV " << this->d_gnss_synchro->PRN << '\n';
         }
 }
 
@@ -290,12 +290,12 @@ int32_t pcps_assisted_acquisition_cc::compute_and_accumulate_grid(gr_vector_cons
     // initialize acquisition algorithm
     const auto *in = reinterpret_cast<const gr_complex *>(input_items[0]);  // Get the input samples pointer
 
-    DLOG(INFO) << "Channel: " << d_channel
-               << " , doing acquisition of satellite: " << d_gnss_synchro->System << " "
-               << d_gnss_synchro->PRN
-               << " ,sample stamp: " << d_sample_counter << ", threshold: "
-               << d_threshold << ", doppler_max: " << d_doppler_max
-               << ", doppler_step: " << d_doppler_step;
+    // DLOG(INFO) << "Channel: " << d_channel
+            //    << " , doing acquisition of satellite: " << d_gnss_synchro->System << " "
+            //    << d_gnss_synchro->PRN
+            //    << " ,sample stamp: " << d_sample_counter << ", threshold: "
+            //    << d_threshold << ", doppler_max: " << d_doppler_max
+            //    << ", doppler_step: " << d_doppler_step;
 
     // 2- Doppler frequency search loop
     std::vector<float> p_tmp_vector(d_fft_size);
@@ -387,7 +387,7 @@ int pcps_assisted_acquisition_cc::general_work(int noutput_items,
                     if (d_disable_assist == false)
                         {
                             d_disable_assist = true;
-                            std::cout << "Acq assist DISABLED for GPS SV " << this->d_gnss_synchro->PRN << '\n';
+                            // std::cout << "Acq assist DISABLED for GPS SV " << this->d_gnss_synchro->PRN << '\n';
                             d_state = 4;
                         }
                     else
@@ -406,14 +406,14 @@ int pcps_assisted_acquisition_cc::general_work(int noutput_items,
             d_state = 2;
             break;
         case 5:  // Positive_Acq
-            DLOG(INFO) << "positive acquisition";
-            DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
-            DLOG(INFO) << "sample_stamp " << d_sample_counter;
-            DLOG(INFO) << "test statistics value " << d_test_statistics;
-            DLOG(INFO) << "test statistics threshold " << d_threshold;
-            DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
-            DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
-            DLOG(INFO) << "input signal power " << d_input_power;
+            // DLOG(INFO) << "positive acquisition";
+            // DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
+            // DLOG(INFO) << "sample_stamp " << d_sample_counter;
+            // DLOG(INFO) << "test statistics value " << d_test_statistics;
+            // DLOG(INFO) << "test statistics threshold " << d_threshold;
+            // DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
+            // DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
+            // DLOG(INFO) << "input signal power " << d_input_power;
             d_active = false;
             // Send message to channel port //0=STOP_CHANNEL 1=ACQ_SUCCESS 2=ACQ_FAIL
             this->message_port_pub(pmt::mp("events"), pmt::from_long(1));
@@ -432,14 +432,14 @@ int pcps_assisted_acquisition_cc::general_work(int noutput_items,
                 }
             break;
         case 6:  // Negative_Acq
-            DLOG(INFO) << "negative acquisition";
-            DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
-            DLOG(INFO) << "sample_stamp " << d_sample_counter;
-            DLOG(INFO) << "test statistics value " << d_test_statistics;
-            DLOG(INFO) << "test statistics threshold " << d_threshold;
-            DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
-            DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
-            DLOG(INFO) << "input signal power " << d_input_power;
+            // DLOG(INFO) << "negative acquisition";
+            // DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
+            // DLOG(INFO) << "sample_stamp " << d_sample_counter;
+            // DLOG(INFO) << "test statistics value " << d_test_statistics;
+            // DLOG(INFO) << "test statistics threshold " << d_threshold;
+            // DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
+            // DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
+            // DLOG(INFO) << "input signal power " << d_input_power;
             d_active = false;
             // Send message to channel port //0=STOP_CHANNEL 1=ACQ_SUCCESS 2=ACQ_FAIL
             this->message_port_pub(pmt::mp("events"), pmt::from_long(2));

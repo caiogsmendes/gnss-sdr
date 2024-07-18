@@ -54,16 +54,16 @@ GpsL5DllPllTrackingFpga::GpsL5DllPllTrackingFpga(
     if (trk_params_fpga.extend_correlation_symbols < 1)
         {
             trk_params_fpga.extend_correlation_symbols = 1;
-            std::cout << TEXT_RED << "WARNING: GPS L5. extend_correlation_symbols must be bigger than 0. Coherent integration has been set to 1 symbol (1 ms)" << TEXT_RESET << '\n';
+            // std::cout << TEXT_RED << "WARNING: GPS L5. extend_correlation_symbols must be bigger than 0. Coherent integration has been set to 1 symbol (1 ms)" << TEXT_RESET << '\n';
         }
     else if (!trk_params_fpga.track_pilot and trk_params_fpga.extend_correlation_symbols > GPS_L5I_NH_CODE_LENGTH)
         {
             trk_params_fpga.extend_correlation_symbols = GPS_L5I_NH_CODE_LENGTH;
-            std::cout << TEXT_RED << "WARNING: GPS L5. extend_correlation_symbols must be lower than 11 when tracking the data component. Coherent integration has been set to 10 symbols (10 ms)" << TEXT_RESET << '\n';
+            // std::cout << TEXT_RED << "WARNING: GPS L5. extend_correlation_symbols must be lower than 11 when tracking the data component. Coherent integration has been set to 10 symbols (10 ms)" << TEXT_RESET << '\n';
         }
     if ((trk_params_fpga.extend_correlation_symbols > 1) and (trk_params_fpga.pll_bw_narrow_hz > trk_params_fpga.pll_bw_hz or trk_params_fpga.dll_bw_narrow_hz > trk_params_fpga.dll_bw_hz))
         {
-            std::cout << TEXT_RED << "WARNING: GPS L5. PLL or DLL narrow tracking bandwidth is higher than wide tracking one" << TEXT_RESET << '\n';
+            // std::cout << TEXT_RED << "WARNING: GPS L5. PLL or DLL narrow tracking bandwidth is higher than wide tracking one" << TEXT_RESET << '\n';
         }
     track_pilot_ = trk_params_fpga.track_pilot;
     trk_params_fpga.system = 'G';
@@ -181,17 +181,17 @@ GpsL5DllPllTrackingFpga::GpsL5DllPllTrackingFpga(
         }
 
     // ################# MAKE TRACKING GNU Radio object ###################
-    DLOG(INFO) << "role " << role_;
+    // DLOG(INFO) << "role " << role_;
     tracking_fpga_sc_sptr_ = dll_pll_veml_make_tracking_fpga(trk_params_fpga);
-    DLOG(INFO) << "tracking(" << tracking_fpga_sc_sptr_->unique_id() << ")";
+    // DLOG(INFO) << "tracking(" << tracking_fpga_sc_sptr_->unique_id() << ")";
 
     if (in_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 
@@ -230,7 +230,7 @@ void GpsL5DllPllTrackingFpga::set_channel(unsigned int channel)
     // find the uio device file corresponding to the tracking multicorrelator
     if (find_uio_dev_file_name(device_io_name, device_name_, channel_ - num_prev_assigned_ch_) < 0)
         {
-            std::cout << "Cannot find the FPGA uio device file corresponding to device name " << device_name_ << std::endl;
+            // std::cout << "Cannot find the FPGA uio device file corresponding to device name " << device_name_ << std::endl;
             throw std::exception();
         }
 

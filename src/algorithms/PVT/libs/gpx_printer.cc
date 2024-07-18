@@ -45,7 +45,7 @@ Gpx_Printer::Gpx_Printer(const std::string& base_path) : indent("  "),
                         {
                             if (!fs::create_directory(new_folder, ec))
                                 {
-                                    std::cout << "Could not create the " << new_folder << " folder.\n";
+                                    // std::cout << "Could not create the " << new_folder << " folder.\n";
                                     gpx_base_path = full_path.string();
                                 }
                         }
@@ -58,7 +58,7 @@ Gpx_Printer::Gpx_Printer(const std::string& base_path) : indent("  "),
         }
     if (gpx_base_path != ".")
         {
-            std::cout << "GPX files will be stored at " << gpx_base_path << '\n';
+            // std::cout << "GPX files will be stored at " << gpx_base_path << '\n';
         }
 
     gpx_base_path = gpx_base_path + fs::path::preferred_separator;
@@ -118,7 +118,7 @@ bool Gpx_Printer::set_headers(const std::string& filename, bool time_tag_name)
 
     if (gpx_file.is_open())
         {
-            DLOG(INFO) << "GPX printer writing on " << filename.c_str();
+            // DLOG(INFO) << "GPX printer writing on " << filename.c_str();
             // Set iostream numeric format and precision
             gpx_file.setf(gpx_file.std::ofstream::fixed, gpx_file.std::ofstream::floatfield);
             gpx_file << std::setprecision(14);
@@ -135,7 +135,7 @@ bool Gpx_Printer::set_headers(const std::string& filename, bool time_tag_name)
                      << indent << indent << "<trkseg>\n";
             return true;
         }
-    std::cout << "File " << gpx_filename << " cannot be saved. Wrong permissions?\n";
+    // std::cout << "File " << gpx_filename << " cannot be saved. Wrong permissions?\n";
     return false;
 }
 
@@ -206,7 +206,7 @@ bool Gpx_Printer::close_file()
 
 Gpx_Printer::~Gpx_Printer()
 {
-    DLOG(INFO) << "GPX printer destructor called.";
+    // DLOG(INFO) << "GPX printer destructor called.";
     try
         {
             close_file();
@@ -220,7 +220,7 @@ Gpx_Printer::~Gpx_Printer()
             errorlib::error_code ec;
             if (!fs::remove(fs::path(gpx_filename), ec))
                 {
-                    LOG(INFO) << "Error deleting temporary GPX file";
+                   // LOG(INFO) << "Error deleting temporary GPX file";
                 }
         }
 }

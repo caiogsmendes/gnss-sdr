@@ -75,18 +75,18 @@ void parseArguments(int argc, char *argv[], cl_uint *deviceIndex)
       // Print device names
       if (numDevices == 0)
       {
-        std::cout << "No devices found.\n";
+        // std::cout << "No devices found.\n";
       }
       else
       {
-        std::cout << "\nDevices:\n";
+        // std::cout << "\nDevices:\n";
         for (int i = 0; i < numDevices; i++)
         {
           std::string name;
           getDeviceName(devices[i], name);
-          std::cout << i << ": " << name << "\n";
+          // std::cout << i << ": " << name << "\n";
         }
-        std::cout << "\n";
+        // std::cout << "\n";
       }
       exit(0);
     }
@@ -94,19 +94,19 @@ void parseArguments(int argc, char *argv[], cl_uint *deviceIndex)
     {
       if (++i >= argc || !parseUInt(argv[i], deviceIndex))
       {
-        std::cout << "Invalid device index\n";
+        // std::cout << "Invalid device index\n";
         exit(1);
       }
     }
     else if (!strcmp(argv[i], "--help") || !strcmp(argv[i], "-h"))
     {
-      std::cout << "\n";
-      std::cout << "Usage: ./program [OPTIONS]\n\n";
-      std::cout << "Options:\n";
-      std::cout << "  -h  --help               Print the message\n";
-      std::cout << "      --list               List available devices\n";
-      std::cout << "      --device     INDEX   Select device at INDEX\n";
-      std::cout << "\n";
+      // std::cout << "\n";
+      // std::cout << "Usage: ./program [OPTIONS]\n\n";
+      // std::cout << "Options:\n";
+      // std::cout << "  -h  --help               Print the message\n";
+      // std::cout << "      --list               List available devices\n";
+      // std::cout << "      --device     INDEX   Select device at INDEX\n";
+      // std::cout << "\n";
       exit(0);
     }
   }

@@ -81,7 +81,7 @@ void GlonassL1CaDllPllTrackingTest_msg_rx::msg_handler_channel_events(const pmt:
         }
     catch (const wht::bad_any_cast& e)
         {
-            LOG(WARNING) << "msg_handler_channel_events Bad any_cast: " << e.what();
+            // LOG(WARNING) << "msg_handler_channel_events Bad any_cast: " << e.what();
             rx_message = 0;
         }
 }
@@ -203,5 +203,5 @@ TEST_F(GlonassL1CaDllPllTrackingTest, ValidationOfResults)
     }) << "Failure running the top_block.";
 
     // TODO: Verify tracking results
-    std::cout << "Tracked " << nsamples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
+    // std::cout << "Tracked " << nsamples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
 }

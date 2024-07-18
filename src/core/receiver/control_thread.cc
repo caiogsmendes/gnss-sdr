@@ -70,6 +70,8 @@
 #include "serial_cmd_interface.h"
 #include <string.h>
 #include "HEtechSerial.h"
+#include <gpiod.h>
+
 
 #ifdef ENABLE_FPGA
 #include <boost/chrono.hpp>  // for steady_clock
@@ -163,9 +165,9 @@ void ControlThread::init()
      * Caio -> copiei para a função de cmd serial.
      */
     //    serial_control_queue_ = std::make_shared<Concurrent_Queue<pmt::pmt_t>>();
-    std::cout << TEXT_BOLD_BLUE << "Caio: Control Thread Init()" << TEXT_RESET
-              << "\n";
-
+    // std::cout << TEXT_BOLD_BLUE << "Caio: Control Thread Init()" << TEXT_RESET
+            //   << "\n";
+    
     serial_cmd_interface_.set_msg_queue(control_queue_);
     // serial_cmd_interface_.set_channels(flowgraph_->get_channels());
     // serial_synchro_interface_.set_channels(channel_status_->get_current_status_map());
@@ -175,7 +177,7 @@ void ControlThread::init()
     // comms = HEserial_connect( &device[0], B115200, O_RDWR);
     // RGL_ctrl_
     // ###########################################################################
-    // std::cout<<sizeof(uint16_t)<<"\n";
+    // // std::cout<<sizeof(uint16_t)<<"\n";
     if (well_formatted_configuration_)
         {
             try
@@ -186,7 +188,7 @@ void ControlThread::init()
                 }
             catch (const boost::bad_lexical_cast &e)
                 {
-                    std::cout << "Caught bad lexical cast with error " << e.what() << '\n';
+                    // std::cout << "Caught bad lexical cast with error " << e.what() << '\n';
                 }
         }
     else
@@ -276,15 +278,16 @@ void ControlThread::init()
 
 ControlThread::~ControlThread()  // NOLINT(modernize-use-equals-default)
 {
-    DLOG(INFO) << "Control Thread destructor called";
+    // DLOG(INFO) << "Control Thread destructor called";
+    // flag_interrupt_PPS_sig = true;
     if (msqid_ != -1)
         {
             msgctl(msqid_, IPC_RMID, nullptr);
         }
-    if (sysv_queue_thread_.joinable())
-        {
-            sysv_queue_thread_.join();
-        }
+    // if (sysv_queue_thread_.joinable())
+    //     {
+    //         sysv_queue_thread_.join();
+    //     }
     if (cmd_interface_thread_.joinable())
         {
             cmd_interface_thread_.join();
@@ -292,7 +295,7 @@ ControlThread::~ControlThread()  // NOLINT(modernize-use-equals-default)
     // Caio - ControlThread Destructor -> fecha as threads
     if (serial_cmd_interface_thread_.joinable())
         {
-            std::cout << TEXT_BOLD_BLUE << "Caio: Thread join()" << TEXT_RESET << "\n";
+            // std::cout << TEXT_BOLD_BLUE << "Caio: Thread join()" << TEXT_RESET << "\n";
             serial_cmd_interface_thread_.join();
         }
     // if (serial_cmd_interface_thread_w.joinable())
@@ -303,6 +306,10 @@ ControlThread::~ControlThread()  // NOLINT(modernize-use-equals-default)
         {
             serial_timer_function_thread_.join();
         }
+    // if (PPS_siggen_thread_.joinable())
+    // {
+    //     PPS_siggen_thread_.join();
+    // }
 }
 
 
@@ -319,7 +326,7 @@ void ControlThread::serialcmd_listener(void)
 {
     // if (serialcmd_enabled_)
     //     {
-    //         std::cout << TEXT_BOLD_BLUE << "Caio Debug: Serial thread Listener..." << TEXT_RESET
+    //         // std::cout << TEXT_BOLD_BLUE << "Caio Debug: Serial thread Listener..." << TEXT_RESET
     //                   << "\n";
     //         //  const char device = configuration_->property("GNSS-SDR.serial_device", "/dev/ttyUSB0");
     //         // char device[] = {"/dev/ttyUSB1"};
@@ -555,19 +562,19 @@ void ControlThread::serialcmd_timer(void)
     //         //             double tempo_ligado_ms = Uptempo.count();
     //         //             // double tempo_ligado1 = Uptempo1.count();
     //         //             // double tempo_ligado2 = Uptempo2.count();
-    //         //             // std::cout<<std::setprecision(24)<< tempo_ligado_ms <<" ms || "<< tempo_ligado1 <<" us || "<<tempo_ligado2<<" ns"<<"\n";
+    //         //             // // std::cout<<std::setprecision(24)<< tempo_ligado_ms <<" ms || "<< tempo_ligado1 <<" us || "<<tempo_ligado2<<" ns"<<"\n";
     //         // std::chrono::milliseconds diff = tEndSteady - tStartSteady;
     //         // float tempo = diff.count();
     //         float tempo = tempo_ligado_ms.count();
     //         //             // std::time_t endWallTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     //         if (tempo >= 1000)
     //             {
-    //                 //                     // std::cout<< "tempo: "<<std::ctime(&endWallTime)<<"\n";
-    //                 //                     // std::cout<< diff.count()/1000000<<"\n";
+    //                 //                     // // std::cout<< "tempo: "<<std::ctime(&endWallTime)<<"\n";
+    //                 //                     // // std::cout<< diff.count()/1000000<<"\n";
     //                 //                     // sprintf(&buff[0],"Flag 1s, Count:%d \n",count++);
     //                 //                     // serial4send(&buff[0]);
 
-    //                 // std::cout << "Flag_1s_count: " << count++ << "\n";
+    //                 // // std::cout << "Flag_1s_count: " << count++ << "\n";
     //                 tStartSteady = std::chrono::high_resolution_clock::now();
     //                 bool verif{false};
     //                 verif = pvt_ptr->got_first_fix();
@@ -578,7 +585,7 @@ void ControlThread::serialcmd_timer(void)
     //                                 uint8_t bf[] = {0xDF, 0xDF};
     //                                 int siso = 2;
     //                                 int byt = HEserial_envio(&comms, &bf[0], &siso);
-    //                                 std::cout << "Bytes: " << byt << "\n";
+    //                                 // std::cout << "Bytes: " << byt << "\n";
     //                                 countad = 1;
     //                             }
     //                         if ((pvt_ptr->get_latest_PVT_2(&rx_posX,
@@ -596,7 +603,7 @@ void ControlThread::serialcmd_timer(void)
     //                             {
     //                                 arqtestPVT
     //                                     // << std::fixed << std::setprecision(4)
-    //                                     // std::cout
+    //                                     // // std::cout
     //                                     << " "
     //                                     << rx_posX
     //                                     << " "
@@ -745,7 +752,7 @@ void ControlThread::serialcmd_timer(void)
     //                                                                 // Double2Hex(&buff[index + 58], &x.second.satvel_Z);
     //                                                                 // index = index + 65;
     //                                                                 arqtest
-    //                                                                     // std::cout
+    //                                                                     // // std::cout
     //                                                                     << " "
     //                                                                     << x.second.PRN
     //                                                                     << " "
@@ -768,10 +775,10 @@ void ControlThread::serialcmd_timer(void)
     //                                                     }
     //                                             }
     //                                     }
-    //                                 // std::cout<<"\n";
+    //                                 // // std::cout<<"\n";
     //                                 arqtest << "\n";
     //                                 arqtestPVT
-    //                                 // std::cout
+    //                                 // // std::cout
     //                                 << " "
     //                                 << last_RX_time << "\n";
     //                                 // for (int i = 0; i < index + 1; i++)
@@ -781,7 +788,7 @@ void ControlThread::serialcmd_timer(void)
     //                                 //     }
     //                                 // buff[index + 1] = checks;
     //                                 // int bytes = HEserial_envio(&comms, &msgVec[0], &tam);
-    //                                 // std::cout << "Bytes: " << bytes << "\n";
+    //                                 // // std::cout << "Bytes: " << bytes << "\n";
 
     //                                 // // ##############################################################################################
     //                                 // //      Correto
@@ -831,7 +838,7 @@ void ControlThread::serialcmd_timer(void)
     //                                 // bytes = write(comms.fd, &buff[0], msgSize);
     //                                 // contador++;  // tcdrain(comms.fd);
     //                                 // tcflush(comms.fd, TCIOFLUSH);
-    //                                 // std::cout << TEXT_BOLD_CYAN
+    //                                 // // std::cout << TEXT_BOLD_CYAN
     //                                 //           << "PVT_msg: " << bytes
     //                                 //           << " " << contador
     //                                 //         //   << " " << (int)buff[msgSize - 1]
@@ -961,7 +968,7 @@ void ControlThread::serial_sat_send(double *rx_posX, double *rx_posY, double *rx
     //     }
     //     msgVec[261]=checks;
     // int bytes = HEserial_envio(&comms, &msgVec[0], &tam);
-    // std::cout<<"Bytes: "<<bytes<<"\n";
+    // // std::cout<<"Bytes: "<<bytes<<"\n";
     // // 
 }
 
@@ -1018,16 +1025,16 @@ void ControlThread::event_dispatcher(bool &valid_event, pmt::pmt_t &msg)
                     if (receiver_on_standby_ == false)
                         {
                             const auto new_event = wht::any_cast<channel_event_sptr>(pmt::any_ref(msg));
-                            DLOG(INFO) << "New channel event rx from ch id: " << new_event->channel_id
-                                       << " what: " << new_event->event_type;
+                            // DLOG(INFO) << "New channel event rx from ch id: " << new_event->channel_id
+                                    //    << " what: " << new_event->event_type;
                             flowgraph_->apply_action(new_event->channel_id, new_event->event_type);
                         }
                 }
             else if (msg_type_hash_code == command_event_type_hash_code_)
                 {
                     const auto new_event = wht::any_cast<command_event_sptr>(pmt::any_ref(msg));
-                    DLOG(INFO) << "New command event rx from ch id: " << new_event->command_id
-                               << " what: " << new_event->event_type;
+                    // DLOG(INFO) << "New command event rx from ch id: " << new_event->command_id
+                            //    << " what: " << new_event->event_type;
 
                     if (new_event->command_id == 200)
                         {
@@ -1044,7 +1051,7 @@ void ControlThread::event_dispatcher(bool &valid_event, pmt::pmt_t &msg)
                 }
             else
                 {
-                    DLOG(INFO) << "Control Queue: unknown object type!\n";
+                    // DLOG(INFO) << "Control Queue: unknown object type!\n";
                 }
         }
     else
@@ -1082,12 +1089,12 @@ int ControlThread::run()
         }
     catch (const std::exception &e)
         {
-            LOG(ERROR) << e.what();
+            // LOG(ERROR) << e.what();
             return 0;
         }
     if (flowgraph_->connected())
         {
-            LOG(INFO) << "Flowgraph connected";
+           // LOG(INFO) << "Flowgraph connected";
         }
     else
         {
@@ -1097,7 +1104,7 @@ int ControlThread::run()
     flowgraph_->start();
     if (flowgraph_->running())
         {
-            LOG(INFO) << "Flowgraph started";
+           // LOG(INFO) << "Flowgraph started";
         }
     else
         {
@@ -1107,11 +1114,11 @@ int ControlThread::run()
     // launch GNSS assistance process AFTER the flowgraph is running because the GNU Radio asynchronous queues must be already running to transport msgs
     assist_GNSS();
     // start the keyboard_listener thread
-    if (FLAGS_keyboard)
-        {
-            keyboard_thread_ = std::thread(&ControlThread::keyboard_listener, this);
-        }
-    sysv_queue_thread_ = std::thread(&ControlThread::sysv_queue_listener, this);
+    // if (FLAGS_keyboard)
+    //     {
+    //         keyboard_thread_ = std::thread(&ControlThread::keyboard_listener, this);
+    //     }
+    // sysv_queue_thread_ = std::thread(&ControlThread::sysv_queue_listener, this);
 
     // start the telecommand listener thread
     cmd_interface_.set_pvt(flowgraph_->get_pvt());
@@ -1119,7 +1126,7 @@ int ControlThread::run()
 
     // Caio
     // Fazer um listener thread para Serial Cmd
-    std::cout << TEXT_BOLD_BLUE << "Caio: Listener Thread Serial Cmd" << TEXT_RESET << "\n";
+    // std::cout << TEXT_BOLD_BLUE << "Caio: Listener Thread Serial Cmd" << TEXT_RESET << "\n";
     serial_cmd_interface_.set_pvt(flowgraph_->get_pvt());
     serial_cmd_interface_.set_Acq(flowgraph_->get_Acq());
     serial_cmd_interface_.set_Trk(flowgraph_->get_Trk());
@@ -1128,6 +1135,14 @@ int ControlThread::run()
 
     // Thread Serial Listener
     serial_cmd_interface_thread_ = std::thread(&ControlThread::serialcmd_listener, this);
+    // PPS_siggen_thread_=std::thread(&ControlThread::PPS_GPIO_ctrl,this);
+    // sched_param sch_params;
+    // int policy;
+    // pthread_getschedparam(PPS_siggen_thread_.native_handle(), &policy, &sch_params);
+    // sch_params.sched_priority = 97;
+    // if (pthread_setschedparam(PPS_siggen_thread_.native_handle(), SCHED_FIFO, &sch_params))
+    //     std::cout << "Failed to PPS_SigGen setschedparam: " << std::strerror(errno) << '\n';
+    
     // serial_cmd_interface_thread_w = std::thread(&ControlThread::serialcmd_printer, this);
     // Cria uma thread para isso, mas é necessário fechar com .join()
     // na função dos destructors
@@ -1149,7 +1164,7 @@ int ControlThread::run()
             // call the new sat dispatcher and receiver controller
             event_dispatcher(valid_event, msg);
         }
-    std::cout << "Stopping GNSS-SDR, please wait!\n";
+    // std::cout << "Stopping GNSS-SDR, please wait!\n";
     flowgraph_->stop();
     stop_ = true;
     flowgraph_->disconnect();
@@ -1164,16 +1179,16 @@ int ControlThread::run()
 #endif
 
     // Terminate keyboard thread
-    if (FLAGS_keyboard && keyboard_thread_.joinable())
-        {
-            pthread_t id = keyboard_thread_.native_handle();
-            keyboard_thread_.detach();
-#ifndef ANDROID
-            pthread_cancel(id);
-#else
-            // todo: find alternative
-#endif
-        }
+//     if (FLAGS_keyboard && keyboard_thread_.joinable())
+//         {
+//             pthread_t id = keyboard_thread_.native_handle();
+//             keyboard_thread_.detach();
+// #ifndef ANDROID
+//             pthread_cancel(id);
+// #else
+//             // todo: find alternative
+// #endif
+//         }
 
     // Terminate telecommand thread
     if (telecommand_enabled_)
@@ -1191,12 +1206,12 @@ int ControlThread::run()
     //  A thread precisa ser finalizada
     if (serialcmd_enabled_)
         {
-            std::cout << "Caio: Finalizada a Serial Thread" << "\n";
+            // std::cout << "Caio: Finalizada a Serial Thread" << "\n";
             pthread_t id3 = serial_cmd_interface_thread_.native_handle();
             serial_cmd_interface_thread_.detach();
             pthread_cancel(id3);
 
-            std::cout << "Caio: Finalizada a Serial Timer Thread" << "\n";
+            // std::cout << "Caio: Finalizada a Serial Timer Thread" << "\n";
             pthread_t id4 = serial_timer_function_thread_.native_handle();
             serial_timer_function_thread_.detach();
             pthread_cancel(id4);
@@ -1204,9 +1219,13 @@ int ControlThread::run()
             // pthread_t id5 = serial_cmd_interface_thread_w.native_handle();
             // serial_cmd_interface_thread_w.detach();
             // pthread_cancel(id5);
+
+            // pthread_t id8 = PPS_siggen_thread_.native_handle();
+            // PPS_siggen_thread_.detach();
+            // pthread_cancel(id8);
         }
 
-    LOG(INFO) << "Flowgraph stopped";
+   // LOG(INFO) << "Flowgraph stopped";
 
     if (restart_)
         {
@@ -1221,14 +1240,14 @@ void ControlThread::set_control_queue(std::shared_ptr<Concurrent_Queue<pmt::pmt_
 {
     if (flowgraph_->running())
         {
-            LOG(WARNING) << "Unable to set control queue while flowgraph is running";
+            // LOG(WARNING) << "Unable to set control queue while flowgraph is running";
             return;
         }
     control_queue_ = std::move(control_queue);
     cmd_interface_.set_msg_queue(control_queue_);
 
     // Caio
-    std::cout << "Caio: set_control_queue" << "\n";
+    // std::cout << "Caio: set_control_queue" << "\n";
     serial_control_queue_ = std::move(control_queue);
     serial_cmd_interface_.set_msg_queue(serial_control_queue_);
 }
@@ -1275,7 +1294,7 @@ bool ControlThread::read_assistance_from_XML()
             gps_almanac_xml_filename = configuration_->property("GNSS-SDR.AGNSS_gps_almanac_xml", gps_almanac_default_xml_filename_);
         }
 
-    std::cout << "Trying to read GNSS ephemeris from XML file(s)...\n";
+    // std::cout << "Trying to read GNSS ephemeris from XML file(s)...\n";
 
     if (configuration_->property("Channels_1C.count", 0) > 0)
         {
@@ -1286,7 +1305,7 @@ bool ControlThread::read_assistance_from_XML()
                          gps_eph_iter != supl_client_ephemeris_.gps_ephemeris_map.cend();
                          gps_eph_iter++)
                         {
-                            std::cout << "From XML file: Read NAV ephemeris for satellite " << Gnss_Satellite("GPS", gps_eph_iter->second.PRN) << '\n';
+                            // std::cout << "From XML file: Read NAV ephemeris for satellite " << Gnss_Satellite("GPS", gps_eph_iter->second.PRN) << '\n';
                             const std::shared_ptr<Gps_Ephemeris> tmp_obj = std::make_shared<Gps_Ephemeris>(gps_eph_iter->second);
                             flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
                         }
@@ -1297,7 +1316,7 @@ bool ControlThread::read_assistance_from_XML()
                 {
                     const std::shared_ptr<Gps_Utc_Model> tmp_obj = std::make_shared<Gps_Utc_Model>(supl_client_acquisition_.gps_utc);
                     flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
-                    std::cout << "From XML file: Read GPS UTC model parameters.\n";
+                    // std::cout << "From XML file: Read GPS UTC model parameters.\n";
                     ret = true;
                 }
 
@@ -1305,7 +1324,7 @@ bool ControlThread::read_assistance_from_XML()
                 {
                     const std::shared_ptr<Gps_Iono> tmp_obj = std::make_shared<Gps_Iono>(supl_client_acquisition_.gps_iono);
                     flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
-                    std::cout << "From XML file: Read GPS ionosphere model parameters.\n";
+                    // std::cout << "From XML file: Read GPS ionosphere model parameters.\n";
                     ret = true;
                 }
 
@@ -1316,7 +1335,7 @@ bool ControlThread::read_assistance_from_XML()
                          gps_alm_iter != supl_client_ephemeris_.gps_almanac_map.cend();
                          gps_alm_iter++)
                         {
-                            std::cout << "From XML file: Read GPS almanac for satellite " << Gnss_Satellite("GPS", gps_alm_iter->second.PRN) << '\n';
+                            // std::cout << "From XML file: Read GPS almanac for satellite " << Gnss_Satellite("GPS", gps_alm_iter->second.PRN) << '\n';
                             const std::shared_ptr<Gps_Almanac> tmp_obj = std::make_shared<Gps_Almanac>(gps_alm_iter->second);
                             flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
                         }
@@ -1334,7 +1353,7 @@ bool ControlThread::read_assistance_from_XML()
                          gal_eph_iter != supl_client_ephemeris_.gal_ephemeris_map.cend();
                          gal_eph_iter++)
                         {
-                            std::cout << "From XML file: Read ephemeris for satellite " << Gnss_Satellite("Galileo", gal_eph_iter->second.PRN) << '\n';
+                            // std::cout << "From XML file: Read ephemeris for satellite " << Gnss_Satellite("Galileo", gal_eph_iter->second.PRN) << '\n';
                             const std::shared_ptr<Galileo_Ephemeris> tmp_obj = std::make_shared<Galileo_Ephemeris>(gal_eph_iter->second);
                             flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
                         }
@@ -1345,7 +1364,7 @@ bool ControlThread::read_assistance_from_XML()
                 {
                     const std::shared_ptr<Galileo_Iono> tmp_obj = std::make_shared<Galileo_Iono>(supl_client_acquisition_.gal_iono);
                     flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
-                    std::cout << "From XML file: Read Galileo ionosphere model parameters.\n";
+                    // std::cout << "From XML file: Read Galileo ionosphere model parameters.\n";
                     ret = true;
                 }
 
@@ -1353,7 +1372,7 @@ bool ControlThread::read_assistance_from_XML()
                 {
                     const std::shared_ptr<Galileo_Utc_Model> tmp_obj = std::make_shared<Galileo_Utc_Model>(supl_client_acquisition_.gal_utc);
                     flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
-                    std::cout << "From XML file: Read Galileo UTC model parameters.\n";
+                    // std::cout << "From XML file: Read Galileo UTC model parameters.\n";
                     ret = true;
                 }
 
@@ -1364,7 +1383,7 @@ bool ControlThread::read_assistance_from_XML()
                          gal_alm_iter != supl_client_ephemeris_.gal_almanac_map.cend();
                          gal_alm_iter++)
                         {
-                            std::cout << "From XML file: Read Galileo almanac for satellite " << Gnss_Satellite("Galileo", gal_alm_iter->second.PRN) << '\n';
+                            // std::cout << "From XML file: Read Galileo almanac for satellite " << Gnss_Satellite("Galileo", gal_alm_iter->second.PRN) << '\n';
                             const std::shared_ptr<Galileo_Almanac> tmp_obj = std::make_shared<Galileo_Almanac>(gal_alm_iter->second);
                             flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
                         }
@@ -1381,7 +1400,7 @@ bool ControlThread::read_assistance_from_XML()
                          gps_cnav_eph_iter != supl_client_ephemeris_.gps_cnav_ephemeris_map.cend();
                          gps_cnav_eph_iter++)
                         {
-                            std::cout << "From XML file: Read CNAV ephemeris for satellite " << Gnss_Satellite("GPS", gps_cnav_eph_iter->second.PRN) << '\n';
+                            // std::cout << "From XML file: Read CNAV ephemeris for satellite " << Gnss_Satellite("GPS", gps_cnav_eph_iter->second.PRN) << '\n';
                             const std::shared_ptr<Gps_CNAV_Ephemeris> tmp_obj = std::make_shared<Gps_CNAV_Ephemeris>(gps_cnav_eph_iter->second);
                             flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
                         }
@@ -1392,7 +1411,7 @@ bool ControlThread::read_assistance_from_XML()
                 {
                     const std::shared_ptr<Gps_CNAV_Utc_Model> tmp_obj = std::make_shared<Gps_CNAV_Utc_Model>(supl_client_acquisition_.gps_cnav_utc);
                     flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
-                    std::cout << "From XML file: Read GPS CNAV UTC model parameters.\n";
+                    // std::cout << "From XML file: Read GPS CNAV UTC model parameters.\n";
                     ret = true;
                 }
         }
@@ -1406,7 +1425,7 @@ bool ControlThread::read_assistance_from_XML()
                          glo_gnav_eph_iter != supl_client_ephemeris_.glonass_gnav_ephemeris_map.cend();
                          glo_gnav_eph_iter++)
                         {
-                            std::cout << "From XML file: Read GLONASS GNAV ephemeris for satellite " << Gnss_Satellite("GLONASS", glo_gnav_eph_iter->second.PRN) << '\n';
+                            // std::cout << "From XML file: Read GLONASS GNAV ephemeris for satellite " << Gnss_Satellite("GLONASS", glo_gnav_eph_iter->second.PRN) << '\n';
                             const std::shared_ptr<Glonass_Gnav_Ephemeris> tmp_obj = std::make_shared<Glonass_Gnav_Ephemeris>(glo_gnav_eph_iter->second);
                             flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
                         }
@@ -1417,15 +1436,15 @@ bool ControlThread::read_assistance_from_XML()
                 {
                     const std::shared_ptr<Glonass_Gnav_Utc_Model> tmp_obj = std::make_shared<Glonass_Gnav_Utc_Model>(supl_client_acquisition_.glo_gnav_utc);
                     flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
-                    std::cout << "From XML file: Read GLONASS UTC model parameters.\n";
+                    // std::cout << "From XML file: Read GLONASS UTC model parameters.\n";
                     ret = true;
                 }
         }
 
     if (ret == false)
         {
-            std::cout << "Error reading XML files\n";
-            std::cout << "Disabling GNSS assistance...\n";
+            // std::cout << "Error reading XML files\n";
+            // std::cout << "Disabling GNSS assistance...\n";
         }
 
     // Only look for {ref time, ref location} if SUPL is enabled
@@ -1435,25 +1454,25 @@ bool ControlThread::read_assistance_from_XML()
             // Try to read Ref Time from XML
             if (supl_client_acquisition_.load_ref_time_xml(ref_time_xml_filename) == true)
                 {
-                    LOG(INFO) << "SUPL: Read XML Ref Time";
+                   // LOG(INFO) << "SUPL: Read XML Ref Time";
                     const std::shared_ptr<Agnss_Ref_Time> tmp_obj = std::make_shared<Agnss_Ref_Time>(supl_client_acquisition_.gps_time);
                     flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
                 }
             else
                 {
-                    LOG(INFO) << "SUPL: could not read Ref Time XML";
+                   // LOG(INFO) << "SUPL: could not read Ref Time XML";
                 }
 
             // Try to read Ref Location from XML
             if (supl_client_acquisition_.load_ref_location_xml(ref_location_xml_filename) == true)
                 {
-                    LOG(INFO) << "SUPL: Read XML Ref Location";
+                   // LOG(INFO) << "SUPL: Read XML Ref Location";
                     const std::shared_ptr<Agnss_Ref_Location> tmp_obj = std::make_shared<Agnss_Ref_Location>(supl_client_acquisition_.gps_ref_loc);
                     flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
                 }
             else
                 {
-                    LOG(INFO) << "SUPL: could not read Ref Location XML";
+                   // LOG(INFO) << "SUPL: could not read Ref Location XML";
                 }
         }
 
@@ -1469,7 +1488,7 @@ void ControlThread::assist_GNSS()
     const bool enable_agnss_xml = configuration_->property("GNSS-SDR.AGNSS_XML_enabled", false);
     if ((enable_gps_supl_assistance == true) && (enable_agnss_xml == false))
         {
-            std::cout << "SUPL RRLP GPS assistance enabled!\n";
+            // std::cout << "SUPL RRLP GPS assistance enabled!\n";
             const std::string default_acq_server("supl.google.com");
             const std::string default_eph_server("supl.google.com");
             supl_client_ephemeris_.server_name = configuration_->property("GNSS-SDR.SUPL_gps_ephemeris_server", default_acq_server);
@@ -1518,15 +1537,15 @@ void ControlThread::assist_GNSS()
                     // Read assistance from file
                     if (read_assistance_from_XML())
                         {
-                            std::cout << "GNSS assistance data loaded from local XML file(s).\n";
-                            std::cout << "No SUPL request has been performed.\n";
+                            // std::cout << "GNSS assistance data loaded from local XML file(s).\n";
+                            // std::cout << "No SUPL request has been performed.\n";
                         }
                 }
             else
                 {
                     // Request ephemeris from SUPL server
                     supl_client_ephemeris_.request = 1;
-                    std::cout << "SUPL: Try to read GPS ephemeris data from SUPL server...\n";
+                    // std::cout << "SUPL: Try to read GPS ephemeris data from SUPL server...\n";
                     int error = supl_client_ephemeris_.get_assistance(supl_mcc_, supl_mns_, supl_lac_, supl_ci_);
                     if (error == 0)
                         {
@@ -1535,7 +1554,7 @@ void ControlThread::assist_GNSS()
                                  gps_eph_iter != supl_client_ephemeris_.gps_ephemeris_map.cend();
                                  gps_eph_iter++)
                                 {
-                                    std::cout << "SUPL: Received ephemeris data for satellite " << Gnss_Satellite("GPS", gps_eph_iter->second.PRN) << '\n';
+                                    // std::cout << "SUPL: Received ephemeris data for satellite " << Gnss_Satellite("GPS", gps_eph_iter->second.PRN) << '\n';
                                     const std::shared_ptr<Gps_Ephemeris> tmp_obj = std::make_shared<Gps_Ephemeris>(gps_eph_iter->second);
                                     flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
                                 }
@@ -1543,27 +1562,27 @@ void ControlThread::assist_GNSS()
                             const std::string eph_xml_filename = configuration_->property("GNSS-SDR.SUPL_gps_ephemeris_xml", eph_default_xml_filename_);
                             if (supl_client_ephemeris_.save_ephemeris_map_xml(eph_xml_filename, supl_client_ephemeris_.gps_ephemeris_map) == true)
                                 {
-                                    std::cout << "SUPL: XML ephemeris data file created\n";
+                                    // std::cout << "SUPL: XML ephemeris data file created\n";
                                 }
                             else
                                 {
-                                    std::cout << "SUPL: Failed to create XML ephemeris data file\n";
+                                    // std::cout << "SUPL: Failed to create XML ephemeris data file\n";
                                 }
                         }
                     else
                         {
-                            std::cout << "ERROR: SUPL client request for ephemeris data returned " << error << '\n';
-                            std::cout << "Please check your network connectivity and SUPL server configuration\n";
-                            std::cout << "Trying to read AGNSS data from local XML file(s)...\n";
+                            // std::cout << "ERROR: SUPL client request for ephemeris data returned " << error << '\n';
+                            // std::cout << "Please check your network connectivity and SUPL server configuration\n";
+                            // std::cout << "Trying to read AGNSS data from local XML file(s)...\n";
                             if (read_assistance_from_XML() == false)
                                 {
-                                    std::cout << "ERROR: Could not read XML files: Disabling SUPL assistance.\n";
+                                    // std::cout << "ERROR: Could not read XML files: Disabling SUPL assistance.\n";
                                 }
                         }
 
                     // Request almanac, IONO and UTC Model data
                     supl_client_ephemeris_.request = 0;
-                    std::cout << "SUPL: Try to read Almanac, Iono, Utc Model, Ref Time and Ref Location data from SUPL server...\n";
+                    // std::cout << "SUPL: Try to read Almanac, Iono, Utc Model, Ref Time and Ref Location data from SUPL server...\n";
                     error = supl_client_ephemeris_.get_assistance(supl_mcc_, supl_mns_, supl_lac_, supl_ci_);
                     if (error == 0)
                         {
@@ -1572,20 +1591,20 @@ void ControlThread::assist_GNSS()
                                  gps_alm_iter != supl_client_ephemeris_.gps_almanac_map.cend();
                                  gps_alm_iter++)
                                 {
-                                    std::cout << "SUPL: Received almanac data for satellite " << Gnss_Satellite("GPS", gps_alm_iter->second.PRN) << '\n';
+                                    // std::cout << "SUPL: Received almanac data for satellite " << Gnss_Satellite("GPS", gps_alm_iter->second.PRN) << '\n';
                                     const std::shared_ptr<Gps_Almanac> tmp_obj = std::make_shared<Gps_Almanac>(gps_alm_iter->second);
                                     flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
                                 }
                             supl_client_ephemeris_.save_gps_almanac_xml("gps_almanac_map.xml", supl_client_ephemeris_.gps_almanac_map);
                             if (supl_client_ephemeris_.gps_iono.valid == true)
                                 {
-                                    std::cout << "SUPL: Received GPS Ionosphere model parameters\n";
+                                    // std::cout << "SUPL: Received GPS Ionosphere model parameters\n";
                                     const std::shared_ptr<Gps_Iono> tmp_obj = std::make_shared<Gps_Iono>(supl_client_ephemeris_.gps_iono);
                                     flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
                                 }
                             if (supl_client_ephemeris_.gps_utc.valid == true)
                                 {
-                                    std::cout << "SUPL: Received GPS UTC model parameters\n";
+                                    // std::cout << "SUPL: Received GPS UTC model parameters\n";
                                     const std::shared_ptr<Gps_Utc_Model> tmp_obj = std::make_shared<Gps_Utc_Model>(supl_client_ephemeris_.gps_utc);
                                     flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
                                 }
@@ -1593,31 +1612,31 @@ void ControlThread::assist_GNSS()
                             const std::string iono_xml_filename = configuration_->property("GNSS-SDR.SUPL_gps_iono_xml", iono_default_xml_filename_);
                             if (supl_client_ephemeris_.save_iono_xml(iono_xml_filename, supl_client_ephemeris_.gps_iono) == true)
                                 {
-                                    std::cout << "SUPL: Iono data file created\n";
+                                    // std::cout << "SUPL: Iono data file created\n";
                                 }
                             else
                                 {
-                                    std::cout << "SUPL: Failed to create Iono data file\n";
+                                    // std::cout << "SUPL: Failed to create Iono data file\n";
                                 }
                             const std::string utc_xml_filename = configuration_->property("GNSS-SDR.SUPL_gps_utc_model_xml", utc_default_xml_filename_);
                             if (supl_client_ephemeris_.save_utc_xml(utc_xml_filename, supl_client_ephemeris_.gps_utc) == true)
                                 {
-                                    std::cout << "SUPL: UTC model data file created\n";
+                                    // std::cout << "SUPL: UTC model data file created\n";
                                 }
                             else
                                 {
-                                    std::cout << "SUPL: Failed to create UTC model data file\n";
+                                    // std::cout << "SUPL: Failed to create UTC model data file\n";
                                 }
                         }
                     else
                         {
-                            std::cout << "ERROR: SUPL client for almanac data returned " << error << '\n';
-                            std::cout << "Please check your network connectivity and SUPL server configuration\n";
+                            // std::cout << "ERROR: SUPL client for almanac data returned " << error << '\n';
+                            // std::cout << "Please check your network connectivity and SUPL server configuration\n";
                         }
 
                     // Request acquisition assistance
                     supl_client_acquisition_.request = 2;
-                    std::cout << "SUPL: Try to read acquisition assistance data from SUPL server...\n";
+                    // std::cout << "SUPL: Try to read acquisition assistance data from SUPL server...\n";
                     error = supl_client_acquisition_.get_assistance(supl_mcc_, supl_mns_, supl_lac_, supl_ci_);
                     if (error == 0)
                         {
@@ -1626,12 +1645,12 @@ void ControlThread::assist_GNSS()
                                  gps_acq_iter != supl_client_acquisition_.gps_acq_map.cend();
                                  gps_acq_iter++)
                                 {
-                                    std::cout << "SUPL: Received acquisition assistance data for satellite " << Gnss_Satellite("GPS", gps_acq_iter->second.PRN) << '\n';
+                                    // std::cout << "SUPL: Received acquisition assistance data for satellite " << Gnss_Satellite("GPS", gps_acq_iter->second.PRN) << '\n';
                                     global_gps_acq_assist_map.write(gps_acq_iter->second.PRN, gps_acq_iter->second);
                                 }
                             if (supl_client_acquisition_.gps_ref_loc.valid == true)
                                 {
-                                    std::cout << "SUPL: Received Ref Location data (Acquisition Assistance)\n";
+                                    // std::cout << "SUPL: Received Ref Location data (Acquisition Assistance)\n";
                                     agnss_ref_location_ = supl_client_acquisition_.gps_ref_loc;
                                     const std::shared_ptr<Agnss_Ref_Location> tmp_obj = std::make_shared<Agnss_Ref_Location>(agnss_ref_location_);
                                     flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
@@ -1639,7 +1658,7 @@ void ControlThread::assist_GNSS()
                                 }
                             if (supl_client_acquisition_.gps_time.valid == true)
                                 {
-                                    std::cout << "SUPL: Received Ref Time data (Acquisition Assistance)\n";
+                                    // std::cout << "SUPL: Received Ref Time data (Acquisition Assistance)\n";
                                     agnss_ref_time_ = supl_client_acquisition_.gps_time;
                                     const std::shared_ptr<Agnss_Ref_Time> tmp_obj = std::make_shared<Agnss_Ref_Time>(agnss_ref_time_);
                                     flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
@@ -1648,9 +1667,9 @@ void ControlThread::assist_GNSS()
                         }
                     else
                         {
-                            std::cout << "ERROR: SUPL client for acquisition assistance returned " << error << '\n';
-                            std::cout << "Please check your network connectivity and SUPL server configuration\n";
-                            std::cout << "Disabling SUPL acquisition assistance.\n";
+                            // std::cout << "ERROR: SUPL client for acquisition assistance returned " << error << '\n';
+                            // std::cout << "Please check your network connectivity and SUPL server configuration\n";
+                            // std::cout << "Disabling SUPL acquisition assistance.\n";
                         }
                 }
         }
@@ -1660,7 +1679,7 @@ void ControlThread::assist_GNSS()
             // read assistance from file
             if (read_assistance_from_XML())
                 {
-                    std::cout << "GNSS assistance data loaded from local XML file(s).\n";
+                    // std::cout << "GNSS assistance data loaded from local XML file(s).\n";
                 }
         }
 
@@ -1696,25 +1715,25 @@ void ControlThread::apply_action(unsigned int what)
     switch (what)
         {
         case 0:
-            LOG(INFO) << "Received action STOP";
+           // LOG(INFO) << "Received action STOP";
             stop_ = true;
             break;
         case 1:
             {
                 char messg[] = "Caio: Receiver Restart\n";
                 // serial4send(&messg[0]);
-                std::cout << TEXT_BOLD_BLUE << "Caio: Receiver Restart" << TEXT_RESET << "\n";
-                LOG(INFO) << "Received action RESTART";
+                // std::cout << TEXT_BOLD_BLUE << "Caio: Receiver Restart" << TEXT_RESET << "\n";
+               // LOG(INFO) << "Received action RESTART";
                 stop_ = true;
                 restart_ = true;
                 break;
             }
         case 10:  // request standby mode
-            LOG(INFO) << "TC request standby mode";
+           // LOG(INFO) << "TC request standby mode";
             receiver_on_standby_ = true;
             break;
         case 11:
-            LOG(INFO) << "Receiver action COLDSTART";
+           // LOG(INFO) << "Receiver action COLDSTART";
             // delete all ephemeris and almanac information from maps (also the PVT map queue)
             pvt_ptr = flowgraph_->get_pvt();
             pvt_ptr->clear_ephemeris();
@@ -1724,7 +1743,7 @@ void ControlThread::apply_action(unsigned int what)
             receiver_on_standby_ = false;
             break;
         case 12:
-            LOG(INFO) << "Receiver action HOTSTART";
+           // LOG(INFO) << "Receiver action HOTSTART";
             visible_satellites = get_visible_sats(cmd_interface_.get_utc_time(), cmd_interface_.get_LLH());
             // reorder the satellite queue to acquire first those visible satellites
             flowgraph_->priorize_satellites(visible_satellites);
@@ -1732,7 +1751,7 @@ void ControlThread::apply_action(unsigned int what)
             receiver_on_standby_ = false;
             break;
         case 13:
-            LOG(INFO) << "Receiver action WARMSTART";
+           // LOG(INFO) << "Receiver action WARMSTART";
             // delete all ephemeris and almanac information from maps (also the PVT map queue)
             pvt_ptr = flowgraph_->get_pvt();
             pvt_ptr->clear_ephemeris();
@@ -1748,27 +1767,27 @@ void ControlThread::apply_action(unsigned int what)
             break;
         // Caio
         case 14:
-            std::cout << "Caio: Apply_action()" << "\n";
-            LOG(INFO) << "NavComp. Request PVT";
+            // std::cout << "Caio: Apply_action()" << "\n";
+           // LOG(INFO) << "NavComp. Request PVT";
             serial_cmd_interface_.serial_get_pvt();
             break;
         case 15:
             {
-                std::cout << TEXT_BOLD_BLUE << "Caio: ControlThread::apply_action(15)" << TEXT_RESET << "\n";
+                // std::cout << TEXT_BOLD_BLUE << "Caio: ControlThread::apply_action(15)" << TEXT_RESET << "\n";
                 char buf[] = "Caio: ControlThread::apply_action(15)";
                 // serial4send(&buf[0]);
                 break;
             }
         case 16:
             {
-                std::cout << TEXT_BOLD_BLUE << "Front-End Reset " << TEXT_RESET << "\n";
+                // std::cout << TEXT_BOLD_BLUE << "Front-End Reset " << TEXT_RESET << "\n";
                 char buff[] = "Front-End Reset";
                 // serial4send(&buff[0]);
                 break;
             }
         case 17:
             {
-                std::cout << TEXT_BOLD_BLUE << "Request Status" << TEXT_RESET << "\n";
+                // std::cout << TEXT_BOLD_BLUE << "Request Status" << TEXT_RESET << "\n";
                 char buff[] = "Status Requested\n";
                 // serial4send(&buff[0]);
                 // serial_status();
@@ -1776,7 +1795,7 @@ void ControlThread::apply_action(unsigned int what)
             }
         case 18:
             {
-                std::cout << TEXT_BOLD_BLUE << "Request Satellites Ephemeris" << TEXT_RESET << "\n";
+                // std::cout << TEXT_BOLD_BLUE << "Request Satellites Ephemeris" << TEXT_RESET << "\n";
                 char buff[] = "Satellites Ephemeris Requested\n";
                 // serial4send(&buff[0]);
                 break;
@@ -1789,7 +1808,7 @@ void ControlThread::apply_action(unsigned int what)
             }
             // default:
             //     {
-            //         LOG(INFO) << "Unrecognized action.";
+            //        // LOG(INFO) << "Unrecognized action.";
             //         break;
             //     }
         }
@@ -1824,8 +1843,8 @@ std::vector<std::pair<int, Gnss_Satellite>> ControlThread::get_visible_sats(time
     tstruct = *gmtime(&rx_utc_time);
     strftime(buf, sizeof(buf), "%d/%m/%Y %H:%M:%S ", &tstruct);
     const std::string str_time = std::string(buf);
-    std::cout << "Get visible satellites at " << str_time
-              << "UTC, assuming RX position " << LLH[0] << " [deg], " << LLH[1] << " [deg], " << LLH[2] << " [m]\n";
+    // std::cout << "Get visible satellites at " << str_time
+            //   << "UTC, assuming RX position " << LLH[0] << " [deg], " << LLH[1] << " [deg], " << LLH[2] << " [m]\n";
 
     const std::map<int, Gps_Ephemeris> gps_eph_map = pvt_ptr->get_gps_ephemeris();
     for (const auto &it : gps_eph_map)
@@ -1845,7 +1864,7 @@ std::vector<std::pair<int, Gnss_Satellite>> ControlThread::get_visible_sats(time
             // push sat
             if (El > 0)
                 {
-                    std::cout << "Using GPS Ephemeris: Sat " << it.second.PRN << " Az: " << Az << " El: " << El << '\n';
+                    // std::cout << "Using GPS Ephemeris: Sat " << it.second.PRN << " Az: " << Az << " El: " << El << '\n';
                     available_satellites.emplace_back(floor(El),
                         (Gnss_Satellite(std::string("GPS"), it.second.PRN)));
                     visible_gps.push_back(it.second.PRN);
@@ -1870,7 +1889,7 @@ std::vector<std::pair<int, Gnss_Satellite>> ControlThread::get_visible_sats(time
             // push sat
             if (El > 0)
                 {
-                    std::cout << "Using Galileo Ephemeris: Sat " << it.second.PRN << " Az: " << Az << " El: " << El << '\n';
+                    // std::cout << "Using Galileo Ephemeris: Sat " << it.second.PRN << " Az: " << Az << " El: " << El << '\n';
                     available_satellites.emplace_back(floor(El),
                         (Gnss_Satellite(std::string("Galileo"), it.second.PRN)));
                     visible_gal.push_back(it.second.PRN);
@@ -1900,7 +1919,7 @@ std::vector<std::pair<int, Gnss_Satellite>> ControlThread::get_visible_sats(time
                     it2 = std::find(visible_gps.begin(), visible_gps.end(), it.second.PRN);
                     if (it2 == visible_gps.end())
                         {
-                            std::cout << "Using GPS Almanac:  Sat " << it.second.PRN << " Az: " << Az << " El: " << El << '\n';
+                            // std::cout << "Using GPS Almanac:  Sat " << it.second.PRN << " Az: " << Az << " El: " << El << '\n';
                             available_satellites.emplace_back(floor(El),
                                 (Gnss_Satellite(std::string("GPS"), it.second.PRN)));
                         }
@@ -1930,7 +1949,7 @@ std::vector<std::pair<int, Gnss_Satellite>> ControlThread::get_visible_sats(time
                     it2 = std::find(visible_gal.begin(), visible_gal.end(), it.second.PRN);
                     if (it2 == visible_gal.end())
                         {
-                            std::cout << "Using Galileo Almanac:  Sat " << it.second.PRN << " Az: " << Az << " El: " << El << '\n';
+                            // std::cout << "Using Galileo Almanac:  Sat " << it.second.PRN << " Az: " << Az << " El: " << El << '\n';
                             available_satellites.emplace_back(floor(El),
                                 (Gnss_Satellite(std::string("Galileo"), it.second.PRN)));
                         }
@@ -1961,21 +1980,21 @@ void ControlThread::gps_acq_assist_data_collector() const
                 }
 
             // DEBUG MESSAGE
-            std::cout << "Acquisition assistance record has arrived from SAT ID "
-                      << gps_acq.PRN
-                      << " with Doppler "
-                      << gps_acq.Doppler0
-                      << " [Hz]\n";
+            // std::cout << "Acquisition assistance record has arrived from SAT ID "
+                    //   << gps_acq.PRN
+                    //   << " with Doppler "
+                    //   << gps_acq.Doppler0
+                    //   << " [Hz]\n";
             // insert new acq record to the global ephemeris map
             if (global_gps_acq_assist_map.read(gps_acq.PRN, gps_acq_old))
                 {
-                    std::cout << "Acquisition assistance record updated\n";
+                    // std::cout << "Acquisition assistance record updated\n";
                     global_gps_acq_assist_map.write(gps_acq.PRN, gps_acq);
                 }
             else
                 {
                     // insert new acq record
-                    LOG(INFO) << "New acq assist record inserted";
+                   // LOG(INFO) << "New acq assist record inserted";
                     global_gps_acq_assist_map.write(gps_acq.PRN, gps_acq);
                 }
         }
@@ -2010,7 +2029,7 @@ void ControlThread::sysv_queue_listener()
                     received_message = msg.stop_message;
                     if ((std::abs(received_message - (-200.0)) < 10 * std::numeric_limits<double>::epsilon()))
                         {
-                            std::cout << "Quit order received, stopping GNSS-SDR !!\n";
+                            // std::cout << "Quit order received, stopping GNSS-SDR !!\n";
                             control_queue_->push(pmt::make_any(command_event_make(200, 0)));
                             read_queue = false;
                         }
@@ -2028,7 +2047,7 @@ void ControlThread::keyboard_listener()
             std::cin.get(c);
             if (c == 'q')
                 {
-                    std::cout << "Quit keystroke order received, stopping GNSS-SDR !!\n";
+                    // std::cout << "Quit keystroke order received, stopping GNSS-SDR !!\n";
                     control_queue_->push(pmt::make_any(command_event_make(200, 0)));
                     stop_ = true;
                     read_keys = false;
@@ -2084,3 +2103,36 @@ void ControlThread::print_help_at_exit() const
 // }
 
 
+void ControlThread::PPS_GPIO_ctrl(void)
+{
+    // int line_value = 1;
+    // int line;
+    // int ret;
+    char chip[10];
+    // unsigned int offset;
+    const char *gpiochip1 = "1";
+    snprintf(chip, sizeof(chip), "gpiochip%s", gpiochip1);
+    int SODIMM_55 = 18;
+    std::shared_ptr<PvtInterface> pvt_ptr = flowgraph_->get_pvt();
+    sync = pvt_ptr->get_gnss_observables();
+    uint32_t tempo_TOW_current_Symbol_ms;
+    uint32_t tempo_1000ms = 1000;
+    uint32_t tempo_100ms = 100;
+    uint32_t contador{0};
+    while (!flag_interrupt_PPS_sig)
+        {
+            for (const auto &x : sync)
+                {
+                    tempo_TOW_current_Symbol_ms = x.second.TOW_at_current_symbol_ms;
+                    if (tempo_TOW_current_Symbol_ms % tempo_100ms == 0 && (contador == 10))
+                        {
+                            gpiod_ctxless_set_value(chip, SODIMM_55, 1, false, "gpio-toggle", NULL, NULL);
+                            usleep(100000);
+                            gpiod_ctxless_set_value(chip, SODIMM_55, 0, false, "gpio-toggle", NULL, NULL);
+                            contador=1;
+                        }
+                        else if(tempo_TOW_current_Symbol_ms % tempo_100ms == 0 &&(contador!=10)){contador++;}
+                        else{continue;}
+                }
+        }
+}

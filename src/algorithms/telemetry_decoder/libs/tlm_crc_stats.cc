@@ -74,7 +74,7 @@ bool Tlm_CRC_Stats::set_channel(int32_t channel)
         }
     catch (const std::ofstream::failure &e)
         {
-            LOG(WARNING) << "Exception opening telemetry CRC stats dump file " << e.what();
+            // LOG(WARNING) << "Exception opening telemetry CRC stats dump file " << e.what();
             d_enable_crc_stats = false;
         }
 
@@ -125,7 +125,7 @@ Tlm_CRC_Stats::~Tlm_CRC_Stats()
                         }
                     catch (const std::exception &ex)
                         {
-                            DLOG(INFO) << "Telemetry CRC stats cannot write on the output file " << d_dump_crc_stats_filename.c_str();
+                            // DLOG(INFO) << "Telemetry CRC stats cannot write on the output file " << d_dump_crc_stats_filename.c_str();
                         }
 
                     const auto pos = d_dump_file.tellp();
@@ -135,7 +135,7 @@ Tlm_CRC_Stats::~Tlm_CRC_Stats()
                         }
                     catch (const std::exception &ex)
                         {
-                            LOG(WARNING) << "Exception in destructor closing the telemetry CRC stats dump file " << ex.what();
+                            // LOG(WARNING) << "Exception in destructor closing the telemetry CRC stats dump file " << ex.what();
                         }
                     if (pos == 0)
                         {

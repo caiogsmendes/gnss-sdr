@@ -29,11 +29,11 @@ NsrFileSignalSource::NsrFileSignalSource(const ConfigurationInterface* configura
 {
     if (in_streams > 0)
         {
-            LOG(ERROR) << "A signal source does not have an input stream";
+            // LOG(ERROR) << "A signal source does not have an input stream";
         }
     if (out_streams > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 
@@ -48,7 +48,7 @@ std::tuple<size_t, bool> NsrFileSignalSource::itemTypeToSize()
         }
     else
         {
-            LOG(WARNING) << item_type() << " unrecognized item type. Using byte.";
+            // LOG(WARNING) << item_type() << " unrecognized item type. Using byte.";
         }
 
     return std::make_tuple(item_size, is_complex);
@@ -62,17 +62,17 @@ gnss_shared_ptr<gr::block> NsrFileSignalSource::source() const { return unpack_b
 void NsrFileSignalSource::create_file_source_hook()
 {
     unpack_byte_ = make_unpack_byte_2bit_samples();
-    DLOG(INFO) << "unpack_byte_2bit_samples(" << unpack_byte_->unique_id() << ")";
+    // DLOG(INFO) << "unpack_byte_2bit_samples(" << unpack_byte_->unique_id() << ")";
 }
 
 void NsrFileSignalSource::pre_connect_hook(gr::top_block_sptr top_block)
 {
     top_block->connect(file_source(), 0, unpack_byte_, 0);
-    DLOG(INFO) << "connected file_source to unpacker";
+    // DLOG(INFO) << "connected file_source to unpacker";
 }
 
 void NsrFileSignalSource::pre_disconnect_hook(gr::top_block_sptr top_block)
 {
     top_block->disconnect(file_source(), 0, unpack_byte_, 0);
-    DLOG(INFO) << "disconnected file_source from unpacker";
+    // DLOG(INFO) << "disconnected file_source from unpacker";
 }

@@ -34,18 +34,18 @@ IbyteToCbyte::IbyteToCbyte(const ConfigurationInterface* configuration,
     const std::string default_output_item_type("lv_8sc_t");
     const std::string default_dump_filename("../data/input_filter.dat");
 
-    DLOG(INFO) << "role " << role_;
+    // DLOG(INFO) << "role " << role_;
 
     input_item_type_ = configuration->property(role_ + ".input_item_type", default_input_item_type);
     dump_filename_ = configuration->property(role_ + ".dump_filename", default_dump_filename);
 
     ibyte_to_cbyte_ = make_interleaved_byte_to_complex_byte();
 
-    DLOG(INFO) << "data_type_adapter_(" << ibyte_to_cbyte_->unique_id() << ")";
+    // DLOG(INFO) << "data_type_adapter_(" << ibyte_to_cbyte_->unique_id() << ")";
 
     if (dump_)
         {
-            DLOG(INFO) << "Dumping output into file " << dump_filename_;
+            // DLOG(INFO) << "Dumping output into file " << dump_filename_;
             const size_t item_size = sizeof(lv_8sc_t);
             file_sink_ = gr::blocks::file_sink::make(item_size, dump_filename_.c_str());
         }
@@ -55,11 +55,11 @@ IbyteToCbyte::IbyteToCbyte(const ConfigurationInterface* configuration,
         }
     if (in_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 
@@ -86,7 +86,7 @@ void IbyteToCbyte::connect(gr::top_block_sptr top_block)
                 }
             else
                 {
-                    DLOG(INFO) << "Nothing to connect internally";
+                    // DLOG(INFO) << "Nothing to connect internally";
                 }
         }
 }

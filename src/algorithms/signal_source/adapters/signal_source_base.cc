@@ -39,7 +39,7 @@ size_t SignalSourceBase::getRfChannels() const
 
 gr::basic_block_sptr SignalSourceBase::get_left_block()
 {
-    LOG(WARNING) << "Trying to get signal source left block.";
+    // LOG(WARNING) << "Trying to get signal source left block.";
     return {};
 }
 
@@ -92,8 +92,8 @@ size_t SignalSourceBase::decode_item_type(std::string const& item_type, bool* is
                 }
             else
                 {
-                    LOG(WARNING) << item_type
-                                 << " unrecognized item type. Using gr_complex.";
+                    // LOG(WARNING) << item_type
+                                //  << " unrecognized item type. Using gr_complex.";
                     item_size = sizeof(gr_complex);
                 }
         }

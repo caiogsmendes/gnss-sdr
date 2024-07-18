@@ -237,5 +237,5 @@ TEST_F(Galileo_FNAV_INAV_test, ValidationOfResults)
     }) << "Exception during INAV frame decoding";
     end = std::chrono::system_clock::now();
     elapsed_seconds = end - start;
-    std::cout << "Galileo INAV/FNAV CRC and Viterbi decoder test completed in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
+    // std::cout << "Galileo INAV/FNAV CRC and Viterbi decoder test completed in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
 }

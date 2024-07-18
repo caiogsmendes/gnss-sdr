@@ -92,7 +92,7 @@ void BeidouB1iPcpsAcquisitionTest_msg_rx::msg_handler_channel_events(const pmt::
         }
     catch (const wht::bad_any_cast &e)
         {
-            LOG(WARNING) << "msg_handler_channel_events Bad any_cast: " << e.what();
+            // LOG(WARNING) << "msg_handler_channel_events Bad any_cast: " << e.what();
             rx_message = 0;
         }
 }
@@ -186,7 +186,7 @@ void BeidouB1iPcpsAcquisitionTest::plot_grid()
 
     if (!acq_dump.read_binary_acq())
         {
-            std::cout << "Error reading files\n";
+            // std::cout << "Error reading files\n";
         }
 
     std::vector<int> *doppler = &acq_dump.doppler;
@@ -196,13 +196,13 @@ void BeidouB1iPcpsAcquisitionTest::plot_grid()
     const std::string gnuplot_executable(FLAGS_gnuplot_executable);
     if (gnuplot_executable.empty())
         {
-            std::cout << "WARNING: Although the flag plot_acq_grid has been set to TRUE,\n";
-            std::cout << "gnuplot has not been found in your system.\n";
-            std::cout << "Test results will not be plotted.\n";
+            // std::cout << "WARNING: Although the flag plot_acq_grid has been set to TRUE,\n";
+            // std::cout << "gnuplot has not been found in your system.\n";
+            // std::cout << "Test results will not be plotted.\n";
         }
     else
         {
-            std::cout << "Plotting the acquisition grid. This can take a while...\n";
+            // std::cout << "Plotting the acquisition grid. This can take a while...\n";
             try
                 {
                     fs::path p(gnuplot_executable);
@@ -230,7 +230,7 @@ void BeidouB1iPcpsAcquisitionTest::plot_grid()
                 }
             catch (const GnuplotException &ge)
                 {
-                    std::cout << ge.what() << '\n';
+                    // std::cout << ge.what() << '\n';
                 }
         }
     std::string data_str = "./tmp-acq-bds-b1i";
@@ -277,7 +277,7 @@ TEST_F(BeidouB1iPcpsAcquisitionTest, ConnectAndRun)
         elapsed_seconds = end - start;
     }) << "Failure running the top_block.";
 
-    std::cout << "Processed " << nsamples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
+    // std::cout << "Processed " << nsamples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
 }
 
 
@@ -350,7 +350,7 @@ TEST_F(BeidouB1iPcpsAcquisitionTest, ValidationOfResults)
     }) << "Failure running the top_block.";
 
     uint64_t nsamples = gnss_synchro.Acq_samplestamp_samples;
-    std::cout << "Acquired " << nsamples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
+    // std::cout << "Acquired " << nsamples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
     ASSERT_EQ(1, msg_rx->rx_message) << "Acquisition failure. Expected message: 1=ACQ SUCCESS.";
 
     double delay_error_samples = std::abs(expected_delay_samples - gnss_synchro.Acq_delay_samples);

@@ -162,6 +162,7 @@ private:
     void serialcmd_timer(void);
     // double deltaprangecomp(void);
     void serial_sat_send(double*, double*, double*, double*, double*, double*);
+    void PPS_GPIO_ctrl(void);
     //
 
     void keyboard_listener();
@@ -196,12 +197,13 @@ private:
     std::thread serial_cmd_interface_thread_;
     std::thread serial_cmd_interface_thread_w;
     std::thread serial_timer_function_thread_;
+    std::thread PPS_siggen_thread_;
     std::shared_ptr<GNSSFlowgraph> serial_cmd_flowgraph_;
     std::shared_ptr<Concurrent_Queue<pmt::pmt_t>> serial_control_queue_;
     
 
-    std::thread keyboard_thread_;
-    std::thread sysv_queue_thread_;
+    // std::thread keyboard_thread_;
+    // std::thread sysv_queue_thread_;
     std::thread gps_acq_assist_data_collector_thread_;
 
 #ifdef ENABLE_FPGA
@@ -249,8 +251,8 @@ private:
     serial_s_t comms;
     uint16_t RGL_ctrl_{};
     bool flag_serial_interrupt{false};
-
-
+    std::map<int, Gnss_Synchro> sync;
+    bool flag_interrupt_PPS_sig;
     bool pre_2009_file_;  // to override the system time to postprocess old gnss records and avoid wrong week rollover
 };
 

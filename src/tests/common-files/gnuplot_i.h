@@ -1106,7 +1106,7 @@ Gnuplot::~Gnuplot()
         {
 #endif
             // throw GnuplotException("Problem closing communication to gnuplot");
-            std::cout << "Gnuplot window left open.\n";
+            // std::cout << "Gnuplot window left open.\n";
         }
 }
 
@@ -2250,7 +2250,7 @@ inline void Gnuplot::remove_tmpfiles()
                 {
                     if (remove(i.c_str()) != 0)
                         {
-                            std::cout << "Problem closing files\n";
+                            // std::cout << "Problem closing files\n";
                         }
                 }
 

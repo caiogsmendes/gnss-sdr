@@ -67,7 +67,7 @@ int Gnss_Sdr_Valve::work(int noutput_items,
         {
             if (d_ncopied_items >= d_nitems)
                 {
-                    LOG(INFO) << "Stopping receiver, " << d_ncopied_items << " samples processed";
+                   // LOG(INFO) << "Stopping receiver, " << d_ncopied_items << " samples processed";
                     d_queue->push(pmt::make_any(command_event_make(200, 0)));
                     if (d_stop_flowgraph)
                         {

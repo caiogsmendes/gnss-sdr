@@ -86,12 +86,12 @@ int main(int argc, char** argv)
             gflags::SetUsageMessage(intro_help);
             gflags::SetVersionString(gnss_sdr_version);
             gflags::ParseCommandLineFlags(&argc, &argv, true);
-            std::cout << "Initializing GNSS-SDR v" << gnss_sdr_version << " ... Please wait.\n";
+            // std::cout << "Initializing GNSS-SDR v" << gnss_sdr_version << " ... Please wait.\n";
         }
     catch (const std::exception& e)
         {
             std::cerr << e.what() << '\n';
-            std::cout << "GNSS-SDR program ended.\n";
+            // std::cout << "GNSS-SDR program ended.\n";
             return 1;
         }
 
@@ -104,7 +104,7 @@ int main(int argc, char** argv)
     // profiled. Calling cudaDeviceReset causes all profile data to be
     // flushed before the application exits
     cudaDeviceReset();
-    std::cout << "Reset CUDA device done.\n";
+    // std::cout << "Reset CUDA device done.\n";
 #endif
 
     if (GOOGLE_STRIP_LOG == 0)
@@ -112,10 +112,10 @@ int main(int argc, char** argv)
             google::InitGoogleLogging(argv[0]);
             if (FLAGS_log_dir.empty())
                 {
-                    std::cout << "Logging will be written at "
-                              << fs::temp_directory_path()
-                              << '\n'
-                              << "Use gnss-sdr --log_dir=/path/to/log to change that.\n";
+                    // std::cout << "Logging will be written at "
+                            //   << fs::temp_directory_path()
+                            //   << '\n'
+                            //   << "Use gnss-sdr --log_dir=/path/to/log to change that.\n";
                 }
             else
                 {
@@ -124,9 +124,9 @@ int main(int argc, char** argv)
                             const fs::path p(FLAGS_log_dir);
                             if (!fs::exists(p))
                                 {
-                                    std::cout << "The path "
-                                              << FLAGS_log_dir
-                                              << " does not exist, attempting to create it.\n";
+                                    // std::cout << "The path "
+                                            //   << FLAGS_log_dir
+                                            //   << " does not exist, attempting to create it.\n";
                                     errorlib::error_code ec;
                                     if (!fs::create_directory(p, ec))
                                         {
@@ -135,7 +135,7 @@ int main(int argc, char** argv)
                                             return 1;
                                         }
                                 }
-                            std::cout << "Logging will be written at " << FLAGS_log_dir << '\n';
+                            // std::cout << "Logging will be written at " << FLAGS_log_dir << '\n';
                         }
                     catch (const std::exception& e)
                         {
@@ -159,7 +159,7 @@ int main(int argc, char** argv)
             auto control_thread = std::make_unique<ControlThread>();
             // record startup time
             start = std::chrono::system_clock::now();
-            // std::cout<<"Main: thread Initiated"<<"\n";
+            // // std::cout<<"Main: thread Initiated"<<"\n";
             return_code = control_thread->run();
         }
     catch (const boost::thread_resource_error& e)
@@ -171,7 +171,7 @@ int main(int argc, char** argv)
         {
             if (GOOGLE_STRIP_LOG == 0)
                 {
-                    LOG(WARNING) << "Boost exception: " << boost::diagnostic_information(e);
+                    // LOG(WARNING) << "Boost exception: " << boost::diagnostic_information(e);
                     std::cerr << boost::diagnostic_information(e) << '\n';
                 }
             else
@@ -184,7 +184,7 @@ int main(int argc, char** argv)
         {
             if (GOOGLE_STRIP_LOG == 0)
                 {
-                    LOG(WARNING) << "C++ Standard Library exception: " << ex.what();
+                    // LOG(WARNING) << "C++ Standard Library exception: " << ex.what();
                     std::cerr << ex.what() << '\n';
                 }
             else
@@ -197,7 +197,7 @@ int main(int argc, char** argv)
         {
             if (GOOGLE_STRIP_LOG == 0)
                 {
-                    LOG(WARNING) << "Unexpected catch. This should not happen.";
+                    // LOG(WARNING) << "Unexpected catch. This should not happen.";
                     std::cerr << "Unexpected error.\n";
                 }
             else
@@ -216,6 +216,6 @@ int main(int argc, char** argv)
               << " [seconds]\n";
 
     gflags::ShutDownCommandLineFlags();
-    std::cout << "GNSS-SDR program ended.\n";
+    // std::cout << "GNSS-SDR program ended.\n";
     return return_code;
 }

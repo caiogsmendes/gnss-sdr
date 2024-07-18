@@ -30,7 +30,7 @@ void errchk(int v, const char *what)
 {
     if (v < 0)
         {
-            LOG(WARNING) << "Error " << v << " writing to channel " << what << " value may not be supported. ";
+            // LOG(WARNING) << "Error " << v << " writing to channel " << what << " value may not be supported. ";
         }
 }
 
@@ -202,7 +202,7 @@ int setup_filter(const std::string &filter_source_, uint64_t bandwidth_, uint64_
                 }
             catch (const std::runtime_error &e)
                 {
-                    std::cout << "Exception cached when configuring the RX FIR filter: " << e.what() << '\n';
+                    // std::cout << "Exception cached when configuring the RX FIR filter: " << e.what() << '\n';
                 }
             ret = iio_device_attr_write(ad9361_phy_dev, "in_voltage0_rf_port_select", rf_port_select_.c_str());
             if (ret)
@@ -262,49 +262,49 @@ int setup_device_parameters(iio_device *ad9361_phy_dev, bool quadrature_, bool r
     ret = iio_device_attr_write(ad9361_phy_dev, "trx_rate_governor", "nominal");
     if (ret < 0)
         {
-            std::cout << "Failed to set trx_rate_governor: " << ret << '\n';
+            // std::cout << "Failed to set trx_rate_governor: " << ret << '\n';
             return ret;
         }
     ret = iio_device_attr_write(ad9361_phy_dev, "ensm_mode", "fdd");
     if (ret < 0)
         {
-            std::cout << "Failed to set ensm_mode: " << ret << '\n';
+            // std::cout << "Failed to set ensm_mode: " << ret << '\n';
             return ret;
         }
     ret = iio_device_attr_write(ad9361_phy_dev, "calib_mode", "auto");
     if (ret < 0)
         {
-            std::cout << "Failed to set calib_mode: " << ret << '\n';
+            // std::cout << "Failed to set calib_mode: " << ret << '\n';
             return ret;
         }
     ret = iio_device_attr_write_bool(ad9361_phy_dev, "in_voltage_quadrature_tracking_en", quadrature_);
     if (ret < 0)
         {
-            std::cout << "Failed to set in_voltage_quadrature_tracking_en: " << ret << '\n';
+            // std::cout << "Failed to set in_voltage_quadrature_tracking_en: " << ret << '\n';
             return ret;
         }
     ret = iio_device_attr_write_bool(ad9361_phy_dev, "in_voltage_rf_dc_offset_tracking_en", rfdc_);
     if (ret < 0)
         {
-            std::cout << "Failed to set in_voltage_rf_dc_offset_tracking_en: " << ret << '\n';
+            // std::cout << "Failed to set in_voltage_rf_dc_offset_tracking_en: " << ret << '\n';
             return ret;
         }
     ret = iio_device_attr_write_bool(ad9361_phy_dev, "in_voltage_bb_dc_offset_tracking_en", bbdc_);
     if (ret < 0)
         {
-            std::cout << "Failed to set in_voltage_bb_dc_offset_tracking_en: " << ret << '\n';
+            // std::cout << "Failed to set in_voltage_bb_dc_offset_tracking_en: " << ret << '\n';
             return ret;
         }
     ret = iio_device_attr_write(ad9361_phy_dev, "in_voltage0_gain_control_mode", gain_mode_rx1_.c_str());
     if (ret < 0)
         {
-            std::cout << "Failed to set in_voltage0_gain_control_mode: " << ret << '\n';
+            // std::cout << "Failed to set in_voltage0_gain_control_mode: " << ret << '\n';
             return ret;
         }
     ret = iio_device_attr_write(ad9361_phy_dev, "in_voltage1_gain_control_mode", gain_mode_rx2_.c_str());
     if (ret < 0)
         {
-            std::cout << "Failed to set in_voltage1_gain_control_mode: " << ret << '\n';
+            // std::cout << "Failed to set in_voltage1_gain_control_mode: " << ret << '\n';
         }
     return ret;
 }
@@ -343,7 +343,7 @@ bool config_ad9361_rx_local(uint64_t bandwidth_,
 #ifndef LIBAD9361_VERSION_GREATER_THAN_01
     if (filter_source_ == "Design")
         {
-            std::cout << "Option filter_source=Design is not available in this version. Set to filter_source=Off\n";
+            // std::cout << "Option filter_source=Design is not available in this version. Set to filter_source=Off\n";
             filter_source_ = std::string("Off");
         }
     if (Fpass_ != 0.0 or Fstop_ != 0.0)
@@ -354,27 +354,27 @@ bool config_ad9361_rx_local(uint64_t bandwidth_,
 #endif
 
     // iio context
-    std::cout << "Acquiring IIO LOCAL context\n";
+    // std::cout << "Acquiring IIO LOCAL context\n";
     ctx = iio_create_default_context();
     if (!ctx)
         {
-            std::cout << "No context\n";
+            // std::cout << "No context\n";
             throw std::runtime_error("AD9361 IIO No context");
         }
 
     if (iio_context_get_devices_count(ctx) <= 0)
         {
-            std::cout << "No devices\n";
+            // std::cout << "No devices\n";
             throw std::runtime_error("AD9361 IIO No devices");
         }
 
     // AD9361-A
     struct iio_device *ad9361_phy;
-    std::cout << "Acquiring AD9361 phy devices\n";
+    // std::cout << "Acquiring AD9361 phy devices\n";
     ad9361_phy = iio_context_find_device(ctx, RX_DEV_A.c_str());
     if (!ad9361_phy)
         {
-            std::cout << "No " << RX_DEV_A << " dev found\n";
+            // std::cout << "No " << RX_DEV_A << " dev found\n";
             throw std::runtime_error("AD9361 IIO no rx dev found");
         }
 
@@ -393,19 +393,19 @@ bool config_ad9361_rx_local(uint64_t bandwidth_,
 
     // set-up AD9361-A stream device
     std::string rx_stream_dev_a = (enable_ad9361_b ? RX_STREAM_DEV_A : RX_STREAM_DEV);
-    std::cout << "* Acquiring " << rx_stream_dev_a << " streaming device\n";
+    // std::cout << "* Acquiring " << rx_stream_dev_a << " streaming device\n";
     rx = iio_context_find_device(ctx, rx_stream_dev_a.c_str());
     if (!rx)
         {
-            std::cout << "No " << rx_stream_dev_a << " stream dev found\n";
+            // std::cout << "No " << rx_stream_dev_a << " stream dev found\n";
             throw std::runtime_error("AD9361 IIO No " + rx_stream_dev_a + " stream dev found");
         }
 
     // get AD9361-A stream device channel 0 as rx channel 0
-    std::cout << "* Acquiring " << rx_stream_dev_a << " phy channel 0\n";
+    // std::cout << "* Acquiring " << rx_stream_dev_a << " phy channel 0\n";
     if (!get_ad9361_stream_ch(ctx, RX, rx, 0, &rx_chan0))
         {
-            std::cout << rx_stream_dev_a << " channel 0 not found\n";
+            // std::cout << rx_stream_dev_a << " channel 0 not found\n";
             throw std::runtime_error(rx_stream_dev_a + "RX channel 0 not found");
         }
 
@@ -418,10 +418,10 @@ bool config_ad9361_rx_local(uint64_t bandwidth_,
             return false;
         }
     // Configure LO channel
-    std::cout << "* Acquiring " << RX_DEV_A << " LO RX channel 0\n";
+    // std::cout << "* Acquiring " << RX_DEV_A << " LO RX channel 0\n";
     if (!get_lo_chan(ad9361_phy, RX, 0, &chn))
         {
-            std::cout << "RX LO channel 0not found\n";
+            // std::cout << "RX LO channel 0not found\n";
             throw std::runtime_error("RX LO channel 0not found");
         }
     wr_ch_lli(chn, "frequency", freq0_);
@@ -429,19 +429,19 @@ bool config_ad9361_rx_local(uint64_t bandwidth_,
     if (enable_ad9361_b)
         {
             // set-up AD9361-B stream device
-            std::cout << "* Acquiring " << RX_STREAM_DEV_B << " streaming device\n";
+            // std::cout << "* Acquiring " << RX_STREAM_DEV_B << " streaming device\n";
             rx = iio_context_find_device(ctx, RX_STREAM_DEV_B.c_str());
             if (!rx)
                 {
-                    std::cout << "No " << RX_STREAM_DEV_B << " stream dev found\n";
+                    // std::cout << "No " << RX_STREAM_DEV_B << " stream dev found\n";
                     throw std::runtime_error("AD9361 IIO No " + RX_STREAM_DEV_B + " stream dev found");
                 }
 
             // get AD9361-B stream device channel 0 as rx channel 1
-            std::cout << "* Acquiring " << RX_STREAM_DEV_B << " phy channel 0\n";
+            // std::cout << "* Acquiring " << RX_STREAM_DEV_B << " phy channel 0\n";
             if (!get_ad9361_stream_ch(ctx, RX, rx, 0, &rx_chan1))
                 {
-                    std::cout << RX_STREAM_DEV_B << " channel 0 not found\n";
+                    // std::cout << RX_STREAM_DEV_B << " channel 0 not found\n";
                     throw std::runtime_error(RX_STREAM_DEV_B + "RX channel 0 not found");
                 }
 
@@ -454,10 +454,10 @@ bool config_ad9361_rx_local(uint64_t bandwidth_,
                     return false;
                 }
             // Configure LO channel
-            std::cout << "* Acquiring " << RX_DEV_B << " LO RX channel 0\n";
+            // std::cout << "* Acquiring " << RX_DEV_B << " LO RX channel 0\n";
             if (!get_lo_chan(ad9361_phy_B, RX, 0, &chn))
                 {
-                    std::cout << "RX LO channel 1 not found\n";
+                    // std::cout << "RX LO channel 1 not found\n";
                     throw std::runtime_error("RX LO channel 1 not found");
                 }
             wr_ch_lli(chn, "frequency", freq1_);
@@ -465,10 +465,10 @@ bool config_ad9361_rx_local(uint64_t bandwidth_,
     else
         {
             // GET ad9361-A stream device channel 1 as rx channel 1
-            std::cout << "* Acquiring " << rx_stream_dev_a << " phy channel 1\n";
+            // std::cout << "* Acquiring " << rx_stream_dev_a << " phy channel 1\n";
             if (!get_ad9361_stream_ch(ctx, RX, rx, 1, &rx_chan1))
                 {
-                    std::cout << rx_stream_dev_a << " channel 1 not found\n";
+                    // std::cout << rx_stream_dev_a << " channel 1 not found\n";
                     throw std::runtime_error(rx_stream_dev_a + "RX channel 1 not found");
                 }
             if (setup_filter(filter_source_, bandwidth_, sample_rate_, freq0_, rf_port_select_, ad9361_phy, rx_chan1, chn, 1, filter_filename_, Fpass_, Fstop_) == -1)
@@ -477,7 +477,7 @@ bool config_ad9361_rx_local(uint64_t bandwidth_,
                 }
         }
 
-    std::cout << "* Enabling IIO streaming channels\n";
+    // std::cout << "* Enabling IIO streaming channels\n";
     if (rx1_enable_)
         {
             iio_channel_enable(rx_chan0);
@@ -489,17 +489,17 @@ bool config_ad9361_rx_local(uint64_t bandwidth_,
         }
     if (!rx1_enable_ and !rx2_enable_)
         {
-            std::cout << "WARNING: No Rx channels enabled.\n";
+            // std::cout << "WARNING: No Rx channels enabled.\n";
         }
 
-    std::cout << "configuring " << RX_DEV_A << " device parameters\n";
+    // std::cout << "configuring " << RX_DEV_A << " device parameters\n";
     if (setup_device_parameters(ad9361_phy, quadrature_, rfdc_, bbdc_, gain_mode_rx1_, gain_mode_rx2_) < 0)
         {
             throw std::runtime_error("configuring " + RX_DEV_A + " device parameters failed\n");
         }
     if (enable_ad9361_b)
         {
-            std::cout << "configuring " << RX_DEV_B << " device parameters\n";
+            // std::cout << "configuring " << RX_DEV_B << " device parameters\n";
             if (setup_device_parameters(ad9361_phy_B, quadrature_, rfdc_, bbdc_, gain_mode_rx2_, gain_mode_rx2_) < 0)
                 {
                     throw std::runtime_error("configuring " + RX_DEV_B + " device parameters failed\n");
@@ -511,7 +511,7 @@ bool config_ad9361_rx_local(uint64_t bandwidth_,
             ret = iio_device_attr_write_double(ad9361_phy, "in_voltage0_hardwaregain", rf_gain_rx1_);
             if (ret < 0)
                 {
-                    std::cout << "Failed to set in_voltage0_hardwaregain: " << ret << '\n';
+                    // std::cout << "Failed to set in_voltage0_hardwaregain: " << ret << '\n';
                 }
         }
 
@@ -522,7 +522,7 @@ bool config_ad9361_rx_local(uint64_t bandwidth_,
                     ret = iio_device_attr_write_double(ad9361_phy, "in_voltage1_hardwaregain", rf_gain_rx2_);
                     if (ret < 0)
                         {
-                            std::cout << "Failed to set in_voltage1_hardwaregain: " << ret << '\n';
+                            // std::cout << "Failed to set in_voltage1_hardwaregain: " << ret << '\n';
                         }
                 }
         }
@@ -533,12 +533,12 @@ bool config_ad9361_rx_local(uint64_t bandwidth_,
                     ret = iio_device_attr_write_double(ad9361_phy_B, "in_voltage0_hardwaregain", rf_gain_rx2_);
                     if (ret < 0)
                         {
-                            std::cout << "Failed to set in_voltage1_hardwaregain: " << ret << '\n';
+                            // std::cout << "Failed to set in_voltage1_hardwaregain: " << ret << '\n';
                         }
                 }
         }
 
-    std::cout << "End of AD9361 RX configuration.\n";
+    // std::cout << "End of AD9361 RX configuration.\n";
     iio_context_destroy(ctx);
     return true;
 }
@@ -564,7 +564,7 @@ bool config_ad9361_rx_remote(const std::string &remote_host,
     float Fstop_)
 {
     // RX stream config
-    std::cout << "AD9361 Acquiring IIO REMOTE context in host " << remote_host << '\n';
+    // std::cout << "AD9361 Acquiring IIO REMOTE context in host " << remote_host << '\n';
     struct iio_context *ctx;
     // Streaming devices
     struct iio_device *rx;
@@ -575,7 +575,7 @@ bool config_ad9361_rx_remote(const std::string &remote_host,
 #ifndef LIBAD9361_VERSION_GREATER_THAN_01
     if (filter_source_ == "Design")
         {
-            std::cout << "Option filter_source=Design is not available in this version. Set to filter_source=Off\n";
+            // std::cout << "Option filter_source=Design is not available in this version. Set to filter_source=Off\n";
             filter_source_ = std::string("Off");
         }
     if (Fpass_ != 0.0 or Fstop_ != 0.0)
@@ -588,39 +588,39 @@ bool config_ad9361_rx_remote(const std::string &remote_host,
     ctx = iio_create_network_context(remote_host.c_str());
     if (!ctx)
         {
-            std::cout << "No context\n";
+            // std::cout << "No context\n";
             throw std::runtime_error("AD9361 IIO No context");
         }
 
     if (iio_context_get_devices_count(ctx) <= 0)
         {
-            std::cout << "No devices\n";
+            // std::cout << "No devices\n";
             throw std::runtime_error("AD9361 IIO No devices");
         }
 
-    std::cout << "* Acquiring AD9361 streaming devices\n";
+    // std::cout << "* Acquiring AD9361 streaming devices\n";
 
     if (!get_ad9361_stream_dev(ctx, RX, &rx))
         {
-            std::cout << "No rx dev found\n";
+            // std::cout << "No rx dev found\n";
             throw std::runtime_error("AD9361 IIO No rx dev found");
         }
 
-    std::cout << "* Configuring AD9361 for streaming\n";
+    // std::cout << "* Configuring AD9361 for streaming\n";
 
     struct iio_device *ad9361_phy;
     ad9361_phy = iio_context_find_device(ctx, "ad9361-phy");
     int ret;
 
-    std::cout << "* Initializing AD9361 IIO streaming channels\n";
+    // std::cout << "* Initializing AD9361 IIO streaming channels\n";
     if (!get_ad9361_stream_ch(ctx, RX, rx, 0, &rx_chan0))
         {
-            std::cout << "RX channel 1 not found\n";
+            // std::cout << "RX channel 1 not found\n";
             throw std::runtime_error("RX channel 1 not found");
         }
     if (!get_ad9361_stream_ch(ctx, RX, rx, 1, &rx_chan1))
         {
-            std::cout << "RX channel 2 not found\n";
+            // std::cout << "RX channel 2 not found\n";
             throw std::runtime_error("RX channel 2 not found");
         }
     if (!get_phy_chan(ad9361_phy, RX, 0, &chn))
@@ -633,15 +633,15 @@ bool config_ad9361_rx_remote(const std::string &remote_host,
         }
 
     // Configure LO channel
-    std::cout << "* Acquiring LO channel RX\n";
+    // std::cout << "* Acquiring LO channel RX\n";
     if (!get_lo_chan(ad9361_phy, RX, 0, &chn))
         {
-            std::cout << "RX LO channel not found\n";
+            // std::cout << "RX LO channel not found\n";
             throw std::runtime_error("RX LO channel not found");
         }
     wr_ch_lli(rx_chan0, "frequency", freq_);
 
-    std::cout << "* Enabling IIO streaming channels\n";
+    // std::cout << "* Enabling IIO streaming channels\n";
     if (rx1_enable_)
         {
             iio_channel_enable(rx_chan0);
@@ -652,55 +652,55 @@ bool config_ad9361_rx_remote(const std::string &remote_host,
         }
     if (!rx1_enable_ and !rx2_enable_)
         {
-            std::cout << "WARNING: No Rx channels enabled.\n";
+            // std::cout << "WARNING: No Rx channels enabled.\n";
         }
 
     ret = iio_device_attr_write(ad9361_phy, "trx_rate_governor", "nominal");
     if (ret < 0)
         {
-            std::cout << "Failed to set trx_rate_governor: " << ret << '\n';
+            // std::cout << "Failed to set trx_rate_governor: " << ret << '\n';
         }
     ret = iio_device_attr_write(ad9361_phy, "ensm_mode", "fdd");
     if (ret < 0)
         {
-            std::cout << "Failed to set ensm_mode: " << ret << '\n';
+            // std::cout << "Failed to set ensm_mode: " << ret << '\n';
         }
     ret = iio_device_attr_write(ad9361_phy, "calib_mode", "auto");
     if (ret < 0)
         {
-            std::cout << "Failed to set calib_mode: " << ret << '\n';
+            // std::cout << "Failed to set calib_mode: " << ret << '\n';
         }
     ret = iio_device_attr_write_bool(ad9361_phy, "in_voltage_quadrature_tracking_en", quadrature_);
     if (ret < 0)
         {
-            std::cout << "Failed to set in_voltage_quadrature_tracking_en: " << ret << '\n';
+            // std::cout << "Failed to set in_voltage_quadrature_tracking_en: " << ret << '\n';
         }
     ret = iio_device_attr_write_bool(ad9361_phy, "in_voltage_rf_dc_offset_tracking_en", rfdc_);
     if (ret < 0)
         {
-            std::cout << "Failed to set in_voltage_rf_dc_offset_tracking_en: " << ret << '\n';
+            // std::cout << "Failed to set in_voltage_rf_dc_offset_tracking_en: " << ret << '\n';
         }
     ret = iio_device_attr_write_bool(ad9361_phy, "in_voltage_bb_dc_offset_tracking_en", bbdc_);
     if (ret < 0)
         {
-            std::cout << "Failed to set in_voltage_bb_dc_offset_tracking_en: " << ret << '\n';
+            // std::cout << "Failed to set in_voltage_bb_dc_offset_tracking_en: " << ret << '\n';
         }
     ret = iio_device_attr_write(ad9361_phy, "in_voltage0_gain_control_mode", gain_mode_rx1_.c_str());
     if (ret < 0)
         {
-            std::cout << "Failed to set in_voltage0_gain_control_mode: " << ret << '\n';
+            // std::cout << "Failed to set in_voltage0_gain_control_mode: " << ret << '\n';
         }
     ret = iio_device_attr_write(ad9361_phy, "in_voltage1_gain_control_mode", gain_mode_rx2_.c_str());
     if (ret < 0)
         {
-            std::cout << "Failed to set in_voltage1_gain_control_mode: " << ret << '\n';
+            // std::cout << "Failed to set in_voltage1_gain_control_mode: " << ret << '\n';
         }
     if (gain_mode_rx1_ == "manual")
         {
             ret = iio_device_attr_write_double(ad9361_phy, "in_voltage0_hardwaregain", rf_gain_rx1_);
             if (ret < 0)
                 {
-                    std::cout << "Failed to set in_voltage0_hardwaregain: " << ret << '\n';
+                    // std::cout << "Failed to set in_voltage0_hardwaregain: " << ret << '\n';
                 }
         }
     if (gain_mode_rx2_ == "manual")
@@ -708,11 +708,11 @@ bool config_ad9361_rx_remote(const std::string &remote_host,
             ret = iio_device_attr_write_double(ad9361_phy, "in_voltage1_hardwaregain", rf_gain_rx2_);
             if (ret < 0)
                 {
-                    std::cout << "Failed to set in_voltage1_hardwaregain: " << ret << '\n';
+                    // std::cout << "Failed to set in_voltage1_hardwaregain: " << ret << '\n';
                 }
         }
 
-    std::cout << "End of AD9361 RX configuration.\n";
+    // std::cout << "End of AD9361 RX configuration.\n";
 
     iio_context_destroy(ctx);
     return true;
@@ -728,7 +728,7 @@ bool config_ad9361_lo_local(uint64_t bandwidth_,
     double phase_dds_deg_)
 {
     // TX stream config
-    std::cout << "Start of AD9361 TX Local Oscillator DDS configuration\n";
+    // std::cout << "Start of AD9361 TX Local Oscillator DDS configuration\n";
     struct iio_channel *tx_chan;
     struct stream_cfg txcfg;
     txcfg.bw_hz = bandwidth_;
@@ -736,27 +736,27 @@ bool config_ad9361_lo_local(uint64_t bandwidth_,
     txcfg.lo_hz = freq_rf_tx_hz_;
     txcfg.rfport = "A";
 
-    std::cout << "AD9361 Acquiring IIO LOCAL context\n";
+    // std::cout << "AD9361 Acquiring IIO LOCAL context\n";
     struct iio_context *ctx;
     ctx = iio_create_default_context();
     if (!ctx)
         {
-            std::cout << "No context\n";
+            // std::cout << "No context\n";
             throw std::runtime_error("AD9361 IIO No context");
         }
 
     // find tx device
     struct iio_device *tx;
 
-    std::cout << "* Acquiring AD9361 TX streaming devices\n";
+    // std::cout << "* Acquiring AD9361 TX streaming devices\n";
 
     if (!get_ad9361_stream_dev(ctx, TX, &tx))
         {
-            std::cout << "No tx dev found\n";
+            // std::cout << "No tx dev found\n";
             throw std::runtime_error("AD9361 IIO No tx dev found");
         }
 
-    std::cout << "* Configuring AD9361 for streaming TX\n";
+    // std::cout << "* Configuring AD9361 for streaming TX\n";
 
     // ENABLE DDS on TX1
     struct iio_device *ad9361_phy;
@@ -764,17 +764,17 @@ bool config_ad9361_lo_local(uint64_t bandwidth_,
 
     if (!get_ad9361_stream_ch(ctx, TX, ad9361_phy, 0, &tx_chan))
         {
-            std::cout << "TX channel 0 not found\n";
+            // std::cout << "TX channel 0 not found\n";
             throw std::runtime_error("TX channel 0 not found");
         }
 
     cfg_ad9361_streaming_ch(&txcfg, tx_chan);
 
     // Configure LO channel
-    std::cout << "* Acquiring LO channel TX\n";
+    // std::cout << "* Acquiring LO channel TX\n";
     if (!get_lo_chan(ad9361_phy, TX, 1, &tx_chan))
         {
-            std::cout << "TX LO channel not found\n";
+            // std::cout << "TX LO channel not found\n";
             throw std::runtime_error("TX LO channel not found");
         }
     wr_ch_lli(tx_chan, "frequency", txcfg.lo_hz);
@@ -784,13 +784,13 @@ bool config_ad9361_lo_local(uint64_t bandwidth_,
     ret = iio_device_attr_write_double(ad9361_phy, "out_voltage0_hardwaregain", -std::abs(tx_attenuation_db_));
     if (ret < 0)
         {
-            std::cout << "Failed to set out_voltage0_hardwaregain value " << -std::abs(tx_attenuation_db_) << ". Error " << ret << '\n';
+            // std::cout << "Failed to set out_voltage0_hardwaregain value " << -std::abs(tx_attenuation_db_) << ". Error " << ret << '\n';
         }
     // shut down signal in TX2
     ret = iio_device_attr_write_double(ad9361_phy, "out_voltage1_hardwaregain", -89.75);
     if (ret < 0)
         {
-            std::cout << "Failed to set out_voltage1_hardwaregain value -89.75 dB. Error " << ret << '\n';
+            // std::cout << "Failed to set out_voltage1_hardwaregain value -89.75 dB. Error " << ret << '\n';
         }
 
     struct iio_device *dds;
@@ -804,51 +804,51 @@ bool config_ad9361_lo_local(uint64_t bandwidth_,
     ret = iio_channel_attr_write_bool(dds_channel0_I, "raw", true);
     if (ret < 0)
         {
-            std::cout << "Failed to toggle DDS: " << ret << '\n';
+            // std::cout << "Failed to toggle DDS: " << ret << '\n';
         }
 
     // set frequency, scale and phase
     ret = iio_channel_attr_write_longlong(dds_channel0_I, "frequency", static_cast<int64_t>(freq_dds_tx_hz_));
     if (ret < 0)
         {
-            std::cout << "Failed to set TX DDS frequency I: " << ret << '\n';
+            // std::cout << "Failed to set TX DDS frequency I: " << ret << '\n';
         }
 
     ret = iio_channel_attr_write_longlong(dds_channel0_Q, "frequency", static_cast<int64_t>(freq_dds_tx_hz_));
     if (ret < 0)
         {
-            std::cout << "Failed to set TX DDS frequency Q: " << ret << '\n';
+            // std::cout << "Failed to set TX DDS frequency Q: " << ret << '\n';
         }
 
     ret = iio_channel_attr_write_double(dds_channel0_I, "phase", phase_dds_deg_ * 1000.0);
     if (ret < 0)
         {
-            std::cout << "Failed to set TX DDS phase I: " << ret << '\n';
+            // std::cout << "Failed to set TX DDS phase I: " << ret << '\n';
         }
 
     ret = iio_channel_attr_write_double(dds_channel0_Q, "phase", phase_dds_deg_ * 1000.0 + 270000.0);
     if (ret < 0)
         {
-            std::cout << "Failed to set TX DDS phase Q: " << ret << '\n';
+            // std::cout << "Failed to set TX DDS phase Q: " << ret << '\n';
         }
 
     ret = iio_channel_attr_write_double(dds_channel0_I, "scale", pow(10, scale_dds_dbfs_ / 20.0));
     if (ret < 0)
         {
-            std::cout << "Failed to set TX DDS scale I: " << ret << '\n';
+            // std::cout << "Failed to set TX DDS scale I: " << ret << '\n';
         }
 
     ret = iio_channel_attr_write_double(dds_channel0_Q, "scale", pow(10, scale_dds_dbfs_ / 20.0));
     if (ret < 0)
         {
-            std::cout << "Failed to set TX DDS scale Q: " << ret << '\n';
+            // std::cout << "Failed to set TX DDS scale Q: " << ret << '\n';
         }
 
     // disable TX2
     ret = iio_device_attr_write_double(ad9361_phy, "out_voltage1_hardwaregain", -89.0);
     if (ret < 0)
         {
-            std::cout << "Failed to set out_voltage1_hardwaregain value " << -89.0 << " error " << ret << '\n';
+            // std::cout << "Failed to set out_voltage1_hardwaregain value " << -89.0 << " error " << ret << '\n';
         }
 
     struct iio_channel *dds_channel1_I;
@@ -860,13 +860,13 @@ bool config_ad9361_lo_local(uint64_t bandwidth_,
     ret = iio_channel_attr_write_double(dds_channel1_I, "scale", 0);
     if (ret < 0)
         {
-            std::cout << "Failed to set TX2 DDS scale I: " << ret << '\n';
+            // std::cout << "Failed to set TX2 DDS scale I: " << ret << '\n';
         }
 
     ret = iio_channel_attr_write_double(dds_channel1_Q, "scale", 0);
     if (ret < 0)
         {
-            std::cout << "Failed to set TX2 DDS scale Q: " << ret << '\n';
+            // std::cout << "Failed to set TX2 DDS scale Q: " << ret << '\n';
         }
 
     iio_context_destroy(ctx);
@@ -884,7 +884,7 @@ bool config_ad9361_lo_remote(const std::string &remote_host,
     double phase_dds_deg_)
 {
     // TX stream config
-    std::cout << "Start of AD9361 TX Local Oscillator DDS configuration\n";
+    // std::cout << "Start of AD9361 TX Local Oscillator DDS configuration\n";
     struct iio_channel *tx_chan;
     struct stream_cfg txcfg;
     txcfg.bw_hz = bandwidth_;
@@ -892,27 +892,27 @@ bool config_ad9361_lo_remote(const std::string &remote_host,
     txcfg.lo_hz = freq_rf_tx_hz_;
     txcfg.rfport = "A";
 
-    std::cout << "AD9361 Acquiring IIO REMOTE context in host " << remote_host << '\n';
+    // std::cout << "AD9361 Acquiring IIO REMOTE context in host " << remote_host << '\n';
     struct iio_context *ctx;
     ctx = iio_create_network_context(remote_host.c_str());
     if (!ctx)
         {
-            std::cout << "No context\n";
+            // std::cout << "No context\n";
             throw std::runtime_error("AD9361 IIO No context");
         }
 
     // find tx device
     struct iio_device *tx;
 
-    std::cout << "* Acquiring AD9361 TX streaming devices\n";
+    // std::cout << "* Acquiring AD9361 TX streaming devices\n";
 
     if (!get_ad9361_stream_dev(ctx, TX, &tx))
         {
-            std::cout << "No tx dev found\n";
+            // std::cout << "No tx dev found\n";
             throw std::runtime_error("AD9361 IIO No tx dev found");
         }
 
-    std::cout << "* Configuring AD9361 for streaming TX\n";
+    // std::cout << "* Configuring AD9361 for streaming TX\n";
 
     // ENABLE DDS on TX1
     struct iio_device *ad9361_phy;
@@ -920,17 +920,17 @@ bool config_ad9361_lo_remote(const std::string &remote_host,
 
     if (!get_ad9361_stream_ch(ctx, TX, ad9361_phy, 0, &tx_chan))
         {
-            std::cout << "TX channel 0 not found\n";
+            // std::cout << "TX channel 0 not found\n";
             throw std::runtime_error("TX channel 0 not found");
         }
 
     cfg_ad9361_streaming_ch(&txcfg, tx_chan);
 
     // Configure LO channel
-    std::cout << "* Acquiring LO channel TX\n";
+    // std::cout << "* Acquiring LO channel TX\n";
     if (!get_lo_chan(ad9361_phy, TX, 1, &tx_chan))
         {
-            std::cout << "TX LO channel not found\n";
+            // std::cout << "TX LO channel not found\n";
             throw std::runtime_error("TX LO channel not found");
         }
     wr_ch_lli(tx_chan, "frequency", txcfg.lo_hz);
@@ -940,14 +940,14 @@ bool config_ad9361_lo_remote(const std::string &remote_host,
     ret = iio_device_attr_write_double(ad9361_phy, "out_voltage0_hardwaregain", -std::abs(tx_attenuation_db_));
     if (ret < 0)
         {
-            std::cout << "Failed to set out_voltage0_hardwaregain value " << -std::abs(tx_attenuation_db_) << ". Error " << ret << '\n';
+            // std::cout << "Failed to set out_voltage0_hardwaregain value " << -std::abs(tx_attenuation_db_) << ". Error " << ret << '\n';
         }
 
     // shut down signal in TX2
     ret = iio_device_attr_write_double(ad9361_phy, "out_voltage1_hardwaregain", -89.75);
     if (ret < 0)
         {
-            std::cout << "Failed to set out_voltage1_hardwaregain value -89.75 dB. Error " << ret << '\n';
+            // std::cout << "Failed to set out_voltage1_hardwaregain value -89.75 dB. Error " << ret << '\n';
         }
     struct iio_device *dds;
     dds = iio_context_find_device(ctx, "cf-ad9361-dds-core-lpc");
@@ -960,51 +960,51 @@ bool config_ad9361_lo_remote(const std::string &remote_host,
     ret = iio_channel_attr_write_bool(dds_channel0_I, "raw", true);
     if (ret < 0)
         {
-            std::cout << "Failed to toggle DDS: " << ret << '\n';
+            // std::cout << "Failed to toggle DDS: " << ret << '\n';
         }
 
     // set frequency, scale and phase
     ret = iio_channel_attr_write_longlong(dds_channel0_I, "frequency", static_cast<int64_t>(freq_dds_tx_hz_));
     if (ret < 0)
         {
-            std::cout << "Failed to set TX DDS frequency I: " << ret << '\n';
+            // std::cout << "Failed to set TX DDS frequency I: " << ret << '\n';
         }
 
     ret = iio_channel_attr_write_longlong(dds_channel0_Q, "frequency", static_cast<int64_t>(freq_dds_tx_hz_));
     if (ret < 0)
         {
-            std::cout << "Failed to set TX DDS frequency Q: " << ret << '\n';
+            // std::cout << "Failed to set TX DDS frequency Q: " << ret << '\n';
         }
 
     ret = iio_channel_attr_write_double(dds_channel0_I, "phase", phase_dds_deg_ * 1000.0);
     if (ret < 0)
         {
-            std::cout << "Failed to set TX DDS phase I: " << ret << '\n';
+            // std::cout << "Failed to set TX DDS phase I: " << ret << '\n';
         }
 
     ret = iio_channel_attr_write_double(dds_channel0_Q, "phase", phase_dds_deg_ * 1000.0 + 270000.0);
     if (ret < 0)
         {
-            std::cout << "Failed to set TX DDS phase Q: " << ret << '\n';
+            // std::cout << "Failed to set TX DDS phase Q: " << ret << '\n';
         }
 
     ret = iio_channel_attr_write_double(dds_channel0_I, "scale", pow(10, scale_dds_dbfs_ / 20.0));
     if (ret < 0)
         {
-            std::cout << "Failed to set TX DDS scale I: " << ret << '\n';
+            // std::cout << "Failed to set TX DDS scale I: " << ret << '\n';
         }
 
     ret = iio_channel_attr_write_double(dds_channel0_Q, "scale", pow(10, scale_dds_dbfs_ / 20.0));
     if (ret < 0)
         {
-            std::cout << "Failed to set TX DDS scale Q: " << ret << '\n';
+            // std::cout << "Failed to set TX DDS scale Q: " << ret << '\n';
         }
 
     // disable TX2
     ret = iio_device_attr_write_double(ad9361_phy, "out_voltage1_hardwaregain", -89.0);
     if (ret < 0)
         {
-            std::cout << "Failed to set out_voltage1_hardwaregain value " << -89.0 << " error " << ret << '\n';
+            // std::cout << "Failed to set out_voltage1_hardwaregain value " << -89.0 << " error " << ret << '\n';
         }
 
     struct iio_channel *dds_channel1_I;
@@ -1016,13 +1016,13 @@ bool config_ad9361_lo_remote(const std::string &remote_host,
     ret = iio_channel_attr_write_double(dds_channel1_I, "scale", 0);
     if (ret < 0)
         {
-            std::cout << "Failed to set TX2 DDS scale I: " << ret << '\n';
+            // std::cout << "Failed to set TX2 DDS scale I: " << ret << '\n';
         }
 
     ret = iio_channel_attr_write_double(dds_channel1_Q, "scale", 0);
     if (ret < 0)
         {
-            std::cout << "Failed to set TX2 DDS scale Q: " << ret << '\n';
+            // std::cout << "Failed to set TX2 DDS scale Q: " << ret << '\n';
         }
 
     iio_context_destroy(ctx);
@@ -1032,12 +1032,12 @@ bool config_ad9361_lo_remote(const std::string &remote_host,
 
 bool ad9361_disable_lo_remote(const std::string &remote_host)
 {
-    std::cout << "AD9361 Acquiring IIO REMOTE context in host " << remote_host << '\n';
+    // std::cout << "AD9361 Acquiring IIO REMOTE context in host " << remote_host << '\n';
     struct iio_context *ctx;
     ctx = iio_create_network_context(remote_host.c_str());
     if (!ctx)
         {
-            std::cout << "No context\n";
+            // std::cout << "No context\n";
             throw std::runtime_error("AD9361 IIO No context");
         }
     struct iio_device *dds;
@@ -1051,19 +1051,19 @@ bool ad9361_disable_lo_remote(const std::string &remote_host)
     ret = iio_channel_attr_write_bool(dds_channel0_I, "raw", false);
     if (ret < 0)
         {
-            std::cout << "Failed to toggle DDS: " << ret << '\n';
+            // std::cout << "Failed to toggle DDS: " << ret << '\n';
         }
 
     ret = iio_channel_attr_write_double(dds_channel0_I, "scale", 0.0);
     if (ret < 0)
         {
-            std::cout << "Failed to set TX DDS scale I: " << ret << '\n';
+            // std::cout << "Failed to set TX DDS scale I: " << ret << '\n';
         }
 
     ret = iio_channel_attr_write_double(dds_channel0_Q, "scale", 0.0);
     if (ret < 0)
         {
-            std::cout << "Failed to set TX DDS scale Q: " << ret << '\n';
+            // std::cout << "Failed to set TX DDS scale Q: " << ret << '\n';
         }
 
     iio_context_destroy(ctx);
@@ -1074,12 +1074,12 @@ bool ad9361_disable_lo_remote(const std::string &remote_host)
 
 bool ad9361_disable_lo_local()
 {
-    std::cout << "AD9361 Acquiring IIO LOCAL context\n";
+    // std::cout << "AD9361 Acquiring IIO LOCAL context\n";
     struct iio_context *ctx;
     ctx = iio_create_default_context();
     if (!ctx)
         {
-            std::cout << "No context\n";
+            // std::cout << "No context\n";
             throw std::runtime_error("AD9361 IIO No context");
         }
     struct iio_device *dds;
@@ -1093,19 +1093,19 @@ bool ad9361_disable_lo_local()
     ret = iio_channel_attr_write_bool(dds_channel0_I, "raw", false);
     if (ret < 0)
         {
-            std::cout << "Failed to toggle DDS: " << ret << '\n';
+            // std::cout << "Failed to toggle DDS: " << ret << '\n';
         }
 
     ret = iio_channel_attr_write_double(dds_channel0_I, "scale", 0.0);
     if (ret < 0)
         {
-            std::cout << "Failed to set TX DDS scale I: " << ret << '\n';
+            // std::cout << "Failed to set TX DDS scale I: " << ret << '\n';
         }
 
     ret = iio_channel_attr_write_double(dds_channel0_Q, "scale", 0.0);
     if (ret < 0)
         {
-            std::cout << "Failed to set TX DDS scale Q: " << ret << '\n';
+            // std::cout << "Failed to set TX DDS scale Q: " << ret << '\n';
         }
 
     iio_context_destroy(ctx);
@@ -1170,13 +1170,13 @@ bool disable_ad9361_rx_local()
     ctx = iio_create_default_context();
     if (!ctx)
         {
-            std::cout << "No default context available when disabling RX channels\n";
+            // std::cout << "No default context available when disabling RX channels\n";
             return false;
         }
 
     if (iio_context_get_devices_count(ctx) <= 0)
         {
-            std::cout << "No devices available when disabling RX channels\n";
+            // std::cout << "No devices available when disabling RX channels\n";
             return false;
         }
 
@@ -1197,14 +1197,14 @@ bool disable_ad9361_rx_local()
     rx = iio_context_find_device(ctx, rx_stream_dev_a.c_str());
     if (!rx)
         {
-            std::cout << "No " << rx_stream_dev_a << " stream dev found when disabling RX channels\n";
+            // std::cout << "No " << rx_stream_dev_a << " stream dev found when disabling RX channels\n";
             throw std::runtime_error("AD9361 IIO No " + rx_stream_dev_a + " stream dev found");
         }
 
     // get AD9361-A stream device channel 0 as rx channel 0
     if (!get_ad9361_stream_ch(ctx, RX, rx, 0, &rx_chan0))
         {
-            std::cout << rx_stream_dev_a << " channel 0 not found when disabling RX channels\n";
+            // std::cout << rx_stream_dev_a << " channel 0 not found when disabling RX channels\n";
             throw std::runtime_error(rx_stream_dev_a + "RX channel 0 not found");
         }
 
@@ -1213,13 +1213,13 @@ bool disable_ad9361_rx_local()
             rx = iio_context_find_device(ctx, RX_STREAM_DEV_B.c_str());
             if (!rx)
                 {
-                    std::cout << "No " << RX_STREAM_DEV_B << " stream dev found when disabling RX channels\n";
+                    // std::cout << "No " << RX_STREAM_DEV_B << " stream dev found when disabling RX channels\n";
                     throw std::runtime_error("AD9361 IIO No " + RX_STREAM_DEV_B + " stream dev found");
                 }
 
             if (!get_ad9361_stream_ch(ctx, RX, rx, 0, &rx_chan1))
                 {
-                    std::cout << RX_STREAM_DEV_B << " channel 0 not found when disabling RX channels\n";
+                    // std::cout << RX_STREAM_DEV_B << " channel 0 not found when disabling RX channels\n";
                     throw std::runtime_error(RX_STREAM_DEV_B + "RX channel 0 not found");
                 }
         }
@@ -1227,7 +1227,7 @@ bool disable_ad9361_rx_local()
         {
             if (!get_ad9361_stream_ch(ctx, RX, rx, 1, &rx_chan1))
                 {
-                    std::cout << rx_stream_dev_a << " channel 1 not found\n";
+                    // std::cout << rx_stream_dev_a << " channel 1 not found\n";
                     throw std::runtime_error(rx_stream_dev_a + "RX channel 1 not found");
                 }
         }
@@ -1249,25 +1249,25 @@ bool disable_ad9361_rx_remote(const std::string &remote_host)
     ctx = iio_create_network_context(remote_host.c_str());
     if (!ctx)
         {
-            std::cout << "No context available at " << remote_host << "when disabling RX channels\n";
+            // std::cout << "No context available at " << remote_host << "when disabling RX channels\n";
             return false;
         }
 
     if (!get_ad9361_stream_dev(ctx, RX, &rx))
         {
-            std::cout << "No rx streams found at " << remote_host << " when disabling RX channels\n";
+            // std::cout << "No rx streams found at " << remote_host << " when disabling RX channels\n";
             return false;
         }
 
     if (!get_ad9361_stream_ch(ctx, RX, rx, 0, &rx_chan0))
         {
-            std::cout << "RX channel 1 not found at " << remote_host << " when disabling RX channels\n";
+            // std::cout << "RX channel 1 not found at " << remote_host << " when disabling RX channels\n";
             return false;
         }
 
     if (!get_ad9361_stream_ch(ctx, RX, rx, 1, &rx_chan1))
         {
-            std::cout << "RX channel 2 not found at " << remote_host << " when disabling RX channels\n";
+            // std::cout << "RX channel 2 not found at " << remote_host << " when disabling RX channels\n";
             return false;
         }
     iio_channel_disable(rx_chan0);

@@ -46,7 +46,7 @@ GpsL5iPcpsAcquisitionFpga::GpsL5iPcpsAcquisitionFpga(
 {
     acq_parameters_.SetFromConfiguration(configuration, role, fpga_downsampling_factor, fpga_buff_num, fpga_blk_exp, GPS_L5I_CODE_RATE_CPS, GPS_L5I_CODE_LENGTH_CHIPS);
 
-    LOG(INFO) << "role " << role;
+   // LOG(INFO) << "role " << role;
 
     if (FLAGS_doppler_max != 0)
         {
@@ -120,11 +120,11 @@ GpsL5iPcpsAcquisitionFpga::GpsL5iPcpsAcquisitionFpga(
 
     if (in_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_streams_ > 0)
         {
-            LOG(ERROR) << "This implementation does not provide an output stream";
+            // LOG(ERROR) << "This implementation does not provide an output stream";
         }
 }
 
@@ -138,7 +138,7 @@ void GpsL5iPcpsAcquisitionFpga::stop_acquisition()
 
 void GpsL5iPcpsAcquisitionFpga::set_threshold(float threshold)
 {
-    DLOG(INFO) << "Channel " << channel_ << " Threshold = " << threshold;
+    // DLOG(INFO) << "Channel " << channel_ << " Threshold = " << threshold;
     acquisition_fpga_->set_threshold(threshold);
 }
 

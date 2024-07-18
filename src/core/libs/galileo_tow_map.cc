@@ -93,6 +93,6 @@ void galileo_tow_map::msg_handler_galileo_tow_map(const pmt::pmt_t& msg)
         }
     catch (const wht::bad_any_cast& e)
         {
-            LOG(WARNING) << "galileo_tow_map Bad any_cast: " << e.what();
+            // LOG(WARNING) << "galileo_tow_map Bad any_cast: " << e.what();
         }
 }

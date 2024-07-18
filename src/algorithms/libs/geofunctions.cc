@@ -205,7 +205,7 @@ int togeod(double *dphi, double *dlambda, double *h, double a, double finv, doub
                 }
             if (i == (maxit - 1))
                 {
-                    // LOG(WARNING) << "The computation of geodetic coordinates did not converge";
+                    // // LOG(WARNING) << "The computation of geodetic coordinates did not converge";
                 }
         }
     *dphi = (*dphi) * rtd;
@@ -353,7 +353,7 @@ arma::vec cart2geo(const arma::vec &XYZ, int elipsoid_selection)
             iterations = iterations + 1;
             if (iterations > 100)
                 {
-                    // std::cout << "Failed to approximate h with desired precision. h-oldh= " << h - oldh;
+                    // // std::cout << "Failed to approximate h with desired precision. h-oldh= " << h - oldh;
                     break;
                 }
         }
@@ -530,7 +530,7 @@ void cart2utm(const arma::vec &r_eb_e, int zone, arma::vec &r_enu)
             iterations = iterations + 1;
             if (iterations > 100)
                 {
-                    // std::cout << "Failed to approximate U with desired precision. U - oldU: " << U - oldU << '\n';
+                    // // std::cout << "Failed to approximate U with desired precision. U - oldU: " << U - oldU << '\n';
                     break;
                 }
         }
@@ -718,12 +718,12 @@ int findUtmZone(double latitude_deg, double longitude_deg)
     // Check value bounds
     if ((longitude_deg > 180.0) || (longitude_deg < -180.0))
         {
-            std::cout << "Longitude value exceeds limits (-180:180).\n";
+            // std::cout << "Longitude value exceeds limits (-180:180).\n";
         }
 
     if ((latitude_deg > 84.0) || (latitude_deg < -80.0))
         {
-            std::cout << "Latitude value exceeds limits (-80:84).\n";
+            // std::cout << "Latitude value exceeds limits (-80:84).\n";
         }
 
     //

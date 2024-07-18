@@ -58,9 +58,9 @@ GalileoE1PcpsCccwsrAmbiguousAcquisition::GalileoE1PcpsCccwsrAmbiguousAcquisition
     if (sampled_ms_ % 4 != 0)
         {
             sampled_ms_ = static_cast<int>(sampled_ms_ / 4) * 4;
-            LOG(WARNING) << "coherent_integration_time should be multiple of "
-                         << "Galileo code length (4 ms). coherent_integration_time = "
-                         << sampled_ms_ << " ms will be used.";
+            // LOG(WARNING) << "coherent_integration_time should be multiple of "
+                        //  << "Galileo code length (4 ms). coherent_integration_time = "
+                        //  << sampled_ms_ << " ms will be used.";
         }
 
     // -- Find number of samples per spreading code (4 ms)  -----------------
@@ -76,32 +76,32 @@ GalileoE1PcpsCccwsrAmbiguousAcquisition::GalileoE1PcpsCccwsrAmbiguousAcquisition
 
     bool enable_monitor_output = configuration_->property("AcquisitionMonitor.enable_monitor", false);
 
-    DLOG(INFO) << "role " << role_;
+    // DLOG(INFO) << "role " << role_;
     if (item_type_ == "gr_complex")
         {
             acquisition_cc_ = pcps_cccwsr_make_acquisition_cc(sampled_ms_, max_dwells_,
                 doppler_max_, fs_in_, samples_per_ms, code_length_,
                 dump_, dump_filename_, enable_monitor_output);
             stream_to_vector_ = gr::blocks::stream_to_vector::make(item_size_, vector_length_);
-            DLOG(INFO) << "stream_to_vector("
-                       << stream_to_vector_->unique_id() << ")";
-            DLOG(INFO) << "acquisition(" << acquisition_cc_->unique_id()
-                       << ")";
+            // DLOG(INFO) << "stream_to_vector("
+                    //    << stream_to_vector_->unique_id() << ")";
+            // DLOG(INFO) << "acquisition(" << acquisition_cc_->unique_id()
+                    //    << ")";
         }
     else
         {
             item_size_ = 0;
             acquisition_cc_ = nullptr;
-            LOG(WARNING) << item_type_ << " unknown acquisition item type";
+            // LOG(WARNING) << item_type_ << " unknown acquisition item type";
         }
 
     if (in_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_streams_ > 0)
         {
-            LOG(ERROR) << "This implementation does not provide an output stream";
+            // LOG(ERROR) << "This implementation does not provide an output stream";
         }
 }
 
@@ -117,7 +117,7 @@ void GalileoE1PcpsCccwsrAmbiguousAcquisition::set_threshold(float threshold)
 {
     threshold_ = threshold;
 
-    DLOG(INFO) << "Channel " << channel_ << " Threshold = " << threshold_;
+    // DLOG(INFO) << "Channel " << channel_ << " Threshold = " << threshold_;
 
     if (item_type_ == "gr_complex")
         {

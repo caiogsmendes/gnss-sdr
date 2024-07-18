@@ -165,7 +165,7 @@ Concurrent_Map<Gps_Acq_Assist> global_gps_acq_assist_map;
 
 int main(int argc, char **argv)
 {
-    std::cout << "Running GNSS-SDR Tests...\n";
+    // std::cout << "Running GNSS-SDR Tests...\n";
     int res = 0;
     try
         {
@@ -182,7 +182,7 @@ int main(int argc, char **argv)
         }
     catch (...)
         {
-            LOG(WARNING) << "Unexpected catch";
+            // LOG(WARNING) << "Unexpected catch";
         }
     gflags::ShutDownCommandLineFlags();
     return res;

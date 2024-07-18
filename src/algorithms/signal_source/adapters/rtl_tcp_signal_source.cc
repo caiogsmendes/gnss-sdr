@@ -80,51 +80,51 @@ RtlTcpSignalSource::RtlTcpSignalSource(const ConfigurationInterface* configurati
 
             if (this->AGC_enabled_ == true)
                 {
-                    std::cout << "AGC enabled\n";
-                    LOG(INFO) << "AGC enabled";
+                    // std::cout << "AGC enabled\n";
+                   // LOG(INFO) << "AGC enabled";
                     signal_source_->set_agc_mode(true);
                 }
             else
                 {
-                    std::cout << "AGC disabled\n";
-                    LOG(INFO) << "AGC disabled";
+                    // std::cout << "AGC disabled\n";
+                   // LOG(INFO) << "AGC disabled";
                     signal_source_->set_agc_mode(false);
 
-                    std::cout << "Setting gain to " << gain_ << '\n';
-                    LOG(INFO) << "Setting gain to " << gain_;
+                    // std::cout << "Setting gain to " << gain_ << '\n';
+                   // LOG(INFO) << "Setting gain to " << gain_;
                     signal_source_->set_gain(gain_);
 
-                    std::cout << "Setting IF gain to " << if_gain_ << '\n';
-                    LOG(INFO) << "Setting IF gain to " << if_gain_;
+                    // std::cout << "Setting IF gain to " << if_gain_ << '\n';
+                   // LOG(INFO) << "Setting IF gain to " << if_gain_;
                     signal_source_->set_if_gain(if_gain_);
                 }
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unrecognized item type. Using short.";
+            // LOG(WARNING) << item_type_ << " unrecognized item type. Using short.";
             item_size_ = sizeof(int16_t);
         }
 
     if (samples_ != 0ULL)
         {
-            DLOG(INFO) << "Send STOP signal after " << samples_ << " samples";
+            // DLOG(INFO) << "Send STOP signal after " << samples_ << " samples";
             valve_ = gnss_sdr_make_valve(item_size_, samples_, queue);
-            DLOG(INFO) << "valve(" << valve_->unique_id() << ")";
+            // DLOG(INFO) << "valve(" << valve_->unique_id() << ")";
         }
 
     if (dump_)
         {
-            DLOG(INFO) << "Dumping output into file " << dump_filename_;
+            // DLOG(INFO) << "Dumping output into file " << dump_filename_;
             file_sink_ = gr::blocks::file_sink::make(item_size_, dump_filename_.c_str());
-            DLOG(INFO) << "file_sink(" << file_sink_->unique_id() << ")";
+            // DLOG(INFO) << "file_sink(" << file_sink_->unique_id() << ")";
         }
     if (in_stream_ > 0)
         {
-            LOG(ERROR) << "A signal source does not have an input stream";
+            // LOG(ERROR) << "A signal source does not have an input stream";
         }
     if (out_stream_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 
@@ -133,13 +133,13 @@ void RtlTcpSignalSource::MakeBlock()
 {
     try
         {
-            std::cout << "Connecting to " << address_ << ":" << port_ << '\n';
-            LOG(INFO) << "Connecting to " << address_ << ":" << port_;
+            // std::cout << "Connecting to " << address_ << ":" << port_ << '\n';
+           // LOG(INFO) << "Connecting to " << address_ << ":" << port_;
             signal_source_ = rtl_tcp_make_signal_source_c(address_, port_, flip_iq_);
         }
     catch (const boost::exception& e)
         {
-            LOG(WARNING) << "Boost exception: " << boost::diagnostic_information(e);
+            // LOG(WARNING) << "Boost exception: " << boost::diagnostic_information(e);
             throw std::runtime_error("Failure connecting to the device");
         }
 }
@@ -150,17 +150,17 @@ void RtlTcpSignalSource::connect(gr::top_block_sptr top_block)
     if (samples_ != 0ULL)
         {
             top_block->connect(signal_source_, 0, valve_, 0);
-            DLOG(INFO) << "connected rtl tcp source to valve";
+            // DLOG(INFO) << "connected rtl tcp source to valve";
             if (dump_)
                 {
                     top_block->connect(valve_, 0, file_sink_, 0);
-                    DLOG(INFO) << "connected valve to file sink";
+                    // DLOG(INFO) << "connected valve to file sink";
                 }
         }
     else if (dump_)
         {
             top_block->connect(signal_source_, 0, file_sink_, 0);
-            DLOG(INFO) << "connected rtl tcp source to file sink";
+            // DLOG(INFO) << "connected rtl tcp source to file sink";
         }
 }
 
@@ -184,7 +184,7 @@ void RtlTcpSignalSource::disconnect(gr::top_block_sptr top_block)
 
 gr::basic_block_sptr RtlTcpSignalSource::get_left_block()
 {
-    LOG(WARNING) << "Trying to get signal source left block.";
+    // LOG(WARNING) << "Trying to get signal source left block.";
     return {};
 }
 

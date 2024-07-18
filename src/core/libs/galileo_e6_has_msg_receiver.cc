@@ -119,12 +119,12 @@ std::shared_ptr<Galileo_HAS_data> galileo_e6_has_msg_receiver::process_test_page
             if (msg_type_hash_code == typeid(std::shared_ptr<Galileo_HAS_page>).hash_code())
                 {
                     const auto HAS_data_page = wht::any_cast<std::shared_ptr<Galileo_HAS_page>>(pmt::any_ref(msg));
-                    DLOG(INFO) << "New HAS page received:  "
-                               << "Status: " << static_cast<float>(HAS_data_page->has_status) << ", "
-                               << "MT: " << static_cast<float>(HAS_data_page->message_type) << ", "
-                               << "MID: " << static_cast<float>(HAS_data_page->message_id) << ", "
-                               << "MS: " << static_cast<float>(HAS_data_page->message_size) << ", "
-                               << "PID: " << static_cast<float>(HAS_data_page->message_page_id);
+                    // DLOG(INFO) << "New HAS page received:  "
+                            //    << "Status: " << static_cast<float>(HAS_data_page->has_status) << ", "
+                            //    << "MT: " << static_cast<float>(HAS_data_page->message_type) << ", "
+                            //    << "MID: " << static_cast<float>(HAS_data_page->message_id) << ", "
+                            //    << "MS: " << static_cast<float>(HAS_data_page->message_size) << ", "
+                            //    << "PID: " << static_cast<float>(HAS_data_page->message_page_id);
                     d_current_has_status = HAS_data_page->has_status;
                     d_current_message_id = HAS_data_page->message_id;
                     timestamp = HAS_data_page->time_stamp;
@@ -136,12 +136,12 @@ std::shared_ptr<Galileo_HAS_data> galileo_e6_has_msg_receiver::process_test_page
                 }
             else
                 {
-                    LOG(WARNING) << "galileo_e6_has_msg_receiver received an unknown object type!";
+                    // LOG(WARNING) << "galileo_e6_has_msg_receiver received an unknown object type!";
                 }
         }
     catch (const wht::bad_any_cast& e)
         {
-            LOG(WARNING) << "galileo_e6_has_msg_receiver Bad any_cast: " << e.what();
+            // LOG(WARNING) << "galileo_e6_has_msg_receiver Bad any_cast: " << e.what();
         }
 
     //  Return the resulting decoded HAS data (if available)
@@ -171,12 +171,12 @@ void galileo_e6_has_msg_receiver::msg_handler_galileo_e6_has(const pmt::pmt_t& m
             if (msg_type_hash_code == typeid(std::shared_ptr<Galileo_HAS_page>).hash_code())
                 {
                     const auto HAS_data_page = wht::any_cast<std::shared_ptr<Galileo_HAS_page>>(pmt::any_ref(msg));
-                    DLOG(INFO) << "New HAS page received:  "
-                               << "Status: " << static_cast<float>(HAS_data_page->has_status) << ", "
-                               << "MT: " << static_cast<float>(HAS_data_page->message_type) << ", "
-                               << "MID: " << static_cast<float>(HAS_data_page->message_id) << ", "
-                               << "MS: " << static_cast<float>(HAS_data_page->message_size) << ", "
-                               << "PID: " << static_cast<float>(HAS_data_page->message_page_id);
+                    // DLOG(INFO) << "New HAS page received:  "
+                            //    << "Status: " << static_cast<float>(HAS_data_page->has_status) << ", "
+                            //    << "MT: " << static_cast<float>(HAS_data_page->message_type) << ", "
+                            //    << "MID: " << static_cast<float>(HAS_data_page->message_id) << ", "
+                            //    << "MS: " << static_cast<float>(HAS_data_page->message_size) << ", "
+                            //    << "PID: " << static_cast<float>(HAS_data_page->message_page_id);
                     d_current_has_status = HAS_data_page->has_status;
                     d_current_message_id = HAS_data_page->message_id;
                     timestamp = HAS_data_page->time_stamp;
@@ -188,12 +188,12 @@ void galileo_e6_has_msg_receiver::msg_handler_galileo_e6_has(const pmt::pmt_t& m
                 }
             else
                 {
-                    LOG(WARNING) << "galileo_e6_has_msg_receiver received an unknown object type!";
+                    // LOG(WARNING) << "galileo_e6_has_msg_receiver received an unknown object type!";
                 }
         }
     catch (const wht::bad_any_cast& e)
         {
-            LOG(WARNING) << "galileo_e6_has_msg_receiver Bad any_cast: " << e.what();
+            // LOG(WARNING) << "galileo_e6_has_msg_receiver Bad any_cast: " << e.what();
         }
 
     //  Send the resulting decoded HAS data (if available) to PVT
@@ -207,7 +207,7 @@ void galileo_e6_has_msg_receiver::msg_handler_galileo_e6_has(const pmt::pmt_t& m
             auto has_data_ptr = std::make_shared<Galileo_HAS_data>(d_HAS_data);
             this->message_port_pub(pmt::mp("E6_HAS_to_PVT"), pmt::make_any(has_data_ptr));
             d_new_message = false;
-            DLOG(INFO) << "HAS message sent to the PVT block through the E6_HAS_to_PVT async message port";
+            // DLOG(INFO) << "HAS message sent to the PVT block through the E6_HAS_to_PVT async message port";
         }
 }
 
@@ -256,8 +256,8 @@ void galileo_e6_has_msg_receiver::process_HAS_page(const Galileo_HAS_page& has_p
                         {
                             // if we have the mask for that message, it's ready to be sent to PVT
                             d_new_message = true;
-                            std::cout << TEXT_MAGENTA << "New Galileo HAS message ID " << std::to_string(has_page.message_id)
-                                      << " received and successfully decoded" << TEXT_RESET << '\n';
+                            // std::cout << TEXT_MAGENTA << "New Galileo HAS message ID " << std::to_string(has_page.message_id)
+                                    //   << " received and successfully decoded" << TEXT_RESET << '\n';
                         }
                 }
         }
@@ -280,7 +280,7 @@ void galileo_e6_has_msg_receiver::delete_outdated_data(const Galileo_HAS_page& h
                 }
             if (current_time_stamp > oldest_time_stamp && current_time_stamp - oldest_time_stamp > MAX_SECONDS_REMEMBERING_MID)
                 {
-                    DLOG(INFO) << "Deleting data for message ID " << i << " because it is too old: " << oldest_time_stamp << " vs " << current_time_stamp;
+                    // DLOG(INFO) << "Deleting data for message ID " << i << " because it is too old: " << oldest_time_stamp << " vs " << current_time_stamp;
                     d_received_pids[i].clear();
                     d_received_timestamps[i].clear();
                     d_C_matrix[i] = {GALILEO_CNAV_MAX_NUMBER_SYMBOLS_ENCODED_BLOCK, std::vector<uint8_t>(GALILEO_CNAV_OCTETS_IN_SUBPAGE)};
@@ -299,7 +299,7 @@ void galileo_e6_has_msg_receiver::delete_outdated_data(const Galileo_HAS_page& h
 
 int galileo_e6_has_msg_receiver::decode_message_type1(uint8_t message_id, uint8_t message_size)
 {
-    DLOG(INFO) << "Start decoding of a HAS message";
+    // DLOG(INFO) << "Start decoding of a HAS message";
     constexpr int32_t max_erasure_positions = GALILEO_CNAV_MAX_NUMBER_SYMBOLS_ENCODED_BLOCK - GALILEO_CNAV_INFORMATION_VECTOR_LENGTH;  // 223 Maximum erasure positions ( = number of parity symbols in a block)
 
     // Compute erasure positions
@@ -333,15 +333,15 @@ int galileo_e6_has_msg_receiver::decode_message_type1(uint8_t message_id, uint8_
                 }
             ss << ", Message size: " << static_cast<float>(message_size) << "  Message ID: " << static_cast<float>(message_id);
             msg += ss.str();
-            LOG(ERROR) << msg;
+            // LOG(ERROR) << msg;
             d_received_pids[message_id].clear();
             d_C_matrix[message_id] = {GALILEO_CNAV_MAX_NUMBER_SYMBOLS_ENCODED_BLOCK, std::vector<uint8_t>(GALILEO_CNAV_OCTETS_IN_SUBPAGE)};
             return -1;
         }
 
-    DLOG(INFO) << debug_print_vector("List of received PIDs", d_received_pids[message_id]);
-    DLOG(INFO) << debug_print_vector("erasure_positions", erasure_positions);
-    DLOG(INFO) << debug_print_matrix("C_matrix", d_C_matrix[message_id]);
+    // DLOG(INFO) << debug_print_vector("List of received PIDs", d_received_pids[message_id]);
+    // DLOG(INFO) << debug_print_vector("erasure_positions", erasure_positions);
+    // DLOG(INFO) << debug_print_matrix("C_matrix", d_C_matrix[message_id]);
 
     // Reset HAS decoded message matrix
     d_M_matrix = std::vector<std::vector<uint8_t>>(GALILEO_CNAV_INFORMATION_VECTOR_LENGTH, std::vector<uint8_t>(GALILEO_CNAV_OCTETS_IN_SUBPAGE));
@@ -359,7 +359,7 @@ int galileo_e6_has_msg_receiver::decode_message_type1(uint8_t message_id, uint8_
 
             if (result < 0)
                 {
-                    DLOG(ERROR) << "Decoding of HAS page failed";
+                    // DLOG(ERROR) << "Decoding of HAS page failed";
                     return -1;
                 }
 
@@ -369,11 +369,11 @@ int galileo_e6_has_msg_receiver::decode_message_type1(uint8_t message_id, uint8_
                     d_M_matrix[i][col] = M_column[i];
                 }
 
-            DLOG(INFO) << debug_print_vector("C_column entering the decoder", C_column);
-            DLOG(INFO) << "Successful HAS page decoding";
+            // DLOG(INFO) << debug_print_vector("C_column entering the decoder", C_column);
+            // DLOG(INFO) << "Successful HAS page decoding";
         }
 
-    DLOG(INFO) << debug_print_matrix("M_matrix", d_M_matrix);
+    // DLOG(INFO) << debug_print_matrix("M_matrix", d_M_matrix);
 
     // Form the decoded HAS message by reading rows of d_M_matrix
     std::string decoded_message_type_1;
@@ -387,11 +387,11 @@ int galileo_e6_has_msg_receiver::decode_message_type1(uint8_t message_id, uint8_
                 }
         }
 
-    DLOG(INFO) << "Decoded message ID " << static_cast<float>(message_id)
-               << " (size: " << static_cast<float>(message_size) << ") with header:\n"
-               << std::string(decoded_message_type_1.begin(), decoded_message_type_1.begin() + GALILEO_CNAV_MT1_HEADER_BITS)
-               << "\nand body:\n"
-               << std::string(decoded_message_type_1.begin() + GALILEO_CNAV_MT1_HEADER_BITS, decoded_message_type_1.end());
+    // DLOG(INFO) << "Decoded message ID " << static_cast<float>(message_id)
+            //    << " (size: " << static_cast<float>(message_size) << ") with header:\n"
+            //    << std::string(decoded_message_type_1.begin(), decoded_message_type_1.begin() + GALILEO_CNAV_MT1_HEADER_BITS)
+            //    << "\nand body:\n"
+            //    << std::string(decoded_message_type_1.begin() + GALILEO_CNAV_MT1_HEADER_BITS, decoded_message_type_1.end());
 
     if (d_enable_navdata_monitor)
         {
@@ -453,17 +453,17 @@ void galileo_e6_has_msg_receiver::read_MT1_header(const std::string& message_hea
     d_HAS_data.header.mask_id = read_has_message_header_parameter_uint8(has_mt1_header, GALILEO_MT1_HEADER_MASK_ID);
     d_HAS_data.header.iod_set_id = read_has_message_header_parameter_uint8(has_mt1_header, GALILEO_MT1_HEADER_IOD_SET_ID);
 
-    DLOG(INFO) << "MT1 header " << message_header << ":  "
-               << "TOH: " << static_cast<float>(d_HAS_data.header.toh) << ", "
-               << "mask_flag: " << static_cast<float>(d_HAS_data.header.mask_flag) << ", "
-               << "orbit_correction_flag: " << static_cast<float>(d_HAS_data.header.orbit_correction_flag) << ", "
-               << "clock_fullset_flag: " << static_cast<float>(d_HAS_data.header.clock_fullset_flag) << ", "
-               << "clock_subset_flag: " << static_cast<float>(d_HAS_data.header.clock_subset_flag) << ", "
-               << "code_bias_flag: " << static_cast<float>(d_HAS_data.header.code_bias_flag) << ", "
-               << "phase_bias_flag: " << static_cast<float>(d_HAS_data.header.phase_bias_flag) << ", "
-               << "reserved: " << static_cast<float>(d_HAS_data.header.reserved) << ", "
-               << "mask ID: " << static_cast<float>(d_HAS_data.header.mask_id) << ", "
-               << "iod ID: " << static_cast<float>(d_HAS_data.header.iod_set_id);
+    // DLOG(INFO) << "MT1 header " << message_header << ":  "
+            //    << "TOH: " << static_cast<float>(d_HAS_data.header.toh) << ", "
+            //    << "mask_flag: " << static_cast<float>(d_HAS_data.header.mask_flag) << ", "
+            //    << "orbit_correction_flag: " << static_cast<float>(d_HAS_data.header.orbit_correction_flag) << ", "
+            //    << "clock_fullset_flag: " << static_cast<float>(d_HAS_data.header.clock_fullset_flag) << ", "
+            //    << "clock_subset_flag: " << static_cast<float>(d_HAS_data.header.clock_subset_flag) << ", "
+            //    << "code_bias_flag: " << static_cast<float>(d_HAS_data.header.code_bias_flag) << ", "
+            //    << "phase_bias_flag: " << static_cast<float>(d_HAS_data.header.phase_bias_flag) << ", "
+            //    << "reserved: " << static_cast<float>(d_HAS_data.header.reserved) << ", "
+            //    << "mask ID: " << static_cast<float>(d_HAS_data.header.mask_id) << ", "
+            //    << "iod ID: " << static_cast<float>(d_HAS_data.header.iod_set_id);
 }
 
 
@@ -549,10 +549,10 @@ void galileo_e6_has_msg_receiver::read_MT1_body(const std::string& message_body)
                     have_mask = true;
                 }
 
-            DLOG(INFO) << "Nsys: " << static_cast<float>(d_HAS_data.Nsys);
-            DLOG(INFO) << debug_print_vector("GNSS ID", d_HAS_data.gnss_id_mask);
-            DLOG(INFO) << debug_print_vector("cell_mask_availability_flag", d_HAS_data.cell_mask_availability_flag);
-            DLOG(INFO) << debug_print_vector("nav_message", d_HAS_data.nav_message);
+            // DLOG(INFO) << "Nsys: " << static_cast<float>(d_HAS_data.Nsys);
+            // DLOG(INFO) << debug_print_vector("GNSS ID", d_HAS_data.gnss_id_mask);
+            // DLOG(INFO) << debug_print_vector("cell_mask_availability_flag", d_HAS_data.cell_mask_availability_flag);
+            // DLOG(INFO) << debug_print_vector("nav_message", d_HAS_data.nav_message);
         }
     else
         {
@@ -570,10 +570,10 @@ void galileo_e6_has_msg_receiver::read_MT1_body(const std::string& message_body)
 
                     have_mask = true;
 
-                    DLOG(INFO) << "Nsys: " << static_cast<float>(d_HAS_data.Nsys);
-                    DLOG(INFO) << debug_print_vector("GNSS ID", d_HAS_data.gnss_id_mask);
-                    DLOG(INFO) << debug_print_vector("cell_mask_availability_flag", d_HAS_data.cell_mask_availability_flag);
-                    DLOG(INFO) << debug_print_vector("nav_message", d_HAS_data.nav_message);
+                    // DLOG(INFO) << "Nsys: " << static_cast<float>(d_HAS_data.Nsys);
+                    // DLOG(INFO) << debug_print_vector("GNSS ID", d_HAS_data.gnss_id_mask);
+                    // DLOG(INFO) << debug_print_vector("cell_mask_availability_flag", d_HAS_data.cell_mask_availability_flag);
+                    // DLOG(INFO) << debug_print_vector("nav_message", d_HAS_data.nav_message);
                 }
         }
 
@@ -613,7 +613,7 @@ void galileo_e6_has_msg_receiver::read_MT1_body(const std::string& message_body)
                     else
                         {
                             // reserved system, not defined what to do, aborting
-                            LOG(WARNING) << "Is the HAS message transmitting data belonging to a new system? System identifier was: " << std::to_string(d_HAS_data.get_gnss_id(i));
+                            // LOG(WARNING) << "Is the HAS message transmitting data belonging to a new system? System identifier was: " << std::to_string(d_HAS_data.get_gnss_id(i));
                             have_mask = false;
                         }
 
@@ -630,10 +630,10 @@ void galileo_e6_has_msg_receiver::read_MT1_body(const std::string& message_body)
                         }
                 }
 
-            DLOG(INFO) << debug_print_vector("gnss_iod", d_HAS_data.gnss_iod);
-            DLOG(INFO) << debug_print_vector("delta_radial", d_HAS_data.delta_radial);
-            DLOG(INFO) << debug_print_vector("delta_in_track", d_HAS_data.delta_in_track);
-            DLOG(INFO) << debug_print_vector("delta_cross_track", d_HAS_data.delta_cross_track);
+            // DLOG(INFO) << debug_print_vector("gnss_iod", d_HAS_data.gnss_iod);
+            // DLOG(INFO) << debug_print_vector("delta_radial", d_HAS_data.delta_radial);
+            // DLOG(INFO) << debug_print_vector("delta_in_track", d_HAS_data.delta_in_track);
+            // DLOG(INFO) << debug_print_vector("delta_cross_track", d_HAS_data.delta_cross_track);
         }
 
     if (d_HAS_data.header.clock_fullset_flag && have_mask)
@@ -656,8 +656,8 @@ void galileo_e6_has_msg_receiver::read_MT1_body(const std::string& message_body)
                     message = std::string(message.begin() + HAS_MSG_DELTA_CLOCK_CORRECTION_LENGTH, message.end());
                 }
 
-            DLOG(INFO) << debug_print_vector("delta_clock_multiplier", d_HAS_data.delta_clock_multiplier);
-            DLOG(INFO) << debug_print_vector("delta_clock_correction", d_HAS_data.delta_clock_correction);
+            // DLOG(INFO) << debug_print_vector("delta_clock_multiplier", d_HAS_data.delta_clock_multiplier);
+            // DLOG(INFO) << debug_print_vector("delta_clock_correction", d_HAS_data.delta_clock_correction);
         }
 
     if (d_HAS_data.header.clock_subset_flag && have_mask)
@@ -731,11 +731,11 @@ void galileo_e6_has_msg_receiver::read_MT1_body(const std::string& message_body)
                         }
                 }
 
-            DLOG(INFO) << "Nsys_sub: " << static_cast<float>(d_HAS_data.Nsys_sub);
-            DLOG(INFO) << (d_HAS_data.Nsys_sub == 0 ? "" : debug_print_vector("gnss_id_clock_subset", d_HAS_data.gnss_id_clock_subset));
-            DLOG(INFO) << (d_HAS_data.Nsys_sub == 0 ? "" : debug_print_vector("delta_clock_multiplier_clock_subset", d_HAS_data.delta_clock_multiplier_clock_subset));
-            DLOG(INFO) << (d_HAS_data.Nsys_sub == 0 ? "" : debug_print_vector("satellite_submask", d_HAS_data.satellite_submask));
-            DLOG(INFO) << (d_HAS_data.Nsys_sub == 0 ? "" : debug_print_matrix("delta_clock_correction_clock_subset", d_HAS_data.delta_clock_correction_clock_subset));
+            // DLOG(INFO) << "Nsys_sub: " << static_cast<float>(d_HAS_data.Nsys_sub);
+            // DLOG(INFO) << (d_HAS_data.Nsys_sub == 0 ? "" : debug_print_vector("gnss_id_clock_subset", d_HAS_data.gnss_id_clock_subset));
+            // DLOG(INFO) << (d_HAS_data.Nsys_sub == 0 ? "" : debug_print_vector("delta_clock_multiplier_clock_subset", d_HAS_data.delta_clock_multiplier_clock_subset));
+            // DLOG(INFO) << (d_HAS_data.Nsys_sub == 0 ? "" : debug_print_vector("satellite_submask", d_HAS_data.satellite_submask));
+            // DLOG(INFO) << (d_HAS_data.Nsys_sub == 0 ? "" : debug_print_matrix("delta_clock_correction_clock_subset", d_HAS_data.delta_clock_correction_clock_subset));
         }
 
     if (d_HAS_data.header.code_bias_flag && have_mask)
@@ -806,7 +806,7 @@ void galileo_e6_has_msg_receiver::read_MT1_body(const std::string& message_body)
                         }
                 }
 
-            DLOG(INFO) << debug_print_matrix("code bias", d_HAS_data.code_bias);
+            // DLOG(INFO) << debug_print_matrix("code bias", d_HAS_data.code_bias);
         }
 
     if (d_HAS_data.header.phase_bias_flag && have_mask)
@@ -881,8 +881,8 @@ void galileo_e6_has_msg_receiver::read_MT1_body(const std::string& message_body)
                         }
                 }
 
-            DLOG(INFO) << debug_print_matrix("phase bias", d_HAS_data.phase_bias);
-            DLOG(INFO) << debug_print_matrix("phase discontinuity indicator", d_HAS_data.phase_discontinuity_indicator);
+            // DLOG(INFO) << debug_print_matrix("phase bias", d_HAS_data.phase_bias);
+            // DLOG(INFO) << debug_print_matrix("phase discontinuity indicator", d_HAS_data.phase_discontinuity_indicator);
         }
 }
 

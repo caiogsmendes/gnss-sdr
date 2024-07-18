@@ -67,9 +67,9 @@ GalileoE5aPcpsAcquisition::GalileoE5aPcpsAcquisition(
 
     sampled_ms_ = acq_parameters_.sampled_ms;
 
-    DLOG(INFO) << "Role " << role_;
+    // DLOG(INFO) << "Role " << role_;
     acquisition_ = pcps_make_acquisition(acq_parameters_);
-    DLOG(INFO) << "acquisition(" << acquisition_->unique_id() << ")";
+    // DLOG(INFO) << "acquisition(" << acquisition_->unique_id() << ")";
 
     if (acq_iq_)
         {
@@ -78,11 +78,11 @@ GalileoE5aPcpsAcquisition::GalileoE5aPcpsAcquisition(
 
     if (in_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_streams_ > 0)
         {
-            LOG(ERROR) << "This implementation does not provide an output stream";
+            // LOG(ERROR) << "This implementation does not provide an output stream";
         }
 }
 
@@ -200,7 +200,7 @@ void GalileoE5aPcpsAcquisition::connect(gr::top_block_sptr top_block __attribute
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unknown acquisition item type";
+            // LOG(WARNING) << item_type_ << " unknown acquisition item type";
         }
 }
 
@@ -213,7 +213,7 @@ void GalileoE5aPcpsAcquisition::disconnect(gr::top_block_sptr top_block __attrib
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unknown acquisition item type";
+            // LOG(WARNING) << item_type_ << " unknown acquisition item type";
         }
 }
 

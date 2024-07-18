@@ -157,7 +157,7 @@ void Glonass_L2_Ca_Dll_Pll_Tracking_cc::start_tracking()
     d_acq_sample_stamp = d_acquisition_gnss_synchro->Acq_samplestamp_samples;
 
     const int64_t acq_trk_diff_samples = static_cast<int64_t>(d_sample_counter) - static_cast<int64_t>(d_acq_sample_stamp);  // -d_vector_length;
-    DLOG(INFO) << "Number of samples between Acquisition and Tracking =" << acq_trk_diff_samples;
+    // DLOG(INFO) << "Number of samples between Acquisition and Tracking =" << acq_trk_diff_samples;
     const double acq_trk_diff_seconds = static_cast<float>(acq_trk_diff_samples) / static_cast<float>(d_fs_in);
     // Doppler effect
     // Fd=(C/(C+Vr))*F
@@ -213,17 +213,17 @@ void Glonass_L2_Ca_Dll_Pll_Tracking_cc::start_tracking()
     sys = std::string(1, d_acquisition_gnss_synchro->System);
 
     // DEBUG OUTPUT
-    std::cout << "Tracking of GLONASS L2 C/A signal started on channel " << d_channel << " for satellite " << Gnss_Satellite(systemName[sys], d_acquisition_gnss_synchro->PRN) << '\n';
-    LOG(INFO) << "Tracking of GLONASS L2 C/A signal for satellite " << Gnss_Satellite(systemName[sys], d_acquisition_gnss_synchro->PRN) << " on channel " << d_channel;
+    // std::cout << "Tracking of GLONASS L2 C/A signal started on channel " << d_channel << " for satellite " << Gnss_Satellite(systemName[sys], d_acquisition_gnss_synchro->PRN) << '\n';
+   // LOG(INFO) << "Tracking of GLONASS L2 C/A signal for satellite " << Gnss_Satellite(systemName[sys], d_acquisition_gnss_synchro->PRN) << " on channel " << d_channel;
 
     // enable tracking
     d_pull_in = true;
     d_enable_tracking = true;
     d_acc_carrier_phase_initialized = false;
 
-    LOG(INFO) << "PULL-IN Doppler [Hz]=" << d_carrier_frequency_hz
-              << " Code Phase correction [samples]=" << delay_correction_samples
-              << " PULL-IN Code Phase [samples]=" << d_acq_code_phase_samples;
+   // LOG(INFO) << "PULL-IN Doppler [Hz]=" << d_carrier_frequency_hz
+            //   << " Code Phase correction [samples]=" << delay_correction_samples
+            //   << " PULL-IN Code Phase [samples]=" << d_acq_code_phase_samples;
 }
 
 
@@ -237,14 +237,14 @@ Glonass_L2_Ca_Dll_Pll_Tracking_cc::~Glonass_L2_Ca_Dll_Pll_Tracking_cc()
                 }
             catch (const std::exception &ex)
                 {
-                    LOG(WARNING) << "Exception in Tracking block destructor: " << ex.what();
+                    // LOG(WARNING) << "Exception in Tracking block destructor: " << ex.what();
                 }
         }
     if (d_dump)
         {
             if (d_channel == 0)
                 {
-                    std::cout << "Writing .mat files ...";
+                    // std::cout << "Writing .mat files ...";
                 }
             try
                 {
@@ -252,12 +252,12 @@ Glonass_L2_Ca_Dll_Pll_Tracking_cc::~Glonass_L2_Ca_Dll_Pll_Tracking_cc()
                 }
             catch (const std::exception &ex)
                 {
-                    LOG(WARNING) << "Error saving the .mat file: " << ex.what();
+                    // LOG(WARNING) << "Error saving the .mat file: " << ex.what();
                 }
 
             if (d_channel == 0)
                 {
-                    std::cout << " done.\n";
+                    // std::cout << " done.\n";
                 }
         }
     try
@@ -266,7 +266,7 @@ Glonass_L2_Ca_Dll_Pll_Tracking_cc::~Glonass_L2_Ca_Dll_Pll_Tracking_cc()
         }
     catch (const std::exception &ex)
         {
-            LOG(WARNING) << "Exception in Tracking block destructor: " << ex.what();
+            // LOG(WARNING) << "Exception in Tracking block destructor: " << ex.what();
         }
 }
 
@@ -445,7 +445,7 @@ int32_t Glonass_L2_Ca_Dll_Pll_Tracking_cc::save_matfile() const
 void Glonass_L2_Ca_Dll_Pll_Tracking_cc::set_channel(uint32_t channel)
 {
     d_channel = channel;
-    LOG(INFO) << "Tracking Channel set to " << d_channel;
+   // LOG(INFO) << "Tracking Channel set to " << d_channel;
     // ############# ENABLE DATA FILE LOG #################
     if (d_dump == true)
         {
@@ -457,11 +457,11 @@ void Glonass_L2_Ca_Dll_Pll_Tracking_cc::set_channel(uint32_t channel)
                             d_dump_filename.append(".dat");
                             d_dump_file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
                             d_dump_file.open(d_dump_filename.c_str(), std::ios::out | std::ios::binary);
-                            LOG(INFO) << "Tracking dump enabled on channel " << d_channel << " Log file: " << d_dump_filename.c_str();
+                           // LOG(INFO) << "Tracking dump enabled on channel " << d_channel << " Log file: " << d_dump_filename.c_str();
                         }
                     catch (const std::ofstream::failure &e)
                         {
-                            LOG(WARNING) << "channel " << d_channel << " Exception opening trk dump file " << e.what();
+                            // LOG(WARNING) << "channel " << d_channel << " Exception opening trk dump file " << e.what();
                         }
                 }
         }
@@ -609,8 +609,8 @@ int Glonass_L2_Ca_Dll_Pll_Tracking_cc::general_work(int noutput_items __attribut
                         }
                     if (d_carrier_lock_fail_counter > FLAGS_max_lock_fail)
                         {
-                            std::cout << "Loss of lock in channel " << d_channel << "!\n";
-                            LOG(INFO) << "Loss of lock in channel " << d_channel << "!";
+                            // std::cout << "Loss of lock in channel " << d_channel << "!\n";
+                           // LOG(INFO) << "Loss of lock in channel " << d_channel << "!";
                             this->message_port_pub(pmt::mp("events"), pmt::from_long(3));  // 3 -> loss of lock
                             d_carrier_lock_fail_counter = 0;
                             d_enable_tracking = false;  // TODO: check if disabling tracking is consistent with the channel state machine
@@ -703,7 +703,7 @@ int Glonass_L2_Ca_Dll_Pll_Tracking_cc::general_work(int noutput_items __attribut
                 }
             catch (const std::ofstream::failure &e)
                 {
-                    LOG(WARNING) << "Exception writing trk dump file " << e.what();
+                    // LOG(WARNING) << "Exception writing trk dump file " << e.what();
                 }
         }
 

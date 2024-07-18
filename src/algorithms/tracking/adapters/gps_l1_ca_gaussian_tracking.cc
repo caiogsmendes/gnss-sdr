@@ -66,7 +66,7 @@ GpsL1CaGaussianTracking::GpsL1CaGaussianTracking(
     int bce_kappa = configuration->property(role_ + ".bce_kappa", 0);
 
     // ################# MAKE TRACKING GNURadio object ###################
-    DLOG(INFO) << "role " << role_;
+    // DLOG(INFO) << "role " << role_;
     if (item_type == "gr_complex")
         {
             tracking_sptr_ = gps_l1_ca_gaussian_make_tracking_cc(
@@ -82,13 +82,13 @@ GpsL1CaGaussianTracking::GpsL1CaGaussianTracking(
                 bce_strans,
                 bce_nu,
                 bce_kappa);
-            DLOG(INFO) << "tracking(" << tracking_sptr_->unique_id() << ")";
+            // DLOG(INFO) << "tracking(" << tracking_sptr_->unique_id() << ")";
         }
     else
         {
             item_size_ = 0;
             tracking_sptr_ = nullptr;
-            LOG(WARNING) << item_type << " unknown tracking item type.";
+            // LOG(WARNING) << item_type << " unknown tracking item type.";
         }
 
     if (in_streams_ == 0)

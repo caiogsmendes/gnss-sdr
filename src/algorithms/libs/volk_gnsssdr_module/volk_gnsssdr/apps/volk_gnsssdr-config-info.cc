@@ -18,7 +18,7 @@
 
 void print_alignment()
 {
-    std::cout << "Alignment in bytes: " << volk_gnsssdr_get_alignment() << '\n';
+    // std::cout << "Alignment in bytes: " << volk_gnsssdr_get_alignment() << '\n';
 }
 
 
@@ -26,13 +26,13 @@ void print_malloc()
 {
     // You don't want to change the volk_malloc code, so just copy the if/else
     // structure from there and give an explanation for the implementations
-    std::cout << "Used malloc implementation: ";
+    // std::cout << "Used malloc implementation: ";
 #if HAVE_POSIX_MEMALIGN
-    std::cout << "posix_memalign\n";
+    // std::cout << "posix_memalign\n";
 #elif defined(_MSC_VER)
-    std::cout << "_aligned_malloc\n";
+    // std::cout << "_aligned_malloc\n";
 #else
-    std::cout << "C11 aligned_alloc.\n";
+    // std::cout << "C11 aligned_alloc.\n";
 #endif
 }
 

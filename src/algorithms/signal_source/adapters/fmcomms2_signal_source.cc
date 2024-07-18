@@ -85,58 +85,58 @@ Fmcomms2SignalSource::Fmcomms2SignalSource(const ConfigurationInterface *configu
     // some basic checks
     if ((rf_port_select_ != "A_BALANCED") && (rf_port_select_ != "B_BALANCED") && (rf_port_select_ != "A_N") && (rf_port_select_ != "B_N") && (rf_port_select_ != "B_P") && (rf_port_select_ != "C_N") && (rf_port_select_ != "C_P") && (rf_port_select_ != "TX_MONITOR1") && (rf_port_select_ != "TX_MONITOR2") && (rf_port_select_ != "TX_MONITOR1_2"))
         {
-            std::cout << "Configuration parameter rf_port_select should take one of these values:\n";
-            std::cout << " A_BALANCED, B_BALANCED, A_N, B_N, B_P, C_N, C_P, TX_MONITOR1, TX_MONITOR2, TX_MONITOR1_2\n";
-            std::cout << "Error: provided value rf_port_select=" << rf_port_select_ << " is not among valid values\n";
-            std::cout << " This parameter has been set to its default value rf_port_select=A_BALANCED\n";
+            // std::cout << "Configuration parameter rf_port_select should take one of these values:\n";
+            // std::cout << " A_BALANCED, B_BALANCED, A_N, B_N, B_P, C_N, C_P, TX_MONITOR1, TX_MONITOR2, TX_MONITOR1_2\n";
+            // std::cout << "Error: provided value rf_port_select=" << rf_port_select_ << " is not among valid values\n";
+            // std::cout << " This parameter has been set to its default value rf_port_select=A_BALANCED\n";
             rf_port_select_ = std::string("A_BALANCED");
-            LOG(WARNING) << "Invalid configuration value for rf_port_select parameter. Set to rf_port_select=A_BALANCED";
+            // LOG(WARNING) << "Invalid configuration value for rf_port_select parameter. Set to rf_port_select=A_BALANCED";
         }
 
     if ((gain_mode_rx1_ != "manual") && (gain_mode_rx1_ != "slow_attack") && (gain_mode_rx1_ != "fast_attack") && (gain_mode_rx1_ != "hybrid"))
         {
-            std::cout << "Configuration parameter gain_mode_rx1 should take one of these values:\n";
-            std::cout << " manual, slow_attack, fast_attack, hybrid\n";
-            std::cout << "Error: provided value gain_mode_rx1=" << gain_mode_rx1_ << " is not among valid values\n";
-            std::cout << " This parameter has been set to its default value gain_mode_rx1=" << default_gain_mode << '\n';
+            // std::cout << "Configuration parameter gain_mode_rx1 should take one of these values:\n";
+            // std::cout << " manual, slow_attack, fast_attack, hybrid\n";
+            // std::cout << "Error: provided value gain_mode_rx1=" << gain_mode_rx1_ << " is not among valid values\n";
+            // std::cout << " This parameter has been set to its default value gain_mode_rx1=" << default_gain_mode << '\n';
             gain_mode_rx1_ = default_gain_mode;
-            LOG(WARNING) << "Invalid configuration value for gain_mode_rx1 parameter. Set to gain_mode_rx1=" << default_gain_mode;
+            // LOG(WARNING) << "Invalid configuration value for gain_mode_rx1 parameter. Set to gain_mode_rx1=" << default_gain_mode;
         }
 
     if ((gain_mode_rx2_ != "manual") && (gain_mode_rx2_ != "slow_attack") && (gain_mode_rx2_ != "fast_attack") && (gain_mode_rx2_ != "hybrid"))
         {
-            std::cout << "Configuration parameter gain_mode_rx2 should take one of these values:\n";
-            std::cout << " manual, slow_attack, fast_attack, hybrid\n";
-            std::cout << "Error: provided value gain_mode_rx2=" << gain_mode_rx2_ << " is not among valid values\n";
-            std::cout << " This parameter has been set to its default value gain_mode_rx2=" << default_gain_mode << '\n';
+            // std::cout << "Configuration parameter gain_mode_rx2 should take one of these values:\n";
+            // std::cout << " manual, slow_attack, fast_attack, hybrid\n";
+            // std::cout << "Error: provided value gain_mode_rx2=" << gain_mode_rx2_ << " is not among valid values\n";
+            // std::cout << " This parameter has been set to its default value gain_mode_rx2=" << default_gain_mode << '\n';
             gain_mode_rx2_ = default_gain_mode;
-            LOG(WARNING) << "Invalid configuration value for gain_mode_rx1 parameter. Set to gain_mode_rx2=" << default_gain_mode;
+            // LOG(WARNING) << "Invalid configuration value for gain_mode_rx1 parameter. Set to gain_mode_rx2=" << default_gain_mode;
         }
 
     if ((filter_source_ != "Off") && (filter_source_ != "Auto") && (filter_source_ != "File") && (filter_source_ != "Design"))
         {
-            std::cout << "Configuration parameter filter_source should take one of these values:\n";
-            std::cout << "  Off: Disable filter\n";
-            std::cout << "  Auto: Use auto-generated filters\n";
-            std::cout << "  File: User-provided filter in filter_filename parameter\n";
+            // std::cout << "Configuration parameter filter_source should take one of these values:\n";
+            // std::cout << "  Off: Disable filter\n";
+            // std::cout << "  Auto: Use auto-generated filters\n";
+            // std::cout << "  File: User-provided filter in filter_filename parameter\n";
 #if LIBAD9361_VERSION_GREATER_THAN_01
-            std::cout << "  Design: Create filter from Fpass, Fstop, sampling_frequency and bandwidth parameters\n";
+            // std::cout << "  Design: Create filter from Fpass, Fstop, sampling_frequency and bandwidth parameters\n";
 #endif
-            std::cout << "Error: provided value filter_source=" << filter_source_ << " is not among valid values\n";
-            std::cout << " This parameter has been set to its default value filter_source=Off\n";
+            // std::cout << "Error: provided value filter_source=" << filter_source_ << " is not among valid values\n";
+            // std::cout << " This parameter has been set to its default value filter_source=Off\n";
             filter_source_ = std::string("Off");
-            LOG(WARNING) << "Invalid configuration value for filter_source parameter. Set to filter_source=Off";
+            // LOG(WARNING) << "Invalid configuration value for filter_source parameter. Set to filter_source=Off";
         }
 
     if (gain_mode_rx1_ == "manual")
         {
             if (rf_gain_rx1_ > 73.0 || rf_gain_rx1_ < -1.0)
                 {
-                    std::cout << "Configuration parameter rf_gain_rx1 should take values between -1.0 and 73 dB\n";
-                    std::cout << "Error: provided value rf_gain_rx1=" << rf_gain_rx1_ << " is not among valid values\n";
-                    std::cout << " This parameter has been set to its default value rf_gain_rx1=64.0\n";
+                    // std::cout << "Configuration parameter rf_gain_rx1 should take values between -1.0 and 73 dB\n";
+                    // std::cout << "Error: provided value rf_gain_rx1=" << rf_gain_rx1_ << " is not among valid values\n";
+                    // std::cout << " This parameter has been set to its default value rf_gain_rx1=64.0\n";
                     rf_gain_rx1_ = 64.0;
-                    LOG(WARNING) << "Invalid configuration value for rf_gain_rx1 parameter. Set to rf_gain_rx1=64.0";
+                    // LOG(WARNING) << "Invalid configuration value for rf_gain_rx1 parameter. Set to rf_gain_rx1=64.0";
                 }
         }
 
@@ -144,26 +144,26 @@ Fmcomms2SignalSource::Fmcomms2SignalSource(const ConfigurationInterface *configu
         {
             if (rf_gain_rx2_ > 73.0 || rf_gain_rx2_ < -1.0)
                 {
-                    std::cout << "Configuration parameter rf_gain_rx2 should take values between -1.0 and 73 dB\n";
-                    std::cout << "Error: provided value rf_gain_rx2=" << rf_gain_rx2_ << " is not among valid values\n";
-                    std::cout << " This parameter has been set to its default value rf_gain_rx2=64.0\n";
+                    // std::cout << "Configuration parameter rf_gain_rx2 should take values between -1.0 and 73 dB\n";
+                    // std::cout << "Error: provided value rf_gain_rx2=" << rf_gain_rx2_ << " is not among valid values\n";
+                    // std::cout << " This parameter has been set to its default value rf_gain_rx2=64.0\n";
                     rf_gain_rx2_ = 64.0;
-                    LOG(WARNING) << "Invalid configuration value for rf_gain_rx2 parameter. Set to rf_gain_rx2=64.0";
+                    // LOG(WARNING) << "Invalid configuration value for rf_gain_rx2 parameter. Set to rf_gain_rx2=64.0";
                 }
         }
 
     if (bandwidth_ < 200000 || bandwidth_ > 56000000)
         {
-            std::cout << "Configuration parameter bandwidth should take values between 200000 and 56000000 Hz\n";
-            std::cout << "Error: provided value bandwidth=" << bandwidth_ << " is not among valid values\n";
-            std::cout << " This parameter has been set to its default value bandwidth=2000000\n";
+            // std::cout << "Configuration parameter bandwidth should take values between 200000 and 56000000 Hz\n";
+            // std::cout << "Error: provided value bandwidth=" << bandwidth_ << " is not among valid values\n";
+            // std::cout << " This parameter has been set to its default value bandwidth=2000000\n";
             bandwidth_ = 2000000;
-            LOG(WARNING) << "Invalid configuration value for bandwidth parameter. Set to bandwidth=2000000";
+            // LOG(WARNING) << "Invalid configuration value for bandwidth parameter. Set to bandwidth=2000000";
         }
 
-    std::cout << "device address: " << uri_ << '\n';
-    std::cout << "LO frequency : " << freq_ << " Hz\n";
-    std::cout << "sample rate: " << sample_rate_ << " Sps\n";
+    // std::cout << "device address: " << uri_ << '\n';
+    // std::cout << "LO frequency : " << freq_ << " Hz\n";
+    // std::cout << "sample rate: " << sample_rate_ << " Sps\n";
 
     if (item_type_ == "gr_complex")
         {
@@ -218,21 +218,21 @@ Fmcomms2SignalSource::Fmcomms2SignalSource(const ConfigurationInterface *configu
                                 {
                                     if (tx_bandwidth_ < static_cast<uint64_t>(std::floor(static_cast<float>(freq_dds_tx_hz_) * 1.1)) || (tx_bandwidth_ < 200000) || (tx_bandwidth_ > 1000000))
                                         {
-                                            std::cout << "Configuration parameter tx_bandwidth value should be between " << std::max(static_cast<float>(freq_dds_tx_hz_) * 1.1, 200000.0) << " and 1000000 Hz\n";
-                                            std::cout << "Error: provided value tx_bandwidth=" << tx_bandwidth_ << " is not among valid values\n";
-                                            std::cout << " This parameter has been set to its default value tx_bandwidth=500000\n";
+                                            // std::cout << "Configuration parameter tx_bandwidth value should be between " << std::max(static_cast<float>(freq_dds_tx_hz_) * 1.1, 200000.0) << " and 1000000 Hz\n";
+                                            // std::cout << "Error: provided value tx_bandwidth=" << tx_bandwidth_ << " is not among valid values\n";
+                                            // std::cout << " This parameter has been set to its default value tx_bandwidth=500000\n";
                                             tx_bandwidth_ = 500000;
-                                            LOG(WARNING) << "Invalid configuration value for tx_bandwidth parameter. Set to tx_bandwidth=500000";
+                                            // LOG(WARNING) << "Invalid configuration value for tx_bandwidth parameter. Set to tx_bandwidth=500000";
                                         }
                                     if (tx_attenuation_db_ > 0.0 || tx_attenuation_db_ < -89.75)
                                         {
-                                            std::cout << "Configuration parameter tx_attenuation_db should take values between 0.0 and -89.95 in 0.25 dB steps\n";
-                                            std::cout << "Error: provided value tx_attenuation_db=" << tx_attenuation_db_ << " is not among valid values\n";
-                                            std::cout << " This parameter has been set to its default value tx_attenuation_db=" << default_tx_attenuation_db << '\n';
+                                            // std::cout << "Configuration parameter tx_attenuation_db should take values between 0.0 and -89.95 in 0.25 dB steps\n";
+                                            // std::cout << "Error: provided value tx_attenuation_db=" << tx_attenuation_db_ << " is not among valid values\n";
+                                            // std::cout << " This parameter has been set to its default value tx_attenuation_db=" << default_tx_attenuation_db << '\n';
                                             tx_attenuation_db_ = default_tx_attenuation_db;
-                                            LOG(WARNING) << "Invalid configuration value for tx_attenuation_db parameter. Set to tx_attenuation_db=" << default_tx_attenuation_db;
+                                            // LOG(WARNING) << "Invalid configuration value for tx_attenuation_db parameter. Set to tx_attenuation_db=" << default_tx_attenuation_db;
                                         }
-                                    std::cout << "Enabling Local Oscillator generator in FMCOMMS2\n";
+                                    // std::cout << "Enabling Local Oscillator generator in FMCOMMS2\n";
                                     try
                                         {
                                             config_ad9361_lo_remote(uri_,
@@ -246,7 +246,7 @@ Fmcomms2SignalSource::Fmcomms2SignalSource(const ConfigurationInterface *configu
                                         }
                                     catch (const std::runtime_error &e)
                                         {
-                                            std::cout << "Exception cached when configuring the TX carrier: " << e.what() << '\n';
+                                            // std::cout << "Exception cached when configuring the TX carrier: " << e.what() << '\n';
                                         }
                                 }
                         }
@@ -292,21 +292,21 @@ Fmcomms2SignalSource::Fmcomms2SignalSource(const ConfigurationInterface *configu
                                 {
                                     if (tx_bandwidth_ < static_cast<uint64_t>(std::floor(static_cast<float>(freq_dds_tx_hz_) * 1.1)) || (tx_bandwidth_ < 200000) || (tx_bandwidth_ > 1000000))
                                         {
-                                            std::cout << "Configuration parameter tx_bandwidth value should be between " << std::max(static_cast<float>(freq_dds_tx_hz_) * 1.1, 200000.0) << " and 1000000 Hz\n";
-                                            std::cout << "Error: provided value tx_bandwidth=" << tx_bandwidth_ << " is not among valid values\n";
-                                            std::cout << " This parameter has been set to its default value tx_bandwidth=500000\n";
+                                            // std::cout << "Configuration parameter tx_bandwidth value should be between " << std::max(static_cast<float>(freq_dds_tx_hz_) * 1.1, 200000.0) << " and 1000000 Hz\n";
+                                            // std::cout << "Error: provided value tx_bandwidth=" << tx_bandwidth_ << " is not among valid values\n";
+                                            // std::cout << " This parameter has been set to its default value tx_bandwidth=500000\n";
                                             tx_bandwidth_ = 500000;
-                                            LOG(WARNING) << "Invalid configuration value for tx_bandwidth parameter. Set to tx_bandwidth=500000";
+                                            // LOG(WARNING) << "Invalid configuration value for tx_bandwidth parameter. Set to tx_bandwidth=500000";
                                         }
                                     if (tx_attenuation_db_ > 0.0 || tx_attenuation_db_ < -89.75)
                                         {
-                                            std::cout << "Configuration parameter tx_attenuation_db should take values between 0.0 and -89.95 in 0.25 dB steps\n";
-                                            std::cout << "Error: provided value tx_attenuation_db=" << tx_attenuation_db_ << " is not among valid values\n";
-                                            std::cout << " This parameter has been set to its default value tx_attenuation_db=" << default_tx_attenuation_db << '\n';
+                                            // std::cout << "Configuration parameter tx_attenuation_db should take values between 0.0 and -89.95 in 0.25 dB steps\n";
+                                            // std::cout << "Error: provided value tx_attenuation_db=" << tx_attenuation_db_ << " is not among valid values\n";
+                                            // std::cout << " This parameter has been set to its default value tx_attenuation_db=" << default_tx_attenuation_db << '\n';
                                             tx_attenuation_db_ = default_tx_attenuation_db;
-                                            LOG(WARNING) << "Invalid configuration value for tx_attenuation_db parameter. Set to tx_attenuation_db=" << default_tx_attenuation_db;
+                                            // LOG(WARNING) << "Invalid configuration value for tx_attenuation_db parameter. Set to tx_attenuation_db=" << default_tx_attenuation_db;
                                         }
-                                    std::cout << "Enabling Local Oscillator generator in FMCOMMS2\n";
+                                    // std::cout << "Enabling Local Oscillator generator in FMCOMMS2\n";
                                     try
                                         {
                                             config_ad9361_lo_remote(uri_,
@@ -320,7 +320,7 @@ Fmcomms2SignalSource::Fmcomms2SignalSource(const ConfigurationInterface *configu
                                         }
                                     catch (const std::runtime_error &e)
                                         {
-                                            std::cout << "Exception cached when configuring the TX carrier: " << e.what() << '\n';
+                                            // std::cout << "Exception cached when configuring the TX carrier: " << e.what() << '\n';
                                         }
                                 }
                         }
@@ -337,25 +337,25 @@ Fmcomms2SignalSource::Fmcomms2SignalSource(const ConfigurationInterface *configu
 
     if (samples_ != 0)
         {
-            DLOG(INFO) << "Send STOP signal after " << samples_ << " samples";
+            // DLOG(INFO) << "Send STOP signal after " << samples_ << " samples";
             valve_ = gnss_sdr_make_valve(item_size_, samples_, queue);
-            DLOG(INFO) << "valve(" << valve_->unique_id() << ")";
+            // DLOG(INFO) << "valve(" << valve_->unique_id() << ")";
         }
 
     if (dump_)
         {
-            DLOG(INFO) << "Dumping output into file " << dump_filename_;
+            // DLOG(INFO) << "Dumping output into file " << dump_filename_;
             file_sink_ = gr::blocks::file_sink::make(item_size_, dump_filename_.c_str());
-            DLOG(INFO) << "file_sink(" << file_sink_->unique_id() << ")";
+            // DLOG(INFO) << "file_sink(" << file_sink_->unique_id() << ")";
         }
 
     if (in_stream_ > 0)
         {
-            LOG(ERROR) << "A signal source does not have an input stream";
+            // LOG(ERROR) << "A signal source does not have an input stream";
         }
     if (out_stream_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 
@@ -366,7 +366,7 @@ Fmcomms2SignalSource::~Fmcomms2SignalSource()
         {
             if (!disable_ad9361_rx_remote(uri_))
                 {
-                    LOG(WARNING) << "Problem shutting down the AD9361 RX channels";
+                    // LOG(WARNING) << "Problem shutting down the AD9361 RX channels";
                 }
             if (enable_dds_lo_ == true)
                 {
@@ -376,7 +376,7 @@ Fmcomms2SignalSource::~Fmcomms2SignalSource()
                         }
                     catch (const std::exception &e)
                         {
-                            LOG(WARNING) << "Problem shutting down the AD9361 TX channel: " << e.what();
+                            // LOG(WARNING) << "Problem shutting down the AD9361 TX channel: " << e.what();
                         }
                 }
         }
@@ -388,11 +388,11 @@ void Fmcomms2SignalSource::connect(gr::top_block_sptr top_block)
     if (samples_ != 0)
         {
             top_block->connect(fmcomms2_source_f32c_, 0, valve_, 0);
-            DLOG(INFO) << "connected fmcomms2 source to valve";
+            // DLOG(INFO) << "connected fmcomms2 source to valve";
             if (dump_)
                 {
                     top_block->connect(valve_, 0, file_sink_, 0);
-                    DLOG(INFO) << "connected valve to file sink";
+                    // DLOG(INFO) << "connected valve to file sink";
                 }
         }
     else
@@ -400,7 +400,7 @@ void Fmcomms2SignalSource::connect(gr::top_block_sptr top_block)
             if (dump_)
                 {
                     top_block->connect(fmcomms2_source_f32c_, 0, file_sink_, 0);
-                    DLOG(INFO) << "connected fmcomms2 source to file sink";
+                    // DLOG(INFO) << "connected fmcomms2 source to file sink";
                 }
         }
 }
@@ -428,7 +428,7 @@ void Fmcomms2SignalSource::disconnect(gr::top_block_sptr top_block)
 
 gr::basic_block_sptr Fmcomms2SignalSource::get_left_block()
 {
-    LOG(WARNING) << "Trying to get signal source left block.";
+    // LOG(WARNING) << "Trying to get signal source left block.";
     return {};
 }
 

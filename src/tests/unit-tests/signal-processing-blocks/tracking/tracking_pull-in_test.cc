@@ -106,11 +106,11 @@ void TrackingPullInTest_msg_rx::msg_handler_channel_events(const pmt::pmt_t msg)
         {
             int64_t message = pmt::to_long(std::move(msg));
             rx_message = message;  // 3 -> loss of lock
-            // std::cout << "Received trk message: " << rx_message << '\n';
+            // // std::cout << "Received trk message: " << rx_message << '\n';
         }
     catch (const wht::bad_any_cast& e)
         {
-            LOG(WARNING) << "msg_handler_tracking Bad cast!";
+            // LOG(WARNING) << "msg_handler_tracking Bad cast!";
             rx_message = 0;
         }
 }
@@ -263,13 +263,13 @@ int TrackingPullInTest::generate_signal()
     else if (pid == 0)
         {
             execv(&generator_binary[0], parmList);
-            std::cout << "Return not expected. Must be an execv err.\n";
+            // std::cout << "Return not expected. Must be an execv err.\n";
             std::terminate();
         }
 
     waitpid(pid, &child_status, 0);
 
-    std::cout << "Signal and Observables RINEX and RAW files created.\n";
+    // std::cout << "Signal and Observables RINEX and RAW files created.\n";
     return 0;
 }
 
@@ -352,22 +352,22 @@ void TrackingPullInTest::configure_receiver(
         }
     else
         {
-            std::cout << "The test can not run with the selected tracking implementation\n ";
+            // std::cout << "The test can not run with the selected tracking implementation\n ";
             throw(std::exception());
         }
 
-    std::cout << "*****************************************\n";
-    std::cout << "*** Tracking configuration parameters ***\n";
-    std::cout << "*****************************************\n";
-    std::cout << "Signal: " << System_and_Signal << "\n";
-    std::cout << "implementation: " << config->property("Tracking.implementation", std::string("undefined")) << " \n";
-    std::cout << "pll_bw_hz: " << config->property("Tracking.pll_bw_hz", 0.0) << " Hz\n";
-    std::cout << "dll_bw_hz: " << config->property("Tracking.dll_bw_hz", 0.0) << " Hz\n";
-    std::cout << "pll_bw_narrow_hz: " << config->property("Tracking.pll_bw_narrow_hz", 0.0) << " Hz\n";
-    std::cout << "dll_bw_narrow_hz: " << config->property("Tracking.dll_bw_narrow_hz", 0.0) << " Hz\n";
-    std::cout << "extend_correlation_symbols: " << config->property("Tracking.extend_correlation_symbols", 0) << " Symbols\n";
-    std::cout << "*****************************************\n";
-    std::cout << "*****************************************\n";
+    // std::cout << "*****************************************\n";
+    // std::cout << "*** Tracking configuration parameters ***\n";
+    // std::cout << "*****************************************\n";
+    // std::cout << "Signal: " << System_and_Signal << "\n";
+    // std::cout << "implementation: " << config->property("Tracking.implementation", std::string("undefined")) << " \n";
+    // std::cout << "pll_bw_hz: " << config->property("Tracking.pll_bw_hz", 0.0) << " Hz\n";
+    // std::cout << "dll_bw_hz: " << config->property("Tracking.dll_bw_hz", 0.0) << " Hz\n";
+    // std::cout << "pll_bw_narrow_hz: " << config->property("Tracking.pll_bw_narrow_hz", 0.0) << " Hz\n";
+    // std::cout << "dll_bw_narrow_hz: " << config->property("Tracking.dll_bw_narrow_hz", 0.0) << " Hz\n";
+    // std::cout << "extend_correlation_symbols: " << config->property("Tracking.extend_correlation_symbols", 0) << " Symbols\n";
+    // std::cout << "*****************************************\n";
+    // std::cout << "*****************************************\n";
 }
 
 
@@ -472,7 +472,7 @@ bool TrackingPullInTest::acquire_signal(int SV_ID)
         }
     else
         {
-            std::cout << "The test can not run with the selected tracking implementation\n ";
+            // std::cout << "The test can not run with the selected tracking implementation\n ";
             throw(std::exception());
         }
 
@@ -549,7 +549,7 @@ bool TrackingPullInTest::acquire_signal(int SV_ID)
                                 baseband_sampling_freq,
                                 acq_fs / 2.1,
                                 acq_fs / 10);
-                            std::cout << "Enabled decimation low pass filter with " << taps.size() << " taps and decimation factor of " << decimation << '\n';
+                            // std::cout << "Enabled decimation low pass filter with " << taps.size() << " taps and decimation factor of " << decimation << '\n';
                             acquisition->set_resampler_latency((taps.size() - 1) / 2);
                             gr::basic_block_sptr fir_filter_ccf_ = gr::filter::fir_filter_ccf::make(decimation, taps);
                             top_block_acq->connect(gr_interleaved_char_to_complex, 0, fir_filter_ccf_, 0);
@@ -557,13 +557,13 @@ bool TrackingPullInTest::acquire_signal(int SV_ID)
                         }
                     else
                         {
-                            std::cout << "Disabled acquisition resampler because the input sampling frequency is too low\n";
+                            // std::cout << "Disabled acquisition resampler because the input sampling frequency is too low\n";
                             top_block_acq->connect(gr_interleaved_char_to_complex, 0, acquisition->get_left_block(), 0);
                         }
                 }
             else
                 {
-                    std::cout << "Disabled acquisition resampler because the input sampling frequency is too low\n";
+                    // std::cout << "Disabled acquisition resampler because the input sampling frequency is too low\n";
                     top_block_acq->connect(gr_interleaved_char_to_complex, 0, acquisition->get_left_block(), 0);
                 }
         }
@@ -579,7 +579,7 @@ bool TrackingPullInTest::acquire_signal(int SV_ID)
         }
     catch (const std::exception& e)
         {
-            std::cout << "Failure connecting the message port system: " << e.what() << '\n';
+            // std::cout << "Failure connecting the message port system: " << e.what() << '\n';
             exit(0);
         }
 
@@ -625,9 +625,9 @@ bool TrackingPullInTest::acquire_signal(int SV_ID)
             top_block_acq->run();
             if (start_msg == true)
                 {
-                    std::cout << "Reading external signal file: " << FLAGS_signal_file << '\n';
-                    std::cout << "Searching for " << System_and_Signal << " Satellites...\n";
-                    std::cout << "[";
+                    // std::cout << "Reading external signal file: " << FLAGS_signal_file << '\n';
+                    // std::cout << "Searching for " << System_and_Signal << " Satellites...\n";
+                    // std::cout << "[";
                     start_msg = false;
                 }
             while (msg_rx->rx_message == 0)
@@ -636,31 +636,31 @@ bool TrackingPullInTest::acquire_signal(int SV_ID)
                 }
             if (msg_rx->rx_message == 1)
                 {
-                    std::cout << " " << PRN << " ";
+                    // std::cout << " " << PRN << " ";
                     doppler_measurements_map.insert(std::pair<int, double>(PRN, tmp_gnss_synchro.Acq_doppler_hz));
                     code_delay_measurements_map.insert(std::pair<int, double>(PRN, tmp_gnss_synchro.Acq_delay_samples));
                     acq_samplestamp_map.insert(std::pair<int, double>(PRN, tmp_gnss_synchro.Acq_samplestamp_samples));
                 }
             else
                 {
-                    std::cout << " . ";
+                    // std::cout << " . ";
                 }
             top_block_acq->stop();
             file_source->seek(2 * FLAGS_skip_samples, SEEK_SET);  // skip head. ibyte, two bytes per complex sample
-            std::cout.flush();
+            // std::cout.flush();
         }
-    std::cout << "]\n";
-    std::cout << "-------------------------------------------\n";
+    // std::cout << "]\n";
+    // std::cout << "-------------------------------------------\n";
 
     for (auto& x : doppler_measurements_map)
         {
-            std::cout << "DETECTED SATELLITE " << System_and_Signal << " PRN: " << x.first << " with Doppler: " << x.second << " [Hz], code phase: " << code_delay_measurements_map.at(x.first) << " [samples] at signal SampleStamp " << acq_samplestamp_map.at(x.first) << "\n";
+            // std::cout << "DETECTED SATELLITE " << System_and_Signal << " PRN: " << x.first << " with Doppler: " << x.second << " [Hz], code phase: " << code_delay_measurements_map.at(x.first) << " [samples] at signal SampleStamp " << acq_samplestamp_map.at(x.first) << "\n";
         }
 
     // report the elapsed time
     end = std::chrono::system_clock::now();
     elapsed_seconds = end - start;
-    std::cout << "Total signal acquisition run time "
+    // std::cout << "Total signal acquisition run time "
               << elapsed_seconds.count()
               << " [seconds]\n";
     return true;
@@ -765,8 +765,8 @@ TEST_F(TrackingPullInTest, ValidationOfResults)
                 << "Failure reading true tracking dump file.\n"
                 << "Maybe sat PRN #" + std::to_string(FLAGS_test_satellite_PRN) +
                        " is not available?";
-            std::cout << "Testing satellite PRN=" << test_satellite_PRN << '\n';
-            std::cout << "True Initial Doppler " << true_obs_data.doppler_l1_hz << " [Hz], true Initial code delay [Chips]=" << true_obs_data.prn_delay_chips << "[Chips]\n";
+            // std::cout << "Testing satellite PRN=" << test_satellite_PRN << '\n';
+            // std::cout << "True Initial Doppler " << true_obs_data.doppler_l1_hz << " [Hz], true Initial code delay [Chips]=" << true_obs_data.prn_delay_chips << "[Chips]\n";
             true_acq_doppler_hz = true_obs_data.doppler_l1_hz;
             true_acq_delay_samples = (GPS_L1_CA_CODE_LENGTH_CHIPS - true_obs_data.prn_delay_chips / GPS_L1_CA_CODE_LENGTH_CHIPS) * static_cast<double>(baseband_sampling_freq) * GPS_L1_CA_CODE_PERIOD_S;
             acq_samplestamp_samples = 0;
@@ -776,7 +776,7 @@ TEST_F(TrackingPullInTest, ValidationOfResults)
             true_acq_doppler_hz = doppler_measurements_map.find(FLAGS_test_satellite_PRN)->second;
             true_acq_delay_samples = code_delay_measurements_map.find(FLAGS_test_satellite_PRN)->second;
             acq_samplestamp_samples = 0;
-            std::cout << "Estimated Initial Doppler " << true_acq_doppler_hz
+            // std::cout << "Estimated Initial Doppler " << true_acq_doppler_hz
                       << " [Hz], estimated Initial code delay " << true_acq_delay_samples << " [Samples]"
                       << " Acquisition SampleStamp is " << acq_samplestamp_map.find(FLAGS_test_satellite_PRN)->second << '\n';
         }
@@ -854,22 +854,22 @@ TEST_F(TrackingPullInTest, ValidationOfResults)
                             // ********************************************************************
                             // ***** STEP 5: Perform the signal tracking and read the results *****
                             // ********************************************************************
-                            std::cout << "--- START TRACKING WITH PULL-IN ERROR: " << acq_doppler_error_hz_values.at(current_acq_doppler_error_idx) << " [Hz] and " << acq_delay_error_chips_values.at(current_acq_doppler_error_idx).at(current_acq_code_error_idx) << " [Chips] ---\n";
+                            // std::cout << "--- START TRACKING WITH PULL-IN ERROR: " << acq_doppler_error_hz_values.at(current_acq_doppler_error_idx) << " [Hz] and " << acq_delay_error_chips_values.at(current_acq_doppler_error_idx).at(current_acq_code_error_idx) << " [Chips] ---\n";
                             std::chrono::time_point<std::chrono::system_clock> start, end;
                             if (acq_to_trk_delay_samples > 0)
                                 {
                                     EXPECT_NO_THROW({
                                         start = std::chrono::system_clock::now();
-                                        std::cout << "--- SIMULATING A PULL-IN DELAY OF " << FLAGS_acq_to_trk_delay_s << " SECONDS ---\n";
+                                        // std::cout << "--- SIMULATING A PULL-IN DELAY OF " << FLAGS_acq_to_trk_delay_s << " SECONDS ---\n";
                                         top_block_trk->start();
-                                        std::cout << " Waiting for valve...\n";
+                                        // std::cout << " Waiting for valve...\n";
                                         // wait the valve message indicating the circulation of the amount of samples of the delay
                                         pmt::pmt_t msg;
                                         queue->wait_and_pop(msg);
-                                        std::cout << " Starting tracking...\n";
+                                        // std::cout << " Starting tracking...\n";
                                         tracking->start_tracking();
                                         resetable_valve_->open_valve();
-                                        std::cout << " Waiting flowgraph..\n";
+                                        // std::cout << " Waiting flowgraph..\n";
                                         top_block_trk->wait();
                                         end = std::chrono::system_clock::now();
                                     }) << "Failure running the top_block.";
@@ -885,7 +885,7 @@ TEST_F(TrackingPullInTest, ValidationOfResults)
                                 }
 
                             std::chrono::duration<double> elapsed_seconds = end - start;
-                            std::cout << "Signal tracking completed in " << elapsed_seconds.count() << " seconds\n";
+                            // std::cout << "Signal tracking completed in " << elapsed_seconds.count() << " seconds\n";
 
                             pull_in_results_v.push_back(msg_rx->rx_message != 3);  // save last asynchronous tracking message in order to detect a loss of lock
 
@@ -941,9 +941,9 @@ TEST_F(TrackingPullInTest, ValidationOfResults)
                                     const std::string gnuplot_executable(FLAGS_gnuplot_executable);
                                     if (gnuplot_executable.empty())
                                         {
-                                            std::cout << "WARNING: Although the flag show_plots has been set to TRUE,\n";
-                                            std::cout << "gnuplot has not been found in your system.\n";
-                                            std::cout << "Test results will not be plotted.\n";
+                                            // std::cout << "WARNING: Although the flag show_plots has been set to TRUE,\n";
+                                            // std::cout << "gnuplot has not been found in your system.\n";
+                                            // std::cout << "Test results will not be plotted.\n";
                                         }
                                     else
                                         {
@@ -1048,7 +1048,7 @@ TEST_F(TrackingPullInTest, ValidationOfResults)
                                                 }
                                             catch (const GnuplotException& ge)
                                                 {
-                                                    std::cout << ge.what() << '\n';
+                                                    // std::cout << ge.what() << '\n';
                                                 }
                                         }
                                 }  // end plot

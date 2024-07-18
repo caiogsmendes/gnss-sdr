@@ -247,7 +247,7 @@ dll_pll_veml_tracking::dll_pll_veml_tracking(const Dll_Pll_Conf &conf_)
                 }
             else
                 {
-                    LOG(WARNING) << "Invalid Signal argument when instantiating tracking blocks";
+                    // LOG(WARNING) << "Invalid Signal argument when instantiating tracking blocks";
                     std::cerr << "Invalid Signal argument when instantiating tracking blocks\n";
                     d_correlation_length_ms = 1;
                     d_secondary = false;
@@ -377,8 +377,8 @@ dll_pll_veml_tracking::dll_pll_veml_tracking(const Dll_Pll_Conf &conf_)
                 }
             else
                 {
-                    LOG(WARNING) << "Invalid Signal argument when instantiating tracking blocks";
-                    std::cout << "Invalid Signal argument when instantiating tracking blocks\n";
+                    // LOG(WARNING) << "Invalid Signal argument when instantiating tracking blocks";
+                    // std::cout << "Invalid Signal argument when instantiating tracking blocks\n";
                     d_correlation_length_ms = 1;
                     d_secondary = false;
                     d_signal_carrier_freq = 0.0;
@@ -434,8 +434,8 @@ dll_pll_veml_tracking::dll_pll_veml_tracking(const Dll_Pll_Conf &conf_)
                 }
             else
                 {
-                    LOG(WARNING) << "Invalid Signal argument when instantiating tracking blocks";
-                    std::cout << "Invalid Signal argument when instantiating tracking blocks\n";
+                    // LOG(WARNING) << "Invalid Signal argument when instantiating tracking blocks";
+                    // std::cout << "Invalid Signal argument when instantiating tracking blocks\n";
                     d_correlation_length_ms = 1;
                     d_secondary = false;
                     d_signal_carrier_freq = 0.0;
@@ -447,7 +447,7 @@ dll_pll_veml_tracking::dll_pll_veml_tracking(const Dll_Pll_Conf &conf_)
         }
     else
         {
-            LOG(WARNING) << "Invalid System argument when instantiating tracking blocks";
+            // LOG(WARNING) << "Invalid System argument when instantiating tracking blocks";
             std::cerr << "Invalid System argument when instantiating tracking blocks\n";
             d_correlation_length_ms = 1;
             d_secondary = false;
@@ -623,7 +623,7 @@ void dll_pll_veml_tracking::msg_handler_telemetry_to_trk(const pmt::pmt_t &msg)
                     const int tlm_event = wht::any_cast<int>(pmt::any_ref(msg));
                     if (tlm_event == 1)
                         {
-                            DLOG(INFO) << "Telemetry fault received in ch " << this->d_channel;
+                            // DLOG(INFO) << "Telemetry fault received in ch " << this->d_channel;
                             gr::thread::scoped_lock lock(d_setlock);
                             d_carrier_lock_fail_counter = 200000;  // force loss-of-lock condition
                         }
@@ -631,11 +631,11 @@ void dll_pll_veml_tracking::msg_handler_telemetry_to_trk(const pmt::pmt_t &msg)
         }
     catch (const wht::bad_any_cast &e)
         {
-            LOG(WARNING) << "msg_handler_telemetry_to_trk Bad any_cast: " << e.what();
+            // LOG(WARNING) << "msg_handler_telemetry_to_trk Bad any_cast: " << e.what();
         }
     catch (std::exception &ex)
         {
-            LOG(WARNING) << "msg_handler_telemetry_to_trk Bad any_cast: " << ex.what();
+            // LOG(WARNING) << "msg_handler_telemetry_to_trk Bad any_cast: " << ex.what();
         }
 }
 
@@ -871,9 +871,9 @@ void dll_pll_veml_tracking::start_tracking()
 
     // DEBUG OUTPUT
 // #ifdef EN_CONSOLE_OUTPUT
-    std::cout << "Tracking of " << d_systemName << " " << d_signal_pretty_name << " signal started on channel " << d_channel << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
+    // std::cout << "Tracking of " << d_systemName << " " << d_signal_pretty_name << " signal started on channel " << d_channel << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
 // #endif
-    // DLOG(INFO) << "Starting tracking of satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << " on channel " << d_channel;
+    // // DLOG(INFO) << "Starting tracking of satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << " on channel " << d_channel;
 
     // enable tracking pull-in
     d_state = 1;
@@ -895,7 +895,7 @@ dll_pll_veml_tracking::~dll_pll_veml_tracking()
                 }
             catch (const std::exception &ex)
                 {
-                    LOG(WARNING) << "Exception in Tracking block destructor: " << ex.what();
+                    // LOG(WARNING) << "Exception in Tracking block destructor: " << ex.what();
                 }
         }
     if (d_dump_mat)
@@ -906,7 +906,7 @@ dll_pll_veml_tracking::~dll_pll_veml_tracking()
                 }
             catch (const std::exception &ex)
                 {
-                    LOG(WARNING) << "Error saving the .mat file: " << ex.what();
+                    // LOG(WARNING) << "Error saving the .mat file: " << ex.what();
                 }
         }
     try
@@ -919,7 +919,7 @@ dll_pll_veml_tracking::~dll_pll_veml_tracking()
         }
     catch (const std::exception &ex)
         {
-            LOG(WARNING) << "Exception in Tracking block destructor: " << ex.what();
+            // LOG(WARNING) << "Exception in Tracking block destructor: " << ex.what();
         }
 }
 
@@ -1019,11 +1019,11 @@ bool dll_pll_veml_tracking::cn0_and_tracking_lock_status(double coh_integration_
     if (d_carrier_lock_fail_counter > d_trk_parameters.max_carrier_lock_fail or d_code_lock_fail_counter > d_trk_parameters.max_code_lock_fail)
         {
 // #ifdef EN_CONSOLE_OUTPUT
-            std::cout << "Loss of lock in channel " << d_channel << "!\n";
+            // std::cout << "Loss of lock in channel " << d_channel << "!\n";
 // #endif
-            LOG(INFO) << "Loss of lock in channel " << d_channel
-                      << " (carrier_lock_fail_counter:" << d_carrier_lock_fail_counter
-                      << " code_lock_fail_counter : " << d_code_lock_fail_counter << ")";
+           // LOG(INFO) << "Loss of lock in channel " << d_channel
+                    //   << " (carrier_lock_fail_counter:" << d_carrier_lock_fail_counter
+                    //   << " code_lock_fail_counter : " << d_code_lock_fail_counter << ")";
             this->message_port_pub(pmt::mp("events"), pmt::from_long(3));  // 3 -> loss of lock
             d_carrier_lock_fail_counter = 0;
             d_code_lock_fail_counter = 0;
@@ -1088,7 +1088,7 @@ void dll_pll_veml_tracking::run_dll_pll()
             d_carr_freq_error_hz = fll_diff_atan(d_P_accu_old, d_P_accu, 0, d_current_correlation_time_s) / TWO_PI;
 
             d_P_accu_old = d_P_accu;
-            // std::cout << "d_carr_freq_error_hz: " << d_carr_freq_error_hz << '\n';
+            // // std::cout << "d_carr_freq_error_hz: " << d_carr_freq_error_hz << '\n';
             // Carrier discriminator filter
             if ((d_pull_in_transitory == true and d_trk_parameters.enable_fll_pull_in == true))
                 {
@@ -1110,8 +1110,8 @@ void dll_pll_veml_tracking::run_dll_pll()
     // New carrier Doppler frequency estimation
     d_carrier_doppler_hz = d_carr_error_filt_hz;
 
-    //    std::cout << "d_carrier_doppler_hz: " << d_carrier_doppler_hz << '\n';
-    //    std::cout << "d_CN0_SNV_dB_Hz: " << this->d_CN0_SNV_dB_Hz << '\n';
+    //    // std::cout << "d_carrier_doppler_hz: " << d_carrier_doppler_hz << '\n';
+    //    // std::cout << "d_CN0_SNV_dB_Hz: " << this->d_CN0_SNV_dB_Hz << '\n';
 
     // ################## DLL ##########################################################
     // DLL discriminator
@@ -1145,7 +1145,7 @@ void dll_pll_veml_tracking::run_dll_pll()
                             if (std::fabs(avg_code_error_chips_s) > 1.0)
                                 {
                                     const float carrier_doppler_error_hz = static_cast<float>(d_signal_carrier_freq) * avg_code_error_chips_s / static_cast<float>(d_code_chip_rate);
-                                    LOG(INFO) << "Detected and corrected carrier doppler error: " << carrier_doppler_error_hz << " [Hz] on sat " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN);
+                                   // LOG(INFO) << "Detected and corrected carrier doppler error: " << carrier_doppler_error_hz << " [Hz] on sat " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN);
                                     d_carrier_loop_filter.initialize(static_cast<float>(d_carrier_doppler_hz) - carrier_doppler_error_hz);
                                     d_corrected_doppler = true;
                                 }
@@ -1225,7 +1225,7 @@ void dll_pll_veml_tracking::update_tracking_vars()
                     d_carrier_phase_rate_step_rad = (tmp_cp2 - tmp_cp1) / tmp_samples;
                 }
         }
-    // std::cout << d_carrier_phase_rate_step_rad * d_trk_parameters.fs_in * d_trk_parameters.fs_in / TWO_PI << '\n';
+    // // std::cout << d_carrier_phase_rate_step_rad * d_trk_parameters.fs_in * d_trk_parameters.fs_in / TWO_PI << '\n';
     // remnant carrier phase to prevent overflow in the code NCO
     d_rem_carr_phase_rad += static_cast<float>(d_carrier_phase_step_rad * static_cast<double>(d_current_prn_length_samples) + 0.5 * d_carrier_phase_rate_step_rad * static_cast<double>(d_current_prn_length_samples) * static_cast<double>(d_current_prn_length_samples));
     d_rem_carr_phase_rad = fmod(d_rem_carr_phase_rad, TWO_PI);
@@ -1233,7 +1233,7 @@ void dll_pll_veml_tracking::update_tracking_vars()
     // carrier phase accumulator
     // double a = d_carrier_phase_step_rad * static_cast<double>(d_current_prn_length_samples);
     // double b = 0.5 * d_carrier_phase_rate_step_rad * static_cast<double>(d_current_prn_length_samples) * static_cast<double>(d_current_prn_length_samples);
-    // std::cout << fmod(b, TWO_PI) / fmod(a, TWO_PI) << '\n';
+    // // std::cout << fmod(b, TWO_PI) / fmod(a, TWO_PI) << '\n';
     d_acc_carrier_phase_rad -= (d_carrier_phase_step_rad * static_cast<double>(d_current_prn_length_samples) + 0.5 * d_carrier_phase_rate_step_rad * static_cast<double>(d_current_prn_length_samples) * static_cast<double>(d_current_prn_length_samples));
 
     // ################### DLL COMMANDS #################################################
@@ -1347,7 +1347,7 @@ void dll_pll_veml_tracking::save_correlation_results()
                     else
                         {
                             d_P_data_accu += *d_Prompt;
-                            // std::cout << "s[" << d_current_data_symbol << "]=" << (int)((*d_Prompt).real() > 0) << '\n';
+                            // // std::cout << "s[" << d_current_data_symbol << "]=" << (int)((*d_Prompt).real() > 0) << '\n';
                         }
                     d_current_data_symbol++;
                     d_current_data_symbol %= d_symbols_per_bit;
@@ -1470,7 +1470,7 @@ void dll_pll_veml_tracking::log_data()
                 }
             catch (const std::ofstream::failure &e)
                 {
-                    LOG(WARNING) << "Exception writing trk dump file " << e.what();
+                    // LOG(WARNING) << "Exception writing trk dump file " << e.what();
                 }
         }
 }
@@ -1490,7 +1490,7 @@ int32_t dll_pll_veml_tracking::save_matfile() const
     dump_filename_.append(std::to_string(d_channel));
     // add extension
     dump_filename_.append(".dat");
-    std::cout << "Generating .mat file for " << dump_filename_ << '\n';
+    // std::cout << "Generating .mat file for " << dump_filename_ << '\n';
     dump_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     try
         {
@@ -1680,7 +1680,7 @@ void dll_pll_veml_tracking::set_channel(uint32_t channel)
 {
     gr::thread::scoped_lock l(d_setlock);
     d_channel = channel;
-    LOG(INFO) << "Tracking Channel set to " << d_channel;
+   // LOG(INFO) << "Tracking Channel set to " << d_channel;
     // ############# ENABLE DATA FILE LOG #################
     if (d_dump)
         {
@@ -1696,11 +1696,11 @@ void dll_pll_veml_tracking::set_channel(uint32_t channel)
                         {
                             d_dump_file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
                             d_dump_file.open(dump_filename_.c_str(), std::ios::out | std::ios::binary);
-                            LOG(INFO) << "Tracking dump enabled on channel " << d_channel << " Log file: " << dump_filename_.c_str();
+                           // LOG(INFO) << "Tracking dump enabled on channel " << d_channel << " Log file: " << dump_filename_.c_str();
                         }
                     catch (const std::ofstream::failure &e)
                         {
-                            LOG(WARNING) << "channel " << d_channel << " Exception opening trk dump file " << e.what();
+                            // LOG(WARNING) << "channel " << d_channel << " Exception opening trk dump file " << e.what();
                         }
                 }
         }
@@ -1783,9 +1783,9 @@ int dll_pll_veml_tracking::general_work(int noutput_items __attribute__((unused)
                 d_cn0_smoother.reset();
                 d_carrier_lock_test_smoother.reset();
 
-                LOG(INFO) << "Number of samples between Acquisition and Tracking = " << acq_trk_diff_samples << " ( " << acq_trk_diff_seconds << " s)";
-                DLOG(INFO) << "PULL-IN Doppler [Hz] = " << d_carrier_doppler_hz
-                           << ". PULL-IN Code Phase [samples] = " << d_acq_code_phase_samples;
+               // LOG(INFO) << "Number of samples between Acquisition and Tracking = " << acq_trk_diff_samples << " ( " << acq_trk_diff_seconds << " s)";
+                // DLOG(INFO) << "PULL-IN Doppler [Hz] = " << d_carrier_doppler_hz
+                        //    << ". PULL-IN Code Phase [samples] = " << d_acq_code_phase_samples;
 
                 consume_each(samples_offset);  // shift input to perform alignment with local replica
                 return 0;
@@ -1814,8 +1814,8 @@ int dll_pll_veml_tracking::general_work(int noutput_items __attribute__((unused)
                 if (d_trk_parameters.bit_synchronization_time_limit_s < (this->nitems_read(0) - d_acq_sample_stamp) / static_cast<int>(d_trk_parameters.fs_in))
                     {
                         d_carrier_lock_fail_counter = 300000;  // force loss-of-lock condition
-                        LOG(INFO) << d_systemName << " " << d_signal_pretty_name << " tracking synchronization time limit reached in channel " << d_channel
-                                  << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
+                       // LOG(INFO) << d_systemName << " " << d_signal_pretty_name << " tracking synchronization time limit reached in channel " << d_channel
+                                //   << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
                     }
                 // Check lock status
                 if (!cn0_and_tracking_lock_status(d_code_period))
@@ -1846,8 +1846,8 @@ int dll_pll_veml_tracking::general_work(int noutput_items __attribute__((unused)
                                                 next_state = acquire_secondary();
                                                 if (next_state)
                                                     {
-                                                        LOG(INFO) << d_systemName << " " << d_signal_pretty_name << " secondary code locked in channel " << d_channel
-                                                                  << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
+                                                       // LOG(INFO) << d_systemName << " " << d_signal_pretty_name << " secondary code locked in channel " << d_channel
+                                                                //   << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
                                                         std::cout << d_systemName << " " << d_signal_pretty_name << " secondary code locked in channel " << d_channel
                                                                   << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
                                                     }
@@ -1862,10 +1862,10 @@ int dll_pll_veml_tracking::general_work(int noutput_items __attribute__((unused)
                                                 next_state = acquire_secondary();
                                                 if (next_state)
                                                     {
-                                                        LOG(INFO) << d_systemName << " " << d_signal_pretty_name << " tracking bit synchronization locked in channel " << d_channel
+                                                       // LOG(INFO) << d_systemName << " " << d_signal_pretty_name << " tracking bit synchronization locked in channel " << d_channel
+                                                                //   << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
+                                                        std::cout << d_systemName << " " << d_signal_pretty_name << " tracking bit synchronization locked in channel " << d_channel
                                                                   << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
-                                                        // std::cout << d_systemName << " " << d_signal_pretty_name << " tracking bit synchronization locked in channel " << d_channel
-                                                        //           << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
                                                     }
                                             }
                                     }
@@ -1896,9 +1896,9 @@ int dll_pll_veml_tracking::general_work(int noutput_items __attribute__((unused)
                                         d_extend_correlation_symbols_count = 0;
                                         d_current_correlation_time_s = static_cast<float>(d_extend_correlation_symbols) * static_cast<float>(d_code_period);
                                         d_state = 3;  // next state is the extended correlator integrator
-                                        LOG(INFO) << "Enabled " << d_extend_correlation_symbols * static_cast<int32_t>(d_code_period * 1000.0) << " ms extended correlator in channel "
-                                                  << d_channel
-                                                  << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN);
+                                       // LOG(INFO) << "Enabled " << d_extend_correlation_symbols * static_cast<int32_t>(d_code_period * 1000.0) << " ms extended correlator in channel "
+                                                //   << d_channel
+                                                //   << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN);
                                         std::cout << "Enabled " << d_extend_correlation_symbols * static_cast<int32_t>(d_code_period * 1000.0) << " ms extended correlator in channel "
                                                   << d_channel
                                                   << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
@@ -2040,8 +2040,8 @@ int dll_pll_veml_tracking::general_work(int noutput_items __attribute__((unused)
                 {
                     if (pmt::any_ref(it.value).type().hash_code() == typeid(const std::shared_ptr<GnssTime>).hash_code())
                         {
-                            // std::cout << "ch[" << d_acquisition_gnss_synchro->Channel_ID << "] tracking time tag with offset " << it->offset << " vs. counter " << d_sample_counter << " vs. nread " << this->nitems_read(0) << " containing ";
-                            // std::cout << "ch[" << d_acquisition_gnss_synchro->Channel_ID << "] tracking time tag with offset " << it->offset << " vs. nread " << this->nitems_read(0) << " containing ";
+                            // // std::cout << "ch[" << d_acquisition_gnss_synchro->Channel_ID << "] tracking time tag with offset " << it->offset << " vs. counter " << d_sample_counter << " vs. nread " << this->nitems_read(0) << " containing ";
+                            // // std::cout << "ch[" << d_acquisition_gnss_synchro->Channel_ID << "] tracking time tag with offset " << it->offset << " vs. nread " << this->nitems_read(0) << " containing ";
                             const auto last_timetag = wht::any_cast<const std::shared_ptr<GnssTime>>(pmt::any_ref(it.value));
                             d_last_timetag = *last_timetag;
                             d_last_timetag_samplecounter = it.offset;
@@ -2049,16 +2049,16 @@ int dll_pll_veml_tracking::general_work(int noutput_items __attribute__((unused)
                         }
                     else
                         {
-                            std::cout << "hash code not match\n";
+                            // std::cout << "hash code not match\n";
                         }
                 }
             catch (const wht::bad_any_cast &e)
                 {
-                    std::cout << "msg Bad any_cast: " << e.what();
+                    // std::cout << "msg Bad any_cast: " << e.what();
                 }
             catch (std::exception &ex)
                 {
-                    LOG(WARNING) << "Bad any_cast: " << ex.what();
+                    // LOG(WARNING) << "Bad any_cast: " << ex.what();
                 }
         }
 
@@ -2088,7 +2088,7 @@ int dll_pll_veml_tracking::general_work(int noutput_items __attribute__((unused)
                     tmp_obj->rx_time = static_cast<double>(current_synchro_data.Tracking_sample_counter) / d_trk_parameters.fs_in;
                     add_item_tag(0, this->nitems_written(0) + 1, pmt::mp("timetag"), pmt::make_any(tmp_obj));
 
-                    // std::cout << "[" << this->nitems_written(0) + 1 << "][diff_time: " << 1000.0 * static_cast<double>(diff_samplecount) / d_trk_parameters.fs_in << "] Sent TimeTag Week: " << d_last_timetag.week << ", TOW: " << d_last_timetag.tow_ms << " [ms], TOW fraction: " << d_last_timetag.tow_ms_fraction << " [ms] \n";
+                    // // std::cout << "[" << this->nitems_written(0) + 1 << "][diff_time: " << 1000.0 * static_cast<double>(diff_samplecount) / d_trk_parameters.fs_in << "] Sent TimeTag Week: " << d_last_timetag.week << ", TOW: " << d_last_timetag.tow_ms << " [ms], TOW fraction: " << d_last_timetag.tow_ms_fraction << " [ms] \n";
                     d_timetag_waiting = false;
                 }
 

@@ -49,39 +49,39 @@ GpsL2MDllPllTracking::GpsL2MDllPllTracking(
     if (trk_params.extend_correlation_symbols != 1)
         {
             trk_params.extend_correlation_symbols = 1;
-            std::cout << TEXT_RED << "WARNING: Extended coherent integration is not allowed in GPS L2. Coherent integration has been set to 20 ms (1 symbol)" << TEXT_RESET << '\n';
+            // std::cout << TEXT_RED << "WARNING: Extended coherent integration is not allowed in GPS L2. Coherent integration has been set to 20 ms (1 symbol)" << TEXT_RESET << '\n';
         }
     trk_params.track_pilot = configuration->property(role_ + ".track_pilot", false);
     if (trk_params.track_pilot)
         {
             trk_params.track_pilot = false;
-            std::cout << TEXT_RED << "WARNING: GPS L2 does not have pilot signal. Data tracking has been enabled" << TEXT_RESET << '\n';
+            // std::cout << TEXT_RED << "WARNING: GPS L2 does not have pilot signal. Data tracking has been enabled" << TEXT_RESET << '\n';
         }
     trk_params.system = 'G';
     const std::array<char, 3> sig{'2', 'S', '\0'};
     std::copy_n(sig.data(), 3, trk_params.signal);
 
     // ################# Make a GNU Radio Tracking block object ################
-    DLOG(INFO) << "role " << role_;
+    // DLOG(INFO) << "role " << role_;
     if (trk_params.item_type == "gr_complex")
         {
             tracking_sptr_ = dll_pll_veml_make_tracking(trk_params);
-            DLOG(INFO) << "tracking(" << tracking_sptr_->unique_id() << ")";
+            // DLOG(INFO) << "tracking(" << tracking_sptr_->unique_id() << ")";
         }
     else
         {
             item_size_ = 0;
             tracking_sptr_ = nullptr;
-            LOG(WARNING) << trk_params.item_type << " unknown tracking item type.";
+            // LOG(WARNING) << trk_params.item_type << " unknown tracking item type.";
         }
 
     if (in_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_streams_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 

@@ -175,7 +175,7 @@ int main(int argc, char *argv[])
         }
     else
         {
-            std::cout << "Warning: this was a dry-run. Config not generated\n";
+            // std::cout << "Warning: this was a dry-run. Config not generated\n";
         }
 
     return 0;
@@ -260,7 +260,7 @@ void write_results(const std::vector<volk_gnsssdr_test_results_t> *results, bool
         {
             try
                 {
-                    std::cout << "Creating " << config_path.parent_path() << " ...\n";
+                    // std::cout << "Creating " << config_path.parent_path() << " ...\n";
                     try
                         {
                             fs::create_directories(config_path.parent_path());
@@ -283,20 +283,20 @@ void write_results(const std::vector<volk_gnsssdr_test_results_t> *results, bool
     std::ofstream config;
     if (update_result)
         {
-            std::cout << "Updating " << path << " ...\n";
+            // std::cout << "Updating " << path << " ...\n";
             config.open(path.c_str(), std::ofstream::app);
             if (!config.is_open())
                 {  // either we don't have write access or we don't have the dir yet
-                    std::cout << "Error opening file " << path << '\n';
+                    // std::cout << "Error opening file " << path << '\n';
                 }
         }
     else
         {
-            std::cout << "Writing " << path << " ...\n";
+            // std::cout << "Writing " << path << " ...\n";
             config.open(path.c_str());
             if (!config.is_open())
                 {  // either we don't have write access or we don't have the dir yet
-                    std::cout << "Error opening file " << path << '\n';
+                    // std::cout << "Error opening file " << path << '\n';
                 }
 
             config << "\

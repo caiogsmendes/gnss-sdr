@@ -50,55 +50,55 @@ DirectResamplerConditioner::DirectResamplerConditioner(
     if (std::fabs(fs_in - sample_freq_out_) > std::numeric_limits<double>::epsilon())
         {
             std::string aux_warn = "CONFIGURATION WARNING: Parameters GNSS-SDR.internal_fs_sps and " + role_ + ".sample_freq_out are not set to the same value!";
-            LOG(WARNING) << aux_warn;
-            std::cout << aux_warn << '\n';
+            // LOG(WARNING) << aux_warn;
+            // std::cout << aux_warn << '\n';
         }
 
     if (item_type_ == "gr_complex")
         {
             item_size_ = sizeof(gr_complex);
             resampler_ = direct_resampler_make_conditioner_cc(sample_freq_in_, sample_freq_out_);
-            DLOG(INFO) << "sample_freq_in " << sample_freq_in_;
-            DLOG(INFO) << "sample_freq_out" << sample_freq_out_;
-            DLOG(INFO) << "Item size " << item_size_;
-            DLOG(INFO) << "resampler(" << resampler_->unique_id() << ")";
+            // DLOG(INFO) << "sample_freq_in " << sample_freq_in_;
+            // DLOG(INFO) << "sample_freq_out" << sample_freq_out_;
+            // DLOG(INFO) << "Item size " << item_size_;
+            // DLOG(INFO) << "resampler(" << resampler_->unique_id() << ")";
         }
     else if (item_type_ == "cshort")
         {
             item_size_ = sizeof(lv_16sc_t);
             resampler_ = direct_resampler_make_conditioner_cs(sample_freq_in_, sample_freq_out_);
-            DLOG(INFO) << "sample_freq_in " << sample_freq_in_;
-            DLOG(INFO) << "sample_freq_out" << sample_freq_out_;
-            DLOG(INFO) << "Item size " << item_size_;
-            DLOG(INFO) << "resampler(" << resampler_->unique_id() << ")";
+            // DLOG(INFO) << "sample_freq_in " << sample_freq_in_;
+            // DLOG(INFO) << "sample_freq_out" << sample_freq_out_;
+            // DLOG(INFO) << "Item size " << item_size_;
+            // DLOG(INFO) << "resampler(" << resampler_->unique_id() << ")";
         }
     else if (item_type_ == "cbyte")
         {
             item_size_ = sizeof(lv_8sc_t);
             resampler_ = direct_resampler_make_conditioner_cb(sample_freq_in_, sample_freq_out_);
-            DLOG(INFO) << "sample_freq_in " << sample_freq_in_;
-            DLOG(INFO) << "sample_freq_out" << sample_freq_out_;
-            DLOG(INFO) << "Item size " << item_size_;
-            DLOG(INFO) << "resampler(" << resampler_->unique_id() << ")";
+            // DLOG(INFO) << "sample_freq_in " << sample_freq_in_;
+            // DLOG(INFO) << "sample_freq_out" << sample_freq_out_;
+            // DLOG(INFO) << "Item size " << item_size_;
+            // DLOG(INFO) << "resampler(" << resampler_->unique_id() << ")";
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unrecognized item type for resampler";
+            // LOG(WARNING) << item_type_ << " unrecognized item type for resampler";
             item_size_ = sizeof(int16_t);
         }
     if (dump_)
         {
-            DLOG(INFO) << "Dumping output into file " << dump_filename_;
+            // DLOG(INFO) << "Dumping output into file " << dump_filename_;
             file_sink_ = gr::blocks::file_sink::make(item_size_, dump_filename_.c_str());
-            DLOG(INFO) << "file_sink(" << file_sink_->unique_id() << ")";
+            // DLOG(INFO) << "file_sink(" << file_sink_->unique_id() << ")";
         }
     if (in_stream_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one input stream";
+            // LOG(ERROR) << "This implementation only supports one input stream";
         }
     if (out_stream_ > 1)
         {
-            LOG(ERROR) << "This implementation only supports one output stream";
+            // LOG(ERROR) << "This implementation only supports one output stream";
         }
 }
 
@@ -108,11 +108,11 @@ void DirectResamplerConditioner::connect(gr::top_block_sptr top_block)
     if (dump_)
         {
             top_block->connect(resampler_, 0, file_sink_, 0);
-            DLOG(INFO) << "connected resampler to file sink";
+            // DLOG(INFO) << "connected resampler to file sink";
         }
     else
         {
-            DLOG(INFO) << "nothing to connect internally";
+            // DLOG(INFO) << "nothing to connect internally";
         }
 }
 

@@ -244,7 +244,7 @@ uint32_t Glonass_Gnav_Navigation_Message::get_frame_number(uint32_t satellite_sl
         }
     else
         {
-            LOG(WARNING) << "GLONASS GNAV: Invalid Satellite Slot Number";
+            // LOG(WARNING) << "GLONASS GNAV: Invalid Satellite Slot Number";
             frame_ID = 0U;
         }
 
@@ -627,8 +627,8 @@ int32_t Glonass_Gnav_Navigation_Message::string_decoder(const std::string& frame
                 }
             break;
         default:
-            LOG(INFO) << "GLONASS GNAV: Invalid String ID of received. Received " << d_string_ID
-                      << ", but acceptable range is from 1-15";
+           // LOG(INFO) << "GLONASS GNAV: Invalid String ID of received. Received " << d_string_ID
+                    //   << ", but acceptable range is from 1-15";
 
             break;
         }  // switch string ID
@@ -660,7 +660,7 @@ bool Glonass_Gnav_Navigation_Message::have_new_ephemeris()  // Check if we have 
                     flag_all_ephemeris = true;
                     // Update the time of ephemeris information
                     d_previous_tb = gnav_ephemeris.d_t_b;
-                    DLOG(INFO) << "GLONASS GNAV Ephemeris (1, 2, 3, 4) have been received and belong to the same batch";
+                    // DLOG(INFO) << "GLONASS GNAV Ephemeris (1, 2, 3, 4) have been received and belong to the same batch";
                     new_eph = true;
                 }
         }

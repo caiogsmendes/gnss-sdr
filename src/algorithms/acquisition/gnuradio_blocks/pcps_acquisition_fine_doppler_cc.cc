@@ -299,11 +299,11 @@ int pcps_acquisition_fine_doppler_cc::compute_and_accumulate_grid(gr_vector_cons
     // initialize acquisition algorithm
     const auto *in = reinterpret_cast<const gr_complex *>(input_items[0]);  // Get the input samples pointer
 
-    DLOG(INFO) << "Channel: " << d_channel
-               << " , doing acquisition of satellite: " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
-               << " ,sample stamp: " << d_sample_counter << ", threshold: "
-               << d_threshold << ", doppler_max: " << d_config_doppler_max
-               << ", doppler_step: " << d_doppler_step;
+    // DLOG(INFO) << "Channel: " << d_channel
+            //    << " , doing acquisition of satellite: " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
+            //    << " ,sample stamp: " << d_sample_counter << ", threshold: "
+            //    << d_threshold << ", doppler_max: " << d_config_doppler_max
+            //    << ", doppler_step: " << d_doppler_step;
 
     // 2- Doppler frequency search loop
     volk_gnsssdr::vector<float> p_tmp_vector(d_fft_size);
@@ -333,12 +333,12 @@ int pcps_acquisition_fine_doppler_cc::compute_and_accumulate_grid(gr_vector_cons
 
     return d_fft_size;
     // debug
-    //            std::cout << "iff=[";
+    //            // std::cout << "iff=[";
     //            for (int n = 0; n < d_fft_size; n++)
     //                {
-    //                    std::cout << std::real(d_ifft->get_outbuf()[n]) << "+" << std::imag(d_ifft->get_outbuf()[n]) << "i,";
+    //                    // std::cout << std::real(d_ifft->get_outbuf()[n]) << "+" << std::imag(d_ifft->get_outbuf()[n]) << "i,";
     //                }
-    //            std::cout << "]\n";
+    //            // std::cout << "]\n";
     //            getchar();
 }
 
@@ -407,12 +407,12 @@ int pcps_acquisition_fine_doppler_cc::estimate_Doppler()
     if (std::abs(fftFreqBins[tmp_index_freq] - d_gnss_synchro->Acq_doppler_hz) < 1000)
         {
             d_gnss_synchro->Acq_doppler_hz = static_cast<double>(fftFreqBins[tmp_index_freq]);
-            // std::cout << "FFT maximum present at " << fftFreqBins[tmp_index_freq] << " [Hz]\n";
+            // // std::cout << "FFT maximum present at " << fftFreqBins[tmp_index_freq] << " [Hz]\n";
         }
     else
         {
-            DLOG(INFO) << "Abs(Grid Doppler - FFT Doppler)=" << std::abs(fftFreqBins[tmp_index_freq] - d_gnss_synchro->Acq_doppler_hz);
-            DLOG(INFO) << "Error estimating fine frequency Doppler";
+            // DLOG(INFO) << "Abs(Grid Doppler - FFT Doppler)=" << std::abs(fftFreqBins[tmp_index_freq] - d_gnss_synchro->Acq_doppler_hz);
+            // DLOG(INFO) << "Error estimating fine frequency Doppler";
         }
 
     return d_fft_size;
@@ -448,7 +448,7 @@ void pcps_acquisition_fine_doppler_cc::set_state(int state)
         }
     else
         {
-            LOG(ERROR) << "State can only be set to 0 or 1";
+            // LOG(ERROR) << "State can only be set to 0 or 1";
         }
 }
 
@@ -538,13 +538,13 @@ int pcps_acquisition_fine_doppler_cc::general_work(int noutput_items,
                 }
             break;
         case 4:  // Positive_Acq
-            DLOG(INFO) << "positive acquisition";
-            DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
-            DLOG(INFO) << "sample_stamp " << d_sample_counter;
-            DLOG(INFO) << "test statistics value " << d_test_statistics;
-            DLOG(INFO) << "test statistics threshold " << d_threshold;
-            DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
-            DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
+            // DLOG(INFO) << "positive acquisition";
+            // DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
+            // DLOG(INFO) << "sample_stamp " << d_sample_counter;
+            // DLOG(INFO) << "test statistics value " << d_test_statistics;
+            // DLOG(INFO) << "test statistics threshold " << d_threshold;
+            // DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
+            // DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
             d_positive_acq = 1;
             d_active = false;
             // Record results to file if required
@@ -571,13 +571,13 @@ int pcps_acquisition_fine_doppler_cc::general_work(int noutput_items,
                 }
             break;
         case 5:  // Negative_Acq
-            DLOG(INFO) << "negative acquisition";
-            DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
-            DLOG(INFO) << "sample_stamp " << d_sample_counter;
-            DLOG(INFO) << "test statistics value " << d_test_statistics;
-            DLOG(INFO) << "test statistics threshold " << d_threshold;
-            DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
-            DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
+            // DLOG(INFO) << "negative acquisition";
+            // DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
+            // DLOG(INFO) << "sample_stamp " << d_sample_counter;
+            // DLOG(INFO) << "test statistics value " << d_test_statistics;
+            // DLOG(INFO) << "test statistics threshold " << d_threshold;
+            // DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
+            // DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
             d_positive_acq = 0;
             d_active = false;
             // Record results to file if required
@@ -626,7 +626,7 @@ void pcps_acquisition_fine_doppler_cc::dump_results(int effective_fft_size)
     mat_t *matfp = Mat_CreateVer(filename.c_str(), nullptr, MAT_FT_MAT73);
     if (matfp == nullptr)
         {
-            std::cout << "Unable to create or open Acquisition dump file\n";
+            // std::cout << "Unable to create or open Acquisition dump file\n";
             d_dump = false;
         }
     else

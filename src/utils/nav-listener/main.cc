@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
                         }
                     else
                         {
-                            std::cout << "Error: the message cannot be parsed." << std::endl;
+                            // std::cout << "Error: the message cannot be parsed." << std::endl;
                         }
                 }
         }

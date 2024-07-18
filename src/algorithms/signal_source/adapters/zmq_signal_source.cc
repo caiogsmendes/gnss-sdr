@@ -41,7 +41,7 @@ ZmqSignalSource::ZmqSignalSource(const ConfigurationInterface* configuration,
 
     if (!endpoint.empty())
         {
-            LOG(INFO) << "Connecting to ZMQ pub at " << endpoint;
+           // LOG(INFO) << "Connecting to ZMQ pub at " << endpoint;
             // work around gnuradio interface const-deficiency
             d_source_block = gr::zeromq::sub_source::make(d_item_size, vlen, const_cast<char*>(endpoint.data()), timeout_ms, pass_tags, hwm);
 
