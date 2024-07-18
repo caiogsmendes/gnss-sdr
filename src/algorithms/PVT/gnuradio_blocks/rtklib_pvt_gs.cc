@@ -251,7 +251,7 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
 
     char device[] = {"/dev/ttyUSB0"};
     // char device[] = {"/dev/ttyLP2"};
-    comms = HEserial_connect(&device[0], B115200, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
+    comms = HEserial_connect(&device[0], B921600, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
     if (comms.fd == -1)
         {
             // std::cout << TEXT_BOLD_RED << "Falha ao abrir Porta Serial" << TEXT_RESET << "\n";
@@ -2170,7 +2170,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                             StoragePVT.rx_vel[1] = rx_vel[1];
                             StoragePVT.rx_vel[2] = rx_vel[2];
                             StoragePVT.last_RX_time = last_RX_time;
-                            mtx.unlock();
+                            mtx.unlock(); msgReady = true;
                             // ##################################################
                             // }
 
@@ -2202,6 +2202,9 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                          << " UTC using "<< d_user_pvt_solver->get_num_valid_observations() <<" observations is HDOP = " << d_user_pvt_solver->get_hdop() << " VDOP = "
                                          << d_user_pvt_solver->get_vdop()
                                          << " GDOP = " << d_user_pvt_solver->get_gdop() << '\n'; */
+                        }
+                        else{
+                            msgReady = false;
                         }
                     // }
                     // else{
@@ -2307,7 +2310,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                 // std::time_t endWallTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 
                 // if((first_fix)&&(tempo % d_report_rate_ms) == 0)
-                if((first_fix)&&(tttt > 1000))
+                if((first_fix)&&(tttt > 1000)&&(msgReady))
                     {
                         tStartSteady = std::chrono::system_clock::now();
                         num_sat = jdex;
@@ -2387,10 +2390,10 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                         sended_PVT = write(comms.fd, &msgVec[0], tam + 3 + 3 + 56);
                                         std::cout<<TEXT_BOLD_GREEN<<num_sat<<"  "<<"Bytes: "<<sended_PVT<<" Time: "<<tttt<<TEXT_RESET<<"\n";
                                         sended_PVT= 0;
-                                        // for (int i = 0; i < (tam + 6 + 56); i++)
-                                        //     {
-                                        //         filele << msgVec[i];
-                                        //     }
+                                        for (int i = 0; i < (tam + 6 + 56); i++)
+                                            {
+                                                msgVec[i]=0;
+                                            }
                                             // filele<<"\n";
                                     // }
 

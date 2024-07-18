@@ -403,6 +403,7 @@ private:
     HEtechOut_t StorageSat[12];
     int jdex{0}; //Número de Satélites Armazenados
     std::mutex mtx;
+    bool msgReady{false};
 };
 
 
