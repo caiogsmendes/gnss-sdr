@@ -263,12 +263,12 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
 
     // // // Caio
     serial_temp_thread_ = std::thread(&rtklib_pvt_gs::serialcmd_, this);
-    sched_param sch_params;
-    int policy;
-    pthread_getschedparam(serial_temp_thread_.native_handle(), &policy, &sch_params);
-    sch_params.sched_priority = 97;
-    if (pthread_setschedparam(serial_temp_thread_.native_handle(), SCHED_FIFO, &sch_params))
-        std::cout << "Failed to setschedparam: " << std::strerror(errno) << '\n';
+    // sched_param sch_params;
+    // int policy;
+    // pthread_getschedparam(serial_temp_thread_.native_handle(), &policy, &sch_params);
+    // sch_params.sched_priority = 97;
+    // if (pthread_setschedparam(serial_temp_thread_.native_handle(), SCHED_FIFO, &sch_params))
+    //     std::cout << "Failed to setschedparam: " << std::strerror(errno) << '\n';
 
 
     if (d_dump)
