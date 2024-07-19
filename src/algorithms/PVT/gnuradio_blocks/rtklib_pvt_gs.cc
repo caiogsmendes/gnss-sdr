@@ -249,8 +249,8 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
     std::string dump_ls_pvt_filename = conf_.dump_filename;
 
 
-    // char device[] = {"/dev/ttyUSB0"};
-    char device[] = {"/dev/ttyLP2"};
+    char device[] = {"/dev/ttyUSB0"};
+    // char device[] = {"/dev/ttyLP2"};
     comms = HEserial_connect(&device[0], B921600, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
     if (comms.fd == -1)
         {
@@ -263,12 +263,12 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
 
     // // // Caio
     serial_temp_thread_ = std::thread(&rtklib_pvt_gs::serialcmd_, this);
-    sched_param sch_params;
-    int policy;
-    pthread_getschedparam(serial_temp_thread_.native_handle(), &policy, &sch_params);
-    sch_params.sched_priority = 80;
-    if (pthread_setschedparam(serial_temp_thread_.native_handle(), SCHED_FIFO, &sch_params))
-        std::cout << "Failed to setschedparam: " << std::strerror(errno) << '\n';
+    // sched_param sch_params;
+    // int policy;
+    // pthread_getschedparam(serial_temp_thread_.native_handle(), &policy, &sch_params);
+    // sch_params.sched_priority = 80;
+    // if (pthread_setschedparam(serial_temp_thread_.native_handle(), SCHED_FIFO, &sch_params))
+    //     std::cout << "Failed to setschedparam: " << std::strerror(errno) << '\n';
 
 
     if (d_dump)
