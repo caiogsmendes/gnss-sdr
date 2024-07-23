@@ -28,7 +28,7 @@ target_link_libraries(gnss-sdr
         pvt_libs
 )
 
-target_compile_definitions(gnss-sdr PRIVATE -DGNSS_SDR_VERSION="${VERSION}")
+# target_compile_definitions(gnss-sdr PRIVATE -DGNSS_SDR_VERSION="${VERSION}")
 
 if(ENABLE_CUDA)
     if(CMAKE_VERSION VERSION_GREATER 3.11)

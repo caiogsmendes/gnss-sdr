@@ -404,7 +404,7 @@ private:
     int jdex{0}; //Número de Satélites Armazenados
     std::mutex mtx;
     bool msgReady{false};
-    
+    uint8_t msgVec[780 + 3 + 3 + 56]{0}; // 780 bytes para 12 satélites no máx.
 };
 
 

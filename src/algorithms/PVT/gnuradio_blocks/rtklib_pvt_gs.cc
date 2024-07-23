@@ -249,8 +249,8 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
     std::string dump_ls_pvt_filename = conf_.dump_filename;
 
 
-    // char device[] = {"/dev/ttyUSB0"};
-    char device[] = {"/dev/ttyLP2"};
+    char device[] = {"/dev/ttyUSB0"};
+    // char device[] = {"/dev/ttyLP2"};
     comms = HEserial_connect(&device[0], B921600, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
     if (comms.fd == -1)
         {
@@ -263,12 +263,12 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
 
     // // // Caio
     serial_temp_thread_ = std::thread(&rtklib_pvt_gs::serialcmd_, this);
-    // sched_param sch_params;
-    // int policy;
-    // pthread_getschedparam(serial_temp_thread_.native_handle(), &policy, &sch_params);
-    // sch_params.sched_priority = 80;
-    // if (pthread_setschedparam(serial_temp_thread_.native_handle(), SCHED_FIFO, &sch_params))
-    //     std::cout << "Failed to setschedparam: " << std::strerror(errno) << '\n';
+    sched_param sch_params;
+    int policy;
+    pthread_getschedparam(serial_temp_thread_.native_handle(), &policy, &sch_params);
+    sch_params.sched_priority = 80;
+    if (pthread_setschedparam(serial_temp_thread_.native_handle(), SCHED_FIFO, &sch_params))
+        std::cout << "Failed to setschedparam: " << std::strerror(errno) << '\n';
 
 
     if (d_dump)
@@ -1565,7 +1565,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                     //// LOG(INFO) << "diff raw obs time: " << d_gnss_observables_map.cbegin()->second.RX_time * 1000.0 - old_time_debug;
                     // old_time_debug = d_gnss_observables_map.cbegin()->second.RX_time * 1000.0;
                     // uint32_t current_RX_time_ms = 0;
-                    current_RX_time_ms = 0;
+                    // current_RX_time_ms = 0;
                     // #### solve PVT and store the corrected observable set
                     if (d_internal_pvt_solver->get_PVT(d_gnss_observables_map, false))
                         {
@@ -1957,9 +1957,13 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                             // if (pid == 0)
                             //     {
                             num_sat = d_user_pvt_solver->get_num_valid_observations();
+                            
+                            /*
                             tam = num_sat * 65;
-                            uint8_t msgVec[tam + 3 + 3 + 56]{0};  // +1 por causa do CRC
+                            uint8_t msgVec[tam + 3 + 3 + 56]{0}; // +1 por causa do CRC
+                            */ 
                             // uint8_t msgPVT[56 + 3]{0};            // +1 por causa do CRC
+                            
                             // double desmsgVec[tam]{0};
                             // uint32_t dessmsgVec{0};
                             // double desmsgPVT[6]{0};
@@ -1972,6 +1976,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
 
                             // if (!flag_interrupt_serial)
                             //     {
+                            uint8_t checks{0};
                             msgVec[0] = 0xd4;
                             msgVec[1] = 0x4f;
                             index = 2;
@@ -2035,24 +2040,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                                     // Step 4
                                                                     variavelTempo = nvotempo - d_user_pvt_solver->get_time_offset_s();
                                                                     gps_ephem.at(x.first).satellitePosition(variavelTempo);
-                                                                    // gps_ephem.at(x.first).satellitePosition(variavel);
-                                                                    // ########################################################################################################
-                                                                    // memset(tmp,'\0',sizeof(tmp));
-                                                                    // sizemsg=sprintf(&tmp[0],
-                                                                    // "%d%lf%lf%lf%lf%lf%lf%lf%lf",
-                                                                    // x.second.PRN,
-                                                                    // y.second.Pseudorange_m,
-                                                                    // y.second.Pseudorange_m,
-                                                                    // double temp = x.second.satpos_X;
-                                                                    // double deltaprange = -SPEED_OF_LIGHT_M_S * (y.second.Carrier_Doppler_hz / 1575420000);
-                                                                    //
-                                                                    // std::array<double,3UL> POS;
-                                                                    // std::array<double,3UL> input;
-                                                                    // input[0] = x.second.satpos_X; input[1] = x.second.satpos_Y; input[2] = x.second.satpos_Z;
-                                                                    // ecef2pos(input.data(),POS.data());
-                                                                    // for(int i=0;i<3;i++){// std::cout<<POS[i]<<"\n";}
-                                                                    // if(POS[2]<10000000){// std::cout<<TEXT_BOLD_RED<<last_RX_time<<" "<<x.second.PRN<<" "<< POS[2]<<TEXT_RESET<<"\n";
-                                                                    // fileRx<<last_RX_time<<" "<<x.second.PRN<<" "<<POS[2]<<"\n";}
+
 
                                                                     PRN = (uint8_t)x.second.PRN;
                                                                     Carrier_Doppler_Hz = y.second.Carrier_Doppler_hz;
@@ -2062,7 +2050,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                                     satVelX = x.second.satvel_X;
                                                                     satVelY = x.second.satvel_Y;
                                                                     satVelZ = x.second.satvel_Z;
-                                                                    last_RX_time = y.second.TOW_at_current_symbol_ms;
+                                                                    last_RX_time = y.second.TOW_at_current_symbol_ms*0.001;
                                                                     // last_RX_time = y.second.RX_time;
                                                                     double m1, m2, m3;
 
@@ -2076,6 +2064,8 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                                     m2 = (satPosY - rx_pos[1]) * (satPosY - rx_pos[1]);
                                                                     m3 = (satPosZ - rx_pos[2]) * (satPosZ - rx_pos[2]);
                                                                     double prange = sqrt((m1 + m2 + m3));
+                                                                    
+                                                                    /*
                                                                     mtx.lock();
                                                                     // ######## Gravar na Struct #########
                                                                     StorageSat[jdex].PRN = PRN;
@@ -2092,6 +2082,8 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                                     jdex++;
                                                                     // ###################################
                                                                     mtx.unlock();
+                                                                     */
+
                                                                     // Teste de Conversão p/ hexadecimal
                                                                     // uint8_t vec[8];
                                                                     // double ExVec;
@@ -2099,19 +2091,18 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                                     // Hex2Double(&ExVec,&vec[0]);
                                                                     // Double2Hex(&test[0] , &temp);
                                                                     //
-
-                                                                    // Integer2Hex(&msgVec[index+0], &PRN);
-                                                                    // msgVec[index + 0] = PRN;
-                                                                    // Double2HexAlt(&msgVec[index + 1], &prange);
-                                                                    // Double2HexAlt(&msgVec[index + 9], &deltaprange);
-                                                                    // Double2HexAlt(&msgVec[index + 17], &satPosX);
-                                                                    // Double2HexAlt(&msgVec[index + 25], &satPosY);
-                                                                    // Double2HexAlt(&msgVec[index + 33], &satPosZ);
-                                                                    // Double2HexAlt(&msgVec[index + 41], &satVelX);
-                                                                    // Double2HexAlt(&msgVec[index + 49], &satVelY);
-                                                                    // Double2HexAlt(&msgVec[index + 57], &satVelZ);
-                                                                    // index = index + 65;
-
+                                                                    mtx.lock();
+                                                                    msgVec[index + 0] = PRN;
+                                                                    Double2HexAlt(&msgVec[index + 1], &prange);
+                                                                    Double2HexAlt(&msgVec[index + 9], &deltaprange);
+                                                                    Double2HexAlt(&msgVec[index + 17], &satPosX);
+                                                                    Double2HexAlt(&msgVec[index + 25], &satPosY);
+                                                                    Double2HexAlt(&msgVec[index + 33], &satPosZ);
+                                                                    Double2HexAlt(&msgVec[index + 41], &satVelX);
+                                                                    Double2HexAlt(&msgVec[index + 49], &satVelY);
+                                                                    Double2HexAlt(&msgVec[index + 57], &satVelZ);
+                                                                    index = index + 65;
+                                                                    mtx.unlock();
                                                                     // ###############################
                                                                     // auto tEndSteady = std::chrono::high_resolution_clock::now();
                                                                     // std::chrono::duration<double, std::milli> tempo_ligado_ms = tEndSteady - tStartSteady;
@@ -2121,52 +2112,40 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                 }
                                         }
                                 }
-                            // for (int i = 0; i < index; i++)
-                            //     {
-                            //         // msgVec[index + 1] = msgVec[index + 1] ^ msgVec[i];  // CRC
-                            //         checks ^= msgVec[i];
-                            //         // if (msgVec[i])
-                            //         //     {
-                            //         //     }
-                            //     }
-                            // msgVec[index] = checks;
-                            // index++;
+                            mtx.lock();
+                            for (int i = 0; i < index; i++)
+                                {
+                                    // msgVec[index + 1] = msgVec[index + 1] ^ msgVec[i];  // CRC
+                                    checks ^= msgVec[i];
+                                    // if (msgVec[i])
+                                    //     {
+                                    //     }
+                                }
+                            msgVec[index] = checks;
+                            
+                            index++;
                             // int sendedEphem = write(comms.fd, &msgVec[0], tam + 3);
                             // int sended = serial4send(&msgVec[0], &tam);
 
+                             
+                            msgVec[index + 0] = 0xd4;
+                            msgVec[index + 1] = 0x4f;
+                            Double2HexAlt(&msgVec[index + 2], &rx_pos[0]);
+                            Double2HexAlt(&msgVec[index + 10], &rx_pos[1]);
+                            Double2HexAlt(&msgVec[index + 18], &rx_pos[2]);
+                            Double2HexAlt(&msgVec[index + 26], &rx_vel[0]);
+                            Double2HexAlt(&msgVec[index + 34], &rx_vel[1]);
+                            Double2HexAlt(&msgVec[index + 42], &rx_vel[2]);
+                            Double2HexAlt(&msgVec[index + 50], &last_RX_time);
+                            checks = 0;
+                            for (int i = index + 0; i < index + 58; i++)
+                                {
+                                    checks ^= msgVec[i];
+                                }
+                            msgVec[index + 58] = checks;
+                            mtx.unlock();
 
-                            // msgVec[index + 0] = 0xd4;
-                            // msgVec[index + 1] = 0x4f;
-                            // Double2HexAlt(&msgVec[index + 2], &rx_pos[0]);
-                            // Double2HexAlt(&msgVec[index + 10], &rx_pos[1]);
-                            // Double2HexAlt(&msgVec[index + 18], &rx_pos[2]);
-                            // Double2HexAlt(&msgVec[index + 26], &rx_vel[0]);
-                            // Double2HexAlt(&msgVec[index + 34], &rx_vel[1]);
-                            // Double2HexAlt(&msgVec[index + 42], &rx_vel[2]);
-                            // Double2HexAlt(&msgVec[index + 50], &last_RX_time);
-                            // checks = 0;
-                            // for (int i = index + 0; i < index + 58; i++)
-                            //     {
-                            //         checks ^= msgVec[i];
-                            //     }
-                            // msgVec[index + 58] = checks;
-                            // Check
-                            //  Hex2Double(&desmsgPVT[0],&msgPVT[0]);
-                            //  Hex2Double(&desmsgPVT[1],&msgPVT[8]);
-                            //  Hex2Double(&desmsgPVT[2],&msgPVT[16]);
-                            //  Hex2Double(&desmsgPVT[3],&msgPVT[24]);
-                            //  Hex2Double(&desmsgPVT[4],&msgPVT[32]);
-                            //  Hex2Double(&desmsgPVT[5],&msgPVT[40]);
-                            //  Hex2Double(&desmsgPVT[6],&msgPVT[48]);
-                            // check end
-                            //  tcdrain(comms.fd);
-                            //  tcflush(comms.fd, TCIOFLUSH);
-                            // if (last_RX_time != ultimo_rx_time)
-                            //     {
-                            // int sended_PVT = write(comms.fd, &msgVec[0], tam + 3 + 3 + 56);
-                            // // std::cout << TEXT_BOLD_GREEN << "Amostra: " << contadorgrav++ << TEXT_RESET << "\n";
-                            // ultimo_rx_time = last_RX_time;
-
+                            /*
                             mtx.lock();
                             StoragePVT.rx_pos[0] = rx_pos[0];
                             StoragePVT.rx_pos[1] = rx_pos[1];
@@ -2175,7 +2154,10 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                             StoragePVT.rx_vel[1] = rx_vel[1];
                             StoragePVT.rx_vel[2] = rx_vel[2];
                             // StoragePVT.last_RX_time = last_RX_time;//*0.001;
-                            mtx.unlock(); msgReady = true;
+                            mtx.unlock();
+                            */
+
+                            msgReady = true;
                             // std::cout<<TEXT_BOLD_MAGENTA<<last_RX_time<<TEXT_RESET<<"\n";
                             // ##################################################
                             // }
@@ -2217,21 +2199,21 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                     //     kill(pid, SIGTERM);
                     // }
 
-                    // PVT MONITOR
-                    if (d_user_pvt_solver->is_valid_position())
-                        {
-                            const std::shared_ptr<Monitor_Pvt> monitor_pvt = std::make_shared<Monitor_Pvt>(d_user_pvt_solver->get_monitor_pvt());
+                    // // PVT MONITOR
+                    // if (d_user_pvt_solver->is_valid_position())
+                    //     {
+                    //         const std::shared_ptr<Monitor_Pvt> monitor_pvt = std::make_shared<Monitor_Pvt>(d_user_pvt_solver->get_monitor_pvt());
 
-                            // publish new position to the gnss_flowgraph channel status monitor
-                            if (current_RX_time_ms % d_report_rate_ms == 0)
-                                {
-                                    this->message_port_pub(pmt::mp("status"), pmt::make_any(monitor_pvt));
-                                }
-                            if (d_flag_monitor_pvt_enabled)
-                                {
-                                    d_udp_sink_ptr->write_monitor_pvt(monitor_pvt.get());
-                                }
-                        }
+                    //         // publish new position to the gnss_flowgraph channel status monitor
+                    //         if (current_RX_time_ms % d_report_rate_ms == 0)
+                    //             {
+                    //                 this->message_port_pub(pmt::mp("status"), pmt::make_any(monitor_pvt));
+                    //             }
+                    //         if (d_flag_monitor_pvt_enabled)
+                    //             {
+                    //                 d_udp_sink_ptr->write_monitor_pvt(monitor_pvt.get());
+                    //             }
+                    //     }
                     // }
 
                     flag_new_pvt_data = flag_pvt_valid;
@@ -2294,14 +2276,14 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
         // std::ofstream filele("ArqTest.bin",std::ios::out|std::ios::app|std::ios::binary);
         auto tStartSteady = std::chrono::system_clock::now();
         auto StartTime = tStartSteady;
-        double ult_tempo = StoragePVT.last_RX_time;//*1000;
+        double ult_tempo = last_RX_time;//*1000;
         double nvo_tempo;
         while (!flag_interrupt_serial)
             {
                 // if(d_gnss_observables_map_t1.begin()->second.Flag_valid_pseudorange)
                 // {
                     // nvo_tempo = d_gnss_observables_map.begin()->second.RX_time;
-                    nvo_tempo = StoragePVT.last_RX_time;//*1000;
+                    nvo_tempo = last_RX_time;//*1000;
                 
                 // bool teste = d_user_pvt_solver->is_valid_position();
                 // if (teste == true)
@@ -2328,7 +2310,8 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                 // if((first_fix)&&((((uint32_t)nvo_tempo)%1000)==0))
                 // if((first_fix)&&(tttt > 1000)/*&&(msgReady)*/)
                 // if((first_fix)&&((nvo_tempo-ult_tempo) > 1.0))
-                if((first_fix)&&((current_RX_time_ms%d_output_rate_ms)==0)&&(testeee>=1.0))
+                // if((first_fix)&&((current_RX_time_ms%d_output_rate_ms)==0)&&(testeee>=1.0))
+                if((first_fix)&&((current_RX_time_ms%1000)==0)&&(testeee>=1.0))
                     {
                         tStartSteady = std::chrono::system_clock::now();
                         num_sat = jdex;
@@ -2361,58 +2344,60 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                         int sended_PVT = 0;
 
                                         int numsatt = num_sat;
-                                        index = 0;
+                                        // index = 0;
                                         tam = num_sat * 65;
-                                        uint8_t msgVec[tam + 3 + 3 + 56]{0};  // +1 por causa do CRC
-                                        msgVec[0] = 0xd4;
-                                        msgVec[1] = 0x4f;
-                                        index = 2;
-                                        // mtx.lock();
-                                        for (int j = 0; j < num_sat; j++)
-                                            {
-                                                // Integer2Hex(&msgVec[index+0], &PRN);
-                                                msgVec[index + 0] = StorageSat[j].PRN;
-                                                Double2HexAlt(&msgVec[index + 1], &StorageSat[j].prang);
-                                                Double2HexAlt(&msgVec[index + 9], &StorageSat[j].deltaprange);
-                                                Double2HexAlt(&msgVec[index + 17], &StorageSat[j].satPosX);
-                                                Double2HexAlt(&msgVec[index + 25], &StorageSat[j].satPosY);
-                                                Double2HexAlt(&msgVec[index + 33], &StorageSat[j].satPosZ);
-                                                Double2HexAlt(&msgVec[index + 41], &StorageSat[j].satVelX);
-                                                Double2HexAlt(&msgVec[index + 49], &StorageSat[j].satVelY);
-                                                Double2HexAlt(&msgVec[index + 57], &StorageSat[j].satVelZ);
-                                                index = index + 65;
+                                        // uint8_t msgVec[tam + 3 + 3 + 56]{0};  // +1 por causa do CRC
+                                        // msgVec[0] = 0xd4;
+                                        // msgVec[1] = 0x4f;
+                                        // index = 2;
+                                        // // mtx.lock();
+                                        // for (int j = 0; j < num_sat; j++)
+                                        //     {
+                                        //         // Integer2Hex(&msgVec[index+0], &PRN);
+                                        //         msgVec[index + 0] = StorageSat[j].PRN;
+                                        //         Double2HexAlt(&msgVec[index + 1], &StorageSat[j].prang);
+                                        //         Double2HexAlt(&msgVec[index + 9], &StorageSat[j].deltaprange);
+                                        //         Double2HexAlt(&msgVec[index + 17], &StorageSat[j].satPosX);
+                                        //         Double2HexAlt(&msgVec[index + 25], &StorageSat[j].satPosY);
+                                        //         Double2HexAlt(&msgVec[index + 33], &StorageSat[j].satPosZ);
+                                        //         Double2HexAlt(&msgVec[index + 41], &StorageSat[j].satVelX);
+                                        //         Double2HexAlt(&msgVec[index + 49], &StorageSat[j].satVelY);
+                                        //         Double2HexAlt(&msgVec[index + 57], &StorageSat[j].satVelZ);
+                                        //         index = index + 65;
 
-                                                // ###############################
-                                            }
-                                        for (int i = 0; i < index; i++)
-                                            {
-                                                // msgVec[index + 1] = msgVec[index + 1] ^ msgVec[i];  // CRC
-                                                checks ^= msgVec[i];
-                                            }
-                                        msgVec[index] = checks;
-                                        index++;
+                                        //         // ###############################
+                                        //     }
+                                        // for (int i = 0; i < index; i++)
+                                        //     {
+                                        //         // msgVec[index + 1] = msgVec[index + 1] ^ msgVec[i];  // CRC
+                                        //         checks ^= msgVec[i];
+                                        //     }
+                                        // msgVec[index] = checks;
+                                        // index++;
 
-                                        msgVec[index + 0] = 0xd4;
-                                        msgVec[index + 1] = 0x4f;
+                                        // msgVec[index + 0] = 0xd4;
+                                        // msgVec[index + 1] = 0x4f;
 
-                                        Double2HexAlt(&msgVec[index + 2], &StoragePVT.rx_pos[0]);
-                                        Double2HexAlt(&msgVec[index + 10], &StoragePVT.rx_pos[1]);
-                                        Double2HexAlt(&msgVec[index + 18], &StoragePVT.rx_pos[2]);
-                                        Double2HexAlt(&msgVec[index + 26], &StoragePVT.rx_vel[0]);
-                                        Double2HexAlt(&msgVec[index + 34], &StoragePVT.rx_vel[1]);
-                                        Double2HexAlt(&msgVec[index + 42], &StoragePVT.rx_vel[2]);
-                                        Double2HexAlt(&msgVec[index + 50], &StoragePVT.last_RX_time);
+                                        // Double2HexAlt(&msgVec[index + 2], &StoragePVT.rx_pos[0]);
+                                        // Double2HexAlt(&msgVec[index + 10], &StoragePVT.rx_pos[1]);
+                                        // Double2HexAlt(&msgVec[index + 18], &StoragePVT.rx_pos[2]);
+                                        // Double2HexAlt(&msgVec[index + 26], &StoragePVT.rx_vel[0]);
+                                        // Double2HexAlt(&msgVec[index + 34], &StoragePVT.rx_vel[1]);
+                                        // Double2HexAlt(&msgVec[index + 42], &StoragePVT.rx_vel[2]);
+                                        // Double2HexAlt(&msgVec[index + 50], &StoragePVT.last_RX_time);
                                         // mtx.unlock();
-                                        checks = 0;
-                                        for (int i = index + 0; i < index + 58; i++)
-                                            {
-                                                checks ^= msgVec[i];
-                                            }
-                                        msgVec[index + 58] = checks;
+                                        // checks = 0;
+                                        // for (int i = index + 0; i < index + 58; i++)
+                                        //     {
+                                        //         checks ^= msgVec[i];
+                                        //     }
+                                        // msgVec[index + 58] = checks;
+
                                         sended_PVT = write(comms.fd, &msgVec[0], tam + 3 + 3 + 56);
-                                        // std::cout<<TEXT_BOLD_GREEN<<num_sat<<"  "<<"Bytes: "<<sended_PVT<<" Time: "<<tttt<<TEXT_RESET<<"\n";
+
                                         std::cout<<TEXT_BOLD_GREEN<<"N_Sat: "<<jdex<<" Bytes: "<<sended_PVT<<" Time: "<<tttt<<" Tempo: "<<StoragePVT.last_RX_time<<" RX_time: "<<testeee<<TEXT_RESET<<"\n";
                                         sended_PVT= 0;
+
                                         for (int i = 0; i < (tam + 6 + 56); i++)
                                             {
                                                 msgVec[i]=0;
