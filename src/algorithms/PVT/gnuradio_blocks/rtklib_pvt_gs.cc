@@ -249,8 +249,8 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
     std::string dump_ls_pvt_filename = conf_.dump_filename;
 
 
-    char device[] = {"/dev/ttyUSB0"};
-    // char device[] = {"/dev/ttyLP2"};
+    // char device[] = {"/dev/ttyUSB0"};
+    char device[] = {"/dev/ttyLP2"};
     comms = HEserial_connect(&device[0], B921600, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
     if (comms.fd == -1)
         {
@@ -2411,7 +2411,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                         msgVec[index + 58] = checks;
                                         sended_PVT = write(comms.fd, &msgVec[0], tam + 3 + 3 + 56);
                                         // std::cout<<TEXT_BOLD_GREEN<<num_sat<<"  "<<"Bytes: "<<sended_PVT<<" Time: "<<tttt<<TEXT_RESET<<"\n";
-                                        std::cout<<TEXT_BOLD_GREEN<<"N_Sat: "<<numsatt<<" Bytes: "<<sended_PVT<<" Time: "<<tttt<<" Tempo: "<<StoragePVT.last_RX_time<<" RX_time: "<<testeee<<TEXT_RESET<<"\n";
+                                        std::cout<<TEXT_BOLD_GREEN<<"N_Sat: "<<jdex<<" Bytes: "<<sended_PVT<<" Time: "<<tttt<<" Tempo: "<<StoragePVT.last_RX_time<<" RX_time: "<<testeee<<TEXT_RESET<<"\n";
                                         sended_PVT= 0;
                                         for (int i = 0; i < (tam + 6 + 56); i++)
                                             {
