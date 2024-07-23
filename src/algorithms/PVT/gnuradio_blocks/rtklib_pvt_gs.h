@@ -340,7 +340,7 @@ private:
     bool flag_new_pvt_data{false};
     //
 
-    double last_RX_time{0};
+    double last_RX_time;
     double correct_time_RX{1.0};
     // uint8_t buffer[1000]{0};
     // uint32_t last_TOW_at_current_symbol_ms = 0;
@@ -404,6 +404,7 @@ private:
     int jdex{0}; //Número de Satélites Armazenados
     std::mutex mtx;
     bool msgReady{false};
+    
 };
 
 

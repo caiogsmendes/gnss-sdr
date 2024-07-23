@@ -249,8 +249,8 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
     std::string dump_ls_pvt_filename = conf_.dump_filename;
 
 
-    // char device[] = {"/dev/ttyUSB0"};
-    char device[] = {"/dev/ttyLP2"};
+    char device[] = {"/dev/ttyUSB0"};
+    // char device[] = {"/dev/ttyLP2"};
     comms = HEserial_connect(&device[0], B921600, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
     if (comms.fd == -1)
         {
@@ -1934,7 +1934,8 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                             // d_internal_pvt_solver->gps_ephemeris_map.at(0).satellitePosition();
 
                             gps_ephem = d_internal_pvt_solver->gps_ephemeris_map;
-
+                            sync_map = get_observables_map();
+                            // last_RX_time = sync_map.begin()->second.RX_time;
                             // d_internal_pvt_solver->Gnss_Ephemeris_map = d_internal_pvt_solver->gps_ephemeris_map;
                             // gps_ephem.at(0).satellitePosition(gps_ephem.at(0).toe);
                             // if(d_internal_pvt_solver->gps_ephemeris_map.empty() == false)
@@ -1967,7 +1968,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                             rx_pos = d_user_pvt_solver->get_rx_pos();
                             rx_vel = d_user_pvt_solver->get_rx_vel();
                             double rx_clk_deslize{0};
-                            sync_map = get_observables_map();
+                            
 
                             // if (!flag_interrupt_serial)
                             //     {
@@ -1980,7 +1981,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                         {
                                             if (y.second.System == 'G')
                                                 {
-                                                    last_RX_time = y.second.RX_time;
+                                                    
                                                     if (y.second.PRN == x.second.PRN)
                                                         {
                                                             if ((x.second.SV_health == 0))  // && (y.second.CN0_dB_hz<50.0))
@@ -1997,7 +1998,8 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                                     // y.second.TOW_at_current_symbol_ms
 
                                                                     // // #########################   Geometrical Approuch on Transmit time:  #################################
-                                                                    double tempoo = y.second.RX_time;
+                                                                    
+                                                                    double tempoo = y.second.RX_time; //this->current_RX_time_ms = y.second.TOW_at_current_symbol_ms;
                                                                     double diffSATREC, diffSATSAT = 1000;
                                                                     double delta_tempo;
                                                                     double nvotempo;
@@ -2060,7 +2062,8 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                                     satVelX = x.second.satvel_X;
                                                                     satVelY = x.second.satvel_Y;
                                                                     satVelZ = x.second.satvel_Z;
-
+                                                                    last_RX_time = y.second.TOW_at_current_symbol_ms;
+                                                                    // last_RX_time = y.second.RX_time;
                                                                     double m1, m2, m3;
 
                                                                     deltaprange = -SPEED_OF_LIGHT_M_S * (Carrier_Doppler_Hz / 1575420000) - d_user_pvt_solver->get_clock_drift_ppm() * SPEED_OF_LIGHT_M_S * 1e-6;
@@ -2084,6 +2087,8 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                                     StorageSat[jdex].satVelX = satVelX;
                                                                     StorageSat[jdex].satVelY = satVelY;
                                                                     StorageSat[jdex].satVelZ = satVelZ;
+                                                                    StoragePVT.last_RX_time = last_RX_time*0.001; // Quando TOW_current_symbol_ms
+                                                                    StoragePVT.gps_time_offset = y.second.RX_time; //Temporariamente coloquei o tempo do receptor.
                                                                     jdex++;
                                                                     // ###################################
                                                                     mtx.unlock();
@@ -2169,8 +2174,9 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                             StoragePVT.rx_vel[0] = rx_vel[0];
                             StoragePVT.rx_vel[1] = rx_vel[1];
                             StoragePVT.rx_vel[2] = rx_vel[2];
-                            StoragePVT.last_RX_time = last_RX_time;
+                            // StoragePVT.last_RX_time = last_RX_time;//*0.001;
                             mtx.unlock(); msgReady = true;
+                            // std::cout<<TEXT_BOLD_MAGENTA<<last_RX_time<<TEXT_RESET<<"\n";
                             // ##################################################
                             // }
 
@@ -2288,13 +2294,19 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
         // std::ofstream filele("ArqTest.bin",std::ios::out|std::ios::app|std::ios::binary);
         auto tStartSteady = std::chrono::system_clock::now();
         auto StartTime = tStartSteady;
+        double ult_tempo = StoragePVT.last_RX_time;//*1000;
+        double nvo_tempo;
         while (!flag_interrupt_serial)
             {
+                // if(d_gnss_observables_map_t1.begin()->second.Flag_valid_pseudorange)
+                // {
+                    // nvo_tempo = d_gnss_observables_map.begin()->second.RX_time;
+                    nvo_tempo = StoragePVT.last_RX_time;//*1000;
+                
                 // bool teste = d_user_pvt_solver->is_valid_position();
                 // if (teste == true)
                 // {
                 // if ((static_cast<uint32_t>(d_rx_time * 1000.0) % d_output_rate_ms) == 0)
-
                 auto tEndSteady = std::chrono::system_clock::now();
                 std::chrono::duration<double, std::milli> tempo_ligado_ms = tEndSteady - tStartSteady;
                 //             // std::chrono::duration<double, std::micro> Uptempo1 = tEndSteady - tStartSteady;
@@ -2310,10 +2322,20 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                 // std::time_t endWallTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 
                 // if((first_fix)&&(tempo % d_report_rate_ms) == 0)
-                if((first_fix)&&(tttt > 1000)/*&&(msgReady)*/)
+                // double tempo_receptor = d_gnss_observables_map.begin()->second.RX_time;
+                // double time_output_ms=1000.0; // 1000ms
+                double testeee = nvo_tempo-ult_tempo;
+                // if((first_fix)&&((((uint32_t)nvo_tempo)%1000)==0))
+                // if((first_fix)&&(tttt > 1000)/*&&(msgReady)*/)
+                // if((first_fix)&&((nvo_tempo-ult_tempo) > 1.0))
+                if((first_fix)&&((current_RX_time_ms%d_output_rate_ms)==0)&&(testeee>=1.0))
                     {
                         tStartSteady = std::chrono::system_clock::now();
                         num_sat = jdex;
+                        // double llastrx = last_RX_time;
+                        // ult_tempo = ult_tempo*0.001;
+                        // double tempo_aux = this->last_RX_time - ult_tempo;
+                        ult_tempo = nvo_tempo;
                         // if (num_sat > 3)
                         //     {
                                 // if (get_latest_PVT_(
@@ -2330,7 +2352,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                 //         &rx_vel[2]) == true)
                                 // {
                                         //
-                                        // num_sat = d_user_pvt_solver->get_num_valid_observations();
+                                        num_sat = d_user_pvt_solver->get_num_valid_observations();
                                         // sync_map = get_observables_map();
                                         // gps_ephem = d_internal_pvt_solver->gps_ephemeris_map;
                                         //
@@ -2388,7 +2410,8 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                             }
                                         msgVec[index + 58] = checks;
                                         sended_PVT = write(comms.fd, &msgVec[0], tam + 3 + 3 + 56);
-                                        std::cout<<TEXT_BOLD_GREEN<<num_sat<<"  "<<"Bytes: "<<sended_PVT<<" Time: "<<tttt<<TEXT_RESET<<"\n";
+                                        // std::cout<<TEXT_BOLD_GREEN<<num_sat<<"  "<<"Bytes: "<<sended_PVT<<" Time: "<<tttt<<TEXT_RESET<<"\n";
+                                        std::cout<<TEXT_BOLD_GREEN<<"N_Sat: "<<numsatt<<" Bytes: "<<sended_PVT<<" Time: "<<tttt<<" Tempo: "<<StoragePVT.last_RX_time<<" RX_time: "<<testeee<<TEXT_RESET<<"\n";
                                         sended_PVT= 0;
                                         for (int i = 0; i < (tam + 6 + 56); i++)
                                             {
@@ -2402,7 +2425,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                 // gps_ephem.clear();
                             // }
                     }
-            }
+            }//}
         // }
         //
 

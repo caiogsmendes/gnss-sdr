@@ -74,45 +74,45 @@ int gnss_sdr_time_counter::general_work(int noutput_items __attribute__((unused)
                         }
                 }
 
-            if (flag_days)
-                {
-                    std::string day;
-                    if (current_days == 1)
-                        {
-                            day = " day ";
-                        }
-                    else
-                        {
-                            day = " days ";
-                        }
-// #ifdef EN_CONSOLE_OUTPUT
-                    std::cout << "Current receiver time: " << current_days << day << current_h << " h " << current_m << " min " << current_s << " s\n";
-// #endif
-                }
-            else
-                {
-                    if (flag_h)
-                        {
-// #ifdef EN_CONSOLE_OUTPUT
-                            std::cout << "Current receiver time: " << current_h << " h " << current_m << " min " << current_s << " s\n";
-// #endif
-                        }
-                    else
-                        {
-                            if (flag_m)
-                                {
-// #ifdef EN_CONSOLE_OUTPUT
-                                    std::cout << "Current receiver time: " << current_m << " min " << current_s << " s\n";
-// #endif
-                                }
-                            else
-                                {
-// #ifdef EN_CONSOLE_OUTPUT
-                                    std::cout << "Current receiver time: " << current_s << " s\n";
-// #endif
-                                }
-                        }
-                }
+//             if (flag_days)
+//                 {
+//                     std::string day;
+//                     if (current_days == 1)
+//                         {
+//                             day = " day ";
+//                         }
+//                     else
+//                         {
+//                             day = " days ";
+//                         }
+// // #ifdef EN_CONSOLE_OUTPUT
+//                     std::cout << "Current receiver time: " << current_days << day << current_h << " h " << current_m << " min " << current_s << " s\n";
+// // #endif
+//                 }
+//             else
+//                 {
+//                     if (flag_h)
+//                         {
+// // #ifdef EN_CONSOLE_OUTPUT
+//                             std::cout << "Current receiver time: " << current_h << " h " << current_m << " min " << current_s << " s\n";
+// // #endif
+//                         }
+//                     else
+//                         {
+//                             if (flag_m)
+//                                 {
+// // #ifdef EN_CONSOLE_OUTPUT
+//                                     std::cout << "Current receiver time: " << current_m << " min " << current_s << " s\n";
+// // #endif
+//                                 }
+//                             else
+//                                 {
+// // #ifdef EN_CONSOLE_OUTPUT
+//                                     std::cout << "Current receiver time: " << current_s << " s\n";
+// // #endif
+//                                 }
+//                         }
+//                 }
         }
         // }
     current_T_rx_ms++;
