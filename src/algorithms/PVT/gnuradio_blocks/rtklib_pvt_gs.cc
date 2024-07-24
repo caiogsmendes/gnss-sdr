@@ -2273,19 +2273,19 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
 
     void rtklib_pvt_gs::serialcmd_(void)
     {
-        bool flag_fix_first = false;
+        // bool flag_fix_first = false;
         // std::ofstream filele("ArqTest.bin",std::ios::out|std::ios::app|std::ios::binary);
         auto tStartSteady = std::chrono::system_clock::now();
-        auto StartTime = tStartSteady;
-        double ult_tempo = last_RX_time;//*1000;
+        // auto StartTime = tStartSteady;
+        double ult_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms*0.001;//*1000;
         double nvo_tempo;
         while (!flag_interrupt_serial)
             {
                 // if(d_gnss_observables_map_t1.begin()->second.Flag_valid_pseudorange)
                 // {
                     // nvo_tempo = d_gnss_observables_map.begin()->second.RX_time;
-                    nvo_tempo = last_RX_time;//*1000;
-                
+                    // nvo_tempo = last_RX_time;//*1000;
+                nvo_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms*0.001;
                 // bool teste = d_user_pvt_solver->is_valid_position();
                 // if (teste == true)
                 // {
@@ -2301,18 +2301,17 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                 // std::chrono::milliseconds diff = tEndSteady - tStartSteady;
                 // float tempo = diff.count();
                 double tttt = tempo_ligado_ms.count();
-                int32_t tempo = (int32_t)tttt;
+                // int32_t tempo = (int32_t)tttt;
                 // std::time_t endWallTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-
+                
                 // if((first_fix)&&(tempo % d_report_rate_ms) == 0)
                 // double tempo_receptor = d_gnss_observables_map.begin()->second.RX_time;
                 // double time_output_ms=1000.0; // 1000ms
-                double testeee = nvo_tempo-ult_tempo;
                 // if((first_fix)&&((((uint32_t)nvo_tempo)%1000)==0))
                 // if((first_fix)&&(tttt > 1000)/*&&(msgReady)*/)
                 // if((first_fix)&&((nvo_tempo-ult_tempo) > 1.0))
                 // if((first_fix)&&((current_RX_time_ms%d_output_rate_ms)==0)&&(testeee>=1.0))
-                if((first_fix)&&((current_RX_time_ms%1000)==0)&&(testeee>=1.0))
+                if((first_fix)&&((current_RX_time_ms%1000)==0)&&((nvo_tempo-ult_tempo)>=1.0))
                     {
                         tStartSteady = std::chrono::system_clock::now();
                         // num_sat = jdex;
@@ -2342,7 +2341,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                         //
                                         // uint8_t checks{0};
 
-                                        int sended_PVT = 0;
+                                        // int sended_PVT = 0;
 
                                         // int numsatt = num_sat;
                                         // index = 0;
@@ -2394,22 +2393,37 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                         //     }
                                         // msgVec[index + 58] = checks;
 
-                                        sended_PVT = write(comms.fd, &msgVec[0], tam + 3 + 3 + 56);
+                                        int sended_PVT = write(comms.fd, &msgVec[0], tam + 3 + 3 + 56);
 
-                                        // std::cout<<TEXT_BOLD_GREEN<<"N_Sat: "<<num_sat<<" Bytes: "<<sended_PVT<<" Time: "<<tttt<<" Tempo: "<<last_RX_time<<" RX_time: "<<testeee<<TEXT_RESET<<"\n";
+
+                                        // std::cout<<TEXT_BOLD_GREEN<<"N_Sat: "<<num_sat<<" Bytes: "<<sended_PVT<<" Time: "<<tttt<<" Tempo: "<<last_RX_time<<" RX_time: "<<nvo_tempo-ult_tempo<<TEXT_RESET<<"\n";
                                         // sended_PVT= 0;
-
-                                        // for (int i = 0; i < (tam + 6 + 56); i++)
+                                        // auto tStartSteadyy = std::chrono::high_resolution_clock::now();
+                                        // for(int i = 0; i<(tam+6+56); i++)
+                                        // for (int i = 0; i < (tam + 6 + 56); i+=10)
                                         //     {
-                                        //         msgVec[i]=0;
+                                        //         // msgVec[i]=0;
+                                        //         msgVec[i+0]=0;
+                                        //         msgVec[i+1]=0;
+                                        //         msgVec[i+2]=0;
+                                        //         msgVec[i+3]=0;
+                                        //         msgVec[i+4]=0;
+                                        //         msgVec[i+5]=0;
+                                        //         msgVec[i+6]=0;
+                                        //         msgVec[i+7]=0;
+                                        //         msgVec[i+8]=0;
+                                        //         msgVec[i+9]=0;
                                         //     }
-                                            // filele<<"\n";
-                                    // }
+                                        // auto tEndSteadyy = std::chrono::high_resolution_clock::now();
+                                        // std::chrono::duration<double, std::micro> tempo_ligado_mss = tEndSteadyy - tStartSteadyy;
+                                        // std::cout << "tempo_loop: " << tempo_ligado_mss.count() << "\n";
+                                        // filele<<"\n";
+                                        // }
 
 
-                                // sync_map.clear();
-                                // gps_ephem.clear();
-                            // }
+                                        // sync_map.clear();
+                                        // gps_ephem.clear();
+                                        // }
                     }
             }//}
         // }
