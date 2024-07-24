@@ -249,8 +249,8 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
     std::string dump_ls_pvt_filename = conf_.dump_filename;
 
 
-    char device[] = {"/dev/ttyUSB0"};
-    // char device[] = {"/dev/ttyLP2"};
+    // char device[] = {"/dev/ttyUSB0"};
+    char device[] = {"/dev/ttyLP2"};
     comms = HEserial_connect(&device[0], B921600, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
     if (comms.fd == -1)
         {
@@ -263,12 +263,12 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
 
     // // // Caio
     serial_temp_thread_ = std::thread(&rtklib_pvt_gs::serialcmd_, this);
-    sched_param sch_params;
-    int policy;
-    pthread_getschedparam(serial_temp_thread_.native_handle(), &policy, &sch_params);
-    sch_params.sched_priority = 80;
-    if (pthread_setschedparam(serial_temp_thread_.native_handle(), SCHED_FIFO, &sch_params))
-        std::cout << "Failed to setschedparam: " << std::strerror(errno) << '\n';
+    // sched_param sch_params;
+    // int policy;
+    // pthread_getschedparam(serial_temp_thread_.native_handle(), &policy, &sch_params);
+    // sch_params.sched_priority = 80;
+    // if (pthread_setschedparam(serial_temp_thread_.native_handle(), SCHED_FIFO, &sch_params))
+    //     std::cout << "Failed to setschedparam: " << std::strerror(errno) << '\n';
 
 
     if (d_dump)
@@ -1980,6 +1980,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                             msgVec[0] = 0xd4;
                             msgVec[1] = 0x4f;
                             index = 2;
+                            num_sat = d_user_pvt_solver->get_num_valid_observations();
                             for (const auto& y : sync_map)
                                 {
                                     for (const auto& x : gps_ephem)
@@ -2314,7 +2315,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                 if((first_fix)&&((current_RX_time_ms%1000)==0)&&(testeee>=1.0))
                     {
                         tStartSteady = std::chrono::system_clock::now();
-                        num_sat = jdex;
+                        // num_sat = jdex;
                         // double llastrx = last_RX_time;
                         // ult_tempo = ult_tempo*0.001;
                         // double tempo_aux = this->last_RX_time - ult_tempo;
@@ -2335,15 +2336,15 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                 //         &rx_vel[2]) == true)
                                 // {
                                         //
-                                        num_sat = d_user_pvt_solver->get_num_valid_observations();
+                                        // num_sat = d_user_pvt_solver->get_num_valid_observations();
                                         // sync_map = get_observables_map();
                                         // gps_ephem = d_internal_pvt_solver->gps_ephemeris_map;
                                         //
-                                        uint8_t checks{0};
+                                        // uint8_t checks{0};
 
                                         int sended_PVT = 0;
 
-                                        int numsatt = num_sat;
+                                        // int numsatt = num_sat;
                                         // index = 0;
                                         tam = num_sat * 65;
                                         // uint8_t msgVec[tam + 3 + 3 + 56]{0};  // +1 por causa do CRC
@@ -2395,13 +2396,13 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
 
                                         sended_PVT = write(comms.fd, &msgVec[0], tam + 3 + 3 + 56);
 
-                                        std::cout<<TEXT_BOLD_GREEN<<"N_Sat: "<<jdex<<" Bytes: "<<sended_PVT<<" Time: "<<tttt<<" Tempo: "<<StoragePVT.last_RX_time<<" RX_time: "<<testeee<<TEXT_RESET<<"\n";
-                                        sended_PVT= 0;
+                                        // std::cout<<TEXT_BOLD_GREEN<<"N_Sat: "<<num_sat<<" Bytes: "<<sended_PVT<<" Time: "<<tttt<<" Tempo: "<<last_RX_time<<" RX_time: "<<testeee<<TEXT_RESET<<"\n";
+                                        // sended_PVT= 0;
 
-                                        for (int i = 0; i < (tam + 6 + 56); i++)
-                                            {
-                                                msgVec[i]=0;
-                                            }
+                                        // for (int i = 0; i < (tam + 6 + 56); i++)
+                                        //     {
+                                        //         msgVec[i]=0;
+                                        //     }
                                             // filele<<"\n";
                                     // }
 
