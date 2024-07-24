@@ -249,8 +249,8 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
     std::string dump_ls_pvt_filename = conf_.dump_filename;
 
 
-    // char device[] = {"/dev/ttyUSB0"};
-    char device[] = {"/dev/ttyLP2"};
+    char device[] = {"/dev/ttyUSB0"};
+    // char device[] = {"/dev/ttyLP2"};
     comms = HEserial_connect(&device[0], B921600, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
     if (comms.fd == -1)
         {
@@ -262,7 +262,7 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
         }
 
     // // // Caio
-    serial_temp_thread_ = std::thread(&rtklib_pvt_gs::serialcmd_, this);
+    // serial_temp_thread_ = std::thread(&rtklib_pvt_gs::serialcmd_, this);
     // sched_param sch_params;
     // int policy;
     // pthread_getschedparam(serial_temp_thread_.native_handle(), &policy, &sch_params);
@@ -436,16 +436,16 @@ rtklib_pvt_gs::~rtklib_pvt_gs()
         }
     try
         {
-            HEserial_disconnect(&comms);
-            if (serial_temp_thread_.joinable())
-                {
-                    serial_temp_thread_.join();
-                    std::cout << TEXT_CYAN << "serial_temp_thread_rtklib joined.." << TEXT_RESET << "\n";
-                }
+            // HEserial_disconnect(&comms);
+            // if (serial_temp_thread_.joinable())
+            //     {
+            //         serial_temp_thread_.join();
+            //         std::cout << TEXT_CYAN << "serial_temp_thread_rtklib joined.." << TEXT_RESET << "\n";
+            //     }
             
-            pthread_t id6 = serial_temp_thread_.native_handle();
-            serial_temp_thread_.detach();
-            pthread_cancel(id6);
+            // pthread_t id6 = serial_temp_thread_.native_handle();
+            // serial_temp_thread_.detach();
+            // pthread_cancel(id6);
 
             if (d_log_timetag_file.is_open())
                 {
@@ -2277,7 +2277,8 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
         // std::ofstream filele("ArqTest.bin",std::ios::out|std::ios::app|std::ios::binary);
         auto tStartSteady = std::chrono::system_clock::now();
         // auto StartTime = tStartSteady;
-        double ult_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms*0.001;//*1000;
+        // double ult_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms*0.001;//*1000;
+        double ult_tempo = current_RX_time_ms*0.001;
         double nvo_tempo;
         while (!flag_interrupt_serial)
             {
@@ -2285,7 +2286,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                 // {
                     // nvo_tempo = d_gnss_observables_map.begin()->second.RX_time;
                     // nvo_tempo = last_RX_time;//*1000;
-                nvo_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms*0.001;
+                // nvo_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms*0.001;
                 // bool teste = d_user_pvt_solver->is_valid_position();
                 // if (teste == true)
                 // {
@@ -2311,6 +2312,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                 // if((first_fix)&&(tttt > 1000)/*&&(msgReady)*/)
                 // if((first_fix)&&((nvo_tempo-ult_tempo) > 1.0))
                 // if((first_fix)&&((current_RX_time_ms%d_output_rate_ms)==0)&&(testeee>=1.0))
+                nvo_tempo = current_RX_time_ms*0.001;
                 if((first_fix)&&((current_RX_time_ms%1000)==0)&&((nvo_tempo-ult_tempo)>=1.0))
                     {
                         tStartSteady = std::chrono::system_clock::now();
@@ -2396,7 +2398,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                         int sended_PVT = write(comms.fd, &msgVec[0], tam + 3 + 3 + 56);
 
 
-                                        // std::cout<<TEXT_BOLD_GREEN<<"N_Sat: "<<num_sat<<" Bytes: "<<sended_PVT<<" Time: "<<tttt<<" Tempo: "<<last_RX_time<<" RX_time: "<<nvo_tempo-ult_tempo<<TEXT_RESET<<"\n";
+                                        std::cout<<TEXT_BOLD_GREEN<<"N_Sat: "<<num_sat<<" Bytes: "<<sended_PVT<<" Time: "<<tttt<<" Tempo: "<<last_RX_time<<" RX_time: "<<nvo_tempo-ult_tempo<<TEXT_RESET<<"\n";
                                         // sended_PVT= 0;
                                         // auto tStartSteadyy = std::chrono::high_resolution_clock::now();
                                         // for(int i = 0; i<(tam+6+56); i++)

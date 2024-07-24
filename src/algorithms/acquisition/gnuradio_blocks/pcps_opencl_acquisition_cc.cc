@@ -173,7 +173,7 @@ int pcps_opencl_acquisition_cc::init_opencl_environment(const std::string &kerne
 
     d_cl_platform = all_platforms[0];  // get default platform
     // std::cout << "Using platform: " << d_cl_platform.getInfo<CL_PLATFORM_NAME>()
-              << '\n';
+            //   << '\n';
 
     // get default GPU device of the default platform
     std::vector<cl::Device> gpu_devices;
@@ -208,8 +208,8 @@ int pcps_opencl_acquisition_cc::init_opencl_environment(const std::string &kerne
     if (program.build(device) != CL_SUCCESS)
         {
             // std::cout << " Error building: "
-                      << program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(device[0])
-                      << '\n';
+                    //   << program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(device[0])
+                    //   << '\n';
             return 3;
         }
     d_cl_program = program;
@@ -355,10 +355,10 @@ void pcps_opencl_acquisition_cc::acquisition_core_volk()
     d_well_count++;
 
     // DLOG(INFO) << "Channel: " << d_channel
-               << " , doing acquisition of satellite: " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
-               << " ,sample stamp: " << d_sample_counter << ", threshold: "
-               << d_threshold << ", doppler_max: " << d_doppler_max
-               << ", doppler_step: " << d_doppler_step;
+            //    << " , doing acquisition of satellite: " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
+            //    << " ,sample stamp: " << d_sample_counter << ", threshold: "
+            //    << d_threshold << ", doppler_max: " << d_doppler_max
+            //    << ", doppler_step: " << d_doppler_step;
 
     // 1- Compute the input signal power estimation
     volk_32fc_magnitude_squared_32f(d_magnitude.data(), d_in_buffer[d_well_count].data(), d_fft_size);
@@ -488,10 +488,10 @@ void pcps_opencl_acquisition_cc::acquisition_core_opencl()
     //    begin = tv.tv_sec *1e6 + tv.tv_usec;
 
     // DLOG(INFO) << "Channel: " << d_channel
-               << " , doing acquisition of satellite: " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
-               << " ,sample stamp: " << d_sample_counter << ", threshold: "
-               << d_threshold << ", doppler_max: " << d_doppler_max
-               << ", doppler_step: " << d_doppler_step;
+            //    << " , doing acquisition of satellite: " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
+            //    << " ,sample stamp: " << d_sample_counter << ", threshold: "
+            //    << d_threshold << ", doppler_max: " << d_doppler_max
+            //    << ", doppler_step: " << d_doppler_step;
 
     // 1- Compute the input signal power estimation
     volk_32fc_magnitude_squared_32f(d_magnitude.data(), d_in_buffer[d_well_count].data(), d_fft_size);
