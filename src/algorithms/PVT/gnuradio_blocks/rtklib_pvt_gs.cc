@@ -262,7 +262,7 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
         }
 
     // // // Caio
-    // serial_temp_thread_ = std::thread(&rtklib_pvt_gs::serialcmd_, this);
+    serial_temp_thread_ = std::thread(&rtklib_pvt_gs::serialcmd_, this);
     // sched_param sch_params;
     // int policy;
     // pthread_getschedparam(serial_temp_thread_.native_handle(), &policy, &sch_params);
@@ -436,16 +436,16 @@ rtklib_pvt_gs::~rtklib_pvt_gs()
         }
     try
         {
-            // HEserial_disconnect(&comms);
-            // if (serial_temp_thread_.joinable())
-            //     {
-            //         serial_temp_thread_.join();
-            //         std::cout << TEXT_CYAN << "serial_temp_thread_rtklib joined.." << TEXT_RESET << "\n";
-            //     }
+            HEserial_disconnect(&comms);
+            if (serial_temp_thread_.joinable())
+                {
+                    serial_temp_thread_.join();
+                    std::cout << TEXT_CYAN << "serial_temp_thread_rtklib joined.." << TEXT_RESET << "\n";
+                }
             
-            // pthread_t id6 = serial_temp_thread_.native_handle();
-            // serial_temp_thread_.detach();
-            // pthread_cancel(id6);
+            pthread_t id6 = serial_temp_thread_.native_handle();
+            serial_temp_thread_.detach();
+            pthread_cancel(id6);
 
             if (d_log_timetag_file.is_open())
                 {
@@ -1388,6 +1388,7 @@ void rtklib_pvt_gs::update_HAS_corrections()
 int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_items,
     gr_vector_void_star& output_items __attribute__((unused)))
 {
+
     // Caio
     // std::ofstream fileRx("RxX_sampled_EPHEM_.txt", std::ios::out | std::ios::app);
     // std::ofstream filePosRecp("RxX_sampled_PVT.txt", std::ios::out | std::ios::app);
@@ -1933,8 +1934,10 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
 
                             // d_internal_pvt_solver->gps_ephemeris_map.at(0).satellitePosition();
 
-                            gps_ephem = d_internal_pvt_solver->gps_ephemeris_map;
-                            sync_map = get_observables_map();
+                            // gps_ephem = d_internal_pvt_solver->gps_ephemeris_map;
+                            // sync_map = get_observables_map();
+
+                            
                             // last_RX_time = sync_map.begin()->second.RX_time;
                             // d_internal_pvt_solver->Gnss_Ephemeris_map = d_internal_pvt_solver->gps_ephemeris_map;
                             // gps_ephem.at(0).satellitePosition(gps_ephem.at(0).toe);
@@ -1972,7 +1975,8 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                             rx_pos = d_user_pvt_solver->get_rx_pos();
                             rx_vel = d_user_pvt_solver->get_rx_vel();
                             double rx_clk_deslize{0};
-                            
+                            gps_ephem = d_internal_pvt_solver->gps_ephemeris_map;
+                            sync_map = get_observables_map();
 
                             // if (!flag_interrupt_serial)
                             //     {
@@ -2275,24 +2279,28 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
     {
         // bool flag_fix_first = false;
         // std::ofstream filele("ArqTest.bin",std::ios::out|std::ios::app|std::ios::binary);
-        auto tStartSteady = std::chrono::system_clock::now();
+        auto tStartSteady = std::chrono::high_resolution_clock::now();
+        auto tEndSteady = std::chrono::high_resolution_clock::now();
         // auto StartTime = tStartSteady;
-        // double ult_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms*0.001;//*1000;
-        double ult_tempo = current_RX_time_ms*0.001;
+        double ult_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms*0.001;//*1000;
+        // double ult_tempo = current_RX_time_ms*0.001;
         double nvo_tempo;
+        double tttt;
+        // std::chrono::duration<double, std::milli> deltinha;
+        double deltinha=0.0f;
         while (!flag_interrupt_serial)
             {
                 // if(d_gnss_observables_map_t1.begin()->second.Flag_valid_pseudorange)
                 // {
                     // nvo_tempo = d_gnss_observables_map.begin()->second.RX_time;
                     // nvo_tempo = last_RX_time;//*1000;
-                // nvo_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms*0.001;
+                
                 // bool teste = d_user_pvt_solver->is_valid_position();
                 // if (teste == true)
                 // {
                 // if ((static_cast<uint32_t>(d_rx_time * 1000.0) % d_output_rate_ms) == 0)
-                auto tEndSteady = std::chrono::system_clock::now();
-                std::chrono::duration<double, std::milli> tempo_ligado_ms = tEndSteady - tStartSteady;
+                tEndSteady = std::chrono::high_resolution_clock::now();
+                std::chrono::duration<double, std::micro> tempo_ligado_ms = tEndSteady - tStartSteady;
                 //             // std::chrono::duration<double, std::micro> Uptempo1 = tEndSteady - tStartSteady;
                 //             // std::chrono::duration<double, std::nano> Uptempo2 = tEndSteady - tStartSteady;
                 //             double tempo_ligado_ms = Uptempo.count();
@@ -2301,7 +2309,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                 //             // // std::cout<<std::setprecision(24)<< tempo_ligado_ms <<" ms || "<< tempo_ligado1 <<" us || "<<tempo_ligado2<<" ns"<<"\n";
                 // std::chrono::milliseconds diff = tEndSteady - tStartSteady;
                 // float tempo = diff.count();
-                double tttt = tempo_ligado_ms.count();
+                tttt = tempo_ligado_ms.count();// - deltinha;
                 // int32_t tempo = (int32_t)tttt;
                 // std::time_t endWallTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
                 
@@ -2312,9 +2320,11 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                 // if((first_fix)&&(tttt > 1000)/*&&(msgReady)*/)
                 // if((first_fix)&&((nvo_tempo-ult_tempo) > 1.0))
                 // if((first_fix)&&((current_RX_time_ms%d_output_rate_ms)==0)&&(testeee>=1.0))
-                nvo_tempo = current_RX_time_ms*0.001;
+                // nvo_tempo = current_RX_time_ms*0.001;
+                nvo_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms*0.001;
                 if((first_fix)&&((current_RX_time_ms%1000)==0)&&((nvo_tempo-ult_tempo)>=1.0))
                     {
+                        // deltinha = tttt - 1.0;
                         tStartSteady = std::chrono::system_clock::now();
                         // num_sat = jdex;
                         // double llastrx = last_RX_time;
@@ -2398,7 +2408,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                         int sended_PVT = write(comms.fd, &msgVec[0], tam + 3 + 3 + 56);
 
 
-                                        std::cout<<TEXT_BOLD_GREEN<<"N_Sat: "<<num_sat<<" Bytes: "<<sended_PVT<<" Time: "<<tttt<<" Tempo: "<<last_RX_time<<" RX_time: "<<nvo_tempo-ult_tempo<<TEXT_RESET<<"\n";
+                                        std::cout<<TEXT_BOLD_GREEN<<"N_Sat: "<<num_sat<<" Bytes: "<<sended_PVT<<" Time: "<<tttt<<" Current_time_rx: "<<nvo_tempo<<TEXT_RESET<<"\n";
                                         // sended_PVT= 0;
                                         // auto tStartSteadyy = std::chrono::high_resolution_clock::now();
                                         // for(int i = 0; i<(tam+6+56); i++)
@@ -2427,96 +2437,11 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                         // gps_ephem.clear();
                                         // }
                     }
+                    else{
+                        tStartSteady = std::chrono::system_clock::now();
+                        ult_tempo = nvo_tempo;
+                    }
             }//}
         // }
         //
-
-        // int bitts;
-        // // uint8_t msg;
-        // uint8_t msg[2];
-        // // int biit = HEserial_leitura_2(&comms,2);
-        // uint8_t biit = 0;
-        // biit = HEserial_leitura_byte(&comms);
-        // // uint32_t cmd{0};
-        // // Hex2IntegerAlt(&cmd, &msg);
-        // if (biit == 0xdf)
-        //     {
-        //         // serialcmd_enabled_ = false;
-        //         flag_interrupt_serial = true;
-        //     }
-        // flag_new_pvt_data = false;
-        // usleep(100);
-            // }
-        // filele.close();
     }
-
-
-                                            // for (const auto& y : sync_map)
-                                            // {
-                                            //     for (const auto& x : gps_ephem)
-                                            //         {
-                                            //             if (y.second.System == 'G')
-                                            //                 {
-                                            //                     last_RX_time = y.second.RX_time;
-                                            //                     if (y.second.PRN == x.second.PRN)
-                                            //                         {
-                                            //                             if ((x.second.SV_health == 0))  // && (y.second.CN0_dB_hz<50.0))
-                                            //                                 {
-                                            //                                     auto tStartSteady = std::chrono::high_resolution_clock::now();
-                                            //                                     auto StartTime = tStartSteady;
-
-                                            //                                     // // #########################   Geometrical Approuch on Transmit time:  #################################
-                                            //                                     double tempoo = y.second.RX_time;
-                                            //                                     double diffSATREC, diffSATSAT = 1000;
-                                            //                                     double delta_tempo;
-                                            //                                     double nvotempo;
-                                            //                                     double limiar = 0.2;
-                                            //                                     // int iter = 0;
-                                            //                                     std::vector<double> LastSatPos(3);
-                                            //                                     // gps_ephem.at(x.first).satellitePosition(y.second.RX_time); //Usar .at(x.first) throw out of range in std::map
-                                            //                                     // while(limiar<diffSATSAT)
-                                            //                                     gps_ephem[x.first].satellitePosition(tempoo);
-
-                                            //                                     //  Step 1
-                                            //                                     LastSatPos[0] = x.second.satpos_X;
-                                            //                                     LastSatPos[1] = x.second.satpos_Y;
-                                            //                                     LastSatPos[2] = x.second.satpos_Z;
-
-                                            //                                     while (diffSATSAT > limiar)
-                                            //                                         {
-                                            //                                             //  Step 2
-                                            //                                             diffSATREC = sqrt(
-                                            //                                                 // (pow(d_internal_pvt_solver->get_rx_pos()[0] - LastSatPos[0], 2)) + (pow(d_internal_pvt_solver->get_rx_pos()[1] - LastSatPos[1], 2)) + (pow(d_internal_pvt_solver->get_rx_pos()[2] - LastSatPos[2], 2)));
-                                            //                                                 pow(rx_pos[0] - LastSatPos[0], 2) + pow(rx_pos[1] - LastSatPos[1], 2) + pow(rx_pos[2] - LastSatPos[2], 2));
-                                            //                                             delta_tempo = diffSATREC / SPEED_OF_LIGHT_M_S;
-                                            //                                             // Step 3
-                                            //                                             nvotempo = tempoo - delta_tempo;
-                                            //                                             gps_ephem[x.first].satellitePosition(nvotempo);
-                                            //                                             diffSATSAT = sqrt(
-                                            //                                                 (pow(LastSatPos[0] - x.second.satpos_X, 2)) + (pow(LastSatPos[1] - x.second.satpos_Y, 2)) + (pow(LastSatPos[2] - x.second.satpos_Z, 2)));
-                                            //                                             // iter++;
-                                            //                                             // // std::cout << "Iter: " << iter <<"\n";
-                                            //                                             LastSatPos[0] = x.second.satpos_X;
-                                            //                                             LastSatPos[1] = x.second.satpos_Y;
-                                            //                                             LastSatPos[2] = x.second.satpos_Z;
-                                            //                                         }
-                                            //                                     // Step 4
-                                            //                                     variavelTempo = nvotempo - d_user_pvt_solver->get_time_offset_s();
-                                            //                                     gps_ephem[x.first].satellitePosition(variavelTempo);
-
-                                            //                                     PRN = (uint8_t)x.second.PRN;
-                                            //                                     Carrier_Doppler_Hz = y.second.Carrier_Doppler_hz;
-                                            //                                     satPosX = x.second.satpos_X;
-                                            //                                     satPosY = x.second.satpos_Y;
-                                            //                                     satPosZ = x.second.satpos_Z;
-                                            //                                     satVelX = x.second.satvel_X;
-                                            //                                     satVelY = x.second.satvel_Y;
-                                            //                                     satVelZ = x.second.satvel_Z;
-
-                                            //                                     double m1, m2, m3;
-
-                                            //                                     deltaprange = -SPEED_OF_LIGHT_M_S * (Carrier_Doppler_Hz / 1575420000) - d_user_pvt_solver->get_clock_drift_ppm() * SPEED_OF_LIGHT_M_S * 1e-6;
-                                            //                                     m1 = (satPosX - rx_pos[0]) * (satPosX - rx_pos[0]);
-                                            //                                     m2 = (satPosY - rx_pos[1]) * (satPosY - rx_pos[1]);
-                                            //                                     m3 = (satPosZ - rx_pos[2]) * (satPosZ - rx_pos[2]);
-                                            //                                     double prange = sqrt((m1 + m2 + m3));

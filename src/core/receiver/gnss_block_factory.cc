@@ -934,7 +934,7 @@ std::unique_ptr<GNSSBlockInterface> GNSSBlockFactory::GetBlock(
                     std::unique_ptr<GNSSBlockInterface> block_ = std::make_unique<GpsL1CaPcpsQuickSyncAcquisition>(configuration, role, in_streams,
                         out_streams);
                     block = std::move(block_);
-                }
+                }/*
             else if (implementation == "GPS_L2_M_PCPS_Acquisition")
                 {
                     std::unique_ptr<AcquisitionInterface> block_ = std::make_unique<GpsL2MPcpsAcquisition>(configuration, role, in_streams,
@@ -946,7 +946,7 @@ std::unique_ptr<GNSSBlockInterface> GNSSBlockFactory::GetBlock(
                     std::unique_ptr<AcquisitionInterface> block_ = std::make_unique<GpsL5iPcpsAcquisition>(configuration, role, in_streams,
                         out_streams);
                     block = std::move(block_);
-                }
+                }*/
             else if (implementation == "Galileo_E1_PCPS_Ambiguous_Acquisition")
                 {
                     std::unique_ptr<GNSSBlockInterface> block_ = std::make_unique<GalileoE1PcpsAmbiguousAcquisition>(configuration, role, in_streams,
@@ -977,6 +977,7 @@ std::unique_ptr<GNSSBlockInterface> GNSSBlockFactory::GetBlock(
                         out_streams);
                     block = std::move(block_);
                 }
+                /*
             else if (implementation == "Galileo_E5a_Noncoherent_IQ_Acquisition_CAF")
                 {
                     std::unique_ptr<GNSSBlockInterface> block_ = std::make_unique<GalileoE5aNoncoherentIQAcquisitionCaf>(configuration, role, in_streams,
@@ -1024,7 +1025,7 @@ std::unique_ptr<GNSSBlockInterface> GNSSBlockFactory::GetBlock(
                     std::unique_ptr<AcquisitionInterface> block_ = std::make_unique<BeidouB3iPcpsAcquisition>(configuration, role, in_streams,
                         out_streams);
                     block = std::move(block_);
-                }
+                }*/
 #if OPENCL_BLOCKS
             else if (implementation == "GPS_L1_CA_PCPS_OpenCl_Acquisition")
                 {
@@ -1079,6 +1080,7 @@ std::unique_ptr<GNSSBlockInterface> GNSSBlockFactory::GetBlock(
                         out_streams);
                     block = std::move(block_);
                 }
+                /*
             else if (implementation == "GPS_L1_CA_Gaussian_Tracking")
                 {
                     std::unique_ptr<GNSSBlockInterface> block_ = std::make_unique<GpsL1CaGaussianTracking>(configuration, role, in_streams,
@@ -1108,7 +1110,7 @@ std::unique_ptr<GNSSBlockInterface> GNSSBlockFactory::GetBlock(
                     std::unique_ptr<GNSSBlockInterface> block_ = std::make_unique<GpsL5DllPllTracking>(configuration, role, in_streams,
                         out_streams);
                     block = std::move(block_);
-                }
+                }*/
             else if (implementation == "Galileo_E1_DLL_PLL_VEML_Tracking")
                 {
                     std::unique_ptr<GNSSBlockInterface> block_ = std::make_unique<GalileoE1DllPllVemlTracking>(configuration, role, in_streams,
@@ -1121,7 +1123,7 @@ std::unique_ptr<GNSSBlockInterface> GNSSBlockFactory::GetBlock(
                         out_streams);
                     block = std::move(block_);
                 }
-            else if (implementation == "Galileo_E5a_DLL_PLL_Tracking")
+            /*else if (implementation == "Galileo_E5a_DLL_PLL_Tracking")
                 {
                     std::unique_ptr<GNSSBlockInterface> block_ = std::make_unique<GalileoE5aDllPllTracking>(configuration, role, in_streams,
                         out_streams);
@@ -1174,7 +1176,7 @@ std::unique_ptr<GNSSBlockInterface> GNSSBlockFactory::GetBlock(
                     std::unique_ptr<GNSSBlockInterface> block_ = std::make_unique<BeidouB3iDllPllTracking>(configuration, role, in_streams,
                         out_streams);
                     block = std::move(block_);
-                }
+                }*/
 #if CUDA_GPU_ACCEL
             else if (implementation == "GPS_L1_CA_DLL_PLL_Tracking_GPU")
                 {
@@ -1223,7 +1225,7 @@ std::unique_ptr<GNSSBlockInterface> GNSSBlockFactory::GetBlock(
                         out_streams);
                     block = std::move(block_);
                 }
-            else if (implementation == "GPS_L2C_Telemetry_Decoder")
+            /*else if (implementation == "GPS_L2C_Telemetry_Decoder")
                 {
                     std::unique_ptr<GNSSBlockInterface> block_ = std::make_unique<GpsL2CTelemetryDecoder>(configuration, role, in_streams,
                         out_streams);
@@ -1289,10 +1291,10 @@ std::unique_ptr<GNSSBlockInterface> GNSSBlockFactory::GetBlock(
                         out_streams);
                     block = std::move(block_);
                 }
-
+            */
             // OBSERVABLES -------------------------------------------------------------
-            else if ((implementation == "Hybrid_Observables") || (implementation == "GPS_L1_CA_Observables") || (implementation == "GPS_L2C_Observables") ||
-                     (implementation == "Galileo_E5A_Observables"))
+            else if ((implementation == "Hybrid_Observables") /*|| (implementation == "GPS_L1_CA_Observables") || (implementation == "GPS_L2C_Observables") ||
+                     (implementation == "Galileo_E5A_Observables")*/)
                 {
                     std::unique_ptr<GNSSBlockInterface> block_ = std::make_unique<HybridObservables>(configuration, role, in_streams,
                         out_streams);
@@ -1372,18 +1374,18 @@ std::unique_ptr<AcquisitionInterface> GNSSBlockFactory::GetAcqBlock(
                 out_streams);
             block = std::move(block_);
         }
-    else if (implementation == "GPS_L2_M_PCPS_Acquisition")
-        {
-            std::unique_ptr<AcquisitionInterface> block_ = std::make_unique<GpsL2MPcpsAcquisition>(configuration, role, in_streams,
-                out_streams);
-            block = std::move(block_);
-        }
-    else if (implementation == "GPS_L5i_PCPS_Acquisition")
-        {
-            std::unique_ptr<AcquisitionInterface> block_ = std::make_unique<GpsL5iPcpsAcquisition>(configuration, role, in_streams,
-                out_streams);
-            block = std::move(block_);
-        }
+    // else if (implementation == "GPS_L2_M_PCPS_Acquisition")
+    //     {
+    //         std::unique_ptr<AcquisitionInterface> block_ = std::make_unique<GpsL2MPcpsAcquisition>(configuration, role, in_streams,
+    //             out_streams);
+    //         block = std::move(block_);
+    //     }
+    // else if (implementation == "GPS_L5i_PCPS_Acquisition")
+    //     {
+    //         std::unique_ptr<AcquisitionInterface> block_ = std::make_unique<GpsL5iPcpsAcquisition>(configuration, role, in_streams,
+    //             out_streams);
+    //         block = std::move(block_);
+    //     }
     else if (implementation == "Galileo_E1_PCPS_Ambiguous_Acquisition")
         {
             std::unique_ptr<AcquisitionInterface> block_ = std::make_unique<GalileoE1PcpsAmbiguousAcquisition>(configuration, role, in_streams,
@@ -1414,7 +1416,7 @@ std::unique_ptr<AcquisitionInterface> GNSSBlockFactory::GetAcqBlock(
             std::unique_ptr<AcquisitionInterface> block_ = std::make_unique<GalileoE1PcpsQuickSyncAmbiguousAcquisition>(configuration, role, in_streams,
                 out_streams);
             block = std::move(block_);
-        }
+        }/*
     else if (implementation == "Galileo_E5a_Noncoherent_IQ_Acquisition_CAF")
         {
             std::unique_ptr<AcquisitionInterface> block_ = std::make_unique<GalileoE5aNoncoherentIQAcquisitionCaf>(configuration, role, in_streams,
@@ -1462,7 +1464,7 @@ std::unique_ptr<AcquisitionInterface> GNSSBlockFactory::GetAcqBlock(
             std::unique_ptr<AcquisitionInterface> block_ = std::make_unique<BeidouB3iPcpsAcquisition>(configuration, role, in_streams,
                 out_streams);
             block = std::move(block_);
-        }
+        }*/
 #if OPENCL_BLOCKS
     else if (implementation == "GPS_L1_CA_PCPS_OpenCl_Acquisition")
         {
@@ -1535,24 +1537,24 @@ std::unique_ptr<TrackingInterface> GNSSBlockFactory::GetTrkBlock(
                 out_streams);
             block = std::move(block_);
         }
-    else if (implementation == "GPS_L1_CA_Gaussian_Tracking")
-        {
-            std::unique_ptr<TrackingInterface> block_ = std::make_unique<GpsL1CaGaussianTracking>(configuration, role, in_streams,
-                out_streams);
-            block = std::move(block_);
-        }
-    else if (implementation == "GPS_L1_CA_KF_Tracking")
-        {
-            std::unique_ptr<TrackingInterface> block_ = std::make_unique<GpsL1CaKfTracking>(configuration, role, in_streams,
-                out_streams);
-            block = std::move(block_);
-        }
-    else if (implementation == "GPS_L1_CA_TCP_CONNECTOR_Tracking")
-        {
-            std::unique_ptr<TrackingInterface> block_ = std::make_unique<GpsL1CaTcpConnectorTracking>(configuration, role, in_streams,
-                out_streams);
-            block = std::move(block_);
-        }
+    // else if (implementation == "GPS_L1_CA_Gaussian_Tracking")
+    //     {
+    //         std::unique_ptr<TrackingInterface> block_ = std::make_unique<GpsL1CaGaussianTracking>(configuration, role, in_streams,
+    //             out_streams);
+    //         block = std::move(block_);
+    //     }
+    // else if (implementation == "GPS_L1_CA_KF_Tracking")
+    //     {
+    //         std::unique_ptr<TrackingInterface> block_ = std::make_unique<GpsL1CaKfTracking>(configuration, role, in_streams,
+    //             out_streams);
+    //         block = std::move(block_);
+    //     }
+    // else if (implementation == "GPS_L1_CA_TCP_CONNECTOR_Tracking")
+    //     {
+    //         std::unique_ptr<TrackingInterface> block_ = std::make_unique<GpsL1CaTcpConnectorTracking>(configuration, role, in_streams,
+    //             out_streams);
+    //         block = std::move(block_);
+    //     }
     else if (implementation == "Galileo_E1_DLL_PLL_VEML_Tracking")
         {
             std::unique_ptr<TrackingInterface> block_ = std::make_unique<GalileoE1DllPllVemlTracking>(configuration, role, in_streams,
@@ -1564,7 +1566,7 @@ std::unique_ptr<TrackingInterface> GNSSBlockFactory::GetTrkBlock(
             std::unique_ptr<TrackingInterface> block_ = std::make_unique<GalileoE1TcpConnectorTracking>(configuration, role, in_streams,
                 out_streams);
             block = std::move(block_);
-        }
+        }/*
     else if (implementation == "Galileo_E5a_DLL_PLL_Tracking")
         {
             std::unique_ptr<TrackingInterface> block_ = std::make_unique<GalileoE5aDllPllTracking>(configuration, role, in_streams,
@@ -1630,7 +1632,7 @@ std::unique_ptr<TrackingInterface> GNSSBlockFactory::GetTrkBlock(
             std::unique_ptr<TrackingInterface> block_ = std::make_unique<BeidouB3iDllPllTracking>(configuration, role, in_streams,
                 out_streams);
             block = std::move(block_);
-        }
+        }*/
 #if CUDA_GPU_ACCEL
     else if (implementation == "GPS_L1_CA_DLL_PLL_Tracking_GPU")
         {
@@ -1701,7 +1703,7 @@ std::unique_ptr<TelemetryDecoderInterface> GNSSBlockFactory::GetTlmBlock(
             std::unique_ptr<TelemetryDecoderInterface> block_ = std::make_unique<GalileoE1BTelemetryDecoder>(configuration, role, in_streams,
                 out_streams);
             block = std::move(block_);
-        }
+        }/*
     else if (implementation == "SBAS_L1_Telemetry_Decoder")
         {
             std::unique_ptr<TelemetryDecoderInterface> block_ = std::make_unique<SbasL1TelemetryDecoder>(configuration, role, in_streams,
@@ -1761,7 +1763,7 @@ std::unique_ptr<TelemetryDecoderInterface> GNSSBlockFactory::GetTlmBlock(
             std::unique_ptr<TelemetryDecoderInterface> block_ = std::make_unique<BeidouB3iTelemetryDecoder>(configuration, role, in_streams,
                 out_streams);
             block = std::move(block_);
-        }
+        }*/
 
     else
         {
