@@ -1117,13 +1117,13 @@ std::unique_ptr<GNSSBlockInterface> GNSSBlockFactory::GetBlock(
                         out_streams);
                     block = std::move(block_);
                 }
-            else if (implementation == "Galileo_E1_TCP_CONNECTOR_Tracking")
+            /*else if (implementation == "Galileo_E1_TCP_CONNECTOR_Tracking")
                 {
                     std::unique_ptr<GNSSBlockInterface> block_ = std::make_unique<GalileoE1TcpConnectorTracking>(configuration, role, in_streams,
                         out_streams);
                     block = std::move(block_);
                 }
-            /*else if (implementation == "Galileo_E5a_DLL_PLL_Tracking")
+            else if (implementation == "Galileo_E5a_DLL_PLL_Tracking")
                 {
                     std::unique_ptr<GNSSBlockInterface> block_ = std::make_unique<GalileoE5aDllPllTracking>(configuration, role, in_streams,
                         out_streams);
@@ -1561,12 +1561,12 @@ std::unique_ptr<TrackingInterface> GNSSBlockFactory::GetTrkBlock(
                 out_streams);
             block = std::move(block_);
         }
-    else if (implementation == "Galileo_E1_TCP_CONNECTOR_Tracking")
+    /*else if (implementation == "Galileo_E1_TCP_CONNECTOR_Tracking")
         {
             std::unique_ptr<TrackingInterface> block_ = std::make_unique<GalileoE1TcpConnectorTracking>(configuration, role, in_streams,
                 out_streams);
             block = std::move(block_);
-        }/*
+        }
     else if (implementation == "Galileo_E5a_DLL_PLL_Tracking")
         {
             std::unique_ptr<TrackingInterface> block_ = std::make_unique<GalileoE5aDllPllTracking>(configuration, role, in_streams,

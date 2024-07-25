@@ -249,8 +249,8 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
     std::string dump_ls_pvt_filename = conf_.dump_filename;
 
 
-    // char device[] = {"/dev/ttyUSB0"};
-    char device[] = {"/dev/ttyLP2"};
+    char device[] = {"/dev/ttyUSB0"};
+    // char device[] = {"/dev/ttyLP2"};
     comms = HEserial_connect(&device[0], B921600, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
     if (comms.fd == -1)
         {
