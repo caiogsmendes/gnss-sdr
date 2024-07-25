@@ -1848,8 +1848,8 @@ int dll_pll_veml_tracking::general_work(int noutput_items __attribute__((unused)
                                                     {
                                                        // LOG(INFO) << d_systemName << " " << d_signal_pretty_name << " secondary code locked in channel " << d_channel
                                                                 //   << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
-                                                        std::cout << d_systemName << " " << d_signal_pretty_name << " secondary code locked in channel " << d_channel
-                                                                  << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
+                                                        // std::cout << d_systemName << " " << d_signal_pretty_name << " secondary code locked in channel " << d_channel
+                                                        //           << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
                                                     }
                                             }
                                     }
@@ -1864,8 +1864,8 @@ int dll_pll_veml_tracking::general_work(int noutput_items __attribute__((unused)
                                                     {
                                                        // LOG(INFO) << d_systemName << " " << d_signal_pretty_name << " tracking bit synchronization locked in channel " << d_channel
                                                                 //   << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
-                                                        std::cout << d_systemName << " " << d_signal_pretty_name << " tracking bit synchronization locked in channel " << d_channel
-                                                                  << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
+                                                        // std::cout << d_systemName << " " << d_signal_pretty_name << " tracking bit synchronization locked in channel " << d_channel
+                                                        //           << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
                                                     }
                                             }
                                     }
@@ -1899,9 +1899,9 @@ int dll_pll_veml_tracking::general_work(int noutput_items __attribute__((unused)
                                        // LOG(INFO) << "Enabled " << d_extend_correlation_symbols * static_cast<int32_t>(d_code_period * 1000.0) << " ms extended correlator in channel "
                                                 //   << d_channel
                                                 //   << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN);
-                                        std::cout << "Enabled " << d_extend_correlation_symbols * static_cast<int32_t>(d_code_period * 1000.0) << " ms extended correlator in channel "
-                                                  << d_channel
-                                                  << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
+                                        // std::cout << "Enabled " << d_extend_correlation_symbols * static_cast<int32_t>(d_code_period * 1000.0) << " ms extended correlator in channel "
+                                        //           << d_channel
+                                        //           << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
                                         // Set narrow taps delay values [chips]
                                         d_code_loop_filter.set_update_interval(static_cast<float>(d_current_correlation_time_s));
                                         d_code_loop_filter.set_noise_bandwidth(d_trk_parameters.dll_bw_narrow_hz);

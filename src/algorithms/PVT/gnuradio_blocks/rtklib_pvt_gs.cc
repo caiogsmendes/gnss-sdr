@@ -249,8 +249,8 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
     std::string dump_ls_pvt_filename = conf_.dump_filename;
 
 
-    char device[] = {"/dev/ttyUSB0"};
-    // char device[] = {"/dev/ttyLP2"};
+    // char device[] = {"/dev/ttyUSB0"};
+    char device[] = {"/dev/ttyLP2"};
     comms = HEserial_connect(&device[0], B921600, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
     if (comms.fd == -1)
         {
@@ -1784,15 +1784,15 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                             if (d_show_local_time_zone)
                                                 {
                                                     const boost::posix_time::ptime time_first_solution = d_user_pvt_solver->get_position_UTC_time() + d_utc_diff_time;
-                                                    std::cout << TEXT_BOLD_YELLOW << "First position fix at " << time_first_solution << d_local_time_str;
+                                                    // std::cout << TEXT_BOLD_YELLOW << "First position fix at " << time_first_solution << d_local_time_str;
                                                 }
                                             else
                                                 {
-                                                    std::cout << TEXT_BOLD_YELLOW << "First position fix at " << d_user_pvt_solver->get_position_UTC_time() << " UTC";
+                                                    // std::cout << TEXT_BOLD_YELLOW << "First position fix at " << d_user_pvt_solver->get_position_UTC_time() << " UTC";
                                                 }
-                                            std::cout << " is Lat = " << d_user_pvt_solver->get_latitude() << " [deg], Long = " << d_user_pvt_solver->get_longitude()
-                                                      << " [deg], Height= " << d_user_pvt_solver->get_height() << " [m]\n"
-                                                      << TEXT_RESET;
+                                            // std::cout << " is Lat = " << d_user_pvt_solver->get_latitude() << " [deg], Long = " << d_user_pvt_solver->get_longitude()
+                                            //           << " [deg], Height= " << d_user_pvt_solver->get_height() << " [m]\n"
+                                            //           << TEXT_RESET;
                                             d_ttff_msgbuf ttff;
                                             ttff.mtype = 1;
                                             d_end = std::chrono::system_clock::now();
@@ -1905,18 +1905,18 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
 
                             // if (numsat_check >= 4)
                             //     {
-                            std::cout
-                                << TEXT_BOLD_YELLOW
+                            // std::cout
+                            //     << TEXT_BOLD_YELLOW
                                 // << std::fixed << std::setprecision(24)
                                 //     << " Time Offset: "<<d_user_pvt_solver->get_time_offset_s() << "[s]"
                                 //     << " User Clock Drift[ppm]: "<< d_user_pvt_solver->get_clock_drift_ppm()<< TEXT_RESET <<"\n"
                                 // << TEXT_BOLD_GREEN
-                                << "Position at " << time_solution << UTC_solution_str
-                                << " using " << d_user_pvt_solver->get_num_valid_observations() << " Sat"
-                                << std::fixed << std::setprecision(9)
-                                << " observations is Lat = " << d_user_pvt_solver->get_latitude() << " [deg], Long = " << d_user_pvt_solver->get_longitude()
-                                << std::fixed << std::setprecision(3)
-                                << " [deg], Height = " << d_user_pvt_solver->get_height() << " [m]" << TEXT_RESET << '\n';
+                                // << "Position at " << time_solution << UTC_solution_str
+                                // << " using " << d_user_pvt_solver->get_num_valid_observations() << " Sat"
+                                // << std::fixed << std::setprecision(9)
+                                // << " observations is Lat = " << d_user_pvt_solver->get_latitude() << " [deg], Long = " << d_user_pvt_solver->get_longitude()
+                                // << std::fixed << std::setprecision(3)
+                                // << " [deg], Height = " << d_user_pvt_solver->get_height() << " [m]" << TEXT_RESET << '\n';
                             // for(const auto &x:d_gnss_observables_map){}
                             // // std::cout<<TEXT_BOLD_CYAN
                             // <<"Channel_ID:  "
