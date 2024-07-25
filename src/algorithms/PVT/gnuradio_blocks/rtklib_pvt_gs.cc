@@ -2408,7 +2408,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                         int sended_PVT = write(comms.fd, &msgVec[0], tam + 3 + 3 + 56);
 
 
-                                        std::cout<<TEXT_BOLD_GREEN<<"N_Sat: "<<num_sat<<" Bytes: "<<sended_PVT<<" Time: "<<tttt<<" Current_time_rx: "<<nvo_tempo<<TEXT_RESET<<"\n";
+                                        // std::cout<<TEXT_BOLD_GREEN<<"N_Sat: "<<num_sat<<" Bytes: "<<sended_PVT<<" Time: "<<tttt<<" Current_time_rx: "<<nvo_tempo<<TEXT_RESET<<"\n";
                                         // sended_PVT= 0;
                                         // auto tStartSteadyy = std::chrono::high_resolution_clock::now();
                                         // for(int i = 0; i<(tam+6+56); i++)
