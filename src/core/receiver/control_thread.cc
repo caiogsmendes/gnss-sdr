@@ -1134,8 +1134,8 @@ int ControlThread::run()
     serial_cmd_interface_.set_channels(flowgraph_->get_channels());
 
     // Thread Serial Listener
-    serial_cmd_interface_thread_ = std::thread(&ControlThread::serialcmd_listener, this);
-    // PPS_siggen_thread_=std::thread(&ControlThread::PPS_GPIO_ctrl,this);
+    // serial_cmd_interface_thread_ = std::thread(&ControlThread::serialcmd_listener, this);
+    PPS_siggen_thread_=std::thread(&ControlThread::PPS_GPIO_ctrl,this);
     // sched_param sch_params;
     // int policy;
     // pthread_getschedparam(PPS_siggen_thread_.native_handle(), &policy, &sch_params);
@@ -1148,7 +1148,7 @@ int ControlThread::run()
     // na função dos destructors
 
     // Caio - timers
-    serial_timer_function_thread_ = std::thread(&ControlThread::serialcmd_timer, this);
+    // serial_timer_function_thread_ = std::thread(&ControlThread::serialcmd_timer, this);
 
 #ifdef ENABLE_FPGA
     // Create a task for the acquisition such that id doesn't block the flow of the control thread
@@ -1191,38 +1191,38 @@ int ControlThread::run()
 //         }
 
     // Terminate telecommand thread
-    if (telecommand_enabled_)
-        {
-            pthread_t id2 = cmd_interface_thread_.native_handle();
-            cmd_interface_thread_.detach();
-#ifndef ANDROID
-            pthread_cancel(id2);
-#else
-            // todo: find alternative
-#endif
-        }
+//     if (telecommand_enabled_)
+//         {
+//             pthread_t id2 = cmd_interface_thread_.native_handle();
+//             cmd_interface_thread_.detach();
+// #ifndef ANDROID
+//             pthread_cancel(id2);
+// #else
+//             // todo: find alternative
+// #endif
+//         }
 
     // Caio
     //  A thread precisa ser finalizada
     if (serialcmd_enabled_)
         {
             // std::cout << "Caio: Finalizada a Serial Thread" << "\n";
-            pthread_t id3 = serial_cmd_interface_thread_.native_handle();
-            serial_cmd_interface_thread_.detach();
-            pthread_cancel(id3);
+            // pthread_t id3 = serial_cmd_interface_thread_.native_handle();
+            // serial_cmd_interface_thread_.detach();
+            // pthread_cancel(id3);
 
             // std::cout << "Caio: Finalizada a Serial Timer Thread" << "\n";
-            pthread_t id4 = serial_timer_function_thread_.native_handle();
-            serial_timer_function_thread_.detach();
-            pthread_cancel(id4);
+            // pthread_t id4 = serial_timer_function_thread_.native_handle();
+            // serial_timer_function_thread_.detach();
+            // pthread_cancel(id4);
 
             // pthread_t id5 = serial_cmd_interface_thread_w.native_handle();
             // serial_cmd_interface_thread_w.detach();
             // pthread_cancel(id5);
 
-            // pthread_t id8 = PPS_siggen_thread_.native_handle();
-            // PPS_siggen_thread_.detach();
-            // pthread_cancel(id8);
+            pthread_t id8 = PPS_siggen_thread_.native_handle();
+            PPS_siggen_thread_.detach();
+            pthread_cancel(id8);
         }
 
    // LOG(INFO) << "Flowgraph stopped";
