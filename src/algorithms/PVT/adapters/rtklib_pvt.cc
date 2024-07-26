@@ -56,6 +56,7 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
     const std::string default_nmea_dump_filename("./nmea_pvt.nmea");
     const std::string default_nmea_dump_devname("/dev/tty1");
     const std::string default_rtcm_dump_devname("/dev/pts/1");
+    const std::string default_dev_serial("/dev/ttyLP2");
     // DLOG(INFO) << "role " << role;
     pvt_output_parameters.dump = configuration->property(role + ".dump", false);
     pvt_output_parameters.dump_filename = configuration->property(role + ".dump_filename", default_dump_filename);
@@ -65,6 +66,10 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
 
     // Flag to postprocess old gnss records (older than 2009) and avoid wrong week rollover
     pvt_output_parameters.pre_2009_file = configuration->property("GNSS-SDR.pre_2009_file", false);
+
+    //Caio
+    pvt_output_parameters.dev_serial = configuration->property(role + ".dev_serial",default_dev_serial);
+    //
 
     // output rate
     pvt_output_parameters.observable_interval_ms = configuration->property("GNSS-SDR.observable_interval_ms", pvt_output_parameters.observable_interval_ms);

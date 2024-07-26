@@ -241,6 +241,8 @@ private:
     std::string d_dump_filename;
     std::string d_xml_base_path;
     std::string d_local_time_str;
+    //Caio
+    std::string d_device_serial;
 
     std::vector<bool> d_channel_initialized;
     std::vector<double> d_initial_carrier_phase_offset_estimation_rads;

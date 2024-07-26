@@ -50,6 +50,10 @@ public:
     std::string udp_eph_addresses;
     std::string log_source_timetag_file;
 
+    //Caio
+    std::string dev_serial = std::string(".");
+    //
+
     uint32_t type_of_receiver = 0;
     uint32_t observable_interval_ms = 20;
 

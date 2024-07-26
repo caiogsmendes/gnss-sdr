@@ -208,6 +208,7 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
       d_log_timetag(conf_.log_source_timetag),
       d_use_e6_for_pvt(conf_.use_e6_for_pvt),
       d_use_has_corrections(conf_.use_has_corrections),
+      d_device_serial(conf_.dev_serial),
       d_use_unhealthy_sats(conf_.use_unhealthy_sats)
 {
     // Send feedback message to observables block with the receiver clock offset
@@ -250,8 +251,11 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
 
 
     // char device[] = {"/dev/ttyUSB0"};
-    char device[] = {"/dev/ttyLP2"};
-    comms = HEserial_connect(&device[0], B921600, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
+    // char device[] = {"/dev/ttyLP2"};
+    char device[d_device_serial.length()+1];
+    strcpy(device, d_device_serial.c_str());
+    // comms = HEserial_connect(&device[0], B921600, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
+    comms = HEserial_connect(device, B921600, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
     if (comms.fd == -1)
         {
             // std::cout << TEXT_BOLD_RED << "Falha ao abrir Porta Serial" << TEXT_RESET << "\n";
@@ -2103,8 +2107,8 @@ void rtklib_pvt_gs::serialcmd_(void)
             // if((first_fix)&&((current_RX_time_ms%d_output_rate_ms)==0)&&(testeee>=1.0))
             // nvo_tempo = current_RX_time_ms*0.001;
             nvo_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms * 0.001;
-            // if((first_fix)&&(tttt > 1000)/*&&(msgReady)*/)
-            if ((first_fix) && ((current_RX_time_ms % 1000) == 0) && ((nvo_tempo - ult_tempo) >= 1.0))
+            if((first_fix)&&(tttt > 1000)/*&&(msgReady)*/)
+            // if ((first_fix) && ((current_RX_time_ms % 1000) == 0) && ((nvo_tempo - ult_tempo) >= 1.0))
                 {
                     // deltinha = tttt - 1.0;
                     tStartSteady = std::chrono::system_clock::now();
