@@ -1989,7 +1989,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                     }
                                 msgVec[index + 58] = checks;
                                 mtx.unlock();
-
+                                jdex = index+58+1;
                                 /*
                                 mtx.lock();
                                 StoragePVT.rx_pos[0] = rx_pos[0];
@@ -2191,10 +2191,10 @@ void rtklib_pvt_gs::serialcmd_(void)
                     //     }
                     // msgVec[index + 58] = checks;
 
-                    int sended_PVT = write(comms.fd, &msgVec[0], tam + 3 + 3 + 56);
+                    // int sended_PVT = write(comms.fd, &msgVec[0], tam + 3 + 3 + 56);
+                    int sended_PVT = write(comms.fd, &msgVec[0], jdex);
 
-
-                    std::cout<<TEXT_BOLD_GREEN<<"N_Sat: "<<num_sat<<" Bytes: "<<sended_PVT<<" Time: "<<tttt<<" Current_time_rx: "<<current_RX_time_ms<<TEXT_RESET<<"\n";
+                    std::cout << TEXT_BOLD_GREEN << "N_Sat: " << num_sat << " Bytes: " << sended_PVT << " Time: " << tttt << " Current_time_rx: " << current_RX_time_ms << TEXT_RESET << "\n";
                     // sended_PVT= 0;
                     // auto tStartSteadyy = std::chrono::high_resolution_clock::now();
                     // for(int i = 0; i<(tam+6+56); i++)
