@@ -1895,7 +1895,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                                         satVelX = x.second.satvel_X;
                                                                         satVelY = x.second.satvel_Y;
                                                                         satVelZ = x.second.satvel_Z;
-                                                                        last_RX_time = y.second.TOW_at_current_symbol_ms * 0.001;
+                                                                        // last_RX_time = y.second.TOW_at_current_symbol_ms * 0.001;
                                                                         // last_RX_time = y.second.RX_time;
                                                                         double m1, m2, m3;
 
@@ -1972,7 +1972,6 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                 // int sendedEphem = write(comms.fd, &msgVec[0], tam + 3);
                                 // int sended = serial4send(&msgVec[0], &tam);
 
-
                                 msgVec[index + 0] = 0xd4;
                                 msgVec[index + 1] = 0x4f;
                                 Double2HexAlt(&msgVec[index + 2], &rx_pos[0]);
@@ -1981,7 +1980,8 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                 Double2HexAlt(&msgVec[index + 26], &rx_vel[0]);
                                 Double2HexAlt(&msgVec[index + 34], &rx_vel[1]);
                                 Double2HexAlt(&msgVec[index + 42], &rx_vel[2]);
-                                Double2HexAlt(&msgVec[index + 50], &last_RX_time);
+                                // Double2HexAlt(&msgVec[index + 50], &last_RX_time);
+                                Double2HexAlt(&msgVec[index+42], &d_rx_time);
                                 checks = 0;
                                 for (int i = index + 0; i < index + 58; i++)
                                     {
@@ -2130,7 +2130,7 @@ void rtklib_pvt_gs::serialcmd_(void)
             // if((first_fix)&&((current_RX_time_ms%d_output_rate_ms)==0)&&(testeee>=1.0))
             // nvo_tempo = current_RX_time_ms*0.001;
             nvo_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms * 0.001;
-            if((first_fix)&&(((abs(tttt-1000)< 0.001))&&((nvo_tempo - ult_tempo) >= 1.0)))
+            if((first_fix)&&(tttt>1000)&&((nvo_tempo - ult_tempo) >= 1.0))
             // if ((first_fix) && (((current_RX_time_ms % 1000) == 0) && ((nvo_tempo - ult_tempo) >= 1.0)))//&& (tttt>1000))
                 {
                     deltinha = tttt - 1000.0;
@@ -2218,7 +2218,7 @@ void rtklib_pvt_gs::serialcmd_(void)
                     int sended_PVT = write(comms.fd, &msgVec[0], jdex); ccontmsg++; 
 
                     std::cout << TEXT_BOLD_GREEN << "N_Sat: " << num_sat << " Bytes: " << sended_PVT <<" Contador: "<<ccontmsg<<" Time: " << tttt 
-                    << " Current_time_rx: " << nvo_tempo << TEXT_RESET << "\n";
+                    << " Current_time_rx: " << nvo_tempo <<" d_rx_time: "<<d_rx_time<< TEXT_RESET << "\n";
                     // sended_PVT= 0;
                     // auto tStartSteadyy = std::chrono::high_resolution_clock::now();
                     // for(int i = 0; i<(tam+6+56); i++)
@@ -2247,14 +2247,14 @@ void rtklib_pvt_gs::serialcmd_(void)
                     // gps_ephem.clear();
                     // }
                 }
-            else if (tttt>=2000)
-                {
-                    tStartSteady = std::chrono::system_clock::now();
+            // else if (tttt>=2000)
+            //     {
+                    // tStartSteady = std::chrono::system_clock::now();
                     //  deltinha = tttt-1000.0;
             //         tStartSteady = std::chrono::system_clock::now();
             //         ult_tempo = nvo_tempo;
-                }
-                else{}
+                // }
+                // else{}
         }  //}
     // }
     //
