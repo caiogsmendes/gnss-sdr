@@ -494,7 +494,7 @@ void hybrid_observables_gs::update_TOW(const std::vector<Gnss_Synchro> &data)
     // 1. Set the TOW using the minimum TOW in the observables.
     //    this will be the receiver time.
     // 2. If the TOW is set, it must be incremented by the desired receiver time step.
-    //    the time step must match the observables timer block (connected to the las input channel)
+    //    the time step must match the observables timer block (connected to the last input channel)
     std::vector<Gnss_Synchro>::const_iterator it;
     if (!d_T_rx_TOW_set)
         {
