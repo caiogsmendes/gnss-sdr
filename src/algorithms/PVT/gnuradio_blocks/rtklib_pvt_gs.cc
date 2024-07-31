@@ -2130,7 +2130,7 @@ void rtklib_pvt_gs::serialcmd_(void)
             // if((first_fix)&&((current_RX_time_ms%d_output_rate_ms)==0)&&(testeee>=1.0))
             // nvo_tempo = current_RX_time_ms*0.001;
             nvo_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms * 0.001;
-            if((first_fix)&&(tttt > 1000)&&((nvo_tempo - ult_tempo) >= 1.0))
+            if((first_fix)&&(((abs(tttt-1000)< 0.001))&&((nvo_tempo - ult_tempo) >= 1.0)))
             // if ((first_fix) && (((current_RX_time_ms % 1000) == 0) && ((nvo_tempo - ult_tempo) >= 1.0)))//&& (tttt>1000))
                 {
                     deltinha = tttt - 1000.0;
@@ -2218,7 +2218,7 @@ void rtklib_pvt_gs::serialcmd_(void)
                     int sended_PVT = write(comms.fd, &msgVec[0], jdex); ccontmsg++; 
 
                     std::cout << TEXT_BOLD_GREEN << "N_Sat: " << num_sat << " Bytes: " << sended_PVT <<" Contador: "<<ccontmsg<<" Time: " << tttt 
-                    << " Current_time_rx: " << nvo_tempo <<" PRN: "<<gps_ephem.begin()->second.PRN<<" af: "<<gps_ephem.begin()->second.af1<<" "<<gps_ephem.begin()->second.af2<< TEXT_RESET << "\n";
+                    << " Current_time_rx: " << nvo_tempo << TEXT_RESET << "\n";
                     // sended_PVT= 0;
                     // auto tStartSteadyy = std::chrono::high_resolution_clock::now();
                     // for(int i = 0; i<(tam+6+56); i++)

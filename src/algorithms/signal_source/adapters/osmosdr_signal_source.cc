@@ -25,6 +25,9 @@
 #include <gnuradio/blocks/file_sink.h>
 #include <iostream>
 
+// Caio
+#include "display.h"
+// #include "frontend.h"
 
 using namespace std::string_literals;
 
@@ -140,6 +143,11 @@ OsmosdrSignalSource::OsmosdrSignalSource(const ConfigurationInterface* configura
             valve_ = gnss_sdr_make_valve(item_size_, samples_, queue);
             // DLOG(INFO) << "valve(" << valve_->unique_id() << ")";
         }
+    // else
+    //     {
+    //         std::cout<< TEXT_BOLD_RED <<"Caio Debug: No samples Acquired...\n"<<TEXT_RESET;
+    //         // frontend_HARD_rst();
+    //     }
 
     if (dump_)
         {

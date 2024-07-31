@@ -158,12 +158,14 @@ target_link_libraries(signal_source_adapters
         Boost::headers
         Gnuradio::blocks
         signal_source_gr_blocks
+
     PRIVATE
         algorithms_libs
         gnss_sdr_flags
         core_system_parameters
         Glog::glog
         Volk::volk
+        caio-mod
 )
 
 if(GNURADIO_USES_STD_POINTERS)
