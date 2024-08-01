@@ -2006,29 +2006,29 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
 
                                 msgReady = true;
                             }
-                        else
-                            {
-                                if (msgVec[0] != 0)
-                                    {
-                                        msgReady = false;
-                                        mtx.lock();
-                                        for (int i = 0; i < (tam + 6 + 56); i += 10)
-                                            {
-                                                // msgVec[i]=0;
-                                                msgVec[i + 0] = 0;
-                                                msgVec[i + 1] = 0;
-                                                msgVec[i + 2] = 0;
-                                                msgVec[i + 3] = 0;
-                                                msgVec[i + 4] = 0;
-                                                msgVec[i + 5] = 0;
-                                                msgVec[i + 6] = 0;
-                                                msgVec[i + 7] = 0;
-                                                msgVec[i + 8] = 0;
-                                                msgVec[i + 9] = 0;
-                                            }
-                                        mtx.unlock();
-                                    }
-                            }
+                        // else
+                        //     {
+                        //         if (msgVec[0] != 0)
+                        //             {
+                        //                 msgReady = false;
+                        //                 mtx.lock();
+                        //                 for (int i = 0; i < (tam + 6 + 56); i += 10)
+                        //                     {
+                        //                         // msgVec[i]=0;
+                        //                         msgVec[i + 0] = 0;
+                        //                         msgVec[i + 1] = 0;
+                        //                         msgVec[i + 2] = 0;
+                        //                         msgVec[i + 3] = 0;
+                        //                         msgVec[i + 4] = 0;
+                        //                         msgVec[i + 5] = 0;
+                        //                         msgVec[i + 6] = 0;
+                        //                         msgVec[i + 7] = 0;
+                        //                         msgVec[i + 8] = 0;
+                        //                         msgVec[i + 9] = 0;
+                        //                     }
+                        //                 mtx.unlock();
+                        //             }
+                        //     }
 
                     // DEBUG MESSAGE: Display position in console output
                     // if (d_user_pvt_solver->is_valid_position() && flag_display_pvt)
@@ -2089,8 +2089,9 @@ void rtklib_pvt_gs::serialcmd_(void)
     auto tStartSteady = std::chrono::high_resolution_clock::now();
     auto tEndSteady = std::chrono::high_resolution_clock::now();
     // auto StartTime = tStartSteady;
-    double ult_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms * 0.001;  //*1000;
+    // double ult_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms * 0.001;  //*1000;
     // double ult_tempo = current_RX_time_ms*0.001;
+    double ult_tempo=0.0f;
     double nvo_tempo;
     double tttt;
     int ccontmsg = 0;
@@ -2129,12 +2130,13 @@ void rtklib_pvt_gs::serialcmd_(void)
             // if((first_fix)&&((nvo_tempo-ult_tempo) > 1.0))
             // if((first_fix)&&((current_RX_time_ms%d_output_rate_ms)==0)&&(testeee>=1.0))
             // nvo_tempo = current_RX_time_ms*0.001;
-            nvo_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms * 0.001;
+            // nvo_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms * 0.001;
+            nvo_tempo = d_rx_time;
             if((first_fix)&&(tttt>1000)&&((nvo_tempo - ult_tempo) >= 1.0))
             // if ((first_fix) && (((current_RX_time_ms % 1000) == 0) && ((nvo_tempo - ult_tempo) >= 1.0)))//&& (tttt>1000))
                 {
                     deltinha = tttt - 1000.0;
-                    tStartSteady = std::chrono::system_clock::now();
+                    tStartSteady = std::chrono::high_resolution_clock::now();
                     // num_sat = jdex;
                     // double llastrx = last_RX_time;
                     // ult_tempo = ult_tempo*0.001;
@@ -2215,10 +2217,11 @@ void rtklib_pvt_gs::serialcmd_(void)
                     // msgVec[index + 58] = checks;
 
                     // int sended_PVT = write(comms.fd, &msgVec[0], tam + 3 + 3 + 56);
-                    int sended_PVT = write(comms.fd, &msgVec[0], jdex); ccontmsg++; 
+                    int sended_PVT = write(comms.fd, &msgVec[0], jdex);
+                    ccontmsg++; 
 
-                    std::cout << TEXT_BOLD_GREEN << "N_Sat: " << num_sat << " Bytes: " << sended_PVT <<" Contador: "<<ccontmsg<<" Time: " << tttt 
-                    << " Current_time_rx: " << nvo_tempo <<" d_rx_time: "<<d_rx_time<< TEXT_RESET << "\n";
+                    // std::cout << TEXT_BOLD_GREEN << "N_Sat: " << num_sat << " Bytes: " << sended_PVT <<" Contador: "<<ccontmsg<<" Time: " << tttt 
+                    // << " Current_time_rx: " << nvo_tempo <<" d_rx_time: "<<d_rx_time<< TEXT_RESET << "\n";
                     // sended_PVT= 0;
                     // auto tStartSteadyy = std::chrono::high_resolution_clock::now();
                     // for(int i = 0; i<(tam+6+56); i++)
@@ -2247,15 +2250,11 @@ void rtklib_pvt_gs::serialcmd_(void)
                     // gps_ephem.clear();
                     // }
                 }
-            // else if (tttt>=2000)
-            //     {
-                    // tStartSteady = std::chrono::system_clock::now();
-                    //  deltinha = tttt-1000.0;
-            //         tStartSteady = std::chrono::system_clock::now();
-            //         ult_tempo = nvo_tempo;
-                // }
-                // else{}
-        }  //}
-    // }
-    //
+            else if (tttt>=1500)
+                {
+                    tStartSteady = std::chrono::system_clock::now();
+                }
+                else{}
+        }
+
 }
