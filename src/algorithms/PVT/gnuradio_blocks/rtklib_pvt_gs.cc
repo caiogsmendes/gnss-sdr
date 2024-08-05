@@ -2279,14 +2279,14 @@ void rtklib_pvt_gs::serialcmd_(void)
 
             nvoo_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms * 0.001;
             nvo_tempo = d_rx_time;
-            if ((first_fix) && (tttt >= 1000) && ((nvo_tempo-ult_tempo)>=1.0))  //&&((nvo_tempo - ult_tempo) >= 1.0))
+            if ((first_fix) && (tttt >= 1000) && ((nvoo_tempo-ult_tempo)>=1.0))  //&&((nvo_tempo - ult_tempo) >= 1.0))
             // if ((first_fix) && (((current_RX_time_ms % 1000) == 0) && ((nvo_tempo - ult_tempo) >= 1.0)))//&& (tttt>1000))
                 {
                     int sended_PVT = write(comms.fd, &msgVec[0], jdex);
                     ccontmsg++;
                     deltinha = tttt - 1000.0;
                     tStartSteady = std::chrono::high_resolution_clock::now();
-                    ult_tempo = nvo_tempo;
+                    ult_tempo = nvoo_tempo;
                     std::cout << TEXT_BOLD_GREEN <</*"SolType: "<<d_user_pvt_solver->SoluType<<*/ " N_Sat: " << num_sat << " Bytes: " << sended_PVT <<" Contador: "<<ccontmsg<<" Time: " << tttt 
                     << " Current_time_rx: " << nvoo_tempo <<" d_rx_time: "<<d_rx_time<< TEXT_RESET << "\n";
                 }
