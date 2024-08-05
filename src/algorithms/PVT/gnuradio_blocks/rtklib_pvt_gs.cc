@@ -2279,7 +2279,7 @@ void rtklib_pvt_gs::serialcmd_(void)
 
             nvoo_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms * 0.001;
             nvo_tempo = d_rx_time;
-            if ((first_fix) && (tttt >= 1000) && ((nvoo_tempo-ult_tempo)>=1.0))  //&&((nvo_tempo - ult_tempo) >= 1.0))
+            if ((first_fix) && (tttt >= 1000))  //&&((nvo_tempo - ult_tempo) >= 1.0))
             // if ((first_fix) && (((current_RX_time_ms % 1000) == 0) && ((nvo_tempo - ult_tempo) >= 1.0)))//&& (tttt>1000))
                 {
                     int sended_PVT = write(comms.fd, &msgVec[0], jdex);
