@@ -9,34 +9,34 @@ protobuf_generate_cpp(PROTO_SRCS2 PROTO_HDRS2 ${GNSSSDR_SOURCE_DIR}/docs/protobu
 protobuf_generate_cpp(PROTO_SRCS3 PROTO_HDRS3 ${GNSSSDR_SOURCE_DIR}/docs/protobuf/galileo_ephemeris.proto)
 
 set(PVT_LIB_SOURCES
-    an_packet_printer.cc
+    # an_packet_printer.cc
     pvt_solution.cc
-    geojson_printer.cc
-    gpx_printer.cc
-    kml_printer.cc
-    nmea_printer.cc
-    rinex_printer.cc
-    rtcm_printer.cc
-    rtcm.cc
+    # geojson_printer.cc
+    # gpx_printer.cc
+    # kml_printer.cc
+    # nmea_printer.cc
+    # rinex_printer.cc
+    # rtcm_printer.cc
+    # rtcm.cc
     rtklib_solver.cc
     monitor_pvt_udp_sink.cc
     monitor_ephemeris_udp_sink.cc
-    has_simple_printer.cc
+    # has_simple_printer.cc
     geohash.cc
     HEtechSerial.cc
 )
 
 set(PVT_LIB_HEADERS
-    an_packet_printer.h
+    # an_packet_printer.h
     pvt_conf.h
     pvt_solution.h
-    geojson_printer.h
-    gpx_printer.h
-    kml_printer.h
-    nmea_printer.h
-    rinex_printer.h
-    rtcm_printer.h
-    rtcm.h
+    # geojson_printer.h
+    # gpx_printer.h
+    # kml_printer.h
+    # nmea_printer.h
+    # rinex_printer.h
+    # rtcm_printer.h
+    # rtcm.h
     rtklib_solver.h
     monitor_pvt_udp_sink.h
     monitor_pvt.h
@@ -44,7 +44,7 @@ set(PVT_LIB_HEADERS
     serdes_galileo_eph.h
     serdes_gps_eph.h
     monitor_ephemeris_udp_sink.h
-    has_simple_printer.h
+    # has_simple_printer.h
     geohash.h
     HEtechSerial.h
 )

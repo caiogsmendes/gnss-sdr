@@ -53,9 +53,9 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
     Pvt_Conf pvt_output_parameters = Pvt_Conf();
     // dump parameters
     const std::string default_dump_filename("./pvt.dat");
-    const std::string default_nmea_dump_filename("./nmea_pvt.nmea");
-    const std::string default_nmea_dump_devname("/dev/tty1");
-    const std::string default_rtcm_dump_devname("/dev/pts/1");
+    // const std::string default_nmea_dump_filename("./nmea_pvt.nmea");
+    // const std::string default_nmea_dump_devname("/dev/tty1");
+    // const std::string default_rtcm_dump_devname("/dev/pts/1");
     const std::string default_dev_serial("/dev/ttyLP2");
     // DLOG(INFO) << "role " << role;
     pvt_output_parameters.dump = configuration->property(role + ".dump", false);
@@ -80,9 +80,9 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
     pvt_output_parameters.display_rate_ms = bc::lcm(pvt_output_parameters.output_rate_ms, configuration->property(role + ".display_rate_ms", 500));
 
     // NMEA Printer settings
-    pvt_output_parameters.flag_nmea_tty_port = configuration->property(role + ".flag_nmea_tty_port", false);
-    pvt_output_parameters.nmea_dump_filename = configuration->property(role + ".nmea_dump_filename", default_nmea_dump_filename);
-    pvt_output_parameters.nmea_dump_devname = configuration->property(role + ".nmea_dump_devname", default_nmea_dump_devname);
+    // pvt_output_parameters.flag_nmea_tty_port = configuration->property(role + ".flag_nmea_tty_port", false);
+    // pvt_output_parameters.nmea_dump_filename = configuration->property(role + ".nmea_dump_filename", default_nmea_dump_filename);
+    // pvt_output_parameters.nmea_dump_devname = configuration->property(role + ".nmea_dump_devname", default_nmea_dump_devname);
 
     // RINEX version
     pvt_output_parameters.rinex_version = configuration->property(role + ".rinex_version", 3);
@@ -101,66 +101,66 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
             pvt_output_parameters.rinex_name = FLAGS_RINEX_name;
         }
 
-    // RTCM Printer settings
-    pvt_output_parameters.flag_rtcm_tty_port = configuration->property(role + ".flag_rtcm_tty_port", false);
-    pvt_output_parameters.rtcm_dump_devname = configuration->property(role + ".rtcm_dump_devname", default_rtcm_dump_devname);
-    pvt_output_parameters.flag_rtcm_server = configuration->property(role + ".flag_rtcm_server", false);
-    pvt_output_parameters.rtcm_tcp_port = configuration->property(role + ".rtcm_tcp_port", 2101);
-    pvt_output_parameters.rtcm_station_id = configuration->property(role + ".rtcm_station_id", 1234);
-    // RTCM message rates: least common multiple with output_rate_ms
-    const int rtcm_MT1019_rate_ms = bc::lcm(configuration->property(role + ".rtcm_MT1019_rate_ms", 5000), pvt_output_parameters.output_rate_ms);
-    const int rtcm_MT1020_rate_ms = bc::lcm(configuration->property(role + ".rtcm_MT1020_rate_ms", 5000), pvt_output_parameters.output_rate_ms);
-    const int rtcm_MT1045_rate_ms = bc::lcm(configuration->property(role + ".rtcm_MT1045_rate_ms", 5000), pvt_output_parameters.output_rate_ms);
-    const int rtcm_MSM_rate_ms = bc::lcm(configuration->property(role + ".rtcm_MSM_rate_ms", 1000), pvt_output_parameters.output_rate_ms);
-    const int rtcm_MT1077_rate_ms = bc::lcm(configuration->property(role + ".rtcm_MT1077_rate_ms", rtcm_MSM_rate_ms), pvt_output_parameters.output_rate_ms);
-    const int rtcm_MT1087_rate_ms = bc::lcm(configuration->property(role + ".rtcm_MT1087_rate_ms", rtcm_MSM_rate_ms), pvt_output_parameters.output_rate_ms);
-    const int rtcm_MT1097_rate_ms = bc::lcm(configuration->property(role + ".rtcm_MT1097_rate_ms", rtcm_MSM_rate_ms), pvt_output_parameters.output_rate_ms);
+    // // RTCM Printer settings
+    // pvt_output_parameters.flag_rtcm_tty_port = configuration->property(role + ".flag_rtcm_tty_port", false);
+    // pvt_output_parameters.rtcm_dump_devname = configuration->property(role + ".rtcm_dump_devname", default_rtcm_dump_devname);
+    // pvt_output_parameters.flag_rtcm_server = configuration->property(role + ".flag_rtcm_server", false);
+    // pvt_output_parameters.rtcm_tcp_port = configuration->property(role + ".rtcm_tcp_port", 2101);
+    // pvt_output_parameters.rtcm_station_id = configuration->property(role + ".rtcm_station_id", 1234);
+    // // RTCM message rates: least common multiple with output_rate_ms
+    // const int rtcm_MT1019_rate_ms = bc::lcm(configuration->property(role + ".rtcm_MT1019_rate_ms", 5000), pvt_output_parameters.output_rate_ms);
+    // const int rtcm_MT1020_rate_ms = bc::lcm(configuration->property(role + ".rtcm_MT1020_rate_ms", 5000), pvt_output_parameters.output_rate_ms);
+    // const int rtcm_MT1045_rate_ms = bc::lcm(configuration->property(role + ".rtcm_MT1045_rate_ms", 5000), pvt_output_parameters.output_rate_ms);
+    // const int rtcm_MSM_rate_ms = bc::lcm(configuration->property(role + ".rtcm_MSM_rate_ms", 1000), pvt_output_parameters.output_rate_ms);
+    // const int rtcm_MT1077_rate_ms = bc::lcm(configuration->property(role + ".rtcm_MT1077_rate_ms", rtcm_MSM_rate_ms), pvt_output_parameters.output_rate_ms);
+    // const int rtcm_MT1087_rate_ms = bc::lcm(configuration->property(role + ".rtcm_MT1087_rate_ms", rtcm_MSM_rate_ms), pvt_output_parameters.output_rate_ms);
+    // const int rtcm_MT1097_rate_ms = bc::lcm(configuration->property(role + ".rtcm_MT1097_rate_ms", rtcm_MSM_rate_ms), pvt_output_parameters.output_rate_ms);
 
-    pvt_output_parameters.rtcm_msg_rate_ms[1019] = rtcm_MT1019_rate_ms;
-    pvt_output_parameters.rtcm_msg_rate_ms[1020] = rtcm_MT1020_rate_ms;
-    pvt_output_parameters.rtcm_msg_rate_ms[1045] = rtcm_MT1045_rate_ms;
-    for (int k = 1071; k < 1078; k++)  // All GPS MSM
-        {
-            pvt_output_parameters.rtcm_msg_rate_ms[k] = rtcm_MT1077_rate_ms;
-        }
-    for (int k = 1081; k < 1088; k++)  // All GLONASS MSM
-        {
-            pvt_output_parameters.rtcm_msg_rate_ms[k] = rtcm_MT1087_rate_ms;
-        }
-    for (int k = 1091; k < 1098; k++)  // All Galileo MSM
-        {
-            pvt_output_parameters.rtcm_msg_rate_ms[k] = rtcm_MT1097_rate_ms;
-        }
+    // pvt_output_parameters.rtcm_msg_rate_ms[1019] = rtcm_MT1019_rate_ms;
+    // pvt_output_parameters.rtcm_msg_rate_ms[1020] = rtcm_MT1020_rate_ms;
+    // pvt_output_parameters.rtcm_msg_rate_ms[1045] = rtcm_MT1045_rate_ms;
+    // for (int k = 1071; k < 1078; k++)  // All GPS MSM
+    //     {
+    //         pvt_output_parameters.rtcm_msg_rate_ms[k] = rtcm_MT1077_rate_ms;
+    //     }
+    // for (int k = 1081; k < 1088; k++)  // All GLONASS MSM
+    //     {
+    //         pvt_output_parameters.rtcm_msg_rate_ms[k] = rtcm_MT1087_rate_ms;
+    //     }
+    // for (int k = 1091; k < 1098; k++)  // All Galileo MSM
+    //     {
+    //         pvt_output_parameters.rtcm_msg_rate_ms[k] = rtcm_MT1097_rate_ms;
+    //     }
 
     // Advanced Nativation Protocol Printer settings
-    pvt_output_parameters.an_output_enabled = configuration->property(role + ".an_output_enabled", pvt_output_parameters.an_output_enabled);
-    pvt_output_parameters.an_dump_devname = configuration->property(role + ".an_dump_devname", default_nmea_dump_devname);
-    if (pvt_output_parameters.an_output_enabled && pvt_output_parameters.flag_nmea_tty_port)
-        {
-            if (pvt_output_parameters.nmea_dump_devname == pvt_output_parameters.an_dump_devname)
-                {
-                    std::cerr << "Warning: NMEA an Advanced Nativation printers set to write to the same serial port.\n"
-                              << "Please make sure that PVT.an_dump_devname and PVT.an_dump_devname are different.\n"
-                              << "Shutting down the NMEA serial output.\n";
-                    pvt_output_parameters.flag_nmea_tty_port = false;
-                }
-        }
-    if (pvt_output_parameters.an_output_enabled && pvt_output_parameters.flag_rtcm_tty_port)
-        {
-            if (pvt_output_parameters.rtcm_dump_devname == pvt_output_parameters.an_dump_devname)
-                {
-                    std::cerr << "Warning: RTCM an Advanced Nativation printers set to write to the same serial port.\n"
-                              << "Please make sure that PVT.an_dump_devname and .rtcm_dump_devname are different.\n"
-                              << "Shutting down the RTCM serial output.\n";
-                    pvt_output_parameters.flag_rtcm_tty_port = false;
-                }
-        }
+    // pvt_output_parameters.an_output_enabled = configuration->property(role + ".an_output_enabled", pvt_output_parameters.an_output_enabled);
+    // pvt_output_parameters.an_dump_devname = configuration->property(role + ".an_dump_devname", default_nmea_dump_devname);
+    // if (pvt_output_parameters.an_output_enabled && pvt_output_parameters.flag_nmea_tty_port)
+    //     {
+    //         if (pvt_output_parameters.nmea_dump_devname == pvt_output_parameters.an_dump_devname)
+    //             {
+    //                 std::cerr << "Warning: NMEA an Advanced Nativation printers set to write to the same serial port.\n"
+    //                           << "Please make sure that PVT.an_dump_devname and PVT.an_dump_devname are different.\n"
+    //                           << "Shutting down the NMEA serial output.\n";
+    //                 pvt_output_parameters.flag_nmea_tty_port = false;
+    //             }
+    //     }
+    // if (pvt_output_parameters.an_output_enabled && pvt_output_parameters.flag_rtcm_tty_port)
+    //     {
+    //         if (pvt_output_parameters.rtcm_dump_devname == pvt_output_parameters.an_dump_devname)
+    //             {
+    //                 std::cerr << "Warning: RTCM an Advanced Nativation printers set to write to the same serial port.\n"
+    //                           << "Please make sure that PVT.an_dump_devname and .rtcm_dump_devname are different.\n"
+    //                           << "Shutting down the RTCM serial output.\n";
+    //                 pvt_output_parameters.flag_rtcm_tty_port = false;
+    //             }
+    //     }
 
-    pvt_output_parameters.kml_rate_ms = bc::lcm(configuration->property(role + ".kml_rate_ms", pvt_output_parameters.kml_rate_ms), pvt_output_parameters.output_rate_ms);
-    pvt_output_parameters.gpx_rate_ms = bc::lcm(configuration->property(role + ".gpx_rate_ms", pvt_output_parameters.gpx_rate_ms), pvt_output_parameters.output_rate_ms);
-    pvt_output_parameters.geojson_rate_ms = bc::lcm(configuration->property(role + ".geojson_rate_ms", pvt_output_parameters.geojson_rate_ms), pvt_output_parameters.output_rate_ms);
-    pvt_output_parameters.nmea_rate_ms = bc::lcm(configuration->property(role + ".nmea_rate_ms", pvt_output_parameters.nmea_rate_ms), pvt_output_parameters.output_rate_ms);
-    pvt_output_parameters.an_rate_ms = configuration->property(role + ".an_rate_ms", pvt_output_parameters.an_rate_ms);
+    // pvt_output_parameters.kml_rate_ms = bc::lcm(configuration->property(role + ".kml_rate_ms", pvt_output_parameters.kml_rate_ms), pvt_output_parameters.output_rate_ms);
+    // pvt_output_parameters.gpx_rate_ms = bc::lcm(configuration->property(role + ".gpx_rate_ms", pvt_output_parameters.gpx_rate_ms), pvt_output_parameters.output_rate_ms);
+    // pvt_output_parameters.geojson_rate_ms = bc::lcm(configuration->property(role + ".geojson_rate_ms", pvt_output_parameters.geojson_rate_ms), pvt_output_parameters.output_rate_ms);
+    // pvt_output_parameters.nmea_rate_ms = bc::lcm(configuration->property(role + ".nmea_rate_ms", pvt_output_parameters.nmea_rate_ms), pvt_output_parameters.output_rate_ms);
+    // pvt_output_parameters.an_rate_ms = configuration->property(role + ".an_rate_ms", pvt_output_parameters.an_rate_ms);
 
     // Infer the type of receiver
     /*
@@ -840,23 +840,23 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
     // Outputs
     const bool default_output_enabled = configuration->property(role + ".output_enabled", true);
     pvt_output_parameters.output_enabled = default_output_enabled;
-    pvt_output_parameters.rinex_output_enabled = configuration->property(role + ".rinex_output_enabled", default_output_enabled);
-    pvt_output_parameters.gpx_output_enabled = configuration->property(role + ".gpx_output_enabled", default_output_enabled);
-    pvt_output_parameters.geojson_output_enabled = configuration->property(role + ".geojson_output_enabled", default_output_enabled);
-    pvt_output_parameters.kml_output_enabled = configuration->property(role + ".kml_output_enabled", default_output_enabled);
-    pvt_output_parameters.xml_output_enabled = configuration->property(role + ".xml_output_enabled", default_output_enabled);
-    pvt_output_parameters.nmea_output_file_enabled = configuration->property(role + ".nmea_output_file_enabled", default_output_enabled);
-    pvt_output_parameters.rtcm_output_file_enabled = configuration->property(role + ".rtcm_output_file_enabled", false);
+    // pvt_output_parameters.rinex_output_enabled = configuration->property(role + ".rinex_output_enabled", default_output_enabled);
+    // pvt_output_parameters.gpx_output_enabled = configuration->property(role + ".gpx_output_enabled", default_output_enabled);
+    // pvt_output_parameters.geojson_output_enabled = configuration->property(role + ".geojson_output_enabled", default_output_enabled);
+    // pvt_output_parameters.kml_output_enabled = configuration->property(role + ".kml_output_enabled", default_output_enabled);
+    // pvt_output_parameters.xml_output_enabled = configuration->property(role + ".xml_output_enabled", default_output_enabled);
+    // pvt_output_parameters.nmea_output_file_enabled = configuration->property(role + ".nmea_output_file_enabled", default_output_enabled);
+    // pvt_output_parameters.rtcm_output_file_enabled = configuration->property(role + ".rtcm_output_file_enabled", false);
 
     const std::string default_output_path = configuration->property(role + ".output_path", std::string("."));
     pvt_output_parameters.output_path = default_output_path;
-    pvt_output_parameters.rinex_output_path = configuration->property(role + ".rinex_output_path", default_output_path);
-    pvt_output_parameters.gpx_output_path = configuration->property(role + ".gpx_output_path", default_output_path);
-    pvt_output_parameters.geojson_output_path = configuration->property(role + ".geojson_output_path", default_output_path);
-    pvt_output_parameters.kml_output_path = configuration->property(role + ".kml_output_path", default_output_path);
-    pvt_output_parameters.xml_output_path = configuration->property(role + ".xml_output_path", default_output_path);
-    pvt_output_parameters.nmea_output_file_path = configuration->property(role + ".nmea_output_file_path", default_output_path);
-    pvt_output_parameters.rtcm_output_file_path = configuration->property(role + ".rtcm_output_file_path", default_output_path);
+    // pvt_output_parameters.rinex_output_path = configuration->property(role + ".rinex_output_path", default_output_path);
+    // pvt_output_parameters.gpx_output_path = configuration->property(role + ".gpx_output_path", default_output_path);
+    // pvt_output_parameters.geojson_output_path = configuration->property(role + ".geojson_output_path", default_output_path);
+    // pvt_output_parameters.kml_output_path = configuration->property(role + ".kml_output_path", default_output_path);
+    // pvt_output_parameters.xml_output_path = configuration->property(role + ".xml_output_path", default_output_path);
+    // pvt_output_parameters.nmea_output_file_path = configuration->property(role + ".nmea_output_file_path", default_output_path);
+    // pvt_output_parameters.rtcm_output_file_path = configuration->property(role + ".rtcm_output_file_path", default_output_path);
 
     // Read PVT MONITOR Configuration
     pvt_output_parameters.monitor_enabled = configuration->property(role + ".enable_monitor", false);

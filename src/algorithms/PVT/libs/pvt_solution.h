@@ -71,10 +71,17 @@ public:
     bool is_valid_position() const;
     bool is_averaging() const;
 
+    //Caio
+    unsigned char get_Solu_type(unsigned char) const;
+    unsigned char SoluType{0};
+    //
+
     virtual double get_hdop() const = 0;
     virtual double get_vdop() const = 0;
     virtual double get_pdop() const = 0;
     virtual double get_gdop() const = 0;
+
+
 
 private:
     /*
@@ -120,6 +127,8 @@ private:
     bool d_pre_2009_file{false};  // Flag to correct week rollover in post processing mode for signals older than 2009
     bool d_valid_position{false};
     bool d_flag_averaging{false};
+
+    
 };
 
 

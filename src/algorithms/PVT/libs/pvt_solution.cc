@@ -294,3 +294,8 @@ bool Pvt_Solution::is_pre_2009() const
 {
     return d_pre_2009_file;
 }
+
+unsigned char Pvt_Solution::get_Solu_type(unsigned char type) const
+{
+    return type;
+}
