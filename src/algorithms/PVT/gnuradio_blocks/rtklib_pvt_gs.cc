@@ -2143,7 +2143,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                 index++;
                                 // int sendedEphem = write(comms.fd, &msgVec[0], tam + 3);
                                 // int sended = serial4send(&msgVec[0], &tam);
-
+                                double auxxx = (uint32_t)d_rx_time;
                                 msgVec[index + 0] = 0xd4;
                                 msgVec[index + 1] = 0x4f;
                                 Double2HexAlt(&msgVec[index + 2], &rx_pos[0]);
@@ -2153,7 +2153,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                 Double2HexAlt(&msgVec[index + 34], &rx_vel[1]);
                                 Double2HexAlt(&msgVec[index + 42], &rx_vel[2]);
                                 // Double2HexAlt(&msgVec[index + 50], &last_RX_time);
-                                Double2HexAlt(&msgVec[index+50], &d_rx_time);
+                                Double2HexAlt(&msgVec[index+50], &auxxx);
                                 checks = 0;
                                 for (int i = index + 0; i < index + 58; i++)
                                     {
