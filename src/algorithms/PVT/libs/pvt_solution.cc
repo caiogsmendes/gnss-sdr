@@ -253,6 +253,10 @@ void Pvt_Solution::set_rx_vel(const std::array<double, 3> &vel)
     d_rx_vel = vel;
 }
 
+gtime_t Pvt_Solution::get_pvtsol_time(gtime_t time)
+{
+    d_pvt_sol_time = time;
+}
 
 std::array<double, 3> Pvt_Solution::get_rx_vel() const
 {

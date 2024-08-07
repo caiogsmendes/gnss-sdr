@@ -1394,6 +1394,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
 {
 
     // Caio
+    double timepvt;
     // std::ofstream fileRx("RxX_sampled_EPHEM_.txt", std::ios::out | std::ios::app);
     // std::ofstream filePosRecp("RxX_sampled_PVT.txt", std::ios::out | std::ios::app);
     // std::ofstream fileRxx("Rx_sampled_EPHEM_transmit_time.txt", std::ios::out | std::ios::app);
@@ -1814,6 +1815,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                             {
                                 jdex = 0;
                                 rx_pos = d_user_pvt_solver->get_rx_pos();
+                                timepvt = d_user_pvt_solver->d_pvt_sol_time.time;
                                 rx_vel = d_user_pvt_solver->get_rx_vel();
                                 double rx_clk_deslize{0};
                                 gps_ephem = d_internal_pvt_solver->gps_ephemeris_map;
@@ -1902,7 +1904,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                                         satVelX = x.second.satvel_X;
                                                                         satVelY = x.second.satvel_Y;
                                                                         satVelZ = x.second.satvel_Z;
-                                                                        // last_RX_time = y.second.TOW_at_current_symbol_ms * 0.001;
+                                                                        last_RX_time = y.second.TOW_at_current_symbol_ms * 0.001;
                                                                         // last_RX_time = y.second.RX_time;
                                                                         double m1, m2, m3;
 
@@ -2047,7 +2049,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                                         satVelX = x.second.satvel_X;
                                                                         satVelY = x.second.satvel_Y;
                                                                         satVelZ = x.second.satvel_Z;
-                                                                        // last_RX_time = y.second.TOW_at_current_symbol_ms * 0.001;
+                                                                        last_RX_time = y.second.TOW_at_current_symbol_ms * 0.001;
                                                                         // last_RX_time = y.second.RX_time;
                                                                         double m1, m2, m3;
 
@@ -2143,7 +2145,8 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                 index++;
                                 // int sendedEphem = write(comms.fd, &msgVec[0], tam + 3);
                                 // int sended = serial4send(&msgVec[0], &tam);
-                                double auxxx = (uint32_t)d_rx_time;
+                                // double auxxx = (uint32_t)d_rx_time;
+                                last_RX_time = round(last_RX_time);
                                 msgVec[index + 0] = 0xd4;
                                 msgVec[index + 1] = 0x4f;
                                 Double2HexAlt(&msgVec[index + 2], &rx_pos[0]);
@@ -2152,8 +2155,8 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                 Double2HexAlt(&msgVec[index + 26], &rx_vel[0]);
                                 Double2HexAlt(&msgVec[index + 34], &rx_vel[1]);
                                 Double2HexAlt(&msgVec[index + 42], &rx_vel[2]);
-                                // Double2HexAlt(&msgVec[index + 50], &last_RX_time);
-                                Double2HexAlt(&msgVec[index+50], &auxxx);
+                                Double2HexAlt(&msgVec[index + 50], &last_RX_time);
+                                // Double2HexAlt(&msgVec[index+50], &auxxx);
                                 checks = 0;
                                 for (int i = index + 0; i < index + 58; i++)
                                     {
@@ -2177,6 +2180,8 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                 */
 
                                 msgReady = true;
+                                // gtime_t gg = d_user_pvt_solver->d_pvt_sol_time; gg.time-=10800;
+                                // std::cout<<TEXT_BOLD_CYAN<<"Local Time : "<<std::put_time(std::gmtime(&gg.time), "%c %Z")<<" GPST: "<<gg.time<<TEXT_RESET<<"\n";
                             }
                         // else
                         //     {
@@ -2261,9 +2266,9 @@ void rtklib_pvt_gs::serialcmd_(void)
     auto tStartSteady = std::chrono::high_resolution_clock::now();
     auto tEndSteady = std::chrono::high_resolution_clock::now();
     // auto StartTime = tStartSteady;
-    // double ult_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms * 0.001;  //*1000;
+    double ult_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms * 0.001;  //*1000;
     // double ult_tempo = current_RX_time_ms*0.001;
-    double ult_tempo=0.0f;
+    // double ult_tempo=0.0f;
     double nvo_tempo;
     double nvoo_tempo;
     double tttt;
@@ -2278,8 +2283,8 @@ void rtklib_pvt_gs::serialcmd_(void)
             tttt = tempo_ligado_ms.count()-deltinha;
 
             nvoo_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms * 0.001;
-            nvo_tempo = d_rx_time;
-            if ((first_fix) && (tttt >= 1000))  //&&((nvo_tempo - ult_tempo) >= 1.0))
+            // nvo_tempo = d_rx_time;
+            if ((first_fix) && /*(tttt >= 1000) &&*/ ((round(nvoo_tempo - ult_tempo) >= 1.0)))
             // if ((first_fix) && (((current_RX_time_ms % 1000) == 0) && ((nvo_tempo - ult_tempo) >= 1.0)))//&& (tttt>1000))
                 {
                     int sended_PVT = write(comms.fd, &msgVec[0], jdex);
@@ -2288,7 +2293,7 @@ void rtklib_pvt_gs::serialcmd_(void)
                     tStartSteady = std::chrono::high_resolution_clock::now();
                     ult_tempo = nvoo_tempo;
                     std::cout << TEXT_BOLD_GREEN <</*"SolType: "<<d_user_pvt_solver->SoluType<<*/ " N_Sat: " << num_sat << " Bytes: " << sended_PVT <<" Contador: "<<ccontmsg<<" Time: " << tttt 
-                    << " Current_time_rx: " << nvoo_tempo <<" d_rx_time: "<<d_rx_time<< TEXT_RESET << "\n";
+                    << " last_Rx_time: " << last_RX_time <<" d_rx_time: "<<d_rx_time<< TEXT_RESET << "\n";
                 }
             else if (tttt>=1100)
                 {
