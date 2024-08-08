@@ -21,7 +21,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <array>
 #include <deque>
-#include "rtklib.h"
+// #include "rtklib.h"
 
 /** \addtogroup PVT
  * \{ */
@@ -75,8 +75,8 @@ public:
     //Caio
     unsigned char get_Solu_type(unsigned char) const;
     unsigned char SoluType{0};
-    gtime_t get_pvtsol_time(gtime_t time);
-    gtime_t d_pvt_sol_time;
+    // gtime_t get_pvtsol_time(gtime_t time);
+    // gtime_t d_pvt_sol_time;
     //
 
     virtual double get_hdop() const = 0;

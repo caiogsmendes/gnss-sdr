@@ -1394,7 +1394,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
 {
 
     // Caio
-    double timepvt;
+    // double timepvt;
     // std::ofstream fileRx("RxX_sampled_EPHEM_.txt", std::ios::out | std::ios::app);
     // std::ofstream filePosRecp("RxX_sampled_PVT.txt", std::ios::out | std::ios::app);
     // std::ofstream fileRxx("Rx_sampled_EPHEM_transmit_time.txt", std::ios::out | std::ios::app);
@@ -1808,14 +1808,13 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                         }
                                 }
                         }
-
                         d_internal_pvt_solver->gnss_observables_map = d_gnss_observables_map;
                         // num_sat = d_user_pvt_solver->get_num_valid_observations();
                         if (d_user_pvt_solver->is_valid_position()&&flag_pvt_valid)
                             {
                                 jdex = 0;
                                 rx_pos = d_user_pvt_solver->get_rx_pos();
-                                timepvt = d_user_pvt_solver->d_pvt_sol_time.time;
+                                // timepvt = d_user_pvt_solver->d_pvt_sol_time.time;
                                 rx_vel = d_user_pvt_solver->get_rx_vel();
                                 double rx_clk_deslize{0};
                                 gps_ephem = d_internal_pvt_solver->gps_ephemeris_map;
@@ -1823,6 +1822,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                 last_RX_time = sync_map.begin()->second.RX_time;
                                 // if (!flag_interrupt_serial)
                                 //     {
+                                // std::map<int, Gps_CNAV_Ephemeris> gps_cnav = d_internal_pvt_solver->gps_cnav_ephemeris_map;
                                 uint8_t checks{0};
                                 msgVec[0] = 0xd4;
                                 msgVec[1] = 0x4f;
@@ -1830,6 +1830,10 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                 // const double _conv = 0.017453292519943;          // (pi/180)
                                 // // const double _c = 299792458.0;                   // velocidade da luz
                                 // const double _OmegaDot = 7.292115146700000e-05;  // Taxa de velocidade de rotacao da Terra
+                                // for(const auto &z:gps_cnav)
+                                // {
+                                //     std::cout<<TEXT_BOLD_RED<<"PRN: "<<z.second.PRN<<" ISCL1: "<<z.second.ISCL1<<TEXT_RESET<<"\n";
+                                // }
                                 for (const auto& y : sync_map)
                                     {
                                         for (const auto& x : gps_ephem)
@@ -1849,7 +1853,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                                         // double variavel = (y.second.RX_time) - y.second.Pseudorange_m / SPEED_OF_LIGHT_M_S - x.second.af0;
                                                                         // double variavel = (y.second.RX_time) - (y.second.Pseudorange_m / SPEED_OF_LIGHT_M_S);
                                                                         // double variavel = (y.second.TOW_at_current_symbol_ms) - y.second.Pseudorange_m / SPEED_OF_LIGHT_M_S - x.second.af0;
-                                                                        // y.second.TOW_at_current_symbol_ms
+                                                                        // y.second.TOW_at_current_symbol_ms    
 
                                                                         // // #########################   Geometrical Approuch on Transmit time:  #################################
 
@@ -2283,6 +2287,8 @@ void rtklib_pvt_gs::serialcmd_(void)
             nvoo_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms * 0.001;
             mtx.unlock();
             // nvo_tempo = d_rx_time;
+
+            // std::map<int, Gps_CNAV_Ephemeris> gps_cnav = d_internal_pvt_solver->gps_cnav_ephemeris_map;
             if ((first_fix) && (tttt >= 1000) && (round(nvoo_tempo - ult_tempo) >= 1.0))
             // if ((first_fix) && (((current_RX_time_ms % 1000) == 0) && ((nvo_tempo - ult_tempo) >= 1.0)))//&& (tttt>1000))
                 {
@@ -2292,7 +2298,11 @@ void rtklib_pvt_gs::serialcmd_(void)
                     tStartSteady = std::chrono::high_resolution_clock::now();
                     ult_tempo = nvoo_tempo;
                     std::cout << TEXT_BOLD_GREEN <<" N_Sat: " << num_sat << " Bytes: " << sended_PVT <<" Contador: "<<ccontmsg<<" Time: " << tttt 
-                    << " last_Rx_time: " << last_RX_time <<" d_rx_time: "<<d_rx_time<< TEXT_RESET << "\n";
+                    << " last_Rx_time: " << nvoo_tempo <<" d_rx_time: "<<d_rx_time<< TEXT_RESET << "\n";
+                    // for(const auto &x:gps_cnav)
+                    // {
+                    //     std::cout<<"PRN: "<<x.second.PRN<<" ISCL1: "<<x.second.ISCL1<<"\n";
+                    // }
                 }
             else if (tttt>=1100)
                 {

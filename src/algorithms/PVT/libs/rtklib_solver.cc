@@ -1609,7 +1609,7 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
                     this->set_rx_vel({pvt_sol.rr[3], pvt_sol.rr[4], pvt_sol.rr[5]}); // Caio's Mod.
                     // this->get_Solu_type(pvt_sol.type);
 
-                    this->get_pvtsol_time(pvt_sol.time);
+                    // this->get_pvtsol_time(pvt_sol.time);
 
                     const double clock_drift_ppm = pvt_sol.dtr[5] / SPEED_OF_LIGHT_M_S * 1e6;
 
