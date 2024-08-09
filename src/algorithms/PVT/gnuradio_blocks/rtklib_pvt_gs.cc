@@ -2306,7 +2306,7 @@ void rtklib_pvt_gs::serialcmd_(void)
                 }
             else if (tttt>=1100)
                 {
-                    tStartSteady = std::chrono::system_clock::now();
+                    tStartSteady = std::chrono::high_resolution_clock::now();
                 }
                 else{continue;}
         }
