@@ -140,7 +140,7 @@ hybrid_observables_gs::hybrid_observables_gs(const Obs_Conf &conf_)
             try
                 {
                     d_dump_file.open(d_dump_filename.c_str(), std::ios::out | std::ios::binary);
-                    // LOG(INFO) << "Observables dump enabled Log file: " << d_dump_filename.c_str();
+                   // LOG(INFO) << "Observables dump enabled Log file: " << d_dump_filename.c_str();
                 }
             catch (const std::ofstream::failure &e)
                 {
@@ -211,7 +211,7 @@ void hybrid_observables_gs::msg_handler_pvt_to_observables(const pmt::pmt_t &msg
                             d_gnss_synchro_history->clear(n);
                         }
 
-                    // LOG(INFO) << "Corrected new RX Time offset: " << static_cast<int>(round(new_rx_clock_offset_s * 1000.0)) << "[ms]";
+                   // LOG(INFO) << "Corrected new RX Time offset: " << static_cast<int>(round(new_rx_clock_offset_s * 1000.0)) << "[ms]";
                     rx_clk_offset_s = new_rx_clock_offset_s;
                 }
             if (pmt::any_ref(msg).type().hash_code() == d_int_type_hash_code)
@@ -227,7 +227,7 @@ void hybrid_observables_gs::msg_handler_pvt_to_observables(const pmt::pmt_t &msg
                                 {
                                     d_gnss_synchro_history->clear(n);
                                 }
-                            // LOG(INFO) << "Received reset observables TOW command from PVT";
+                           // LOG(INFO) << "Received reset observables TOW command from PVT";
                             break;
                         default:
                             break;
@@ -661,9 +661,6 @@ int hybrid_observables_gs::general_work(int noutput_items __attribute__((unused)
     gr_vector_int &ninput_items, gr_vector_const_void_star &input_items,
     gr_vector_void_star &output_items)
 {
-    std::ofstream filereg("hybrid_obs_gs.txt",std::ios::app|std::ios::out);
-    auto tStartSteady = std::chrono::high_resolution_clock::now();
-    // auto tEndSteady = std::chrono::high_resolution_clock::now();
     const auto **in = reinterpret_cast<const Gnss_Synchro **>(&input_items[0]);
     auto **out = reinterpret_cast<Gnss_Synchro **>(&output_items[0]);
 
@@ -815,36 +812,36 @@ int hybrid_observables_gs::general_work(int noutput_items __attribute__((unused)
                     d_T_status_report_timer_ms = 0;
                 }
 
-            // if (d_dump)
-            //     {
-            //         // MULTIPLEXED FILE RECORDING - Record results to file
-            //         try
-            //             {
-            //                 double tmp_double;
-            //                 for (uint32_t i = 0; i < d_nchannels_out; i++)
-            //                     {
-            //                         tmp_double = out[i][0].RX_time;
-            //                         d_dump_file.write(reinterpret_cast<char *>(&tmp_double), sizeof(double));
-            //                         tmp_double = out[i][0].interp_TOW_ms / 1000.0;
-            //                         d_dump_file.write(reinterpret_cast<char *>(&tmp_double), sizeof(double));
-            //                         tmp_double = out[i][0].Carrier_Doppler_hz;
-            //                         d_dump_file.write(reinterpret_cast<char *>(&tmp_double), sizeof(double));
-            //                         tmp_double = out[i][0].Carrier_phase_rads / TWO_PI;
-            //                         d_dump_file.write(reinterpret_cast<char *>(&tmp_double), sizeof(double));
-            //                         tmp_double = out[i][0].Pseudorange_m;
-            //                         d_dump_file.write(reinterpret_cast<char *>(&tmp_double), sizeof(double));
-            //                         tmp_double = static_cast<double>(out[i][0].PRN);
-            //                         d_dump_file.write(reinterpret_cast<char *>(&tmp_double), sizeof(double));
-            //                         tmp_double = static_cast<double>(out[i][0].Flag_valid_pseudorange);
-            //                         d_dump_file.write(reinterpret_cast<char *>(&tmp_double), sizeof(double));
-            //                     }
-            //             }
-            //         catch (const std::ofstream::failure &e)
-            //             {
-            //                 // LOG(WARNING) << "Exception writing observables dump file " << e.what();
-            //                 d_dump = false;
-            //             }
-            //     }
+            if (d_dump)
+                {
+                    // MULTIPLEXED FILE RECORDING - Record results to file
+                    try
+                        {
+                            double tmp_double;
+                            for (uint32_t i = 0; i < d_nchannels_out; i++)
+                                {
+                                    tmp_double = out[i][0].RX_time;
+                                    d_dump_file.write(reinterpret_cast<char *>(&tmp_double), sizeof(double));
+                                    tmp_double = out[i][0].interp_TOW_ms / 1000.0;
+                                    d_dump_file.write(reinterpret_cast<char *>(&tmp_double), sizeof(double));
+                                    tmp_double = out[i][0].Carrier_Doppler_hz;
+                                    d_dump_file.write(reinterpret_cast<char *>(&tmp_double), sizeof(double));
+                                    tmp_double = out[i][0].Carrier_phase_rads / TWO_PI;
+                                    d_dump_file.write(reinterpret_cast<char *>(&tmp_double), sizeof(double));
+                                    tmp_double = out[i][0].Pseudorange_m;
+                                    d_dump_file.write(reinterpret_cast<char *>(&tmp_double), sizeof(double));
+                                    tmp_double = static_cast<double>(out[i][0].PRN);
+                                    d_dump_file.write(reinterpret_cast<char *>(&tmp_double), sizeof(double));
+                                    tmp_double = static_cast<double>(out[i][0].Flag_valid_pseudorange);
+                                    d_dump_file.write(reinterpret_cast<char *>(&tmp_double), sizeof(double));
+                                }
+                        }
+                    catch (const std::ofstream::failure &e)
+                        {
+                            // LOG(WARNING) << "Exception writing observables dump file " << e.what();
+                            d_dump = false;
+                        }
+                }
 
             if (n_valid > 0)
                 {
@@ -853,19 +850,14 @@ int hybrid_observables_gs::general_work(int noutput_items __attribute__((unused)
                     return 1;
                 }
         }
-    // if (d_always_output_gs)
-    //     {
-    //         Gnss_Synchro empty_gs{};
-    //         for (uint32_t n = 0; n < d_nchannels_out; n++)
-    //             {
-    //                 out[n][0] = empty_gs;
-    //             }
-    //         return 1;
-    //     }
-    auto tEndSteady = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double, std::milli> tempo_ligado_ms = tEndSteady - tStartSteady;
-    double tttt = tempo_ligado_ms.count();
-    filereg<< tttt<<"\n";
-
+    if (d_always_output_gs)
+        {
+            Gnss_Synchro empty_gs{};
+            for (uint32_t n = 0; n < d_nchannels_out; n++)
+                {
+                    out[n][0] = empty_gs;
+                }
+            return 1;
+        }
     return 0;
 }
