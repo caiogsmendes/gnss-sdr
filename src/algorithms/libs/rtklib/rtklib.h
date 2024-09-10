@@ -369,6 +369,7 @@ typedef struct
     double L[NFREQ + NEXOBS];           /* observation data carrier-phase (cycle) */
     double P[NFREQ + NEXOBS];           /* observation data pseudorange (m) */
     float D[NFREQ + NEXOBS];            /* observation data doppler frequency (Hz) */
+    bool valid_sat;
 } obsd_t;
 
 
@@ -1049,6 +1050,7 @@ typedef struct
     double phw;                /* phase windup (cycle) */
     gtime_t pt[2][NFREQ];      /* previous carrier-phase time */
     double ph[2][NFREQ];       /* previous carrier-phase observable (cycle) */
+    unsigned char prn;  // PRN Caio's Mod
 } ssat_t;
 
 

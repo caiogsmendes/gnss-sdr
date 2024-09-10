@@ -127,6 +127,7 @@ public:
     // Caio: 
     std::map<int, Gnss_Synchro> get_observables_map() const;
     bool set_flag_serial_interp(bool status);
+    void Protocol2CN(void);
 
     /*!
      * \brief Get the latest Position WGS84 [deg], Ground Velocity, Course over Ground, and UTC Time, if available
@@ -219,6 +220,7 @@ private:
 
     //Caio:
     std::fstream d_log_timetag_file;
+   
     //
 
     std::shared_ptr<Rtklib_Solver> d_internal_pvt_solver;
@@ -340,6 +342,7 @@ private:
     serial_s_t comms;
     double ultimo_rx_time{0};
     bool flag_new_pvt_data{false};
+    bool flag_prage_valid{false};
     //
 
     double last_RX_time;
@@ -376,6 +379,7 @@ private:
     double rx_clk_deslize{0};
     std::map<int, Gnss_Synchro> sync_map;
     std::map<int, Gps_Ephemeris> gps_ephem;
+    std::map<int, bool> valid_sat_selection;
 
     uint32_t current_RX_time_ms = 0;
 
@@ -403,10 +407,13 @@ private:
 
     HEtechOut_t StoragePVT;
     HEtechOut_t StorageSat[12];
-    int jdex{0}; //Número de Satélites Armazenados
+    int jdex{0};
     std::mutex mtx;
     bool msgReady{false};
-    uint8_t msgVec[780 + 3 + 3 + 56]{0}; // 780 bytes para 12 satélites no máx.
+    // uint8_t msgVec[780 + 3 + 3 + 56]{0}; // 780 bytes para 12 satélites no máx.
+    uint8_t msgVec[130*12+5]; // 81 bytes x 12 Sats
+
+    bool valida{false};
 };
 
 

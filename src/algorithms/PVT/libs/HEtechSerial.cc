@@ -564,6 +564,17 @@ extern "C"
             }
     }
 
+    void Int2Hex(uint8_t *output, const int *input)
+    {
+        // Output -> vetor de msg
+        // Input -> valor a ser compactado
+        for (int i = 0; i < 2; i++)
+            {
+                *output = *((uint8_t *)input + i);
+                output = output + 1;
+            }
+    }
+
     void Integer2Hexx(uint8_t *output, const uint32_t input)
     {
         // Output -> vetor de msg

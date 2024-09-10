@@ -1085,7 +1085,7 @@ void estvel(const obsd_t *obs, int n, const double *rs, const double *dts,
  *          receiver bias are negligible (only involving glonass-gps time offset
  *          and receiver bias)
  *-----------------------------------------------------------------------------*/
-int pntpos(const obsd_t *obs, int n, const nav_t *nav,
+int pntpos(obsd_t *obs, int n, const nav_t *nav,
     const prcopt_t *opt, sol_t *sol, double *azel, ssat_t *ssat,
     char *msg)
 {
@@ -1099,6 +1099,12 @@ int pntpos(const obsd_t *obs, int n, const nav_t *nav,
     int stat;
     std::vector<int> vsat(MAXOBS, 0);
     std::vector<int> svh(MAXOBS, 0);
+
+    // obsd_t obs_aux[181];
+    // for(int ii=0;ii<181;ii++)
+    // {
+    //     obs_aux[ii] = obs[ii];
+    // }
 
     sol->stat = SOLQ_NONE;
 
@@ -1170,6 +1176,10 @@ int pntpos(const obsd_t *obs, int n, const nav_t *nav,
                             continue;
                         }
                     ssat[obs[i].sat - 1].vs = 1;
+                    obs[i].valid_sat=1;
+                    // ssat[obs[i].sat-1].prn = obs_aux[i].sat;
+                    // ssat[obs[i].sat - 1].prn = obs[i].sat;
+                    // unsigned char auxx = obs[i].sat;
                     ssat[obs[i].sat - 1].resp[0] = resp[i];
                 }
         }

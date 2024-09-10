@@ -138,7 +138,7 @@ void estvel(const obsd_t *obs, int n, const double *rs, const double *dts,
  *          receiver bias are negligible (only involving glonass-gps time offset
  *          and receiver bias)
  */
-int pntpos(const obsd_t *obs, int n, const nav_t *nav,
+int pntpos(obsd_t *obs, int n, const nav_t *nav,
     const prcopt_t *opt, sol_t *sol, double *azel, ssat_t *ssat,
     char *msg);
 

@@ -97,6 +97,11 @@ public:
     Monitor_Pvt get_monitor_pvt() const;
     void store_has_data(const Galileo_HAS_data& new_has_data);
     void update_has_corrections(const std::map<int, Gnss_Synchro>& obs_map);
+    
+    //Caio
+    // void get_valid_sat_select(void);
+    std::map<int,bool> get_valid_sat_select(void);
+    //
 
     sol_t pvt_sol{};
     std::array<ssat_t, MAXSAT> pvt_ssat{};
@@ -161,6 +166,8 @@ private:
     bool d_use_e6_for_pvt;
 
     bool first_fix{false};
+
+    std::map<int,bool> valid_sat_select;
 };
 
 

@@ -459,6 +459,11 @@ Monitor_Pvt Rtklib_Solver::get_monitor_pvt() const
     return d_monitor_pvt;
 }
 
+std::map<int,bool> Rtklib_Solver::get_valid_sat_select(void)
+{
+    return valid_sat_select;
+}
+
 
 void Rtklib_Solver::store_has_data(const Galileo_HAS_data &new_has_data)
 {
@@ -1459,6 +1464,22 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
                 }
 
             result = rtkpos(&d_rtk, d_obs_data.data(), valid_obs + glo_valid_obs, &d_nav_data);
+            
+            //Caio
+            int sattt = 0;
+            for (const auto &yy : d_obs_data)
+                {
+                    if (yy.valid_sat == 1)
+                        {
+                            sattt = (int)yy.sat;
+                            valid_sat_select.insert(std::pair{sattt, 1});
+                        }
+                    else
+                        {
+                            valid_sat_select.insert(std::pair{sattt, 0});
+                        }
+                }
+            //
 
             if (result == 0)
                 {
@@ -1470,7 +1491,7 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
             else
                 {
                     this->set_num_valid_observations(d_rtk.sol.ns);  // record the number of valid satellites used by the PVT solver
-                    pvt_sol = d_rtk.sol;
+                    pvt_sol = d_rtk.sol; // Não Comente isso PLMD!!!!
                     // DOP computation
                     unsigned int used_sats = 0;
                     for (unsigned int i = 0; i < MAXSAT; i++)
@@ -1606,14 +1627,12 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
                     d_monitor_pvt.vdop = d_dop[3];
 
                     // this->set_rx_vel({enuv[0], enuv[1], enuv[2]});
-                    this->set_rx_vel({pvt_sol.rr[3], pvt_sol.rr[4], pvt_sol.rr[5]}); // Caio's Mod.
-                    // this->get_Solu_type(pvt_sol.type);
-
-                    // this->get_pvtsol_time(pvt_sol.time);
+                    this->set_rx_vel({pvt_sol.rr[0],pvt_sol.rr[1],pvt_sol.rr[2]});
 
                     const double clock_drift_ppm = pvt_sol.dtr[5] / SPEED_OF_LIGHT_M_S * 1e6;
 
                     this->set_clock_drift_ppm(clock_drift_ppm);
+                    
                     // User clock drift [ppm]
                     d_monitor_pvt.user_clk_drift_ppm = clock_drift_ppm;
 

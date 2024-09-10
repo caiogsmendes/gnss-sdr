@@ -174,7 +174,8 @@ void rtkinit(rtk_t *rtk, const prcopt_t *opt);
 
 void rtkfree(rtk_t *rtk);
 
-int rtkpos(rtk_t *rtk, const obsd_t *obs, int n, const nav_t *nav);
+// Mudei de const obsd_t para obsd_t
+int rtkpos(rtk_t *rtk, obsd_t *obs, int n, const nav_t *nav);
 
 
 /** \} */
