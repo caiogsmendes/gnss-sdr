@@ -73,28 +73,11 @@ void frontend_init(void)
     }
 }
 
-void frontend_SOFT_rst(void)
-{
-    int line_value = 0;
-    int line;
-    int ret;
-    char chip[10];
-    unsigned int offset;
-    const char* gpiochip5 = "5";
-    int SODIMM127 = 5;
-
-    snprintf(chip, sizeof(chip), "gpiochip%s", gpiochip5);
-    offset = SODIMM127;
-
-    gpiod_ctxless_set_value(chip, offset, ~line_value, false, "gpio-toggle", NULL, NULL);
-    usleep(1000);
-    gpiod_ctxless_set_value(chip, offset, ~line_value, false, "gpio-toggle", NULL, NULL);
-}
-
 void frontend_HARD_rst(void)
 {
     int line_value_pwr = 1;
     int line;
+      
     int ret;
     char chip[10];
     unsigned int offset;
@@ -127,7 +110,7 @@ int frontend_WTD_hwfeed(void)
 {
     int ret = ioctl(api_watchdog_fd, WDIOC_KEEPALIVE, NULL);
     if (ret < 0){
-        fprintf(stderr, "Could not pat watchdog: %s\n", strerror(errno));
+        // fprintf(stderr, "Could not pat watchdog: %s\n", strerror(errno));
     }
     return ret;
 }
@@ -150,7 +133,7 @@ int frontend_WTD_open(const char* watchdog_device)
     ret = ioctl(api_watchdog_fd, WDIOC_SETTIMEOUT, 2);
     if (ret < 0)
         {
-            std::cout << "Watchdog timer ñ foi settado\n";
+            // std::cout << "Watchdog timer ñ foi settado\n";
         }
     else
         {

@@ -14,8 +14,8 @@ endif()
 # Select the release build type by default to get optimization flags.
 # This has to come before project() which otherwise initializes it.
 # Build type can still be overridden by setting -DCMAKE_BUILD_TYPE=
-# set(CMAKE_BUILD_TYPE "Release" CACHE STRING "")
-set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "")
+set(CMAKE_BUILD_TYPE "Release" CACHE STRING "")
+# set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "")
 
 cmake_minimum_required(VERSION 2.8.12...3.26)
 project(gnss-sdr CXX C)
@@ -69,7 +69,7 @@ option(ENABLE_CUDA "Enable building of processing blocks implemented with CUDA (
 option(ENABLE_FPGA "Enable building of processing blocks implementing FPGA offloading" OFF)
 
 # Building and packaging options
-option(ENABLE_PACKAGING "Enable software packaging" OFF)
+option(ENABLE_PACKAGING "Enable software packaging" ON)
 
 option(ENABLE_OWN_GLOG "Download glog and link it to gflags" OFF)
 

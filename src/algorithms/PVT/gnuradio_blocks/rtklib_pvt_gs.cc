@@ -1788,18 +1788,18 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                             // int byyt;
                                             // byyt = HEserial_envio(&comms, &bf[0], &siso);
 
-                                            if (d_show_local_time_zone)
-                                                {
-                                                    const boost::posix_time::ptime time_first_solution = d_user_pvt_solver->get_position_UTC_time() + d_utc_diff_time;
-                                                    std::cout << TEXT_BOLD_YELLOW << "First position fix at " << time_first_solution << d_local_time_str;
-                                                }
-                                            else
-                                                {
-                                                    std::cout << TEXT_BOLD_YELLOW << "First position fix at " << d_user_pvt_solver->get_position_UTC_time() << " UTC";
-                                                }
-                                            std::cout << " is Lat = " << d_user_pvt_solver->get_latitude() << " [deg], Long = " << d_user_pvt_solver->get_longitude()
-                                                      << " [deg], Height= " << d_user_pvt_solver->get_height() << " [m]\n"
-                                                      << TEXT_RESET;
+                                            // if (d_show_local_time_zone)
+                                            //     {
+                                            //         const boost::posix_time::ptime time_first_solution = d_user_pvt_solver->get_position_UTC_time() + d_utc_diff_time;
+                                            //         std::cout << TEXT_BOLD_YELLOW << "First position fix at " << time_first_solution << d_local_time_str;
+                                            //     }
+                                            // else
+                                            //     {
+                                            //         std::cout << TEXT_BOLD_YELLOW << "First position fix at " << d_user_pvt_solver->get_position_UTC_time() << " UTC";
+                                            //     }
+                                            // std::cout << " is Lat = " << d_user_pvt_solver->get_latitude() << " [deg], Long = " << d_user_pvt_solver->get_longitude()
+                                            //           << " [deg], Height= " << d_user_pvt_solver->get_height() << " [m]\n"
+                                            //           << TEXT_RESET;
                                             d_ttff_msgbuf ttff;
                                             ttff.mtype = 1;
                                             d_end = std::chrono::system_clock::now();
@@ -2353,8 +2353,8 @@ void rtklib_pvt_gs::serialcmd_(void)
                     deltinha = tttt - 1000.0;
                     tStartSteady = std::chrono::high_resolution_clock::now();
                     ult_tempo = nvoo_tempo;
-                    std::cout << TEXT_BOLD_GREEN <<"Numsat: "<<num_sat<<" N_Sat: " << contadorrx << " Bytes: " << sended_PVT <<" Contador: "<<ccontmsg<<" Time: " << tttt 
-                    << " last_Rx_time: " << nvoo_tempo <<" d_rx_time: "<<d_rx_time<< TEXT_RESET << "\n";
+                    // std::cout << TEXT_BOLD_GREEN <<"Numsat: "<<num_sat<<" N_Sat: " << contadorrx << " Bytes: " << sended_PVT <<" Contador: "<<ccontmsg<<" Time: " << tttt 
+                    // << " last_Rx_time: " << nvoo_tempo <<" d_rx_time: "<<d_rx_time<< TEXT_RESET << "\n";
                     // for(const auto &x:gps_cnav)
                     // {
                     //     std::cout<<"PRN: "<<x.second.PRN<<" ISCL1: "<<x.second.ISCL1<<"\n";
