@@ -21,7 +21,10 @@
 // frontend();
 // ~frontend();
 void frontend_init(void);
+
+
 void frontend_SOFT_rst(void);
+
 void frontend_HARD_rst(void);
 
 // ##### GPIO #####
