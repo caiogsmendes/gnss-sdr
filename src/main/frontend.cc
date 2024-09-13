@@ -47,8 +47,8 @@ void frontend_init(void)
     offset = SODIMM127;
     // gpiod_ctxless_set_value(chip, offset, line_value, false, "gpio-toggle", NULL, NULL);
 
-    gpiod_ctxless_set_value(chip, offset, 0, false, "gpio-toggle", NULL, NULL);  // Lower the hackRF RST_pin
-    gpiod_ctxless_set_value(chip, SODIMM129, 0, false, "gpio-toggle", NULL, NULL);
+    // gpiod_ctxless_set_value(chip, offset, 0, false, "gpio-toggle", NULL, NULL);  // Lower the hackRF RST_pin
+    // gpiod_ctxless_set_value(chip, SODIMM129, 0, false, "gpio-toggle", NULL, NULL);
 
     // if(fork()==0){
     // char* const argin[] = {"hackrf_info"};
