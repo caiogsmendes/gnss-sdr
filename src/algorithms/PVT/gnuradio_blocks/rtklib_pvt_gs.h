@@ -163,6 +163,8 @@ public:
         double* vdop,
         double* pdop);
 
+    double Rx_clkK_offset_s;
+
 // void set_pvt(std::shared_ptr<> PVT_sptr)
 // {
 //     serial_sptr_ = std::move(PVT_sptr);

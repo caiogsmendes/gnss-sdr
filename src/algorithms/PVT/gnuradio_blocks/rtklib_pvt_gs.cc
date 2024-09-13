@@ -1629,37 +1629,38 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                 }
                             else
                                 {
-                                    // if (d_enable_rx_clock_correction == true)
-                                    //     {
-                                    //         d_gnss_observables_map_t0 = d_gnss_observables_map_t1;
-                                    //         apply_rx_clock_offset(d_gnss_observables_map, Rx_clock_offset_s);
-                                    //         d_gnss_observables_map_t1 = d_gnss_observables_map;
+                                    if (d_enable_rx_clock_correction == true)
+                                        {
+                                            d_gnss_observables_map_t0 = d_gnss_observables_map_t1;
+                                            Rx_clkK_offset_s = Rx_clock_offset_s;
+                                            apply_rx_clock_offset(d_gnss_observables_map, Rx_clock_offset_s);
+                                            d_gnss_observables_map_t1 = d_gnss_observables_map;
+                                            
+                                            // ### select the rx_time and interpolate observables at that time
+                                            if (!d_gnss_observables_map_t0.empty())
+                                                {
+                                                    const auto t0_int_ms = static_cast<uint32_t>(d_gnss_observables_map_t0.cbegin()->second.RX_time * 1000.0);
+                                                    const uint32_t adjust_next_obs_interval_ms = d_observable_interval_ms - t0_int_ms % d_observable_interval_ms;
+                                                    current_RX_time_ms = t0_int_ms + adjust_next_obs_interval_ms;
 
-                                    //         // ### select the rx_time and interpolate observables at that time
-                                    //         if (!d_gnss_observables_map_t0.empty())
-                                    //             {
-                                    //                 const auto t0_int_ms = static_cast<uint32_t>(d_gnss_observables_map_t0.cbegin()->second.RX_time * 1000.0);
-                                    //                 const uint32_t adjust_next_obs_interval_ms = d_observable_interval_ms - t0_int_ms % d_observable_interval_ms;
-                                    //                 current_RX_time_ms = t0_int_ms + adjust_next_obs_interval_ms;
-
-                                    //                 if (current_RX_time_ms % d_output_rate_ms == 0)
-                                    //                     {
-                                    //                         d_rx_time = static_cast<double>(current_RX_time_ms) / 1000.0;
-                                    //                         // // std::cout << " obs time t0: " << d_gnss_observables_map_t0.cbegin()->second.RX_time
-                                    //                         //           << " t1: " << d_gnss_observables_map_t1.cbegin()->second.RX_time
-                                    //                         //           << " interp time: " << d_rx_time << '\n';
-                                    //                         d_gnss_observables_map = interpolate_observables(d_gnss_observables_map_t0,
-                                    //                             d_gnss_observables_map_t1,
-                                    //                             d_rx_time);
-                                    //                         flag_compute_pvt_output = true;
-                                    //                         // d_rx_time = current_RX_time;
-                                    //                         // // std::cout.precision(17);
-                                    //                         // // std::cout << "current_RX_time: " << current_RX_time << " map time: " << d_gnss_observables_map.begin()->second.RX_time << '\n';
-                                    //                     }
-                                    //             }
-                                    //     }
-                                    // else
-                                    //     {
+                                                    if (current_RX_time_ms % d_output_rate_ms == 0)
+                                                        {
+                                                            d_rx_time = static_cast<double>(current_RX_time_ms) / 1000.0;
+                                                            // // std::cout << " obs time t0: " << d_gnss_observables_map_t0.cbegin()->second.RX_time
+                                                            //           << " t1: " << d_gnss_observables_map_t1.cbegin()->second.RX_time
+                                                            //           << " interp time: " << d_rx_time << '\n';
+                                                            d_gnss_observables_map = interpolate_observables(d_gnss_observables_map_t0,
+                                                                d_gnss_observables_map_t1,
+                                                                d_rx_time);
+                                                            flag_compute_pvt_output = true;
+                                                            // d_rx_time = current_RX_time;
+                                                            // // std::cout.precision(17);
+                                                            // // std::cout << "current_RX_time: " << current_RX_time << " map time: " << d_gnss_observables_map.begin()->second.RX_time << '\n';
+                                                        }
+                                                }
+                                        }
+                                    else
+                                        {
                                             d_rx_time = d_gnss_observables_map.begin()->second.RX_time;
                                             current_RX_time_ms = static_cast<uint32_t>(d_rx_time * 1000.0);
                                             if (current_RX_time_ms % d_output_rate_ms == 0)
@@ -1670,7 +1671,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                 }
                                             flag_pvt_valid = true;
                                             flag_new_pvt_data = flag_pvt_valid;
-                                        // }
+                                        }
                                 }
                         }
                     else
@@ -2379,7 +2380,8 @@ void rtklib_pvt_gs::Protocol2CN(void){
             rx_pos = d_user_pvt_solver->get_rx_pos();
             rx_vel = d_user_pvt_solver->get_rx_vel();
             // double gdop = d_internal_pvt_solver->get_clock_drift_ppm();
-            double gdop = d_user_pvt_solver->get_gdop();
+            double gdop = Rx_clkK_offset_s;
+            // double gdop = d_user_pvt_solver->get_gdop();
             // double hdop = d_internal_pvt_solver->get_time_offset_s();
             double hdop = d_user_pvt_solver->get_hdop();
             double vdop = d_user_pvt_solver->get_vdop();
@@ -2455,6 +2457,7 @@ void rtklib_pvt_gs::Protocol2CN(void){
                                                     // satVelY = y.second.RX_time - y.second.TOW_at_current_symbol_ms*1e-3;
                                                     
                                                     satVelZ = x.second.satvel_Z;
+                                                    // satVelZ = y.second.rx_clk_offset;
                                                     // satVelZ = x.second.dtr;
                                                     // satVelZ = y.second.RX_time;
                                                     
@@ -2470,7 +2473,7 @@ void rtklib_pvt_gs::Protocol2CN(void){
                                                     tempoo = y.second.RX_time;
                                                     double usr_offset = d_internal_pvt_solver->get_clock_drift_ppm() * 1e-6;
 
-                                                    prange = y.second.Pseudorange_m + x.second.dtr * SPEED_OF_LIGHT_M_S - (usr_offset * SPEED_OF_LIGHT_M_S);
+                                                    prange = y.second.Pseudorange_m + x.second.dtr * SPEED_OF_LIGHT_M_S; //- (usr_offset * SPEED_OF_LIGHT_M_S);
                                                     
                                                     double TOW_symbol = y.second.TOW_at_current_symbol_ms * 1e-3;
 
