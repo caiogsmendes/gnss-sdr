@@ -24,9 +24,9 @@
 void frontend_init(void);
 void frontend_SOFT_rst(void);
 void frontend_HARD_rst(void);
-int frontend_WTD_init(void);
-int frontend_WTD_open(const char*);
-int frontend_WTD_hwfeed(void);
+// int frontend_WTD_init(void);
+// int frontend_WTD_open(const char*);
+// int frontend_WTD_hwfeed(void);
 
 
 // ##### GPIO #####
@@ -55,6 +55,6 @@ int frontend_WTD_hwfeed(void);
 // const char* gpiochip5;
 // int SODIMM127;
 // int SODIMM129;
-static int api_watchdog_fd = -1;
+// static int api_watchdog_fd = -1;
 // };
 #endif

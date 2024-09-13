@@ -2378,7 +2378,9 @@ void rtklib_pvt_gs::Protocol2CN(void){
 
             rx_pos = d_user_pvt_solver->get_rx_pos();
             rx_vel = d_user_pvt_solver->get_rx_vel();
+            // double gdop = d_internal_pvt_solver->get_clock_drift_ppm();
             double gdop = d_user_pvt_solver->get_gdop();
+            // double hdop = d_internal_pvt_solver->get_time_offset_s();
             double hdop = d_user_pvt_solver->get_hdop();
             double vdop = d_user_pvt_solver->get_vdop();
             double pdop = d_user_pvt_solver->get_pdop();
@@ -2443,12 +2445,19 @@ void rtklib_pvt_gs::Protocol2CN(void){
                                                     satPosX = x.second.satpos_X;
                                                     satPosY = x.second.satpos_Y;
                                                     satPosZ = x.second.satpos_Z;
+                                                    
                                                     satVelX = x.second.satvel_X;
+                                                    // satVelX = y.second.Pseudorange_m;
                                                     // satVelX = y.second.RX_time - y.second.interp_TOW_ms*1e-3;
+            
                                                     satVelY = x.second.satvel_Y;
+                                                    // satVelY = x.second.relcore;
                                                     // satVelY = y.second.RX_time - y.second.TOW_at_current_symbol_ms*1e-3;
+                                                    
                                                     satVelZ = x.second.satvel_Z;
+                                                    // satVelZ = x.second.dtr;
                                                     // satVelZ = y.second.RX_time;
+                                                    
                                                     // gtime_t checkk = d_internal_pvt_solver->get_pvtsol_time();
                                                     // satVelZ = ->get_pvtsol_time();
                                                     // gtime_t =  d_internal_pvt_solver->d_position_GPS_time;
@@ -2461,7 +2470,8 @@ void rtklib_pvt_gs::Protocol2CN(void){
                                                     tempoo = y.second.RX_time;
                                                     double usr_offset = d_internal_pvt_solver->get_clock_drift_ppm() * 1e-6;
 
-                                                    prange = y.second.Pseudorange_m + (x.second.satClkDrift + x.second.dtr) * SPEED_OF_LIGHT_M_S - (usr_offset * SPEED_OF_LIGHT_M_S);
+                                                    prange = y.second.Pseudorange_m + x.second.dtr * SPEED_OF_LIGHT_M_S - (usr_offset * SPEED_OF_LIGHT_M_S);
+                                                    
                                                     double TOW_symbol = y.second.TOW_at_current_symbol_ms * 1e-3;
 
                                                     msgVec[index + 0] = PRN;

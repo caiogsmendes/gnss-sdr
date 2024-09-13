@@ -63,14 +63,14 @@ void frontend_init(void)
     // char* cmd = "/usr/bin";
     // int result = execvp(cmd, argin);
     int result = system("/usr/bin/hackrf_info");
-    if (result < 0)
-        {
-            std::cout << "\33[31m" << "Front RF Initialization Failed!!! ... " << "\33[0m" << "\n";
-        }
-    else{
-        // perror("execvp");
-        std::cout<<"\33[32m"<<"Front RF Initialized!!..." <<"\33[0m"<<"\n";
-    }
+    // if (result < 0)
+    //     {
+    //         std::cout << "\33[31m" << "Front RF Initialization Failed!!! ... " << "\33[0m" << "\n";
+    //     }
+    // else{
+    //     // perror("execvp");
+    //     std::cout<<"\33[32m"<<"Front RF Initialized!!..." <<"\33[0m"<<"\n";
+    // }
 }
 
 void frontend_HARD_rst(void)
@@ -92,51 +92,51 @@ void frontend_HARD_rst(void)
     gpiod_ctxless_set_value(chip, offset, ~line_value_pwr, false, "gpio-toggle", NULL, NULL);
 }
 
-int frontend_WTD_init(void)
-{
-    // printf("Open WatchDog\n");
-    int ret = 0;
-    ret = frontend_WTD_open("/dev/watchdog");
-    if (ret < 0)
-        {
-            return ret;
-        }
-    ret = frontend_WTD_hwfeed();
-    return ret;
-}
+// int frontend_WTD_init(void)
+// {
+//     // printf("Open WatchDog\n");
+//     int ret = 0;
+//     ret = frontend_WTD_open("/dev/watchdog");
+//     if (ret < 0)
+//         {
+//             return ret;
+//         }
+//     ret = frontend_WTD_hwfeed();
+//     return ret;
+// }
 
 
-int frontend_WTD_hwfeed(void)
-{
-    int ret = ioctl(api_watchdog_fd, WDIOC_KEEPALIVE, NULL);
-    if (ret < 0){
-        // fprintf(stderr, "Could not pat watchdog: %s\n", strerror(errno));
-    }
-    return ret;
-}
+// int frontend_WTD_hwfeed(void)
+// {
+//     int ret = ioctl(api_watchdog_fd, WDIOC_KEEPALIVE, NULL);
+//     if (ret < 0){
+//         // fprintf(stderr, "Could not pat watchdog: %s\n", strerror(errno));
+//     }
+//     return ret;
+// }
 
 
-int frontend_WTD_open(const char* watchdog_device)
-{
-    int ret = -1;
-    if (api_watchdog_fd >= 0)
-        {
-            fprintf(stderr, "Watchdog already opened\n");
-            return ret;
-        }
-    api_watchdog_fd = open(watchdog_device, O_RDWR);
-    if (api_watchdog_fd < 0)
-        {
-            fprintf(stderr, "Could not open %s: %s\n", watchdog_device, strerror(errno));
-            return api_watchdog_fd;
-        }
-    ret = ioctl(api_watchdog_fd, WDIOC_SETTIMEOUT, 2);
-    if (ret < 0)
-        {
-            // std::cout << "Watchdog timer ñ foi settado\n";
-        }
-    else
-        {
-            return api_watchdog_fd;
-        }
-}
+// int frontend_WTD_open(const char* watchdog_device)
+// {
+//     int ret = -1;
+//     if (api_watchdog_fd >= 0)
+//         {
+//             fprintf(stderr, "Watchdog already opened\n");
+//             return ret;
+//         }
+//     api_watchdog_fd = open(watchdog_device, O_RDWR);
+//     if (api_watchdog_fd < 0)
+//         {
+//             fprintf(stderr, "Could not open %s: %s\n", watchdog_device, strerror(errno));
+//             return api_watchdog_fd;
+//         }
+//     ret = ioctl(api_watchdog_fd, WDIOC_SETTIMEOUT, 2);
+//     if (ret < 0)
+//         {
+//             // std::cout << "Watchdog timer ñ foi settado\n";
+//         }
+//     else
+//         {
+//             return api_watchdog_fd;
+//         }
+// }

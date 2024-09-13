@@ -64,7 +64,7 @@ double Gnss_Ephemeris::predicted_doppler(double rx_time_s,
     const double t = cosp * vu - sinp * vn;
     const std::vector<double> vel_rx = {cosl * t - sinl * ve, sinl * t + cosl * ve, sinp * vu + cosp * vn};
 
-    std::array<double, 7> sat_pos_vel = {0};
+    std::array<double, 8> sat_pos_vel = {0};
     satellitePosVelComputation(rx_time_s, sat_pos_vel);
     const std::vector<double> pos_sat = {sat_pos_vel[0], sat_pos_vel[1], sat_pos_vel[2]};
     const std::vector<double> vel_sat = {sat_pos_vel[3], sat_pos_vel[4], sat_pos_vel[5]};
@@ -155,7 +155,7 @@ double Gnss_Ephemeris::predicted_doppler(double rx_time_s,
 
 void Gnss_Ephemeris::satellitePosition(double transmitTime)
 {
-    std::array<double, 7> pos_vel_dtr = {0};
+    std::array<double, 8> pos_vel_dtr = {0};
     satellitePosVelComputation(transmitTime, pos_vel_dtr);
     this->satpos_X = pos_vel_dtr[0];
     this->satpos_Y = pos_vel_dtr[1];
@@ -164,10 +164,11 @@ void Gnss_Ephemeris::satellitePosition(double transmitTime)
     this->satvel_Y = pos_vel_dtr[4];
     this->satvel_Z = pos_vel_dtr[5];
     this->dtr = pos_vel_dtr[6];
+    this->relcore = pos_vel_dtr[7];
 }
 
 
-void Gnss_Ephemeris::satellitePosVelComputation(double transmitTime, std::array<double, 7>& pos_vel_dtr) const
+void Gnss_Ephemeris::satellitePosVelComputation(double transmitTime, std::array<double, 8>& pos_vel_dtr) const
 {
     // Restore semi-major axis
     const double a = this->sqrtA * this->sqrtA;
@@ -286,7 +287,7 @@ void Gnss_Ephemeris::satellitePosVelComputation(double transmitTime, std::array<
     // Time from ephemeris reference clock
     tk = check_t(transmitTime - this->toc);
 
-    pos_vel_dtr[6] = this->af0 + this->af1 * tk + this->af2 * tk * tk;
+    pos_vel_dtr[6] = this->af0 + this->af1 * tk + this->af2 * tk * tk; //Anderson
 
     if (this->System == 'E')
         {
@@ -298,7 +299,8 @@ void Gnss_Ephemeris::satellitePosVelComputation(double transmitTime, std::array<
         }
     else
         {
-            pos_vel_dtr[6] -= 2.0 * sqrt(GPS_GM * a) * this->ecc * sek / (SPEED_OF_LIGHT_M_S * SPEED_OF_LIGHT_M_S);
+            pos_vel_dtr[7] = 2.0 * sqrt(GPS_GM * a) * this->ecc * sek / (SPEED_OF_LIGHT_M_S * SPEED_OF_LIGHT_M_S);
+            pos_vel_dtr[6] -= pos_vel_dtr[7];
         }
 }
 
