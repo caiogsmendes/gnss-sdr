@@ -332,6 +332,7 @@ private:
     bool d_use_unhealthy_sats;
 
     // caio
+    double temp_verif; double tempoo;
     int contadorrx = 0;
     int contadorgrav=1;
     bool first_fix{false};

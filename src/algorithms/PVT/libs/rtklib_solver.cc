@@ -1570,6 +1570,11 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
                     p_time += boost::posix_time::microseconds(static_cast<long>(round(rtklib_utc_time.sec * 1e6)));  // NOLINT(google-runtime-int)
 
                     this->set_position_UTC_time(p_time);
+                    // this->set_position_GPS_time(pvt_sol.time);
+
+                    //Caio  
+                    // this->set_rtklib_time(pvt_sol.time);
+                    // this->set_pvtsol_time(pvt_sol.time);
 
                     // DLOG(INFO) << "RTKLIB Position at " << boost::posix_time::to_simple_string(p_time)
                             //    << " is Lat = " << this->get_latitude() << " [deg], Long = " << this->get_longitude()

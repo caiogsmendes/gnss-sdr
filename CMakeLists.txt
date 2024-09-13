@@ -77,7 +77,7 @@ option(ENABLE_OWN_ARMADILLO "Download and build Armadillo locally" OFF)
 
 option(ENABLE_LOG "Enable logging" OFF)
 
-option(ENABLE_ARMA_NO_DEBUG OFF)
+option(ENABLE_ARMA_NO_DEBUG ON)
 
 option(ENABLE_STRIP "Create stripped binaries without debugging symbols (in Release build mode only)" OFF)
 

@@ -90,10 +90,10 @@ public:
 
     bool get_PVT(const std::map<int, Gnss_Synchro>& gnss_observables_map, bool flag_averaging);
 
-    double get_hdop() const override;
-    double get_vdop() const override;
-    double get_pdop() const override;
-    double get_gdop() const override;
+    double get_hdop() const;// override;
+    double get_vdop() const;// override;
+    double get_pdop() const;// override;
+    double get_gdop() const;// override;
     Monitor_Pvt get_monitor_pvt() const;
     void store_has_data(const Galileo_HAS_data& new_has_data);
     void update_has_corrections(const std::map<int, Gnss_Synchro>& obs_map);
@@ -101,6 +101,7 @@ public:
     //Caio
     // void get_valid_sat_select(void);
     std::map<int,bool> get_valid_sat_select(void);
+    // void set_pvtsol_time(gtime_t);
     //
 
     sol_t pvt_sol{};
@@ -116,6 +117,7 @@ public:
     std::map<int, Gnss_Synchro> gnss_observables_map; // With Hope, a Map storing new Synchro Data
     std::map<int, Gnss_Ephemeris> Gnss_Ephem_map;
     std::map<int, Gps_Ephemeris> Gps_Ephem_map;
+    
 
     Galileo_Utc_Model galileo_utc_model;
     Galileo_Iono galileo_iono;

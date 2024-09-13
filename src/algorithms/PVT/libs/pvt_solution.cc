@@ -20,7 +20,7 @@
 #include <glog/logging.h>
 #include <cmath>
 #include <cstddef>
-
+#include "rtklib_solver.h"
 
 int Pvt_Solution::cart2geo(double X, double Y, double Z, int elipsoid_selection)
 {
@@ -253,9 +253,14 @@ void Pvt_Solution::set_rx_vel(const std::array<double, 3> &vel)
     d_rx_vel = vel;
 }
 
-// gtime_t Pvt_Solution::get_pvtsol_time(gtime_t time)
+// gtime_t Pvt_Solution::set_pvtsol_time(gtime_t time)
 // {
-//     d_pvt_sol_time = time;
+//     d_pvtsol_time = time;
+// }
+
+// gtime_t Pvt_Solution::get_pvtsol_time(void)
+// {
+//     return d_pvtsol_time;
 // }
 
 std::array<double, 3> Pvt_Solution::get_rx_vel() const
@@ -274,6 +279,21 @@ void Pvt_Solution::set_position_UTC_time(const boost::posix_time::ptime &pt)
 {
     d_position_UTC_time = pt;
 }
+
+// void Pvt_Solution::set_position_GPS_time(const gtime_t &time)
+// {
+//     d_position_GPS_time = time;
+// }
+
+// gtime_t Pvt_Solution::get_pvtsol_time(void)
+// {
+//     return d_pvtsol_time;
+// }
+
+// void Pvt_Solution::set_pvtsol_time(gtime_t time)
+// {
+//     d_pvtsol_time = time;
+// }
 
 
 int Pvt_Solution::get_num_valid_observations() const

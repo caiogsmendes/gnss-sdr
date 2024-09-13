@@ -21,6 +21,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <array>
 #include <deque>
+// #include "rtklib_solver.h"
 // #include "rtklib.h"
 
 /** \addtogroup PVT
@@ -42,6 +43,9 @@ public:
     void set_rx_pos(const std::array<double, 3> &pos);  //!< Set position: X, Y, Z in Cartesian ECEF coordinates [m]
     void set_rx_vel(const std::array<double, 3> &vel);  //!< Set velocity: East [m/s], North [m/s], Up [m/s]
     void set_position_UTC_time(const boost::posix_time::ptime &pt);
+    
+    // void set_position_GPS_time(const gtime_t &time);
+
     void set_time_offset_s(double offset);             //!< Set RX time offset [s]
     void set_clock_drift_ppm(double clock_drift_ppm);  //!< Set the Rx clock drift [ppm]
     void set_speed_over_ground(double speed_m_s);      //!< Set RX speed over ground [m/s]
@@ -75,9 +79,10 @@ public:
     //Caio
     unsigned char get_Solu_type(unsigned char) const;
     unsigned char SoluType{0};
-    // gtime_t get_pvtsol_time(gtime_t time);
-    // gtime_t d_pvt_sol_time;
-    //
+    // gtime_t get_pvtsol_time(void) const;
+    // void set_pvtsol_time(gtime_t) const;
+    // //
+    // gtime_t d_pvtsol_time;
 
     virtual double get_hdop() const = 0;
     virtual double get_vdop() const = 0;
@@ -107,6 +112,7 @@ private:
     std::array<double, 3> d_rx_pos{};
     std::array<double, 3> d_rx_vel{};
     boost::posix_time::ptime d_position_UTC_time;
+    // gtime_t d_position_GPS_time;
 
     std::deque<double> d_hist_latitude_d;
     std::deque<double> d_hist_longitude_d;

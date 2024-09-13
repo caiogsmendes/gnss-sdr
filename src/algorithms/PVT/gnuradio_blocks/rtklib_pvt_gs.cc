@@ -2428,7 +2428,8 @@ void rtklib_pvt_gs::Protocol2CN(void){
 
                                                     // // #########################   Geometrical Approuch on Transmit time:  #################################
 
-                                                    double tempoo = y.second.RX_time;  // this->current_RX_time_ms = y.second.TOW_at_current_symbol_ms;
+                                                    // double tempoo = y.second.RX_time;  // this->current_RX_time_ms = y.second.TOW_at_current_symbol_ms;
+                                                    tempoo = y.second.RX_time;
                                                     double diffSATREC, diffSATSAT = 1000;
                                                     double delta_tempo;
                                                     double nvotempo;
@@ -2443,12 +2444,20 @@ void rtklib_pvt_gs::Protocol2CN(void){
                                                     satPosY = x.second.satpos_Y;
                                                     satPosZ = x.second.satpos_Z;
                                                     satVelX = x.second.satvel_X;
+                                                    // satVelX = y.second.RX_time - y.second.interp_TOW_ms*1e-3;
                                                     satVelY = x.second.satvel_Y;
+                                                    // satVelY = y.second.RX_time - y.second.TOW_at_current_symbol_ms*1e-3;
                                                     satVelZ = x.second.satvel_Z;
+                                                    // satVelZ = y.second.RX_time;
+                                                    // gtime_t checkk = d_internal_pvt_solver->get_pvtsol_time();
+                                                    // satVelZ = ->get_pvtsol_time();
+                                                    // gtime_t =  d_internal_pvt_solver->d_position_GPS_time;
 
                                                     deltaprange = -SPEED_OF_LIGHT_M_S * (Carrier_Doppler_Hz / 1575420000) - ((d_internal_pvt_solver->get_clock_drift_ppm() * 1e-6) - x.second.af1) * SPEED_OF_LIGHT_M_S;
 
                                                     mtx.lock();
+                                                    // double temp_verif = y.second.interp_TOW_ms;
+                                                    temp_verif = y.second.interp_TOW_ms;
                                                     tempoo = y.second.RX_time;
                                                     double usr_offset = d_internal_pvt_solver->get_clock_drift_ppm() * 1e-6;
 
