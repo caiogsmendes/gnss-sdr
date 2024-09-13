@@ -43,8 +43,8 @@ void frontend_init(void)
     // gpiod_ctxless_set_value(chip, offset, 0, false, "gpio-toggle", NULL, NULL);  // Lower the hackRF RST_pin
 
 
-    snprintf(chip, sizeof(chip), "gpiochip%s", gpiochip5);
-    offset = SODIMM127;
+    // snprintf(chip, sizeof(chip), "gpiochip%s", gpiochip5);
+    // offset = SODIMM127;
     // gpiod_ctxless_set_value(chip, offset, line_value, false, "gpio-toggle", NULL, NULL);
 
     // gpiod_ctxless_set_value(chip, offset, 0, false, "gpio-toggle", NULL, NULL);  // Lower the hackRF RST_pin
@@ -55,14 +55,14 @@ void frontend_init(void)
     // char* cmd = "/usr/bin";
     // int result = execvp(cmd, argin);
     int result = system("/usr/bin/hackrf_info");
-    if (result < 0)
-        {
-            std::cout << "\33[31m" << "Front RF Initialization Failed!!! ... " << "\33[0m" << "\n";
-        }
-    else{
-        // perror("execvp");
-        std::cout<<"\33[32m"<<"Front RF Initialized!!..." <<"\33[0m"<<"\n";
-    }
+    // if (result < 0)
+    //     {
+    //         std::cout << "\33[31m" << "Front RF Initialization Failed!!! ... " << "\33[0m" << "\n";
+    //     }
+    // else{
+    //     // perror("execvp");
+    //     std::cout<<"\33[32m"<<"Front RF Initialized!!..." <<"\33[0m"<<"\n";
+    // }
 }
 
 void frontend_SOFT_rst(void)
