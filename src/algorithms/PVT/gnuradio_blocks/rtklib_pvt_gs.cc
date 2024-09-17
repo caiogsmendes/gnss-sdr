@@ -1126,22 +1126,22 @@ bool rtklib_pvt_gs::get_latest_PVT(double* longitude_deg,
     double* course_over_ground_deg,
     time_t* UTC_time) const
 {
-    // if (d_enable_rx_clock_correction == true)
-    //     {
-    //         if (d_user_pvt_solver->is_valid_position())
-    //             {
-    //                 *latitude_deg = d_user_pvt_solver->get_latitude();
-    //                 *longitude_deg = d_user_pvt_solver->get_longitude();
-    //                 *height_m = d_user_pvt_solver->get_height();
-    //                 *ground_speed_kmh = d_user_pvt_solver->get_speed_over_ground() * 3600.0 / 1000.0;
-    //                 *course_over_ground_deg = d_user_pvt_solver->get_course_over_ground();
-    //                 *UTC_time = convert_to_time_t(d_user_pvt_solver->get_position_UTC_time());
+    if (d_enable_rx_clock_correction == true)
+        {
+            if (d_user_pvt_solver->is_valid_position())
+                {
+                    *latitude_deg = d_user_pvt_solver->get_latitude();
+                    *longitude_deg = d_user_pvt_solver->get_longitude();
+                    *height_m = d_user_pvt_solver->get_height();
+                    *ground_speed_kmh = d_user_pvt_solver->get_speed_over_ground() * 3600.0 / 1000.0;
+                    *course_over_ground_deg = d_user_pvt_solver->get_course_over_ground();
+                    *UTC_time = convert_to_time_t(d_user_pvt_solver->get_position_UTC_time());
 
-    //                 return true;
-    //             }
-    //     }
-    // else
-    //     {
+                    return true;
+                }
+        }
+    else
+        {
             if (d_internal_pvt_solver->is_valid_position())
                 {
                     *latitude_deg = d_internal_pvt_solver->get_latitude();
@@ -1153,7 +1153,7 @@ bool rtklib_pvt_gs::get_latest_PVT(double* longitude_deg,
 
                     return true;
                 }
-        // }
+        }
 
 
     return false;
@@ -1691,7 +1691,13 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                     if (flag_compute_pvt_output == true)
                         {
                             flag_pvt_valid = d_user_pvt_solver->get_PVT(d_gnss_observables_map, false);
+                            if((flag_pvt_valid == true)&&(d_internal_pvt_solver->is_valid_position())){
+                                CN_SAT_feed();  // CN SAT FEED
+                                CN_PVT_feed();  // CN PVT FEED
+                            }
+                            //
                         }
+
 
                     if (flag_pvt_valid == true)
                         {
@@ -1816,7 +1822,14 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                         // if (d_user_pvt_solver->is_valid_position()&&flag_pvt_valid)
                         if(d_internal_pvt_solver->is_valid_position())
                             {
-                                Protocol2CN();
+                
+                
+                                // Protocol2CN();
+                                // Protocol2CNlite();
+                
+                
+                
+                
                 //                 // jdex = 0;
                 //                 rx_pos = d_user_pvt_solver->get_rx_pos();
                 // //                 // timepvt = d_user_pvt_solver->d_pvt_sol_time.time;
@@ -2345,6 +2358,7 @@ void rtklib_pvt_gs::serialcmd_(void)
             if ((first_fix) && (tttt >= 1000) && (round(nvoo_tempo - ult_tempo) >= 1.0))
             // if ((first_fix) && (((current_RX_time_ms % 1000) == 0) && ((nvo_tempo - ult_tempo) >= 1.0)))//&& (tttt>1000))
             // if ((valida) && (tttt >= 1000) && (round(nvoo_tempo - ult_tempo) >= 1.0))
+            // if(flag_new_pvt_data==true)
                 {
                     // mtx.lock();
                     // msgVec[2] = jdex;
@@ -2369,6 +2383,7 @@ void rtklib_pvt_gs::serialcmd_(void)
         }
 
 }
+
 void rtklib_pvt_gs::Protocol2CN(void){
     d_internal_pvt_solver->gnss_observables_map = d_gnss_observables_map;
     num_sat = d_user_pvt_solver->get_num_valid_observations();
@@ -2473,7 +2488,7 @@ void rtklib_pvt_gs::Protocol2CN(void){
                                                     tempoo = y.second.RX_time;
                                                     double usr_offset = d_internal_pvt_solver->get_clock_drift_ppm() * 1e-6;
 
-                                                    prange = y.second.Pseudorange_m + x.second.dtr * SPEED_OF_LIGHT_M_S; //- (usr_offset * SPEED_OF_LIGHT_M_S);
+                                                    prange = y.second.Pseudorange_m+ x.second.dtr * SPEED_OF_LIGHT_M_S; //- (usr_offset * SPEED_OF_LIGHT_M_S);
                                                     
                                                     double TOW_symbol = y.second.TOW_at_current_symbol_ms * 1e-3;
 
@@ -2501,6 +2516,239 @@ void rtklib_pvt_gs::Protocol2CN(void){
 
                                                     mtx.unlock();
                                                 }
+                                        }
+                                }
+                        }
+                }
+        }
+}
+
+void rtklib_pvt_gs::Protocol2CNlite(void){
+    d_internal_pvt_solver->gnss_observables_map = d_gnss_observables_map;
+    num_sat = d_user_pvt_solver->get_num_valid_observations();
+    if (d_internal_pvt_solver->is_valid_position())
+        {
+            jdex = 0; index = 0;
+            mtx.lock();
+            rx_pos = d_user_pvt_solver->get_rx_pos();
+            std::array<float,3> rx_vel_f;
+            rx_vel = d_user_pvt_solver->get_rx_vel();
+            rx_vel_f[0] = (float)rx_vel[0];
+            rx_vel_f[1] = (float)rx_vel[1];
+            rx_vel_f[2] = (float)rx_vel[2];
+            gps_ephem = d_internal_pvt_solver->gps_ephemeris_map;
+            sync_map = get_observables_map();
+            valid_sat_selection = d_internal_pvt_solver->get_valid_sat_select();
+            double recepTempo = sync_map.begin()->second.RX_time;
+            double prange;
+            contadorrx = 0;
+            uint8_t checks{0};
+            msgVec[0] = 0xd4;
+            msgVec[1] = 0x4f;
+            msgVec[2] = 0; //Modo
+            msgVec[3] = 0; //Estado
+            msgVec[4] = 0; //tamanho pt1
+            msgVec[5] = 0; //tamanho pt2
+            index = 6;
+            Double2HexAlt(&msgVec[index + 0], &rx_pos[0]);
+            Double2HexAlt(&msgVec[index + 8], &rx_pos[1]);
+            Double2HexAlt(&msgVec[index + 16], &rx_pos[2]);
+            Float2Hex(&msgVec[index + 24], &rx_vel_f[0]);
+            Float2Hex(&msgVec[index + 28], &rx_vel_f[1]);
+            Float2Hex(&msgVec[index + 32], &rx_vel_f[2]);
+            Double2HexAlt(&msgVec[index + 36], &recepTempo);
+
+            mtx.unlock();
+
+            index +=44;
+
+            for (const auto& y : sync_map)
+                {
+                    for (const auto& x : gps_ephem)
+                        {
+                            if (y.second.System == 'G')
+                                {
+                                    if (y.second.PRN == x.second.PRN)
+                                        {
+                                            // bool valid_prange=y.second.Flag_valid_pseudorange;
+                                            if ((x.second.SV_health == 0) && (y.second.Flag_valid_pseudorange == 1))
+                                                {
+
+                                                    // // #########################   Geometrical Approuch on Transmit time:  #################################
+
+                                                    // double tempoo = y.second.RX_time;  // this->current_RX_time_ms = y.second.TOW_at_current_symbol_ms;
+                                                    tempoo = y.second.RX_time;
+                                                    double diffSATREC, diffSATSAT = 1000;
+                                                    double delta_tempo;
+                                                    double nvotempo;
+                                                    double limiar = 0.2;
+
+                                                    gps_ephem.at(x.first).satellitePosition(tempoo);
+
+                                                    PRN = (uint8_t)x.second.PRN;
+                                                    Carrier_Doppler_Hz = y.second.Carrier_Doppler_hz;
+
+                                                    satPosX = x.second.satpos_X;
+                                                    satPosY = x.second.satpos_Y;
+                                                    satPosZ = x.second.satpos_Z;
+                                                    
+                                                    float satVelX_f = x.second.satvel_X;         
+                                                    float satVelY_f = x.second.satvel_Y;                                                  
+                                                    float satVelZ_f = x.second.satvel_Z;
+
+                                                    deltaprange_f = -SPEED_OF_LIGHT_M_S * (Carrier_Doppler_Hz / 1575420000) - ((d_internal_pvt_solver->get_clock_drift_ppm() * 1e-6) - x.second.af1) * SPEED_OF_LIGHT_M_S;
+
+                                                    mtx.lock();
+                                                    // double temp_verif = y.second.interp_TOW_ms;
+                                                    temp_verif = y.second.interp_TOW_ms;
+                                                    tempoo = y.second.RX_time;
+                                                    double usr_offset = d_internal_pvt_solver->get_clock_drift_ppm() * 1e-6;
+
+                                                    prange = y.second.Pseudorange_m+ x.second.dtr * SPEED_OF_LIGHT_M_S; //- (usr_offset * SPEED_OF_LIGHT_M_S);
+                                                    
+                                                    double TOW_symbol = y.second.TOW_at_current_symbol_ms * 1e-3;
+
+                                                    msgVec[index + 0] = PRN;
+                                                    Double2HexAlt(&msgVec[index + 1], &prange);
+                                                    Float2Hex(&msgVec[index + 9], &deltaprange_f);
+                                                    Double2HexAlt(&msgVec[index + 13], &satPosX);
+                                                    Double2HexAlt(&msgVec[index + 21], &satPosY);
+                                                    Double2HexAlt(&msgVec[index + 29], &satPosZ);
+                                                    Float2Hex(&msgVec[index + 37], &satVelX_f);
+                                                    Float2Hex(&msgVec[index + 41], &satVelY_f);
+                                                    Float2Hex(&msgVec[index + 45], &satVelZ_f);
+
+                                                    index = index + 49;
+                                                    contadorrx++;
+                                                    jdex = index + 1;
+                                                    Int2Hex(&msgVec[4], &jdex);
+                                                    checks = 0;
+                                                    for (int i = 0; i < index; i++)
+                                                        {
+                                                            checks ^= msgVec[i];
+                                                        }
+                                                    msgVec[index] = checks;
+
+                                                    mtx.unlock();
+                                                }
+                                        }
+                                }
+                        }
+                }
+        }
+}
+
+
+void rtklib_pvt_gs::CN_PVT_feed(void)
+{
+    mtx.lock();
+    rx_pos = d_user_pvt_solver->get_rx_pos();
+    std::array<float, 3> rx_vel_f;
+    rx_vel = d_user_pvt_solver->get_rx_vel();
+    rx_vel_f[0] = (float)rx_vel[0];
+    rx_vel_f[1] = (float)rx_vel[1];
+    rx_vel_f[2] = (float)rx_vel[2];
+
+    valid_sat_selection = d_internal_pvt_solver->get_valid_sat_select();
+    double recepTempo = sync_map.begin()->second.RX_time;
+
+    uint8_t checks{0};
+    msgVec[0] = 0xd4;
+    msgVec[1] = 0x4f;
+    msgVec[2] = 0;  // Modo
+    msgVec[3] = 0;  // Estado
+    msgVec[4] = 0;  // tamanho pt1
+    msgVec[5] = 0;  // tamanho pt2
+    Double2HexAlt(&msgVec[6], &rx_pos[0]);
+    Double2HexAlt(&msgVec[14], &rx_pos[1]);
+    Double2HexAlt(&msgVec[22], &rx_pos[2]);
+    Float2Hex(&msgVec[30], &rx_vel_f[0]);
+    Float2Hex(&msgVec[34], &rx_vel_f[1]);
+    Float2Hex(&msgVec[38], &rx_vel_f[2]);
+    Double2HexAlt(&msgVec[42], &recepTempo);
+    // mtx.unlock();
+
+    // index += 50;
+
+    // mtx.lock();
+    // checksum
+    // int checks = 0;
+    contadorrx++;
+    jdex = index + 1;
+    Int2Hex(&msgVec[4], &jdex);
+    for (int i = 0; i < index; i++)
+        {
+            checks ^= msgVec[i];
+        }
+    msgVec[index] = checks;
+    mtx.unlock();
+}
+
+void rtklib_pvt_gs::CN_SAT_feed(void)
+{
+    double prange;
+    contadorrx = 0;
+    gps_ephem = d_internal_pvt_solver->gps_ephemeris_map;
+    sync_map = get_observables_map();
+    index = 50;
+
+    for (const auto& y : sync_map)
+        {
+            for (const auto& x : gps_ephem)
+                {
+                    if (y.second.System == 'G')
+                        {
+                            if (y.second.PRN == x.second.PRN)
+                                {
+                                    // bool valid_prange=y.second.Flag_valid_pseudorange;
+                                    if ((x.second.SV_health == 0) && (y.second.Flag_valid_pseudorange == 1))
+                                        {
+                                            // // #########################   Geometrical Approuch on Transmit time:  #################################
+
+                                            // double tempoo = y.second.RX_time;  // this->current_RX_time_ms = y.second.TOW_at_current_symbol_ms;
+                                            tempoo = y.second.RX_time;
+                                            // double diffSATREC, diffSATSAT = 1000;
+                                            // double delta_tempo;
+                                            // double nvotempo;
+                                            // double limiar = 0.2;
+
+                                            gps_ephem.at(x.first).satellitePosition(tempoo);
+
+                                            PRN = (uint8_t)x.second.PRN;
+                                            Carrier_Doppler_Hz = y.second.Carrier_Doppler_hz;
+
+                                            satPosX = x.second.satpos_X;
+                                            satPosY = x.second.satpos_Y;
+                                            satPosZ = x.second.satpos_Z;
+
+                                            float satVelX_f = x.second.satvel_X;
+                                            float satVelY_f = x.second.satvel_Y;
+                                            float satVelZ_f = x.second.satvel_Z;
+
+                                            deltaprange_f = -SPEED_OF_LIGHT_M_S * (Carrier_Doppler_Hz / 1575420000) - ((d_internal_pvt_solver->get_clock_drift_ppm() * 1e-6) - x.second.af1) * SPEED_OF_LIGHT_M_S;
+
+                                            mtx.lock();
+                                            // double temp_verif = y.second.interp_TOW_ms;
+                                            temp_verif = y.second.interp_TOW_ms;
+                                            tempoo = y.second.RX_time;
+                                            double usr_offset = d_internal_pvt_solver->get_clock_drift_ppm() * 1e-6;
+
+                                            prange = y.second.Pseudorange_m + x.second.dtr * SPEED_OF_LIGHT_M_S;  //- (usr_offset * SPEED_OF_LIGHT_M_S);
+
+                                            double TOW_symbol = y.second.TOW_at_current_symbol_ms * 1e-3;
+                                            msgVec[index + 0] = PRN;
+                                            Double2HexAlt(&msgVec[index + 1], &prange);
+                                            Float2Hex(&msgVec[index + 9], &deltaprange_f);
+                                            Double2HexAlt(&msgVec[index + 13], &satPosX);
+                                            Double2HexAlt(&msgVec[index + 21], &satPosY);
+                                            Double2HexAlt(&msgVec[index + 29], &satPosZ);
+                                            Float2Hex(&msgVec[index + 37], &satVelX_f);
+                                            Float2Hex(&msgVec[index + 41], &satVelY_f);
+                                            Float2Hex(&msgVec[index + 45], &satVelZ_f);
+                                            index += 49;
+                                            contadorrx++;
+
+                                            mtx.unlock();
                                         }
                                 }
                         }

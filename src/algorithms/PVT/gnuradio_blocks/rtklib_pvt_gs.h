@@ -128,6 +128,9 @@ public:
     std::map<int, Gnss_Synchro> get_observables_map() const;
     bool set_flag_serial_interp(bool status);
     void Protocol2CN(void);
+    void Protocol2CNlite(void);
+    void CN_PVT_feed(void);
+    void CN_SAT_feed(void);
 
     /*!
      * \brief Get the latest Position WGS84 [deg], Ground Velocity, Course over Ground, and UTC Time, if available
@@ -378,7 +381,8 @@ private:
     double satVelZ{0};
     std::array<double, 3> rx_pos{0};
     std::array<double, 3> rx_vel{0};
-    double deltaprange{0};
+    double deltaprange{};
+    float deltaprange_f{};
     double rx_clk_deslize{0};
     std::map<int, Gnss_Synchro> sync_map;
     std::map<int, Gps_Ephemeris> gps_ephem;
