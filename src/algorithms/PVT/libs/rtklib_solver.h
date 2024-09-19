@@ -117,7 +117,7 @@ public:
     std::map<int, Gnss_Synchro> gnss_observables_map; // With Hope, a Map storing new Synchro Data
     std::map<int, Gnss_Ephemeris> Gnss_Ephem_map;
     std::map<int, Gps_Ephemeris> Gps_Ephem_map;
-    
+    uint32_t tow_symbol_ms{0};
 
     Galileo_Utc_Model galileo_utc_model;
     Galileo_Iono galileo_iono;

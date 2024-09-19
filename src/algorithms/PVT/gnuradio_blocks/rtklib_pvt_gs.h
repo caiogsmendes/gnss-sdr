@@ -388,6 +388,8 @@ private:
     std::map<int, Gps_Ephemeris> gps_ephem;
     std::map<int, bool> valid_sat_selection;
 
+    double _TGD{0};
+
     uint32_t current_RX_time_ms = 0;
 
     typedef struct 

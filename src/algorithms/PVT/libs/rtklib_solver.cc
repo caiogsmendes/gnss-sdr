@@ -1584,6 +1584,7 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
                     // ######## PVT MONITOR #########
                     // TOW
                     d_monitor_pvt.TOW_at_current_symbol_ms = gnss_observables_map.cbegin()->second.TOW_at_current_symbol_ms;
+                    tow_symbol_ms = d_monitor_pvt.TOW_at_current_symbol_ms;
                     // WEEK
                     d_monitor_pvt.week = adjgpsweek(d_nav_data.eph[0].week, this->is_pre_2009());
                     // PVT GPS time

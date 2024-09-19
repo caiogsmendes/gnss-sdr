@@ -1691,10 +1691,11 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                     if (flag_compute_pvt_output == true)
                         {
                             flag_pvt_valid = d_user_pvt_solver->get_PVT(d_gnss_observables_map, false);
-                            if((flag_pvt_valid == true)&&(d_internal_pvt_solver->is_valid_position())){
+                            num_sat = d_user_pvt_solver->get_num_valid_observations();
+                            // if((flag_pvt_valid == true)&&(d_internal_pvt_solver->is_valid_position())){
                                 CN_SAT_feed();  // CN SAT FEED
                                 CN_PVT_feed();  // CN PVT FEED
-                            }
+                            // }
                             //
                         }
 
@@ -2368,7 +2369,7 @@ void rtklib_pvt_gs::serialcmd_(void)
                     deltinha = tttt - 1000.0;
                     tStartSteady = std::chrono::high_resolution_clock::now();
                     ult_tempo = nvoo_tempo;
-                    // std::cout << TEXT_BOLD_GREEN <<"Numsat: "<<num_sat<<" N_Sat: " << contadorrx << " Bytes: " << sended_PVT <<" Contador: "<<ccontmsg<<" Time: " << tttt 
+                    // std::cout << TEXT_BOLD_GREEN <<"TGD: "<<_TGD<<" Numsat: "<<num_sat<<" N_Sat: " << contadorrx << " Bytes: " << sended_PVT <<" Contador: "<<ccontmsg<<" Time: " << tttt 
                     // << " last_Rx_time: " << nvoo_tempo <<" d_rx_time: "<<d_rx_time<< TEXT_RESET << "\n";
                     // for(const auto &x:gps_cnav)
                     // {
@@ -2650,13 +2651,15 @@ void rtklib_pvt_gs::CN_PVT_feed(void)
     rx_vel_f[2] = (float)rx_vel[2];
 
     valid_sat_selection = d_internal_pvt_solver->get_valid_sat_select();
-    double recepTempo = sync_map.begin()->second.RX_time;
+    // double recepTempo = sync_map.begin()->second.RX_time;
+    uint32_t recepTempo = d_user_pvt_solver->tow_symbol_ms*1e-3;
 
     uint8_t checks{0};
     msgVec[0] = 0xd4;
     msgVec[1] = 0x4f;
-    msgVec[2] = 0;  // Modo
-    msgVec[3] = 0;  // Estado
+    msgVec[2] = 0x04;  // Modo
+    // msgVec[3] = num_sat;  // Estado
+    msgVec[3] = contadorrx;  // Estado
     msgVec[4] = 0;  // tamanho pt1
     msgVec[5] = 0;  // tamanho pt2
     Double2HexAlt(&msgVec[6], &rx_pos[0]);
@@ -2665,7 +2668,9 @@ void rtklib_pvt_gs::CN_PVT_feed(void)
     Float2Hex(&msgVec[30], &rx_vel_f[0]);
     Float2Hex(&msgVec[34], &rx_vel_f[1]);
     Float2Hex(&msgVec[38], &rx_vel_f[2]);
-    Double2HexAlt(&msgVec[42], &recepTempo);
+    // Double2HexAlt(&msgVec[42], &recepTempo);
+    // Float2Hex(&msgVec[42], (float*)&recepTempo);
+    Integer2Hex(&msgVec[42],&recepTempo);
     // mtx.unlock();
 
     // index += 50;
@@ -2690,7 +2695,7 @@ void rtklib_pvt_gs::CN_SAT_feed(void)
     contadorrx = 0;
     gps_ephem = d_internal_pvt_solver->gps_ephemeris_map;
     sync_map = get_observables_map();
-    index = 50;
+    index = 46;
 
     for (const auto& y : sync_map)
         {
@@ -2701,17 +2706,21 @@ void rtklib_pvt_gs::CN_SAT_feed(void)
                             if (y.second.PRN == x.second.PRN)
                                 {
                                     // bool valid_prange=y.second.Flag_valid_pseudorange;
-                                    if ((x.second.SV_health == 0) && (y.second.Flag_valid_pseudorange == 1))
+                                    if ((x.second.SV_health == 0) && (y.second.Flag_valid_pseudorange == 1))//&& (y.second.CN0_dB_hz>=40.0))
                                         {
                                             // // #########################   Geometrical Approuch on Transmit time:  #################################
 
                                             // double tempoo = y.second.RX_time;  // this->current_RX_time_ms = y.second.TOW_at_current_symbol_ms;
-                                            tempoo = y.second.RX_time;
+                                            //tempoo = y.second.RX_time;
+                                            // tempoo = (y.second.TOW_at_current_symbol_ms*1e-3)-y.second.Pseudorange_m/SPEED_OF_LIGHT_M_S;
+                                            // tempoo = (d_user_pvt_solver->tow_symbol_ms*1e-3)-y.second.Pseudorange_m/SPEED_OF_LIGHT_M_S;
+                                            mtx.lock();
+                                            tempoo = (y.second.RX_time)-y.second.Pseudorange_m/SPEED_OF_LIGHT_M_S;
                                             // double diffSATREC, diffSATSAT = 1000;
                                             // double delta_tempo;
                                             // double nvotempo;
                                             // double limiar = 0.2;
-
+                                            _TGD = x.second.TGD;
                                             gps_ephem.at(x.first).satellitePosition(tempoo);
 
                                             PRN = (uint8_t)x.second.PRN;
@@ -2721,21 +2730,27 @@ void rtklib_pvt_gs::CN_SAT_feed(void)
                                             satPosY = x.second.satpos_Y;
                                             satPosZ = x.second.satpos_Z;
 
-                                            float satVelX_f = x.second.satvel_X;
-                                            float satVelY_f = x.second.satvel_Y;
-                                            float satVelZ_f = x.second.satvel_Z;
-
+                                            float satVelX_f = (float)x.second.satvel_X;
+                                            float satVelY_f = (float)x.second.satvel_Y;
+                                            // float satVelZ_f = _TGD * SPEED_OF_LIGHT_M_S;//x.second.satvel_Z;
+                                            float satVelZ_f = (float)x.second.satvel_Z;
+                                            // float satVelZ_f = (float)y.second.CN0_dB_hz;
+                                            float _CN0_dB_hz = y.second.CN0_dB_hz;
+                                            double towSymbol_s;// = y.second.TOW_at_current_symbol_ms*1e-3;
+                                            // towSymbol_s = (double)x.second.SV_accuracy;
+                                            towSymbol_s = y.second.interp_TOW_ms*1e-3;
                                             deltaprange_f = -SPEED_OF_LIGHT_M_S * (Carrier_Doppler_Hz / 1575420000) - ((d_internal_pvt_solver->get_clock_drift_ppm() * 1e-6) - x.second.af1) * SPEED_OF_LIGHT_M_S;
 
-                                            mtx.lock();
+                                            
                                             // double temp_verif = y.second.interp_TOW_ms;
                                             temp_verif = y.second.interp_TOW_ms;
                                             tempoo = y.second.RX_time;
                                             double usr_offset = d_internal_pvt_solver->get_clock_drift_ppm() * 1e-6;
 
-                                            prange = y.second.Pseudorange_m + x.second.dtr * SPEED_OF_LIGHT_M_S;  //- (usr_offset * SPEED_OF_LIGHT_M_S);
-
+                                            prange = y.second.Pseudorange_m + (x.second.dtr) * SPEED_OF_LIGHT_M_S;  //- (usr_offset * SPEED_OF_LIGHT_M_S);
                                             double TOW_symbol = y.second.TOW_at_current_symbol_ms * 1e-3;
+                                            
+                                            // Sat Msg Block //
                                             msgVec[index + 0] = PRN;
                                             Double2HexAlt(&msgVec[index + 1], &prange);
                                             Float2Hex(&msgVec[index + 9], &deltaprange_f);
@@ -2744,8 +2759,13 @@ void rtklib_pvt_gs::CN_SAT_feed(void)
                                             Double2HexAlt(&msgVec[index + 29], &satPosZ);
                                             Float2Hex(&msgVec[index + 37], &satVelX_f);
                                             Float2Hex(&msgVec[index + 41], &satVelY_f);
+                                            // Float2Hex(&msgVec[index + 45], &satVelZ_f);
                                             Float2Hex(&msgVec[index + 45], &satVelZ_f);
-                                            index += 49;
+                                            // Double2Hex(&msgVec[index + 49], &towSymbol_s);
+                                            Float2Hex(&msgVec[index + 49], &_CN0_dB_hz);
+                                            //
+
+                                            index += 53;
                                             contadorrx++;
 
                                             mtx.unlock();
