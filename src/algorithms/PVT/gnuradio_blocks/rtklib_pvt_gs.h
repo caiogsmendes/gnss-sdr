@@ -345,6 +345,7 @@ private:
     // std::shared_ptr<PVT_interface> serial_sptr_;
     std::thread serial_temp_thread_;
     void serialcmd_(void);
+    void serialcmd_2(void);
     serial_s_t comms;
     double ultimo_rx_time{0};
     bool flag_new_pvt_data{false};
@@ -421,7 +422,6 @@ private:
     bool msgReady{false};
     // uint8_t msgVec[780 + 3 + 3 + 56]{0}; // 780 bytes para 12 satélites no máx.
     uint8_t msgVec[130*12+5]; // 81 bytes x 12 Sats
-
     bool valida{false};
 };
 

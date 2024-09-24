@@ -267,14 +267,16 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
         }
 
     // // // Caio
-    serial_temp_thread_ = std::thread(&rtklib_pvt_gs::serialcmd_, this);
+    // serial_temp_thread_ = std::thread(&rtklib_pvt_gs::serialcmd_, this);
+    serial_temp_thread_ = std::thread(&rtklib_pvt_gs::serialcmd_2, this);
     // sched_param sch_params;
     // int policy;
     // pthread_getschedparam(serial_temp_thread_.native_handle(), &policy, &sch_params);
     // sch_params.sched_priority = 80;
     // if (pthread_setschedparam(serial_temp_thread_.native_handle(), SCHED_FIFO, &sch_params))
     //     std::cout << "Failed to setschedparam: " << std::strerror(errno) << '\n';
-
+    // msgVec[2] = 0x03;
+    // msgVec[3] = 0;
 
     if (d_dump)
         {
@@ -1691,14 +1693,18 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                     if (flag_compute_pvt_output == true)
                         {
                             flag_pvt_valid = d_user_pvt_solver->get_PVT(d_gnss_observables_map, false);
-                            num_sat = d_user_pvt_solver->get_num_valid_observations();
-                            // if((flag_pvt_valid == true)&&(d_internal_pvt_solver->is_valid_position())){
-                                CN_SAT_feed();  // CN SAT FEED
-                                CN_PVT_feed();  // CN PVT FEED
-                            // }
-                            //
-                        }
 
+                            if ((flag_pvt_valid == true) && (d_internal_pvt_solver->is_valid_position()))
+                                {   
+                                    first_fix = true;
+                                    num_sat = d_user_pvt_solver->get_num_valid_observations();
+                                    CN_SAT_feed();  // CN SAT FEED
+                                    CN_PVT_feed();  // CN PVT FEED
+                                }
+                                else{
+                                    first_fix = false;
+                                }
+                        }
 
                     if (flag_pvt_valid == true)
                         {
@@ -1816,7 +1822,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                             send_sys_v_ttff_msg(ttff);
                                             d_first_fix = false;
                                         }
-                                }
+                        }
                         }
                         d_internal_pvt_solver->gnss_observables_map = d_gnss_observables_map;
                         num_sat = d_user_pvt_solver->get_num_valid_observations();
@@ -2327,9 +2333,10 @@ bool rtklib_pvt_gs::set_flag_serial_interp(bool status)
 }
 
 
-
 void rtklib_pvt_gs::serialcmd_(void)
 {
+
+
     // bool flag_fix_first = false;
     // std::ofstream filele("ArqTest.bin",std::ios::out|std::ios::app|std::ios::binary);
     auto tStartSteady = std::chrono::high_resolution_clock::now();
@@ -2382,7 +2389,6 @@ void rtklib_pvt_gs::serialcmd_(void)
                 }
                 else{continue;}
         }
-
 }
 
 void rtklib_pvt_gs::Protocol2CN(void){
@@ -2772,6 +2778,107 @@ void rtklib_pvt_gs::CN_SAT_feed(void)
                                         }
                                 }
                         }
+                }
+        }
+}
+
+
+void rtklib_pvt_gs::serialcmd_2(void)
+{
+    msgVec[0] = 0xd4;
+    msgVec[1] = 0x4f;
+    msgVec[2] = 0x03;  // Modo
+    msgVec[3] = 0;     // Estado ou N°Sat
+    msgVec[4] = 0;     // tamanho pt1
+    msgVec[5] = 0;     // tamanho pt2
+    jdex = index + 1;
+    uint8_t checks{0};
+    Int2Hex(&msgVec[4], &jdex);
+    for (int i = 0; i < index; i++)
+        {
+            checks ^= msgVec[i];
+        }
+    msgVec[index] = checks;
+    // bool flag_fix_first = false;
+    // std::ofstream filele("ArqTest.bin",std::ios::out|std::ios::app|std::ios::binary);
+    auto tStartSteady = std::chrono::high_resolution_clock::now();
+    auto tEndSteady = std::chrono::high_resolution_clock::now();
+    mtx.lock();
+    double ult_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms * 0.001;  //*1000;
+    mtx.unlock();
+    // double nvo_tempo;
+    double nvoo_tempo;
+    double tttt;
+    int ccontmsg = 0;
+    double deltinha = 0.0f;
+    while (!flag_interrupt_serial)
+        {
+            tEndSteady = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double, std::milli> tempo_ligado_ms = tEndSteady - tStartSteady;
+
+            tttt = tempo_ligado_ms.count() - deltinha;
+            mtx.lock();
+            nvoo_tempo = sync_map.begin()->second.TOW_at_current_symbol_ms * 0.001;
+
+            mtx.unlock();
+            // nvo_tempo = d_rx_time;
+
+            // std::map<int, Gps_CNAV_Ephemeris> gps_cnav = d_internal_pvt_solver->gps_cnav_ephemeris_map;
+            if ((tttt >= 1000) /*(&& (round(nvoo_tempo - ult_tempo) >= 1.0))*/)
+                // if ((first_fix) && (((current_RX_time_ms % 1000) == 0) && ((nvo_tempo - ult_tempo) >= 1.0)))//&& (tttt>1000))
+                // if ((valida) && (tttt >= 1000) && (round(nvoo_tempo - ult_tempo) >= 1.0))
+                // if(flag_new_pvt_data==true)
+                {
+                    if ((first_fix)&&(round(nvoo_tempo - ult_tempo) >= 1.0))
+                        {
+                            // mtx.lock();
+                            // msgVec[2] = jdex;
+                            int sended_PVT = write(comms.fd, &msgVec[0], jdex);
+                            // mtx.unlock();
+                            ccontmsg++;
+                            deltinha = tttt - 1000.0;
+                            tStartSteady = std::chrono::high_resolution_clock::now();
+                            ult_tempo = nvoo_tempo;
+                            // std::cout << TEXT_BOLD_GREEN <<"TGD: "<<_TGD<<" Numsat: "<<num_sat<<" N_Sat: " << contadorrx << " Bytes: " << sended_PVT <<" Contador: "<<ccontmsg<<" Time: " << tttt
+                            // << " last_Rx_time: " << nvoo_tempo <<" d_rx_time: "<<d_rx_time<< TEXT_RESET << "\n";
+                            // for(const auto &x:gps_cnav)
+                            // {
+                            //     std::cout<<"PRN: "<<x.second.PRN<<" ISCL1: "<<x.second.ISCL1<<"\n";
+                            // }
+                        }
+                    else
+                        {
+                            CN_SAT_feed();
+                            msgVec[0] = 0xd4;
+                            msgVec[1] = 0x4f;
+                            msgVec[2] = 0x03;        // Modo
+                            msgVec[3] = contadorrx;  // Estado ou N°Sat
+                            msgVec[4] = 0;           // tamanho pt1
+                            msgVec[5] = 0;           // tamanho pt2
+                            jdex = index + 1;
+                            uint8_t checks{0};
+                            Int2Hex(&msgVec[4], &jdex);
+                            for (int i = 0; i < index; i++)
+                                {
+                                    checks ^= msgVec[i];
+                                }
+                            msgVec[index] = checks;
+
+                            int sended_PVT = write(comms.fd, &msgVec[0], jdex);
+
+                            // ccontmsg++;
+                            deltinha = tttt - 1000.0;
+                            tStartSteady = std::chrono::high_resolution_clock::now();
+                            ult_tempo = nvoo_tempo;
+                        }
+                }
+            else if (tttt >= 1100)
+                {
+                    tStartSteady = std::chrono::system_clock::now();
+                }
+            else
+                {
+                    continue;
                 }
         }
 }
