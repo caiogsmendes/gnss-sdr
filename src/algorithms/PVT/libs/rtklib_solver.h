@@ -92,6 +92,9 @@ public:
 
     bool get_PVT(const std::map<int, Gnss_Synchro>& gnss_observables_map, double kf_update_interval_s);
 
+    std::map<int, Gnss_Synchro> c_gnss_observables_map; //Caio mod
+    uint32_t tow_symbol_ms{0}; // Caio mod
+
     double get_hdop() const override;
     double get_vdop() const override;
     double get_pdop() const override;

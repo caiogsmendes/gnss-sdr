@@ -1501,6 +1501,8 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
 
             result = rtkpos(&d_rtk, d_obs_data.data(), valid_obs + glo_valid_obs, &d_nav_data);
 
+            tow_symbol_ms=gnss_observables_map.cbegin()->second.TOW_at_current_symbol_ms*1e-3; //Caio Mod
+
             if (result == 0)
                 {
                     LOG(INFO) << "RTKLIB rtkpos error: " << d_rtk.errbuf;

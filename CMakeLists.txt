@@ -30,9 +30,9 @@ list(APPEND CMAKE_MODULE_PATH ${GNSSSDR_SOURCE_DIR}/cmake/Modules)
 include(FeatureSummary)
 
 # Support of optional RF front-ends
-option(ENABLE_UHD "Enable the use of UHD (driver for all USRP devices)" ON)
+option(ENABLE_UHD "Enable the use of UHD (driver for all USRP devices)" OFF) #caio
 
-option(ENABLE_OSMOSDR "Enable the use of OsmoSDR and other front-ends (RTL-based dongles, HackRF, bladeRF, etc.) as signal source" OFF)
+option(ENABLE_OSMOSDR "Enable the use of OsmoSDR and other front-ends (RTL-based dongles, HackRF, bladeRF, etc.) as signal source" ON) #caio
 
 option(ENABLE_LIMESDR "Enable the use of LimeSDR and Custom LimeSDR as signal source" OFF)
 
@@ -50,7 +50,7 @@ option(ENABLE_FLEXIBAND "Enable the use of the signal source adater for the Tele
 
 option(ENABLE_ARRAY "Enable the use of CTTC's antenna array front-end as signal source (experimental)" OFF)
 
-option(ENABLE_ZMQ "Enable GNU Radio ZeroMQ Messaging, requires gr-zeromq" ON)
+option(ENABLE_ZMQ "Enable GNU Radio ZeroMQ Messaging, requires gr-zeromq" OFF) #caio
 
 # Performance analysis tools
 option(ENABLE_GPERFTOOLS "Enable linking to Gperftools libraries (tcmalloc and profiler)" OFF)
@@ -70,13 +70,13 @@ option(ENABLE_CUDA "Enable building of processing blocks implemented with CUDA (
 option(ENABLE_FPGA "Enable building of processing blocks implementing FPGA offloading" OFF)
 
 # Building and packaging options
-option(ENABLE_PACKAGING "Enable software packaging" OFF)
+option(ENABLE_PACKAGING "Enable software packaging" ON)
 
 option(ENABLE_OWN_GLOG "Download glog and link it to gflags" OFF)
 
 option(ENABLE_OWN_ARMADILLO "Download and build Armadillo locally" OFF)
 
-option(ENABLE_LOG "Enable logging" ON)
+option(ENABLE_LOG "Enable logging" OFF) #caio
 
 option(ENABLE_ARMA_NO_DEBUG OFF)
 
@@ -91,7 +91,7 @@ if(ENABLE_PACKAGING)
 endif()
 
 # Testing
-option(ENABLE_UNIT_TESTING "Build unit tests" ON)
+option(ENABLE_UNIT_TESTING "Build unit tests" OFF) #caio
 
 option(ENABLE_UNIT_TESTING_MINIMAL "Build a minimal set of unit tests" OFF)
 
@@ -101,7 +101,7 @@ option(ENABLE_SYSTEM_TESTING "Build system tests" OFF)
 
 option(ENABLE_SYSTEM_TESTING_EXTRA "Download external tools and build extra system tests" OFF)
 
-option(ENABLE_GNSS_SIM_INSTALL "Enable the installation of gnss_sim on the fly" ON)
+option(ENABLE_GNSS_SIM_INSTALL "Enable the installation of gnss_sim on the fly" OFF) #caio
 
 option(ENABLE_CPUFEATURES "Make use of the cpu_features library" ON)
 

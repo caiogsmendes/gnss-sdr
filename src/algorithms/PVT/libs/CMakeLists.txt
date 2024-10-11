@@ -24,6 +24,7 @@ set(PVT_LIB_SOURCES
     has_simple_printer.cc
     geohash.cc
     pvt_kf.cc
+    HEtechSerial.cc
 )
 
 set(PVT_LIB_HEADERS
@@ -47,6 +48,7 @@ set(PVT_LIB_HEADERS
     has_simple_printer.h
     geohash.h
     pvt_kf.h
+    HEtechSerial.h
 )
 
 list(SORT PVT_LIB_HEADERS)
