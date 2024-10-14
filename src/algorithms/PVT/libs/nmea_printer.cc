@@ -31,6 +31,9 @@
 #include <termios.h>
 #include <utility>
 
+#include <unistd.h>
+#include "HEtechSerial.h"
+
 #if USE_GLOG_AND_GFLAGS
 #include <glog/logging.h>
 #else
@@ -45,6 +48,7 @@ Nmea_Printer::Nmea_Printer(const std::string& filename,
     const std::string& base_path) : nmea_base_path(base_path),
                                     d_flag_nmea_output_file(flag_nmea_output_file)
 {
+    comms = HEserial_connect(nmea_dump_devname.c_str(), B921600, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
     if (d_flag_nmea_output_file == true)
         {
             fs::path full_path(fs::current_path());
@@ -112,6 +116,7 @@ Nmea_Printer::Nmea_Printer(const std::string& filename,
 
 Nmea_Printer::~Nmea_Printer()
 {
+    HEserial_disconnect(&comms);
     DLOG(INFO) << "NMEA printer destructor called.";
     const auto pos = nmea_file_descriptor.tellp();
     try
@@ -157,13 +162,13 @@ int Nmea_Printer::init_serial(const std::string& serial_device)
     // clang-format off
     struct termios options{};
     // clang-format on
-    const int64_t BAUD = B9600;  // BAUD  =  B38400;
+    const int64_t BAUD = B921600;//B9600;  // BAUD  =  B38400;
     const int64_t DATABITS = CS8;
-    const int64_t STOPBITS = 0;
+    const int64_t STOPBITS = 1;
     const int64_t PARITYON = 0;
     const int64_t PARITY = 0;
 
-    fd = open(serial_device.c_str(), O_RDWR | O_NOCTTY | O_NDELAY | O_CLOEXEC);
+    fd = open(serial_device.c_str(), O_RDWR | O_NOCTTY | O_NDELAY /*| O_CLOEXEC*/);
     if (fd == -1)
         {
             return fd;  // failed to open TTY port
@@ -199,59 +204,69 @@ bool Nmea_Printer::Print_Nmea_Line(const Rtklib_Solver* const pvt_data)
 {
     // set the new PVT data
     d_PVT_data = pvt_data;
-
+    int bytes = get_msgvec_w_GAL(pvt_data);
     // generate the NMEA sentences
 
     // GPRMC
-    const std::string GPRMC = get_GPRMC();
+    // const std::string GPRMC = get_GPRMC();
     // GPGGA (Global Positioning System Fixed Data)
-    const std::string GPGGA = get_GPGGA();
+    // const std::string GPGGA = get_GPGGA();
     // GPGSA
-    const std::string GPGSA = get_GPGSA();
+    // const std::string GPGSA = get_GPGSA();
     // GPGSV
-    const std::string GPGSV = get_GPGSV();
+    // const std::string GPGSV = get_GPGSV();
 
-    // write to log file
-    if (d_flag_nmea_output_file)
-        {
-            try
-                {
-                    nmea_file_descriptor
-                        << GPRMC
-                        << GPGGA  // GPGGA (Global Positioning System Fixed Data)
-                        << GPGSA
-                        << GPGSV
-                        << std::flush;
-                }
-            catch (const std::exception& ex)
-                {
-                    DLOG(INFO) << "NMEA printer can not write on output file" << nmea_filename.c_str();
-                }
-        }
+    // // write to log file
+    // if (d_flag_nmea_output_file)
+    //     {
+    //         try
+    //             {
+    //                 nmea_file_descriptor
+    //                     << msgvec_test
+    //                     //<< GPRMC
+    //                     // << GPGGA  // GPGGA (Global Positioning System Fixed Data)
+    //                     // << GPGSA
+    //                     // << GPGSV
+    //                     << std::flush;
+    //             }
+    //         catch (const std::exception& ex)
+    //             {
+    //                 DLOG(INFO) << "NMEA printer can not write on output file" << nmea_filename.c_str();
+    //             }
+    //     }
 
     // write to serial device
     if (nmea_dev_descriptor != -1)
         {
-            if (write(nmea_dev_descriptor, GPRMC.c_str(), GPRMC.length()) == -1)
+            // int resultt = write(nmea_dev_descriptor, &msgvec_test[0], 365);
+            // int resultt = write(comms.fd, &msgvec_test[0], 357);
+            int resultt = write(nmea_dev_descriptor, &msgvec[0], bytes);
+            if (resultt == -1)
                 {
-                    DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
+                    // DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
                     return false;
                 }
-            if (write(nmea_dev_descriptor, GPGGA.c_str(), GPGGA.length()) == -1)
-                {
-                    DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
-                    return false;
-                }
-            if (write(nmea_dev_descriptor, GPGSA.c_str(), GPGSA.length()) == -1)
-                {
-                    DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
-                    return false;
-                }
-            if (write(nmea_dev_descriptor, GPGSV.c_str(), GPGSV.length()) == -1)
-                {
-                    DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
-                    return false;
-                }
+
+            // if (write(nmea_dev_descriptor, GPRMC.c_str(), GPRMC.length()) == -1)
+            //     {
+            //         DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
+            //         return false;
+            //     }
+            // if (write(nmea_dev_descriptor, GPGGA.c_str(), GPGGA.length()) == -1)
+            //     {
+            //         DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
+            //         return false;
+            //     }
+            // if (write(nmea_dev_descriptor, GPGSA.c_str(), GPGSA.length()) == -1)
+            //     {
+            //         DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
+            //         return false;
+            //     }
+            // if (write(nmea_dev_descriptor, GPGSV.c_str(), GPGSV.length()) == -1)
+            //     {
+            //         DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
+            //         return false;
+            //     }
         }
     return true;
 }
@@ -437,4 +452,70 @@ std::string Nmea_Printer::get_GPGGA() const
     sentence_str << buff.data();
     return sentence_str.str();
     // $GPGGA,104427.591,5920.7009,N,01803.2938,E,1,05,3.3,78.2,M,23.2,M,0.0,0000*4A
+}
+
+int Nmea_Printer::get_msgvec_w_GAL(const Rtklib_Solver* const pvt_data)
+{
+    msgvec[0]=0xd4;
+    msgvec[1]=0x4f;
+    msgvec[2]=4;
+    // msgvec[3]=pvt_data->pvt_sol.ns;
+    Double2Hex(&msgvec[6],&pvt_data->pvt_sol.rr[0]);
+    Double2Hex(&msgvec[14], &pvt_data->pvt_sol.rr[1]);
+    Double2Hex(&msgvec[22], &pvt_data->pvt_sol.rr[2]);
+    float velX = (float)pvt_data->pvt_sol.rr[3];
+    float velY = (float)pvt_data->pvt_sol.rr[4];
+    float velZ = (float)pvt_data->pvt_sol.rr[5];
+    Float2Hex(&msgvec[30], &velX);
+    Float2Hex(&msgvec[34], &velY);
+    Float2Hex(&msgvec[38], &velZ);
+    Integer2Hex(&msgvec[42], &pvt_data->tow_symbol_ms);
+    int index = 46; int cont=0;
+    float dummyfloat = 456.7;
+    std::map<int,Gps_Ephemeris>gps_ephem = pvt_data->gps_ephemeris_map;
+    std::map<int,Gnss_Synchro>Syncmap = pvt_data->c_gnss_observables_map;
+    float satvX{0};
+    float satvY{0};
+    float satvZ{0};
+    for (const auto& y : Syncmap){
+            for (const auto& x : gps_ephem)
+                {
+                    if (y.second.PRN == x.second.PRN)
+                        {
+                            double tempoo = (y.second.RX_time) - y.second.Pseudorange_m / SPEED_OF_LIGHT_M_S;  // Tempo de transmissão do satélite
+                            gps_ephem.at(x.first).satellitePosition(tempoo);
+                            float deltaprange_f = -SPEED_OF_LIGHT_M_S * (y.second.Carrier_Doppler_hz / 1575420000) - ((pvt_data->get_clock_drift_ppm() * 1e-6) - x.second.af1) * SPEED_OF_LIGHT_M_S;
+                            double prange = y.second.Pseudorange_m + (x.second.dtr) * SPEED_OF_LIGHT_M_S;
+                            satvX = (float)x.second.satvel_X;
+                            satvY = (float)x.second.satvel_Y;
+                            satvZ = (float)x.second.satvel_Z;
+                            dummyfloat = (float)y.second.CN0_dB_hz;
+                            
+                            msgvec[index + 0] = (uint8_t)x.second.PRN;
+                            Double2Hex(&msgvec[index + 1], &prange);
+                            Float2Hex(&msgvec[index + 9], &deltaprange_f);
+                            Double2Hex(&msgvec[index + 13], &x.second.satpos_X);
+                            Double2Hex(&msgvec[index + 21], &x.second.satpos_Y);
+                            Double2Hex(&msgvec[index + 29], &x.second.satpos_Z);
+                            Float2Hex(&msgvec[index + 37], &satvX);
+                            Float2Hex(&msgvec[index + 41], &satvY);
+                            Float2Hex(&msgvec[index + 45], &satvZ);
+                            Float2Hex(&msgvec[index + 49], &dummyfloat);
+                            
+                            
+                            cont+=1;
+                            index += 53;
+                        }
+                }
+        }
+    index += 1;
+    uint8_t checks{0};
+    msgvec[3]=(uint8_t)cont;
+    Int2Hex(&msgvec[4],&index);
+    for (int i = 0; i < index-1; i++)
+        {
+            checks ^= msgvec[i];
+        }
+    msgvec[index-1] = checks;
+    return index;
 }

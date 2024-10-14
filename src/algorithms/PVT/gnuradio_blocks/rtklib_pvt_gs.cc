@@ -2290,6 +2290,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                     if (flag_compute_pvt_output == true)
                         {
                             flag_pvt_valid = d_user_pvt_solver->get_PVT(d_gnss_observables_map, d_output_rate_ms / 1000.0);
+                            d_user_pvt_solver->c_gnss_observables_map = d_gnss_observables_map;  // Caio mod
                         }
 
                     if (flag_pvt_valid == true)
@@ -2420,7 +2421,8 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                         }
                                     if (d_nmea_output_file_enabled)
                                         {
-                                            if (current_RX_time_ms % d_nmea_rate_ms == 0)
+                                            // if (current_RX_time_ms % d_output_rate_ms == 0)
+                                            if (current_RX_time_ms % d_display_rate_ms == 0)
                                                 {
                                                     d_nmea_printer->Print_Nmea_Line(d_user_pvt_solver.get());
                                                 }
