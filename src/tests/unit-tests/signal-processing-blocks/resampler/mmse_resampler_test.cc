@@ -65,7 +65,7 @@ TEST(MmseResamplerTest, InstantiationAndRunTestWarning)
         top_block->stop();
     }) << "Failure running direct_resampler_conditioner.";
 
-    std::cout << "Resampled " << nsamples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
+    // std::cout << "Resampled " << nsamples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
 }
 
 
@@ -106,5 +106,5 @@ TEST(MmseResamplerTest, InstantiationAndRunTest2)
         top_block->stop();
     }) << "Failure running direct_resampler_conditioner.";
 
-    std::cout << "Resampled " << nsamples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
+    // std::cout << "Resampled " << nsamples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
 }

@@ -48,7 +48,7 @@ IONGSMSFileSource::IONGSMSFileSource(
         {
             LOG(WARNING) << "ION_GSMS_Signal_Source - Unable to open the samples file: " << (data_filepath).c_str();
             std::cerr << "ION_GSMS_Signal_Source - Unable to open the samples file: " << (data_filepath).c_str() << std::endl;
-            std::cout << "GNSS-SDR program ended.\n";
+            // std::cout << "GNSS-SDR program ended.\n";
             exit(1);
         }
 

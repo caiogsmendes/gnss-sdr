@@ -101,7 +101,7 @@ void IONGSMSSignalSource::load_metadata()
                 {
                     LOG(WARNING) << "Could not load XML metadata file " << metadata_filepath_;
                     std::cerr << "Could not load XML metadata file " << metadata_filepath_ << std::endl;
-                    std::cout << "GNSS-SDR program ended.\n";
+                    // std::cout << "GNSS-SDR program ended.\n";
                     exit(1);
                 }
         }
@@ -109,14 +109,14 @@ void IONGSMSSignalSource::load_metadata()
         {
             LOG(WARNING) << "API Exception while loading XML metadata file: " << std::to_string(e.Error());
             std::cerr << "Could not load XML metadata file " << metadata_filepath_ << " : " << std::to_string(e.Error()) << std::endl;
-            std::cout << "GNSS-SDR program ended.\n";
+            // std::cout << "GNSS-SDR program ended.\n";
             exit(1);
         }
     catch (std::exception& e)
         {
             LOG(WARNING) << "Exception while loading XML metadata file: " << e.what();
             std::cerr << "Could not load XML metadata file " << metadata_filepath_ << " : " << e.what() << std::endl;
-            std::cout << "GNSS-SDR program ended.\n";
+            // std::cout << "GNSS-SDR program ended.\n";
             exit(1);
         }
 }

@@ -226,7 +226,7 @@ void Glonass_L2_Ca_Dll_Pll_Tracking_cc::start_tracking()
     sys = std::string(1, d_acquisition_gnss_synchro->System);
 
     // DEBUG OUTPUT
-    std::cout << "Tracking of GLONASS L2 C/A signal started on channel " << d_channel << " for satellite " << Gnss_Satellite(systemName[sys], d_acquisition_gnss_synchro->PRN) << '\n';
+    // std::cout << "Tracking of GLONASS L2 C/A signal started on channel " << d_channel << " for satellite " << Gnss_Satellite(systemName[sys], d_acquisition_gnss_synchro->PRN) << '\n';
     LOG(INFO) << "Tracking of GLONASS L2 C/A signal for satellite " << Gnss_Satellite(systemName[sys], d_acquisition_gnss_synchro->PRN) << " on channel " << d_channel;
 
     // enable tracking
@@ -257,7 +257,7 @@ Glonass_L2_Ca_Dll_Pll_Tracking_cc::~Glonass_L2_Ca_Dll_Pll_Tracking_cc()
         {
             if (d_channel == 0)
                 {
-                    std::cout << "Writing .mat files ...";
+                    // std::cout << "Writing .mat files ...";
                 }
             try
                 {
@@ -270,7 +270,7 @@ Glonass_L2_Ca_Dll_Pll_Tracking_cc::~Glonass_L2_Ca_Dll_Pll_Tracking_cc()
 
             if (d_channel == 0)
                 {
-                    std::cout << " done.\n";
+                    // std::cout << " done.\n";
                 }
         }
     try
@@ -631,7 +631,7 @@ int Glonass_L2_Ca_Dll_Pll_Tracking_cc::general_work(int noutput_items __attribut
                     if (d_carrier_lock_fail_counter > absl::GetFlag(FLAGS_max_lock_fail))
 #endif
                         {
-                            std::cout << "Loss of lock in channel " << d_channel << "!\n";
+                            // std::cout << "Loss of lock in channel " << d_channel << "!\n";
                             LOG(INFO) << "Loss of lock in channel " << d_channel << "!";
                             this->message_port_pub(pmt::mp("events"), pmt::from_long(3));  // 3 -> loss of lock
                             d_carrier_lock_fail_counter = 0;

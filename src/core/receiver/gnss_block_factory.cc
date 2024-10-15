@@ -1392,9 +1392,9 @@ std::unique_ptr<GNSSBlockInterface> GNSSBlockFactory::GetBlock(
     catch (const std::exception& e)
         {
             LOG(INFO) << "Exception raised while instantiating the block: " << e.what();
-            std::cout << "Configuration error in " << role << " block, implementation " << (implementation == "Wrong"s ? "not defined."s : implementation) << ". The error was:\n"
-                      << e.what() << '\n';
-            std::cout << "GNSS-SDR program ended.\n";
+            // std::cout << "Configuration error in " << role << " block, implementation " << (implementation == "Wrong"s ? "not defined."s : implementation) << ". The error was:\n"
+                    //   << e.what() << '\n';
+            // std::cout << "GNSS-SDR program ended.\n";
             exit(1);
         }
     return block;

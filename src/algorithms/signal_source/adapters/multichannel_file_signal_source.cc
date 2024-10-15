@@ -171,12 +171,12 @@ MultichannelFileSignalSource::MultichannelFileSignalSource(const ConfigurationIn
                 }
             else
                 {
-                    std::cout << "file_signal_source: Unable to open the samples file " << filename_vec_.at(0).c_str() << '\n';
+                    // std::cout << "file_signal_source: Unable to open the samples file " << filename_vec_.at(0).c_str() << '\n';
                     LOG(ERROR) << "file_signal_source: Unable to open the samples file " << filename_vec_.at(0).c_str();
                 }
             std::streamsize ss = std::cout.precision();
-            std::cout << std::setprecision(16);
-            std::cout << "Processing file " << filename_vec_.at(0) << ", which contains " << static_cast<double>(size) << " [bytes]\n";
+            // std::cout << std::setprecision(16);
+            // std::cout << "Processing file " << filename_vec_.at(0) << ", which contains " << static_cast<double>(size) << " [bytes]\n";
             std::cout.precision(ss);
 
             if (size > 0)
@@ -196,7 +196,7 @@ MultichannelFileSignalSource::MultichannelFileSignalSource(const ConfigurationIn
         }
 
     DLOG(INFO) << "Total number samples to be processed= " << samples_ << " GNSS signal duration= " << signal_duration_s << " [s]";
-    std::cout << "GNSS signal recorded time to be processed: " << signal_duration_s << " [s]\n";
+    // std::cout << "GNSS signal recorded time to be processed: " << signal_duration_s << " [s]\n";
 
     valve_ = gnss_sdr_make_valve(item_size_, samples_, queue);
     DLOG(INFO) << "valve(" << valve_->unique_id() << ")";

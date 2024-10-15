@@ -125,11 +125,11 @@ TEST_F(ControlThreadTest /*unused*/, InstantiateRunControlMessages /*unused*/)
         }
     catch (const boost::exception& e)
         {
-            std::cout << "Boost exception: " << boost::diagnostic_information(e);
+            // std::cout << "Boost exception: " << boost::diagnostic_information(e);
         }
     catch (const std::exception& ex)
         {
-            std::cout << "STD exception: " << ex.what();
+            // std::cout << "STD exception: " << ex.what();
         }
 
     unsigned int expected3 = 3;
@@ -187,11 +187,11 @@ TEST_F(ControlThreadTest /*unused*/, InstantiateRunControlMessages2 /*unused*/)
         }
     catch (const boost::exception& e)
         {
-            std::cout << "Boost exception: " << boost::diagnostic_information(e);
+            // std::cout << "Boost exception: " << boost::diagnostic_information(e);
         }
     catch (const std::exception& ex)
         {
-            std::cout << "STD exception: " << ex.what();
+            // std::cout << "STD exception: " << ex.what();
         }
 
     unsigned int expected5 = 5;
@@ -244,11 +244,11 @@ TEST_F(ControlThreadTest /*unused*/, StopReceiverProgrammatically /*unused*/)
         }
     catch (const boost::exception& e)
         {
-            std::cout << "Boost exception: " << boost::diagnostic_information(e);
+            // std::cout << "Boost exception: " << boost::diagnostic_information(e);
         }
     catch (const std::exception& ex)
         {
-            std::cout << "STD exception: " << ex.what();
+            // std::cout << "STD exception: " << ex.what();
         }
 
     stop_receiver_thread.join();

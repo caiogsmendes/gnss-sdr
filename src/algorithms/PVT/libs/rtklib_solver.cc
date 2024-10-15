@@ -225,7 +225,7 @@ bool Rtklib_Solver::save_matfile() const
     int64_t num_epoch = 0LL;
     if (dump_file.is_open())
         {
-            std::cout << "Generating .mat file for " << dump_filename << '\n';
+            // std::cout << "Generating .mat file for " << dump_filename << '\n';
             const std::ifstream::pos_type size = dump_file.tellg();
             num_epoch = static_cast<int64_t>(size) / static_cast<int64_t>(epoch_size_bytes);
             dump_file.seekg(0, std::ios::beg);
@@ -601,7 +601,7 @@ void Rtklib_Solver::store_has_data(const Galileo_HAS_data &new_has_data)
                             if (static_cast<int32_t>(gnss_iod) == iod_sis)
                                 {
                                     float clock_correction_mult_m = new_has_data.get_clock_correction_mult_m(gal_str, prn);
-                                    // std::cout << "Galileo Satellite " << prn
+                                    // // std::cout << "Galileo Satellite " << prn
                                     //           << " clock correction=" << new_has_data.get_clock_correction_mult_m(gal_str, prn)
                                     //           << std::endl;
                                     if ((std::fabs(clock_correction_mult_m + 10.24) < 0.001) ||
@@ -1119,7 +1119,7 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
                                                     gnss_observables_iter->second,
                                                     galileo_ephemeris_iter->second.WN,
                                                     2);  // Band E6
-                                                // std::cout << "Week " << galileo_ephemeris_iter->second.WN << '\n';
+                                                // // std::cout << "Week " << galileo_ephemeris_iter->second.WN << '\n';
                                                 valid_obs++;
                                             }
                                     }

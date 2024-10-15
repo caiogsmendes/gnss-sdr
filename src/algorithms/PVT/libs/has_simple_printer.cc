@@ -70,7 +70,7 @@ Has_Simple_Printer::Has_Simple_Printer(const std::string& base_path,
         }
     if (d_has_base_path != ".")
         {
-            std::cout << "HAS Message file will be stored at " << d_has_base_path << '\n';
+            // std::cout << "HAS Message file will be stored at " << d_has_base_path << '\n';
         }
 
     d_has_base_path = d_has_base_path + fs::path::preferred_separator;

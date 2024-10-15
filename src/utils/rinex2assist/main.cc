@@ -381,7 +381,7 @@ int main(int argc, char** argv)
 #endif
                     return 1;
                 }
-            std::cout << "Generated file: " << xml_filename << '\n';
+            // std::cout << "Generated file: " << xml_filename << '\n';
         }
     if (j != 0)
         {
@@ -401,7 +401,7 @@ int main(int argc, char** argv)
 #endif
                     return 1;
                 }
-            std::cout << "Generated file: " << xml_filename << '\n';
+            // std::cout << "Generated file: " << xml_filename << '\n';
         }
 
     // Write XML UTC
@@ -423,7 +423,7 @@ int main(int argc, char** argv)
 #endif
                     return 1;
                 }
-            std::cout << "Generated file: " << xml_filename << '\n';
+            // std::cout << "Generated file: " << xml_filename << '\n';
         }
 
     // Write XML iono
@@ -445,7 +445,7 @@ int main(int argc, char** argv)
 #endif
                     return 1;
                 }
-            std::cout << "Generated file: " << xml_filename << '\n';
+            // std::cout << "Generated file: " << xml_filename << '\n';
         }
 
     if (gal_utc_model.A0 != 0)
@@ -466,7 +466,7 @@ int main(int argc, char** argv)
 #endif
                     return 1;
                 }
-            std::cout << "Generated file: " << xml_filename << '\n';
+            // std::cout << "Generated file: " << xml_filename << '\n';
         }
     if (gal_iono.ai0 != 0)
         {
@@ -486,7 +486,7 @@ int main(int argc, char** argv)
 #endif
                     return 1;
                 }
-            std::cout << "Generated file: " << xml_filename << '\n';
+            // std::cout << "Generated file: " << xml_filename << '\n';
         }
 #if USE_GLOG_AND_GFLAGS
     gflags::ShutDownCommandLineFlags();

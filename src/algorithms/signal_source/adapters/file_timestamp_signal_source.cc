@@ -93,7 +93,7 @@ void FileTimestampSignalSource::create_file_source_hook()
 
     if (is_complex == false)
         {
-            std::cout << "A : " << std::get<0>(itemTypeToSize()) << "\n";
+            // std::cout << "A : " << std::get<0>(itemTypeToSize()) << "\n";
             timestamp_block_ = gnss_sdr_make_Timestamp(
                 std::get<0>(itemTypeToSize()),
                 timestamp_file_,
@@ -102,7 +102,7 @@ void FileTimestampSignalSource::create_file_source_hook()
         }
     else
         {
-            std::cout << "B : " << std::get<0>(itemTypeToSize()) << "\n";
+            // std::cout << "B : " << std::get<0>(itemTypeToSize()) << "\n";
             timestamp_block_ = gnss_sdr_make_Timestamp(
                 std::get<0>(itemTypeToSize()),
                 timestamp_file_,

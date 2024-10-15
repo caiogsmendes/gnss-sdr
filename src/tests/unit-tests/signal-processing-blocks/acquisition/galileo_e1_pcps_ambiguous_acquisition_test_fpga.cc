@@ -138,7 +138,7 @@ void* handler_DMA_galileo_e1_pcps_ambiguous_acq_test(void* arguments)
     tx_fd = open("/dev/loop_tx", O_WRONLY);
     if (tx_fd < 0)
         {
-            std::cout << "Cannot open loop device\n";
+            // std::cout << "Cannot open loop device\n";
             return nullptr;
         }
 
@@ -358,7 +358,7 @@ bool GalileoE1PcpsAmbiguousAcquisitionTestFpga::acquire_signal()
 
     if (pthread_create(&thread_acquisition, nullptr, handler_acquisition_galileo_e1_pcps_ambiguous_acq_test, reinterpret_cast<void*>(&args_acq)) < 0)
         {
-            std::cout << "ERROR cannot create acquisition Process\n";
+            // std::cout << "ERROR cannot create acquisition Process\n";
         }
 
     // wait to give time for the acquisition thread to set up the acquisition HW accelerator in the FPGA
@@ -367,7 +367,7 @@ bool GalileoE1PcpsAmbiguousAcquisitionTestFpga::acquire_signal()
     // create DMA child process
     if (pthread_create(&thread_DMA, nullptr, handler_DMA_galileo_e1_pcps_ambiguous_acq_test, reinterpret_cast<void*>(&args)) < 0)
         {
-            std::cout << "ERROR cannot create DMA Process\n";
+            // std::cout << "ERROR cannot create DMA Process\n";
         }
 
     // wait until the acquisition is finished
@@ -431,7 +431,7 @@ TEST_F(GalileoE1PcpsAmbiguousAcquisitionTestFpga, ValidationOfResults)
     elapsed_seconds = end - start;
 
     uint32_t n = 0;  // there is only one channel
-    std::cout << "Acquired " << nsamples_to_transfer << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
+    // std::cout << "Acquired " << nsamples_to_transfer << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
 
     double delay_error_samples = std::abs(expected_delay_samples - gnss_synchro_vec.at(n).Acq_delay_samples);
     auto delay_error_chips = static_cast<float>(delay_error_samples * 1023 / 4000);

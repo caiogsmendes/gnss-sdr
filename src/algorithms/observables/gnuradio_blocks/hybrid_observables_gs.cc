@@ -253,7 +253,7 @@ int32_t hybrid_observables_gs::save_matfile() const
     const int32_t number_of_double_vars = 7;
     const int32_t epoch_size_bytes = sizeof(double) * number_of_double_vars * d_nchannels_out;
     std::ifstream dump_file;
-    std::cout << "Generating .mat file for " << dump_filename << '\n';
+    // std::cout << "Generating .mat file for " << dump_filename << '\n';
     dump_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     try
         {
@@ -421,14 +421,14 @@ bool hybrid_observables_gs::interp_trk_obs(Gnss_Synchro &interpolated_obs, uint3
                             int32_t t2_idx;
                             if (rx_clock > d_gnss_synchro_history->get(ch, nearest_element).Tracking_sample_counter)
                                 {
-                                    // std::cout << "S1= " << d_gnss_synchro_history->get(ch, nearest_element).Tracking_sample_counter
+                                    // // std::cout << "S1= " << d_gnss_synchro_history->get(ch, nearest_element).Tracking_sample_counter
                                     //           << " Si=" << rx_clock << " S2=" << d_gnss_synchro_history->get(ch, neighbor_element).Tracking_sample_counter << '\n';
                                     t1_idx = nearest_element;
                                     t2_idx = neighbor_element;
                                 }
                             else
                                 {
-                                    // std::cout << "inv S1= " << d_gnss_synchro_history->get(ch, neighbor_element).Tracking_sample_counter
+                                    // // std::cout << "inv S1= " << d_gnss_synchro_history->get(ch, neighbor_element).Tracking_sample_counter
                                     //           << " Si=" << rx_clock << " S2=" << d_gnss_synchro_history->get(ch, nearest_element).Tracking_sample_counter << '\n';
                                     t1_idx = neighbor_element;
                                     t2_idx = nearest_element;
@@ -472,13 +472,13 @@ bool hybrid_observables_gs::interp_trk_obs(Gnss_Synchro &interpolated_obs, uint3
                             //           << d_gnss_synchro_history->get(ch, t2_idx).RX_time - d_gnss_synchro_history->get(ch, t1_idx).RX_time
                             //           << " trx - t1: "
                             //           << T_rx_s - d_gnss_synchro_history->get(ch, t1_idx).RX_time;
-                            // std::cout << "Rx samplestamp: " << T_rx_s << " Channel " << ch << " interp buff idx " << nearest_element
+                            // // std::cout << "Rx samplestamp: " << T_rx_s << " Channel " << ch << " interp buff idx " << nearest_element
                             //           << " ,diff: " << old_abs_diff << " samples (" << static_cast<double>(old_abs_diff) / static_cast<double>(d_gnss_synchro_history->get(ch, nearest_element).fs) << " s)\n";
                             return true;
                         }
                     return false;
                 }
-            // std::cout << "ALERT: Channel " << ch << " interp buff idx " << nearest_element
+            // // std::cout << "ALERT: Channel " << ch << " interp buff idx " << nearest_element
             //           << " ,diff: " << old_abs_diff << " samples (" << static_cast<double>(old_abs_diff) / static_cast<double>(d_gnss_synchro_history->get(ch, nearest_element).fs) << " s)\n";
             // usleep(1000);
         }
@@ -541,7 +541,7 @@ void hybrid_observables_gs::update_TOW(const std::vector<Gnss_Synchro> &data)
 void hybrid_observables_gs::compute_pranges(std::vector<Gnss_Synchro> &data) const
 {
     // std::cout.precision(17);
-    // std::cout << " d_T_rx_TOW_ms: " << static_cast<double>(d_T_rx_TOW_ms) << '\n';
+    // // std::cout << " d_T_rx_TOW_ms: " << static_cast<double>(d_T_rx_TOW_ms) << '\n';
     std::vector<Gnss_Synchro>::iterator it;
     const auto current_T_rx_TOW_ms = static_cast<double>(d_T_rx_TOW_ms);
     const double current_T_rx_TOW_s = current_T_rx_TOW_ms / 1000.0;
@@ -558,8 +558,8 @@ void hybrid_observables_gs::compute_pranges(std::vector<Gnss_Synchro> &data) con
                     it->Pseudorange_m = traveltime_ms * SPEED_OF_LIGHT_M_MS;
                     it->Flag_valid_pseudorange = true;
                     // debug code
-                    // std::cout << "[" << it->Channel_ID << "] interp_TOW_ms: " << it->interp_TOW_ms << '\n';
-                    // std::cout << "[" << it->Channel_ID << "] Diff d_T_rx_TOW_ms - interp_TOW_ms: " << static_cast<double>(d_T_rx_TOW_ms) - it->interp_TOW_ms << '\n';
+                    // // std::cout << "[" << it->Channel_ID << "] interp_TOW_ms: " << it->interp_TOW_ms << '\n';
+                    // // std::cout << "[" << it->Channel_ID << "] Diff d_T_rx_TOW_ms - interp_TOW_ms: " << static_cast<double>(d_T_rx_TOW_ms) - it->interp_TOW_ms << '\n';
                 }
             else
                 {
@@ -638,7 +638,7 @@ void hybrid_observables_gs::set_tag_timestamp_in_sdr_timeframe(const std::vector
 
             if (delta_rxtime_to_tag >= 0 and delta_rxtime_to_tag <= 0.1)
                 {
-                    // std::cout << "[Time ch][" << delta_rxtime_to_tag
+                    // // std::cout << "[Time ch][" << delta_rxtime_to_tag
                     //           << "] OBS RX TimeTag Week: " << current_tag.week
                     //           << ", TOW: " << current_tag.tow_ms
                     //           << " [ms], TOW fraction: " << current_tag.tow_ms_fraction
@@ -678,17 +678,17 @@ int hybrid_observables_gs::general_work(int noutput_items __attribute__((unused)
                             if (pmt::any_ref(it.value).type().hash_code() == typeid(const std::shared_ptr<GnssTime>).hash_code())
                                 {
                                     const auto timetag = wht::any_cast<const std::shared_ptr<GnssTime>>(pmt::any_ref(it.value));
-                                    // std::cout << "[Time ch ] timetag: " << timetag->rx_time << "\n";
+                                    // // std::cout << "[Time ch ] timetag: " << timetag->rx_time << "\n";
                                     d_TimeChannelTagTimestamps.push(*timetag);
                                 }
                             else
                                 {
-                                    std::cout << "hash code not match\n";
+                                    // std::cout << "hash code not match\n";
                                 }
                         }
                     catch (const wht::bad_any_cast &e)
                         {
-                            std::cout << "msg Bad any_cast: " << e.what();
+                            // std::cout << "msg Bad any_cast: " << e.what();
                         }
                 }
 
@@ -709,17 +709,17 @@ int hybrid_observables_gs::general_work(int noutput_items __attribute__((unused)
             //                            if (pmt::any_ref(it->value).type().hash_code() == typeid(const std::shared_ptr<GnssTime>).hash_code())
             //                                {
             //                                    const std::shared_ptr<GnssTime> timetag = wht::any_cast<const std::shared_ptr<GnssTime>>(pmt::any_ref(it->value));
-            //                                    //std::cout << "[ch " << n << "] timetag: " << timetag->rx_time << "\n";
+            //                                    //// std::cout << "[ch " << n << "] timetag: " << timetag->rx_time << "\n";
             //                                    d_SourceTagTimestamps.at(n).push(*timetag);
             //                                }
             //                            else
             //                                {
-            //                                    std::cout << "hash code not match\n";
+            //                                    // std::cout << "hash code not match\n";
             //                                }
             //                        }
             //                    catch (const wht::bad_any_cast &e)
             //                        {
-            //                            std::cout << "msg Bad any_cast: " << e.what();
+            //                            // std::cout << "msg Bad any_cast: " << e.what();
             //                        }
             //                }
 

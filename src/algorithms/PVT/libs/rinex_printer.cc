@@ -159,7 +159,7 @@ Rinex_Printer::Rinex_Printer(int32_t conf_version,
                         {
                             if (!fs::create_directory(new_folder, ec))
                                 {
-                                    std::cout << "Could not create the " << new_folder << " folder.\n";
+                                    // std::cout << "Could not create the " << new_folder << " folder.\n";
                                     base_rinex_path = full_path.string();
                                 }
                         }
@@ -172,7 +172,7 @@ Rinex_Printer::Rinex_Printer(int32_t conf_version,
         }
     if (base_rinex_path != ".")
         {
-            std::cout << "RINEX files will be stored at " << base_rinex_path << '\n';
+            // std::cout << "RINEX files will be stored at " << base_rinex_path << '\n';
         }
 
     navfilename = base_rinex_path + fs::path::preferred_separator + Rinex_Printer::createFilename("RINEX_FILE_TYPE_GPS_NAV", base_name);
@@ -195,7 +195,7 @@ Rinex_Printer::Rinex_Printer(int32_t conf_version,
         !Rinex_Printer::sbsFile.is_open() || !Rinex_Printer::navGalFile.is_open() or
         !Rinex_Printer::navMixFile.is_open() || !Rinex_Printer::navGloFile.is_open())
         {
-            std::cout << "RINEX files cannot be saved. Wrong permissions?\n";
+            // std::cout << "RINEX files cannot be saved. Wrong permissions?\n";
         }
 
     if (conf_version == 2)
@@ -3865,7 +3865,7 @@ void Rinex_Printer::update_nav_header(std::fstream& out, const Glonass_Gnav_Utc_
     out.close();
     out.open(navGlofilename, std::ios::out | std::ios::app);
     out.seekp(pos);
-    std::cout << "The RINEX Navigation file header has been updated with UTC info.\n";
+    // std::cout << "The RINEX Navigation file header has been updated with UTC info.\n";
 }
 
 
@@ -3960,7 +3960,7 @@ void Rinex_Printer::update_nav_header(std::fstream& out, const Galileo_Iono& gal
     out.close();
     out.open(navGalfilename, std::ios::out | std::ios::app);
     out.seekp(pos);
-    std::cout << "The RINEX Navigation file header has been updated with UTC and IONO info.\n";
+    // std::cout << "The RINEX Navigation file header has been updated with UTC and IONO info.\n";
 }
 
 
@@ -4139,7 +4139,7 @@ void Rinex_Printer::update_nav_header(std::fstream& out, const Gps_Utc_Model& ut
     out.close();
     out.open(navfilename, std::ios::out | std::ios::app);
     out.seekp(pos);
-    std::cout << "The RINEX Navigation file header has been updated with UTC and IONO info.\n";
+    // std::cout << "The RINEX Navigation file header has been updated with UTC and IONO info.\n";
 }
 
 
@@ -4234,7 +4234,7 @@ void Rinex_Printer::update_nav_header(std::fstream& out, const Gps_CNAV_Utc_Mode
     out.close();
     out.open(navfilename, std::ios::out | std::ios::app);
     out.seekp(pos);
-    std::cout << "The RINEX Navigation file header has been updated with UTC and IONO info.\n";
+    // std::cout << "The RINEX Navigation file header has been updated with UTC and IONO info.\n";
 }
 
 
@@ -4363,7 +4363,7 @@ void Rinex_Printer::update_nav_header(std::fstream& out, const Gps_CNAV_Utc_Mode
     out.close();
     out.open(navfilename, std::ios::out | std::ios::app);
     out.seekp(pos);
-    std::cout << "The RINEX Navigation file header has been updated with UTC and IONO info.\n";
+    // std::cout << "The RINEX Navigation file header has been updated with UTC and IONO info.\n";
 }
 
 
@@ -4507,7 +4507,7 @@ void Rinex_Printer::update_nav_header(std::fstream& out, const Gps_Iono& gps_ion
     out.close();
     out.open(navMixfilename, std::ios::out | std::ios::app);
     out.seekp(pos);
-    std::cout << "The RINEX Navigation file header has been updated with UTC and IONO info.\n";
+    // std::cout << "The RINEX Navigation file header has been updated with UTC and IONO info.\n";
 }
 
 
@@ -4629,7 +4629,7 @@ void Rinex_Printer::update_nav_header(std::fstream& out, const Gps_Iono& gps_ion
     out.close();
     out.open(navMixfilename, std::ios::out | std::ios::app);
     out.seekp(pos);
-    std::cout << "The RINEX Navigation file header has been updated with UTC and IONO info.\n";
+    // std::cout << "The RINEX Navigation file header has been updated with UTC and IONO info.\n";
 }
 
 
@@ -4737,7 +4737,7 @@ void Rinex_Printer::update_nav_header(std::fstream& out, const Gps_CNAV_Iono& gp
     out.close();
     out.open(navMixfilename, std::ios::out | std::ios::app);
     out.seekp(pos);
-    std::cout << "The RINEX Navigation file header has been updated with UTC and IONO info.\n";
+    // std::cout << "The RINEX Navigation file header has been updated with UTC and IONO info.\n";
 }
 
 
@@ -4839,7 +4839,7 @@ void Rinex_Printer::update_nav_header(std::fstream& out, const Galileo_Iono& gal
     out.close();
     out.open(navMixfilename, std::ios::out | std::ios::app);
     out.seekp(pos);
-    std::cout << "The RINEX Navigation file header has been updated with UTC and IONO info.\n";
+    // std::cout << "The RINEX Navigation file header has been updated with UTC and IONO info.\n";
 }
 
 
@@ -4932,7 +4932,7 @@ void Rinex_Printer::update_nav_header(std::fstream& out, const Beidou_Dnav_Utc_M
     out.close();
     out.open(navfilename, std::ios::out | std::ios::app);
     out.seekp(pos);
-    std::cout << "The RINEX Navigation file header has been updated with UTC and IONO info.\n";
+    // std::cout << "The RINEX Navigation file header has been updated with UTC and IONO info.\n";
 }
 
 
@@ -13442,10 +13442,10 @@ void Rinex_Printer::to_date_time(int32_t gps_week, int32_t gps_tow, int& year, i
             else
                 {
                     year = y;
-                    // std::cout << "year: year=" << year << " secs_in_year_y="<< secs_in_year_y << " remaining_secs="<< remaining_secs << '\n';
+                    // // std::cout << "year: year=" << year << " secs_in_year_y="<< secs_in_year_y << " remaining_secs="<< remaining_secs << '\n';
                     break;
                 }
-            // std::cout << "year: y=" << y << " secs_in_year_y="<< secs_in_year_y << " remaining_secs="<< remaining_secs << '\n';
+            // // std::cout << "year: y=" << y << " secs_in_year_y="<< secs_in_year_y << " remaining_secs="<< remaining_secs << '\n';
         }
 
     // find month
@@ -13464,10 +13464,10 @@ void Rinex_Printer::to_date_time(int32_t gps_week, int32_t gps_tow, int& year, i
             else
                 {
                     month = m;
-                    // std::cout << "month: month=" << month << " secs_in_month_m="<< secs_in_month_m << " remaining_secs="<< remaining_secs << '\n';
+                    // // std::cout << "month: month=" << month << " secs_in_month_m="<< secs_in_month_m << " remaining_secs="<< remaining_secs << '\n';
                     break;
                 }
-            // std::cout << "month: m=" << m << " secs_in_month_m="<< secs_in_month_m << " remaining_secs="<< remaining_secs << '\n';
+            // // std::cout << "month: m=" << m << " secs_in_month_m="<< secs_in_month_m << " remaining_secs="<< remaining_secs << '\n';
         }
 
     day = remaining_secs / secs_per_day + 1;

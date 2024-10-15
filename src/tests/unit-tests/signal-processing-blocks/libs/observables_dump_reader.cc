@@ -83,7 +83,7 @@ bool Observables_Dump_Reader::open_obs_file(std::string out_file)
                 }
             catch (const std::ifstream::failure &e)
                 {
-                    std::cout << "Problem opening Observables dump Log file: " << d_dump_filename << '\n';
+                    // std::cout << "Problem opening Observables dump Log file: " << d_dump_filename << '\n';
                     return false;
                 }
         }

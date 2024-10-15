@@ -130,7 +130,7 @@ TEST_F(GalileoE1DllPllVemlTrackingInternalTest, ConnectAndRun)
         elapsed_seconds = end - start;
     }) << "Failure running the top_block.";
 
-    std::cout << "Processed " << nsamples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
+    // std::cout << "Processed " << nsamples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
 }
 
 
@@ -192,5 +192,5 @@ TEST_F(GalileoE1DllPllVemlTrackingInternalTest, ValidationOfResults)
         elapsed_seconds = end - start;
     }) << "Failure running the top_block.";
 
-    std::cout << "Tracked " << num_samples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
+    // std::cout << "Tracked " << num_samples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
 }

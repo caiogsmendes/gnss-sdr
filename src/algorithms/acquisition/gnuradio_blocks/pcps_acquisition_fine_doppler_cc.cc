@@ -338,12 +338,12 @@ int pcps_acquisition_fine_doppler_cc::compute_and_accumulate_grid(gr_vector_cons
 
     return d_fft_size;
     // debug
-    //            std::cout << "iff=[";
+    //            // std::cout << "iff=[";
     //            for (int n = 0; n < d_fft_size; n++)
     //                {
-    //                    std::cout << std::real(d_ifft->get_outbuf()[n]) << "+" << std::imag(d_ifft->get_outbuf()[n]) << "i,";
+    //                    // std::cout << std::real(d_ifft->get_outbuf()[n]) << "+" << std::imag(d_ifft->get_outbuf()[n]) << "i,";
     //                }
-    //            std::cout << "]\n";
+    //            // std::cout << "]\n";
     //            getchar();
 }
 
@@ -412,7 +412,7 @@ int pcps_acquisition_fine_doppler_cc::estimate_Doppler()
     if (std::abs(fftFreqBins[tmp_index_freq] - d_gnss_synchro->Acq_doppler_hz) < 1000)
         {
             d_gnss_synchro->Acq_doppler_hz = static_cast<double>(fftFreqBins[tmp_index_freq]);
-            // std::cout << "FFT maximum present at " << fftFreqBins[tmp_index_freq] << " [Hz]\n";
+            // // std::cout << "FFT maximum present at " << fftFreqBins[tmp_index_freq] << " [Hz]\n";
         }
     else
         {
@@ -631,7 +631,7 @@ void pcps_acquisition_fine_doppler_cc::dump_results(int effective_fft_size)
     mat_t *matfp = Mat_CreateVer(filename.c_str(), nullptr, MAT_FT_MAT73);
     if (matfp == nullptr)
         {
-            std::cout << "Unable to create or open Acquisition dump file\n";
+            // std::cout << "Unable to create or open Acquisition dump file\n";
             d_dump = false;
         }
     else

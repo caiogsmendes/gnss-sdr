@@ -62,7 +62,7 @@ TEST(FFTSpeedTest, ArmadilloVSGNURadioExecutionTime)
 #else
             d_execution_time = elapsed_seconds.count() / static_cast<double>(absl::GetFlag(FLAGS_fft_speed_iterations_test));
 #endif
-            std::cout << "GNU Radio FFT execution time for length = " << d_fft_size << " : " << d_execution_time * 1e6 << " [us]\n";
+            // std::cout << "GNU Radio FFT execution time for length = " << d_fft_size << " : " << d_execution_time * 1e6 << " [us]\n";
 
             start = std::chrono::system_clock::now();
 #if USE_GLOG_AND_GFLAGS
@@ -80,6 +80,6 @@ TEST(FFTSpeedTest, ArmadilloVSGNURadioExecutionTime)
 #else
             d_execution_time = elapsed_seconds.count() / static_cast<double>(absl::GetFlag(FLAGS_fft_speed_iterations_test));
 #endif
-            std::cout << "Armadillo FFT execution time for length = " << d_fft_size << " : " << d_execution_time * 1e6 << " [us]\n";
+            // std::cout << "Armadillo FFT execution time for length = " << d_fft_size << " : " << d_execution_time * 1e6 << " [us]\n";
         });
 }

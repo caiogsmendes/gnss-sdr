@@ -52,7 +52,7 @@ Kml_Printer::Kml_Printer(const std::string& base_path) : kml_base_path(base_path
                         {
                             if (!fs::create_directory(new_folder, ec))
                                 {
-                                    std::cout << "Could not create the " << new_folder << " folder.\n";
+                                    // std::cout << "Could not create the " << new_folder << " folder.\n";
                                     kml_base_path = full_path.string();
                                 }
                         }
@@ -65,7 +65,7 @@ Kml_Printer::Kml_Printer(const std::string& base_path) : kml_base_path(base_path
         }
     if (kml_base_path != ".")
         {
-            std::cout << "KML files will be stored at " << kml_base_path << '\n';
+            // std::cout << "KML files will be stored at " << kml_base_path << '\n';
         }
 
     kml_base_path = kml_base_path + fs::path::preferred_separator;
@@ -209,7 +209,7 @@ bool Kml_Printer::set_headers(const std::string& filename, bool time_tag_name)
 
             return true;
         }
-    std::cout << "File " << kml_filename << " cannot be saved. Wrong permissions?\n";
+    // std::cout << "File " << kml_filename << " cannot be saved. Wrong permissions?\n";
     return false;
 }
 

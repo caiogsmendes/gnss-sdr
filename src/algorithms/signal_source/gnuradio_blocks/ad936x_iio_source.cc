@@ -91,12 +91,12 @@ void ad936x_iio_source::ad9361_channel_demux_and_record(ad936x_iio_samples* samp
 {
     uint32_t current_byte = 0;
     int16_t ch = 0;
-    // std::cout << "nbytes: " << samples_in->n_bytes << " nsamples: " << samples_in->n_samples << " nch: " << nchannels << "\n";
+    // // std::cout << "nbytes: " << samples_in->n_bytes << " nsamples: " << samples_in->n_samples << " nch: " << nchannels << "\n";
     while (current_byte < samples_in->n_bytes)
         {
             for (ch = 0; ch < nchannels; ch++)
                 {
-                    // std::cout << current_byte << " of " << samples_in->n_bytes << " test: " << (int)samples_in->buffer[current_byte] << "\n";
+                    // // std::cout << current_byte << " of " << samples_in->n_bytes << " test: " << (int)samples_in->buffer[current_byte] << "\n";
                     (*files_out).at(ch).write(&samples_in->buffer[current_byte], 4);  // two bytes I + two bytes Q per channel
                     current_byte += 4;
                 }
@@ -154,7 +154,7 @@ ad936x_iio_source::ad936x_iio_source(
                             high_side_lo_,
                             tx_lo_channel_) == true)
                         {
-                            std::cout << "ad936x_iio_source HW configured OK!\n";
+                            // std::cout << "ad936x_iio_source HW configured OK!\n";
 
                             // PPS FPGA Samplestamp information from TCP server
                             pps_rx = std::make_shared<pps_tcp_rx>();
@@ -173,87 +173,87 @@ ad936x_iio_source::ad936x_iio_source(
                                         {
                                         case 16:
                                             {
-                                                std::cout << "FPGA sample size set to 16 bits per sample.\n";
+                                                // std::cout << "FPGA sample size set to 16 bits per sample.\n";
                                                 if (pps_rx->send_cmd("ssize=16\n") == false)
                                                     {
-                                                        std::cout << "cmd send error!\n";
+                                                        // std::cout << "cmd send error!\n";
                                                     }
                                                 break;
                                             }
                                         case 8:
                                             {
-                                                std::cout << "FPGA sample size set to 8 bits per sample.\n";
+                                                // std::cout << "FPGA sample size set to 8 bits per sample.\n";
                                                 if (pps_rx->send_cmd("ssize=8\n") == false)
                                                     {
-                                                        std::cout << "cmd send error!\n";
+                                                        // std::cout << "cmd send error!\n";
                                                     }
                                                 break;
                                             }
                                         case 4:
                                             {
-                                                std::cout << "FPGA sample size set to 4 bits per sample.\n";
+                                                // std::cout << "FPGA sample size set to 4 bits per sample.\n";
                                                 if (pps_rx->send_cmd("ssize=4\n") == false)
                                                     {
-                                                        std::cout << "cmd send error!\n";
+                                                        // std::cout << "cmd send error!\n";
                                                     }
                                                 break;
                                             }
                                         case 2:
                                             {
-                                                std::cout << "FPGA sample size set to 2 bits per sample.\n";
+                                                // std::cout << "FPGA sample size set to 2 bits per sample.\n";
                                                 if (pps_rx->send_cmd("ssize=2\n") == false)
                                                     {
-                                                        std::cout << "cmd send error!\n";
+                                                        // std::cout << "cmd send error!\n";
                                                     }
                                                 break;
                                             }
                                         default:
                                             {
-                                                std::cout << "WARNING: Unsupported ssize. FPGA sample size set to 16 bits per sample.\n";
+                                                // std::cout << "WARNING: Unsupported ssize. FPGA sample size set to 16 bits per sample.\n";
                                                 if (pps_rx->send_cmd("ssize=16") == false)
                                                     {
-                                                        std::cout << "cmd send error!\n";
+                                                        // std::cout << "cmd send error!\n";
                                                     }
                                             }
                                         }
 
                                     if (bshift_ >= 0 and bshift_ <= 14)
                                         {
-                                            std::cout << "FPGA sample bits shift left set to " + std::to_string(bshift_) + " positions.\n";
+                                            // std::cout << "FPGA sample bits shift left set to " + std::to_string(bshift_) + " positions.\n";
                                             if (pps_rx->send_cmd("bshift=" + std::to_string(bshift_) + "\n") == false)
                                                 {
-                                                    std::cout << "cmd send error!\n";
+                                                    // std::cout << "cmd send error!\n";
                                                 }
                                         }
                                     else
                                         {
-                                            std::cout << "WARNING: Unsupported bshift. FPGA sample bits shift left set to 0.\n";
+                                            // std::cout << "WARNING: Unsupported bshift. FPGA sample bits shift left set to 0.\n";
                                             if (pps_rx->send_cmd("bshift=0\n") == false)
                                                 {
-                                                    std::cout << "cmd send error!\n";
+                                                    // std::cout << "cmd send error!\n";
                                                 }
                                         }
 
                                     if (spattern_ == true)
                                         {
-                                            std::cout << "FPGA debug sample pattern is active!.\n";
+                                            // std::cout << "FPGA debug sample pattern is active!.\n";
                                             if (pps_rx->send_cmd("spattern=1\n") == false)
                                                 {
-                                                    std::cout << "cmd send error!\n";
+                                                    // std::cout << "cmd send error!\n";
                                                 }
                                         }
                                     else
                                         {
-                                            std::cout << "FPGA debug sample pattern disabled.\n";
+                                            // std::cout << "FPGA debug sample pattern disabled.\n";
                                             if (pps_rx->send_cmd("spattern=0\n") == false)
                                                 {
-                                                    std::cout << "cmd send error!\n";
+                                                    // std::cout << "cmd send error!\n";
                                                 }
                                         }
                                 }
                             else
                                 {
-                                    std::cout << "PPS mode NOT enabled, not configuring PlutoSDR custom timestamping FPGA IP.\n";
+                                    // std::cout << "PPS mode NOT enabled, not configuring PlutoSDR custom timestamping FPGA IP.\n";
                                 }
                         }
                     else
@@ -281,7 +281,7 @@ ad936x_iio_source::ad936x_iio_source(
 
     set_min_noutput_items(IIO_DEFAULTAD936XAPIFIFOSIZE_SAMPLES * 2);  // multiplexed I,Q, so, two samples per complex sample
     set_min_output_buffer(IIO_DEFAULTAD936XAPIFIFOSIZE_SAMPLES * sizeof(int16_t) * 2);
-    // std::cout << "max_output_buffer " << min_output_buffer(0) << " min_noutput_items: " << min_noutput_items() << "\n";
+    // // std::cout << "max_output_buffer " << min_output_buffer(0) << " min_noutput_items: " << min_noutput_items() << "\n";
 
     //    for (int n = 0; n < ad936x_custom->n_channels; n++)
     //        {
@@ -291,7 +291,7 @@ ad936x_iio_source::ad936x_iio_source(
     //
     //            if (samplesfile.back().is_open() == false)
     //                {
-    //                    std::cout << "ERROR: Could not open " << cap_file_root_name + "_ch" + std::to_string(n) + ".dat"
+    //                    // std::cout << "ERROR: Could not open " << cap_file_root_name + "_ch" + std::to_string(n) + ".dat"
     //                              << " for record samples!\n";
     //                }
     //        }
@@ -318,7 +318,7 @@ bool ad936x_iio_source::start()
 
 bool ad936x_iio_source::stop()
 {
-    std::cout << "stopping ad936x_iio_source...\n";
+    // std::cout << "stopping ad936x_iio_source...\n";
     ad936x_custom->stop_record();
     return true;
 }
@@ -338,7 +338,7 @@ int ad936x_iio_source::general_work(int noutput_items,
     int32_t n_interleaved_iq_samples_per_channel = current_samples->n_bytes / (ad936x_custom->n_channels * 2);
     if (noutput_items < n_interleaved_iq_samples_per_channel)
         {
-            std::cout << "ad936x_iio_source output buffer overflow! noutput_items: " << noutput_items << " vs. " << n_interleaved_iq_samples_per_channel << "\n";
+            // std::cout << "ad936x_iio_source output buffer overflow! noutput_items: " << noutput_items << " vs. " << n_interleaved_iq_samples_per_channel << "\n";
             return 0;
         }
     else
@@ -348,7 +348,7 @@ int ad936x_iio_source::general_work(int noutput_items,
             uint32_t current_byte = 0;
             uint32_t current_byte_in_gr = 0;
             int16_t ch = 0;
-            // std::cout << "nbytes: " << samples_in->n_bytes << " nsamples: " << samples_in->n_samples << " nch: " << nchannels << "\n";
+            // // std::cout << "nbytes: " << samples_in->n_bytes << " nsamples: " << samples_in->n_samples << " nch: " << nchannels << "\n";
             if (ad936x_custom->n_channels == 1)
                 {
                     memcpy(out[0], &current_samples->buffer[current_byte], current_samples->n_bytes);

@@ -250,10 +250,10 @@ void glonass_l2_ca_telemetry_decoder_gs::decode_string(const double *frame_symbo
 #else
             const auto default_precision{std::cout.precision()};
 #endif
-            std::cout << TEXT_CYAN << "New GLONASS L2 GNAV message received in channel " << d_channel
-                      << ": ephemeris from satellite " << d_satellite
-                      << " with CN0=" << std::setprecision(2) << cn0 << std::setprecision(default_precision)
-                      << " dB-Hz" << TEXT_RESET << std::endl;
+            // std::cout << TEXT_CYAN << "New GLONASS L2 GNAV message received in channel " << d_channel
+                    //   << ": ephemeris from satellite " << d_satellite
+                    //   << " with CN0=" << std::setprecision(2) << cn0 << std::setprecision(default_precision)
+                    //   << " dB-Hz" << TEXT_RESET << std::endl;
         }
     if (d_nav.have_new_utc_model() == true)
         {
@@ -266,10 +266,10 @@ void glonass_l2_ca_telemetry_decoder_gs::decode_string(const double *frame_symbo
 #else
             const auto default_precision{std::cout.precision()};
 #endif
-            std::cout << TEXT_CYAN << "New GLONASS L2 GNAV message received in channel " << d_channel
-                      << ": UTC model parameters from satellite " << d_satellite
-                      << " with CN0=" << std::setprecision(2) << cn0 << std::setprecision(default_precision)
-                      << " dB-Hz" << TEXT_RESET << std::endl;
+            // std::cout << TEXT_CYAN << "New GLONASS L2 GNAV message received in channel " << d_channel
+                    //   << ": UTC model parameters from satellite " << d_satellite
+                    //   << " with CN0=" << std::setprecision(2) << cn0 << std::setprecision(default_precision)
+                    //   << " dB-Hz" << TEXT_RESET << std::endl;
         }
     if (d_nav.have_new_almanac() == true)
         {
@@ -282,10 +282,10 @@ void glonass_l2_ca_telemetry_decoder_gs::decode_string(const double *frame_symbo
 #else
             const auto default_precision{std::cout.precision()};
 #endif
-            std::cout << TEXT_CYAN << "New GLONASS L2 GNAV almanac received in channel " << d_channel
-                      << " from satellite " << d_satellite
-                      << " with CN0=" << std::setprecision(2) << cn0 << std::setprecision(default_precision)
-                      << " dB-Hz" << TEXT_RESET << std::endl;
+            // std::cout << TEXT_CYAN << "New GLONASS L2 GNAV almanac received in channel " << d_channel
+                    //   << " from satellite " << d_satellite
+                    //   << " with CN0=" << std::setprecision(2) << cn0 << std::setprecision(default_precision)
+                    //   << " dB-Hz" << TEXT_RESET << std::endl;
         }
     // 5. Update satellite information on system
     if (d_nav.get_flag_update_slot_number() == true)

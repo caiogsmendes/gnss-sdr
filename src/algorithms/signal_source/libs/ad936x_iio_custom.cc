@@ -84,7 +84,7 @@ bool ad936x_iio_custom::initialize_device(const std::string &pluto_device_uri, c
             struct iio_scan_context *tmp_ctx = iio_create_scan_context("usb", 0);
             if (!tmp_ctx)
                 {
-                    std::cout << "Unable to create scan context\n";
+                    // std::cout << "Unable to create scan context\n";
                     return false;
                 }
 
@@ -94,7 +94,7 @@ bool ad936x_iio_custom::initialize_device(const std::string &pluto_device_uri, c
                 {
                     iio_scan_context_destroy(tmp_ctx);
 
-                    std::cout << "Unable to scan for Pluto devices\n";
+                    // std::cout << "Unable to scan for Pluto devices\n";
                     return false;
                 }
 
@@ -102,13 +102,13 @@ bool ad936x_iio_custom::initialize_device(const std::string &pluto_device_uri, c
                 {
                     iio_context_info_list_free(info);
                     iio_scan_context_destroy(tmp_ctx);
-                    std::cout << " No Pluto device found\n ";
+                    // std::cout << " No Pluto device found\n ";
                     return false;
                 }
 
             if (ret > 1)
                 {
-                    std::cout << "More than one Pluto found:\n";
+                    // std::cout << "More than one Pluto found:\n";
 
                     for (unsigned int i = 0; i < (size_t)ret; i++)
                         {
@@ -117,7 +117,7 @@ bool ad936x_iio_custom::initialize_device(const std::string &pluto_device_uri, c
                                 iio_context_info_get_uri(info[i]));
                         }
 
-                    std::cout << "We will use the first one.\n";
+                    // std::cout << "We will use the first one.\n";
                 }
 
             std::string uri(iio_context_info_get_uri(info[0]));
@@ -133,7 +133,7 @@ bool ad936x_iio_custom::initialize_device(const std::string &pluto_device_uri, c
 
     if (ctx == nullptr)
         {
-            std::cout << "Unable to create context from uri: " << pluto_device_uri << std::endl;
+            // std::cout << "Unable to create context from uri: " << pluto_device_uri << std::endl;
             return false;
         }
 
@@ -141,7 +141,7 @@ bool ad936x_iio_custom::initialize_device(const std::string &pluto_device_uri, c
 
     if (phy == nullptr)
         {
-            std::cout << "Unable to find ad9361-phy device from uri: " << pluto_device_uri << std::endl;
+            // std::cout << "Unable to find ad9361-phy device from uri: " << pluto_device_uri << std::endl;
             return false;
         }
 
@@ -150,7 +150,7 @@ bool ad936x_iio_custom::initialize_device(const std::string &pluto_device_uri, c
             stream_dev = iio_context_find_device(ctx, "cf-ad9361-A");  // first ad9361 in FMCOMMS5
             if (stream_dev == nullptr)
                 {
-                    std::cout << "Unable to find cf-ad9361-A device from uri: " << pluto_device_uri << std::endl;
+                    // std::cout << "Unable to find cf-ad9361-A device from uri: " << pluto_device_uri << std::endl;
                     return false;
                 };
         }
@@ -159,13 +159,13 @@ bool ad936x_iio_custom::initialize_device(const std::string &pluto_device_uri, c
             stream_dev = iio_context_find_device(ctx, "cf-ad9361-lpc");  // regular AD9361 stream device in single AD9361 boards
             if (stream_dev == nullptr)
                 {
-                    std::cout << "Unable to find cf-ad9361-lpc device from uri: " << pluto_device_uri << std::endl;
+                    // std::cout << "Unable to find cf-ad9361-lpc device from uri: " << pluto_device_uri << std::endl;
                     return false;
                 };
             dds_dev = iio_context_find_device(ctx, "cf-ad9361-dds-core-lpc");  // DDS core for LO oscillator (external transverter operation)
             if (stream_dev == nullptr)
                 {
-                    std::cout << "Warning: Unable to find cf-ad9361-dds-core-lpc device from uri: " << pluto_device_uri << std::endl;
+                    // std::cout << "Warning: Unable to find cf-ad9361-dds-core-lpc device from uri: " << pluto_device_uri << std::endl;
                 };
         }
 
@@ -237,13 +237,13 @@ void ad936x_iio_custom::set_params_rx(struct iio_device *phy_device,
 
     params.push_back("out_altvoltage0_RX_LO_frequency=" +
                      std::to_string(frequency));
-    std::cout << params.back() << "\n";
+    // std::cout << params.back() << "\n";
     params.push_back("in_voltage_sampling_frequency=" +
                      std::to_string(samplerate));
-    std::cout << params.back() << "\n";
+    // std::cout << params.back() << "\n";
     params.push_back("in_voltage_rf_bandwidth=" +
                      std::to_string(bandwidth));
-    std::cout << params.back() << "\n";
+    // std::cout << params.back() << "\n";
     params.push_back("in_voltage_quadrature_tracking_en=" +
                      std::to_string(quadrature));
     params.push_back("in_voltage_rf_dc_offset_tracking_en=" +
@@ -273,9 +273,9 @@ bool ad936x_iio_custom::config_ad9361_dds(uint64_t freq_rf_tx_hz_,
     int channel)
 {
     // TX stream config
-    std::cout << "Start of AD9361 TX Oscillator DDS configuration\n";
+    // std::cout << "Start of AD9361 TX Oscillator DDS configuration\n";
 
-    std::cout << "* Configuring AD9361 for streaming TX\n";
+    // std::cout << "* Configuring AD9361 for streaming TX\n";
 
     // ENABLE DDS on TX1
     // Configure LO channel
@@ -454,35 +454,35 @@ bool ad936x_iio_custom::init_config_ad9361_rx(long long bandwidth_,
         }
 
     bool no_errors = true;
-    std::cout << "Configuring phy device parameters...\n";
+    // std::cout << "Configuring phy device parameters...\n";
     int ret;
     if (rf_filter == "Disabled")
         {
-            std::cout << "LNA Filter switch is disabled.\n";
+            // std::cout << "LNA Filter switch is disabled.\n";
         }
     else if (rf_filter == "Auto")
         {
-            std::cout << "Selecting LNA RF filter based on the selected RF frequency... \n";
+            // std::cout << "Selecting LNA RF filter based on the selected RF frequency... \n";
             if (freq_ == 1575420000)
                 {
                     if (select_rf_filter("E1") == true)
                         {
-                            std::cout << "LNA RF filter board switch set to E1\n";
+                            // std::cout << "LNA RF filter board switch set to E1\n";
                         }
                     else
                         {
-                            std::cout << "Problem setting LNA RF filter switch value\n";
+                            // std::cout << "Problem setting LNA RF filter switch value\n";
                         }
                 }
             else
                 {
                     if (select_rf_filter("E5E6") == true)
                         {
-                            std::cout << "LNA RF filter board switch set to E5E6\n";
+                            // std::cout << "LNA RF filter board switch set to E5E6\n";
                         }
                     else
                         {
-                            std::cout << "Problem setting LNA RF filter switch value\n";
+                            // std::cout << "Problem setting LNA RF filter switch value\n";
                         }
                 }
         }
@@ -490,11 +490,11 @@ bool ad936x_iio_custom::init_config_ad9361_rx(long long bandwidth_,
         {
             if (select_rf_filter(rf_filter) == true)
                 {
-                    std::cout << "LNA RF filter board switch set to " << rf_filter << "\n";
+                    // std::cout << "LNA RF filter board switch set to " << rf_filter << "\n";
                 }
             else
                 {
-                    std::cout << "Problem setting LNA RF filter switch value\n";
+                    // std::cout << "Problem setting LNA RF filter switch value\n";
                 }
         }
 
@@ -544,30 +544,30 @@ bool ad936x_iio_custom::init_config_ad9361_rx(long long bandwidth_,
 
     if (enable_ch1 == true and enable_ch0 == true and freq_ != freq_2ch)
         {
-            std::cout << "Two channels enabled with different frequencies, enabling the external RF transverter board:\n";
+            // std::cout << "Two channels enabled with different frequencies, enabling the external RF transverter board:\n";
             long long int lo_freq_hz = 0;
             if (high_side_lo_ == false)
                 {
-                    std::cout << "Using LOW SIDE Local Oscillator (F_RF > F_LO)\n";
+                    // std::cout << "Using LOW SIDE Local Oscillator (F_RF > F_LO)\n";
                     lo_freq_hz = freq_2ch - freq_;
                     if (lo_freq_hz < 0)
                         {
-                            std::cout << "Configuration problem: 2nd channel frequency is " << freq_2ch << " [Hz], must be higher than main channel (" << freq_ << " [Hz])\n";
+                            // std::cout << "Configuration problem: 2nd channel frequency is " << freq_2ch << " [Hz], must be higher than main channel (" << freq_ << " [Hz])\n";
                             return false;
                         }
                 }
             else
                 {
-                    std::cout << "Using HIGH SIDE Local Oscillator (F_RF < F_LO), consider baseband spectrum inversion.\n";
+                    // std::cout << "Using HIGH SIDE Local Oscillator (F_RF < F_LO), consider baseband spectrum inversion.\n";
                     lo_freq_hz = freq_2ch + freq_;
                     if (lo_freq_hz < 0)
                         {
-                            std::cout << "Configuration problem: 2nd channel frequency is " << freq_2ch << " [Hz], must be higher than main channel (" << freq_ << " [Hz])\n";
+                            // std::cout << "Configuration problem: 2nd channel frequency is " << freq_2ch << " [Hz], must be higher than main channel (" << freq_ << " [Hz])\n";
                             return false;
                         }
                 }
 
-            std::cout << "Configuring DDS Local Oscillator generation. LO Freq. is " << lo_freq_hz << " [Hz]\n";
+            // std::cout << "Configuring DDS Local Oscillator generation. LO Freq. is " << lo_freq_hz << " [Hz]\n";
             PlutoTxEnable(true);
             config_ad9361_dds(lo_freq_hz,
                 lo_attenuation_db_,
@@ -575,7 +575,7 @@ bool ad936x_iio_custom::init_config_ad9361_rx(long long bandwidth_,
                 0.9,
                 0,
                 tx_lo_channel_);
-            std::cout << "Configuring DDS Local Oscillator generation DONE\n";
+            // std::cout << "Configuring DDS Local Oscillator generation DONE\n";
         }
     else
         {
@@ -585,13 +585,13 @@ bool ad936x_iio_custom::init_config_ad9361_rx(long long bandwidth_,
     int set_filter_ret = ad9361_set_bb_rate(phy, sample_rate_sps);
     if (set_filter_ret != 0)
         {
-            std::cout << "Warning: Unable to set AD936x ad9361_set_bb_rate parameters!\n";
+            // std::cout << "Warning: Unable to set AD936x ad9361_set_bb_rate parameters!\n";
         }
 
     //    int set_filter_ret = ad9361_set_bb_rate_custom_filter_auto(phy, sample_rate_sps);
     //    if (set_filter_ret != 0)
     //        {
-    //            std::cout << "Warning: Unable to set AD936x RX filter parameters!\n";
+    //            // std::cout << "Warning: Unable to set AD936x RX filter parameters!\n";
     //        }
 
     // testing: set manual RX filter chain
@@ -608,13 +608,13 @@ bool ad936x_iio_custom::init_config_ad9361_rx(long long bandwidth_,
     //        TX_analog_bb_lpf_stop_hz);
     //    if (set_filter_ret != 0)
     //        {
-    //            std::cout << "Warning: Unable to set AD936x RX filter parameters!\n";
+    //            // std::cout << "Warning: Unable to set AD936x RX filter parameters!\n";
     //        }
     n_channels = 0;
     if (enable_ch0 == true)
         {
             n_channels++;
-            std::cout << "* Get AD9361 Phy RX channel 0...\n";
+            // std::cout << "* Get AD9361 Phy RX channel 0...\n";
             std::stringstream name;
             name.str("");
             name << "voltage";
@@ -663,7 +663,7 @@ bool ad936x_iio_custom::init_config_ad9361_rx(long long bandwidth_,
     if (enable_ch1 == true)
         {
             n_channels++;
-            std::cout << "* Get AD9361 Phy RX channel 1...\n";
+            // std::cout << "* Get AD9361 Phy RX channel 1...\n";
             std::stringstream name;
             name.str("");
             name << "voltage";
@@ -709,15 +709,15 @@ bool ad936x_iio_custom::init_config_ad9361_rx(long long bandwidth_,
                 }
         }
 
-    std::cout << "AD936x Front-end configuration summary: \n";
-    std::cout << "RF frequency tuned in AD936x: " << freq_ << " [Hz]\n";
-    std::cout << "Baseband sampling frequency: " << sample_rate_sps << " [SPS]\n";
-    std::cout << "RX chain gain: " << rf_gain_rx0_ << " [dB][only valid in manual mode]\n";
-    std::cout << "RX chain gain mode: " << gain_mode_rx0_ << "\n";
-    //    std::cout << "Analog baseband LPF stop frequency: " << RX_analog_bb_lpf_stop_hz << " [Hz]\n";
-    //    std::cout << "Digital baseband LPF FIR passband frequency: " << FIR_lpf_passband_hz << " [Hz]\n";
-    //    std::cout << "Digital baseband LPF FIR stopband frequency: " << FIR_lpf_stopband_hz << " [Hz]\n";
-    std::cout << "End of AD9361 RX configuration.\n";
+    // std::cout << "AD936x Front-end configuration summary: \n";
+    // std::cout << "RF frequency tuned in AD936x: " << freq_ << " [Hz]\n";
+    // std::cout << "Baseband sampling frequency: " << sample_rate_sps << " [SPS]\n";
+    // std::cout << "RX chain gain: " << rf_gain_rx0_ << " [dB][only valid in manual mode]\n";
+    // std::cout << "RX chain gain mode: " << gain_mode_rx0_ << "\n";
+    //    // std::cout << "Analog baseband LPF stop frequency: " << RX_analog_bb_lpf_stop_hz << " [Hz]\n";
+    //    // std::cout << "Digital baseband LPF FIR passband frequency: " << FIR_lpf_passband_hz << " [Hz]\n";
+    //    // std::cout << "Digital baseband LPF FIR stopband frequency: " << FIR_lpf_stopband_hz << " [Hz]\n";
+    // std::cout << "End of AD9361 RX configuration.\n";
     return no_errors;
 }
 
@@ -914,19 +914,19 @@ void ad936x_iio_custom::stop_record()
 
     if (capture_samples_thread.joinable() == true)
         {
-            std::cout << "Joining sample cature thread...\n";
+            // std::cout << "Joining sample cature thread...\n";
             capture_samples_thread.join();
         }
 
     if (overflow_monitor_thread.joinable() == true)
         {
-            std::cout << "Joining overflow monitor thread...\n";
+            // std::cout << "Joining overflow monitor thread...\n";
             overflow_monitor_thread.join();
         }
 
     if (capture_time_thread.joinable() == true)
         {
-            std::cout << "Joining time cature thread...\n";
+            // std::cout << "Joining time cature thread...\n";
             capture_time_thread.join();
         }
 }
@@ -963,7 +963,7 @@ void ad936x_iio_custom::setPlutoGpo(int p)
     snprintf(pins, sizeof(pins), "0x27 0x%x0", p);  // direct access to AD9361 registers... WARNING!
     pins[9] = 0;
     int ret;
-    // std::cout << "send: " << pins << " \n";
+    // // std::cout << "send: " << pins << " \n";
     if (check_device())
         {
             ret = iio_device_debug_attr_write(phy, "direct_reg_access", pins);
@@ -1034,12 +1034,12 @@ bool ad936x_iio_custom::select_rf_filter(const std::string &rf_filter)
         }
     if (rf_filter == "none")
         {
-            std::cout << "RF external filter not selected\n";
+            // std::cout << "RF external filter not selected\n";
         }
 
     else
         {
-            std::cout << "Unknown filter selected, switching to E1 filter...\n";
+            // std::cout << "Unknown filter selected, switching to E1 filter...\n";
             ret = iio_device_debug_attr_write(phy, "gpo_set", "0 0");
             if (ret < 0)
                 {
@@ -1059,24 +1059,24 @@ void ad936x_iio_custom::get_PPS_timestamp()
     GnssTime_queue->clear();
     Pps_queue->clear();
 
-    std::cout << "Waiting for uBlox time message synchronization... (wait up to 10 seconds)\n";
+    // std::cout << "Waiting for uBlox time message synchronization... (wait up to 10 seconds)\n";
     if (GnssTime_queue->timed_wait_and_pop(tow, 10000) == false)
         {
-            std::cout << "uBlox time message synchronization error.\n";
+            // std::cout << "uBlox time message synchronization error.\n";
             return;
         }
 
-    std::cout << "Waiting for PPS Samplestamp message synchronization... (wait up to 10 seconds)\n";
+    // std::cout << "Waiting for PPS Samplestamp message synchronization... (wait up to 10 seconds)\n";
     if (Pps_queue->timed_wait_and_pop(pps, 10000) == false)
         {
-            std::cout << "PPS IP message synchronization error.\n";
+            // std::cout << "PPS IP message synchronization error.\n";
             return;
         }
 
     // Get new PPS samplestamp and associate it to the corresponding uBlox TP message
     while (receive_samples == true)
         {
-            std::cout << "[" << pps.samplestamp << "][o:" << pps.overflow_reg << "] uBlox time message received with TOW=" << tow.tow_ms << "\n";
+            // std::cout << "[" << pps.samplestamp << "][o:" << pps.overflow_reg << "] uBlox time message received with TOW=" << tow.tow_ms << "\n";
             LOG(INFO) << "[" << pps.samplestamp << "][o:" << pps.overflow_reg << "] uBlox time message received with TOW=" << tow.tow_ms << "\n";
             // write timestamp information to timestamp metadata file:
             // uint64_t: absolute sample counter from the beginning of sample capture associated to the rising edge of the PPS signal
@@ -1092,7 +1092,7 @@ void ad936x_iio_custom::get_PPS_timestamp()
                 {
                     if (receive_samples == true)
                         {
-                            std::cout << "ERROR: uBlox time message not received, check uBlox GNSS signal quality!\n";
+                            // std::cout << "ERROR: uBlox time message not received, check uBlox GNSS signal quality!\n";
                             LOG(INFO) << "ERROR: uBlox time message not received!";
                         }
                     break;
@@ -1101,7 +1101,7 @@ void ad936x_iio_custom::get_PPS_timestamp()
                 {
                     if (receive_samples == true)
                         {
-                            std::cout << "ERROR: PPS time message not received, check uBlox GNSS signal quality!\n";
+                            // std::cout << "ERROR: PPS time message not received, check uBlox GNSS signal quality!\n";
                             LOG(INFO) << "ERROR: PPS time message not received!";
                         }
                     break;
@@ -1111,7 +1111,7 @@ void ad936x_iio_custom::get_PPS_timestamp()
                     if (receive_samples == true)
                         {
                             fpga_overflow = true;
-                            std::cout << "ERROR: FPGA reported RX sample buffer overflow!\n";
+                            // std::cout << "ERROR: FPGA reported RX sample buffer overflow!\n";
                             LOG(INFO) << "ERROR: FPGA reported RX sample buffer overflow!\n";
                         }
                     break;
@@ -1136,7 +1136,7 @@ bool ad936x_iio_custom::start_sample_rx(bool ppsmode)
         }
     catch (const std::exception &ex)
         {
-            std::cout << "ERROR: Problem allocating RAM buffer: " << ex.what() << "\n";
+            // std::cout << "ERROR: Problem allocating RAM buffer: " << ex.what() << "\n";
             return false;
         }
 
@@ -1252,7 +1252,7 @@ void ad936x_iio_custom::capture(const std::vector<std::string> &channels)
     rxbuf = iio_device_create_buffer(stream_dev, IIO_DEFAULTAD936XAPIFIFOSIZE_SAMPLES, false);
     if (!rxbuf)
         {
-            std::cout << "Could not create RX buffer. \n";
+            // std::cout << "Could not create RX buffer. \n";
             return;
         }
 

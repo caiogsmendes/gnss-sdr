@@ -53,11 +53,11 @@ Fpga_Switch::Fpga_Switch(void)
     if (d_map_base == reinterpret_cast<void *>(-1))
         {
             LOG(WARNING) << "Cannot map the FPGA switch module into tracking memory";
-            std::cout << "Could not map switch memory.\n";
+            // std::cout << "Could not map switch memory.\n";
         }
     else
         {
-            std::cout << "Switch memory successfully mapped.\n";
+            // std::cout << "Switch memory successfully mapped.\n";
         }
 
     // sanity check : check test register
@@ -107,7 +107,7 @@ void Fpga_Switch::close_device()
     auto *aux = const_cast<unsigned *>(d_map_base);
     if (munmap(static_cast<void *>(aux), FPGA_PAGE_SIZE) == -1)
         {
-            std::cout << "Failed to unmap memory uio\n";
+            // std::cout << "Failed to unmap memory uio\n";
         }
 
     close(d_device_descriptor);

@@ -261,8 +261,8 @@ void galileo_e6_has_msg_receiver::process_HAS_page(const Galileo_HAS_page& has_p
                         {
                             // if we have the mask for that message, it's ready to be sent to PVT
                             d_new_message = true;
-                            std::cout << TEXT_MAGENTA << "New Galileo HAS message ID " << std::to_string(has_page.message_id)
-                                      << " received and successfully decoded" << TEXT_RESET << '\n';
+                            // std::cout << TEXT_MAGENTA << "New Galileo HAS message ID " << std::to_string(has_page.message_id)
+                                    //   << " received and successfully decoded" << TEXT_RESET << '\n';
                         }
                 }
         }

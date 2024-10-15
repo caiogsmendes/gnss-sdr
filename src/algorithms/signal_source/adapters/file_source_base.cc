@@ -92,8 +92,8 @@ FileSourceBase::FileSourceBase(ConfigurationInterface const* configuration, std:
             if (seconds_to_skip_ != 0.0)
                 {
                     seconds_to_skip_ = 0.0;
-                    std::cout << "Warning: since " << role_ << ".repeat is set to true, "
-                              << role_ << ".seconds_to_skip parameter will be ignored.\n";
+                    // std::cout << "Warning: since " << role_ << ".repeat is set to true, "
+                            //   << role_ << ".seconds_to_skip parameter will be ignored.\n";
                 }
         }
 
@@ -142,7 +142,7 @@ void FileSourceBase::init()
         }
 
     DLOG(INFO) << "Total number samples to be processed= " << samples_ << " GNSS signal duration= " << signal_duration_s << " [s]";
-    std::cout << "GNSS signal recorded time to be processed: " << signal_duration_s << " [s]\n";
+    // std::cout << "GNSS signal recorded time to be processed: " << signal_duration_s << " [s]\n";
 
     DLOG(INFO) << "File source filename " << filename_;
     DLOG(INFO) << "Samples " << samples_;
@@ -414,12 +414,12 @@ size_t FileSourceBase::computeSamplesInFile() const
 
     if (tail > size)
         {
-            std::cout << "Warning: file " << filename() << " has " << size << " samples (it is too short).\n";
+            // std::cout << "Warning: file " << filename() << " has " << size << " samples (it is too short).\n";
             return 1;
         }
     if (to_skip + tail > size)
         {
-            std::cout << "Warning: " << role_ << ".seconds_to_skip is larger than file duration.\n";
+            // std::cout << "Warning: " << role_ << ".seconds_to_skip is larger than file duration.\n";
             return 1;
         }
 
@@ -430,7 +430,7 @@ size_t FileSourceBase::computeSamplesInFile() const
             n_samples = std::floor(packetsPerSample() * size / item_size());
 
             DLOG(INFO) << "Total samples in the file= " << n_samples;
-            std::cout << "Processing file " << filename() << ", which contains " << n_samples << " samples (" << size << " bytes)\n";
+            // std::cout << "Processing file " << filename() << ", which contains " << n_samples << " samples (" << size << " bytes)\n";
 
             if (n_samples > (to_skip + tail))
                 {
@@ -439,8 +439,8 @@ size_t FileSourceBase::computeSamplesInFile() const
                 }
             else
                 {
-                    std::cout << "Warning: Skipping " << to_skip << " samples from the front and truncating " << tail << " samples\n"
-                              << "is greater than the number of samples in the file (" << size << ")\n";
+                    // std::cout << "Warning: Skipping " << to_skip << " samples from the front and truncating " << tail << " samples\n"
+                            //   << "is greater than the number of samples in the file (" << size << ")\n";
                     return 1;
                 }
         }
@@ -448,13 +448,13 @@ size_t FileSourceBase::computeSamplesInFile() const
         {
             if (n_samples > size - to_skip - tail)
                 {
-                    std::cout << "Warning: file " << filename() << " has " << size - to_skip
-                              << " samples, but " << role_ << ".samples has been set to " << n_samples << ".\n"
-                              << " Setting " << role_ << ".samples to " << size - to_skip - tail
-                              << " (" << to_skip << " samples skipped at header and " << tail << " samples skipped at the tail).\n";
+                    // std::cout << "Warning: file " << filename() << " has " << size - to_skip
+                            //   << " samples, but " << role_ << ".samples has been set to " << n_samples << ".\n"
+                            //   << " Setting " << role_ << ".samples to " << size - to_skip - tail
+                            //   << " (" << to_skip << " samples skipped at header and " << tail << " samples skipped at the tail).\n";
                     n_samples = size - to_skip - tail;
                 }
-            std::cout << "Processing " << n_samples << " samples from file " << filename() << '\n';
+            // std::cout << "Processing " << n_samples << " samples from file " << filename() << '\n';
         }
 
     return n_samples;

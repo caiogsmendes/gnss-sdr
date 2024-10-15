@@ -89,13 +89,13 @@ GalileoE5aNoncoherentIQAcquisitionCaf::GalileoE5aNoncoherentIQAcquisitionCaf(
         {
             sampled_ms_ = 3;
             DLOG(INFO) << "Coherent integration time should be 3 ms or less. Changing to 3ms ";
-            std::cout << "Too high coherent integration time. Changing to 3ms\n";
+            // std::cout << "Too high coherent integration time. Changing to 3ms\n";
         }
     if (Zero_padding > 0)
         {
             sampled_ms_ = 2;
             DLOG(INFO) << "Zero padding activated. Changing to 1ms code + 1ms zero padding ";
-            std::cout << "Zero padding activated. Changing to 1ms code + 1ms zero padding\n";
+            // std::cout << "Zero padding activated. Changing to 1ms code + 1ms zero padding\n";
         }
 
     // -- Find number of samples per spreading code (1ms)-------------------------

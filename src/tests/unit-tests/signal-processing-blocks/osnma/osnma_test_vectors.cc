@@ -339,7 +339,7 @@ bool OsnmaTestVectors::feedOsnmaWithTestVectors(osnma_msg_receiver_sptr osnma_ob
             offset_byte = 0;
             byte_index = 0;
             set_time(startTimesFiles[test_step]);
-            std::cout << "OsnmaTestVectorsSimulation:"
+            // std::cout << "OsnmaTestVectorsSimulation:"
                       << " d_GST_SIS= " << d_GST_SIS
                       << ", TOW=" << TOW
                       << ", WN=" << WN << std::endl;
@@ -356,7 +356,7 @@ bool OsnmaTestVectors::feedOsnmaWithTestVectors(osnma_msg_receiver_sptr osnma_ob
                     // loop over all SVs, extract a subframe
                     for (const TestVector& tv : testVectors[test_step])
                         {  // loop over all SVs, extract a subframe
-                            std::cout << "OsnmaTestVectorsSimulation: SVID (PRN_a) " << tv.svId << std::endl;
+                            // std::cout << "OsnmaTestVectorsSimulation: SVID (PRN_a) " << tv.svId << std::endl;
                             auto osnmaMsg_sptr = std::make_shared<OSNMA_msg>();
                             std::array<uint8_t, 15> hkroot{};
                             std::array<uint32_t, 15> mack{};
@@ -369,7 +369,7 @@ bool OsnmaTestVectors::feedOsnmaWithTestVectors(osnma_msg_receiver_sptr osnma_ob
                                     std::vector<uint8_t> page_bytes = extract_page_bytes(tv, byte_index, SIZE_PAGE_BYTES);
                                     if (page_bytes.empty())
                                         {
-                                            std::cout << "OsnmaTestVectorsSimulation: end of TestVectors \n"
+                                            // std::cout << "OsnmaTestVectorsSimulation: end of TestVectors \n"
                                                       << "byte_index=" << byte_index << " expected= " << 432000 / 8 << std::endl;
                                             end_of_hex_stream = true;
                                             break;
@@ -381,7 +381,7 @@ bool OsnmaTestVectors::feedOsnmaWithTestVectors(osnma_msg_receiver_sptr osnma_ob
                                     std::string odd_page = page_bits.substr(page_bits.size() / 2);
                                     if (even_page.size() < 120 || odd_page.size() < 120)
                                         {
-                                            std::cout << "OsnmaTestVectorsSimulation: error parsing pages" << std::endl;
+                                            // std::cout << "OsnmaTestVectorsSimulation: error parsing pages" << std::endl;
                                         }
                                     bool even_odd_OK = even_page[0] == '0' && odd_page[0] == '1';
                                     bool page_type_OK = even_page[1] == '0' && odd_page[1] == '0';
@@ -393,7 +393,7 @@ bool OsnmaTestVectors::feedOsnmaWithTestVectors(osnma_msg_receiver_sptr osnma_ob
                                     std::bitset<16> data_j(odd_page.substr(2, 16));
                                     std::bitset<112> shifted_data_k = data_k;
                                     uint8_t word_type = static_cast<uint8_t>((shifted_data_k >>= 106).to_ulong());  // word type is the first 6 bits of the word
-                                    // std::cout << "OsnmaTestVectorsSimulation: received Word " << static_cast<int>(word_type) << std::endl;
+                                    // // std::cout << "OsnmaTestVectorsSimulation: received Word " << static_cast<int>(word_type) << std::endl;
                                     if ((word_type >= 1 && word_type <= 5) || word_type == 6 || word_type == 10)
                                         {
                                             // store raw word
@@ -415,7 +415,7 @@ bool OsnmaTestVectors::feedOsnmaWithTestVectors(osnma_msg_receiver_sptr osnma_ob
                                     byte_index += SIZE_PAGE_BYTES;
                                 }
 
-                            // std::cout << "----------" << std::endl;
+                            // // std::cout << "----------" << std::endl;
                             if (end_of_hex_stream)
                                 break;
                             if (flag_dummy_page)
@@ -472,7 +472,7 @@ bool OsnmaTestVectors::feedOsnmaWithTestVectors(osnma_msg_receiver_sptr osnma_ob
                                     bool check_size_is_ok = nav_data_ADKD_0_12.size() == 549;
                                     if (check_size_is_ok)
                                         {
-                                            std::cout << "Galileo OSNMA: sending ADKD=0/12 navData, PRN_d (" << tv.svId << ") "
+                                            // std::cout << "Galileo OSNMA: sending ADKD=0/12 navData, PRN_d (" << tv.svId << ") "
                                                       << "TOW_sf=" << osnmaMsg_sptr->TOW_sf0 << std::endl;
                                             const auto tmp_obj_osnma = std::make_shared<std::tuple<uint32_t, std::string, uint32_t>>(  // < PRNd , navDataBits, TOW_Sosf>
                                                 tv.svId,
@@ -509,7 +509,7 @@ bool OsnmaTestVectors::feedOsnmaWithTestVectors(osnma_msg_receiver_sptr osnma_ob
                                     bool check_size_is_ok = nav_data_ADKD_4.size() == 141;
                                     if (check_size_is_ok)
                                         {
-                                            std::cout << "Galileo OSNMA: sending ADKD=04 navData, PRN_d (" << tv.svId << ") "
+                                            // std::cout << "Galileo OSNMA: sending ADKD=04 navData, PRN_d (" << tv.svId << ") "
                                                       << "TOW_sf=" << osnmaMsg_sptr->TOW_sf0 << std::endl;
                                             const auto tmp_obj_osnma = std::make_shared<std::tuple<uint32_t, std::string, uint32_t>>(  // < PRNd , navDataBits, TOW_Sosf>
                                                 tv.svId,
@@ -531,7 +531,7 @@ bool OsnmaTestVectors::feedOsnmaWithTestVectors(osnma_msg_receiver_sptr osnma_ob
                             d_GST_SIS += DURATION_SUBFRAME;
                             TOW = d_GST_SIS & 0x000FFFFF;
                             WN = (d_GST_SIS & 0xFFF00000) >> 20;
-                            std::cout << "OsnmaTestVectorsSimulation:"
+                            // std::cout << "OsnmaTestVectorsSimulation:"
                                       << " d_GST_SIS= " << d_GST_SIS
                                       << ", TOW=" << TOW
                                       << ", WN=" << WN << std::endl;

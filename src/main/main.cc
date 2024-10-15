@@ -127,17 +127,17 @@ int main(int argc, char** argv)
             absl::ParseCommandLine(argc, argv);
             if (!ValidateFlags())
                 {
-                    std::cout << "GNSS-SDR program ended.\n";
+                    // std::cout << "GNSS-SDR program ended.\n";
                     return 1;
                 }
 
 #endif
-            std::cout << "Initializing GNSS-SDR v" << gnss_sdr_version << " ... Please wait.\n";
+            // std::cout << "Initializing GNSS-SDR v" << gnss_sdr_version << " ... Please wait.\n";
         }
     catch (const std::exception& e)
         {
             std::cerr << e.what() << '\n';
-            std::cout << "GNSS-SDR program ended.\n";
+            // std::cout << "GNSS-SDR program ended.\n";
             return 1;
         }
 
@@ -149,7 +149,7 @@ int main(int argc, char** argv)
     // profiled. Calling cudaDeviceReset causes all profile data to be
     // flushed before the application exits
     cudaDeviceReset();
-    std::cout << "Reset CUDA device done.\n";
+    // std::cout << "Reset CUDA device done.\n";
 #endif
 
     if (GOOGLE_STRIP_LOG == 0)
@@ -164,10 +164,10 @@ int main(int argc, char** argv)
             if (absl::GetFlag(FLAGS_log_dir).empty())
 #endif
                 {
-                    std::cout << "Logging will be written at "
-                              << fs::temp_directory_path()
-                              << '\n'
-                              << "Use gnss-sdr --log_dir=/path/to/log to change that.\n";
+                    // std::cout << "Logging will be written at "
+                            //   << fs::temp_directory_path()
+                            //   << '\n'
+                            //   << "Use gnss-sdr --log_dir=/path/to/log to change that.\n";
                 }
             else
                 {
@@ -200,9 +200,9 @@ int main(int argc, char** argv)
                                         }
                                 }
 #if USE_GLOG_AND_GFLAGS
-                            std::cout << "Logging will be written at " << FLAGS_log_dir << '\n';
+                            // std::cout << "Logging will be written at " << FLAGS_log_dir << '\n';
 #else
-                            std::cout << "Logging will be written at " << absl::GetFlag(FLAGS_log_dir) << '\n';
+                            // std::cout << "Logging will be written at " << absl::GetFlag(FLAGS_log_dir) << '\n';
 #endif
                         }
                     catch (const std::exception& e)
@@ -285,15 +285,15 @@ int main(int argc, char** argv)
     end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
 
-    std::cout << "Total GNSS-SDR run time: "
-              << elapsed_seconds.count()
-              << " [seconds]\n";
+    // std::cout << "Total GNSS-SDR run time: "
+            //   << elapsed_seconds.count()
+            //   << " [seconds]\n";
 
 #if USE_GLOG_AND_GFLAGS
     gflags::ShutDownCommandLineFlags();
 #else
     absl::FlushLogSinks();
 #endif
-    std::cout << "GNSS-SDR program ended.\n";
+    // std::cout << "GNSS-SDR program ended.\n";
     return return_code;
 }

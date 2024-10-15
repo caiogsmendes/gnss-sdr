@@ -738,7 +738,7 @@ private:
                         }
                     else
                         {
-                            std::cout << "Closing connection with RTCM client\n";
+                            // std::cout << "Closing connection with RTCM client\n";
                             room_.leave(shared_from_this());
                         }
                 });
@@ -753,14 +753,14 @@ private:
                     if (!ec)
                         {
                             room_.deliver(read_msg_);
-                            // std::cout << "Delivered message (session): ";
+                            // // std::cout << "Delivered message (session): ";
                             // std::cout.write(read_msg_.body(), read_msg_.body_length());
-                            // std::cout << '\n';
+                            // // std::cout << '\n';
                             do_read_message_header();
                         }
                     else
                         {
-                            std::cout << "Closing connection with RTCM client\n";
+                            // std::cout << "Closing connection with RTCM client\n";
                             room_.leave(shared_from_this());
                         }
                 });
@@ -782,7 +782,7 @@ private:
                         }
                     else
                         {
-                            std::cout << "Closing connection with RTCM client\n";
+                            // std::cout << "Closing connection with RTCM client\n";
                             room_.leave(shared_from_this());
                         }
                 });
@@ -836,7 +836,7 @@ private:
                         }
                     else
                         {
-                            std::cout << "Server is down.\n";
+                            // std::cout << "Server is down.\n";
                         }
                 });
         }
@@ -852,7 +852,7 @@ private:
                         }
                     else
                         {
-                            std::cout << "Error in client\n";
+                            // std::cout << "Error in client\n";
                             socket_.close();
                         }
                 });
@@ -950,25 +950,25 @@ private:
                     {
                         if (first_client)
                             {
-                                std::cout << "The TCP/IP server of RTCM messages is up and running. Accepting connections ...\n";
+                                // std::cout << "The TCP/IP server of RTCM messages is up and running. Accepting connections ...\n";
                                 first_client = false;
                             }
                         else
                             {
-                                std::cout << "Starting RTCM TCP/IP server session...\n";
+                                // std::cout << "Starting RTCM TCP/IP server session...\n";
                                 boost::system::error_code ec2;
                                 boost::asio::ip::tcp::endpoint endpoint = socket_.remote_endpoint(ec2);
                                 if (ec2)
                                     {
                                         // Error creating remote_endpoint
-                                        std::cout << "Error getting remote IP address, closing session.\n";
+                                        // std::cout << "Error getting remote IP address, closing session.\n";
                                         LOG(INFO) << "Error getting remote IP address";
                                         start_session = false;
                                     }
                                 else
                                     {
                                         std::string remote_addr = endpoint.address().to_string();
-                                        std::cout << "Serving client from " << remote_addr << '\n';
+                                        // std::cout << "Serving client from " << remote_addr << '\n';
                                         LOG(INFO) << "Serving client from " << remote_addr;
                                     }
                             }
@@ -979,7 +979,7 @@ private:
                     }
                 else
                     {
-                        std::cout << "Error when invoking a RTCM session. " << ec << '\n';
+                        // std::cout << "Error when invoking a RTCM session. " << ec << '\n';
                     }
                 start_session = true;
                 do_accept();

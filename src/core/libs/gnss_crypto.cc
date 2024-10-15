@@ -1078,7 +1078,7 @@ void Gnss_Crypto::read_merkle_xml(const std::string& merkleFilePath)
             d_x_4_0 = convert_from_hex_str("832E15EDE55655EAC6E399A539477B7C034CCE24C3C93FFC904ACD9BF842F04E");
             return;
         }
-    std::cout << "OSNMA Merkle Tree successfully read from file " << merkleFilePath << std::endl;
+    // std::cout << "OSNMA Merkle Tree successfully read from file " << merkleFilePath << std::endl;
     LOG(INFO) << "OSNMA Merkle Tree successfully read from file " << merkleFilePath;
 }
 
@@ -1269,7 +1269,7 @@ void Gnss_Crypto::readPublicKeyFromPEM(const std::string& pemFilePath)
             return;
         }
 #endif
-    std::cout << "OSNMA Public key successfully read from file " << pemFilePath << std::endl;
+    // std::cout << "OSNMA Public key successfully read from file " << pemFilePath << std::endl;
     LOG(INFO) << "OSNMA Public key successfully read from file " << pemFilePath;
 }
 
@@ -1531,7 +1531,7 @@ bool Gnss_Crypto::readPublicKeyFromCRT(const std::string& crtFilePath)
     BIO_free(bio);
     X509_free(cert);
 #endif
-    std::cout << "OSNMA Public key successfully read from file " << crtFilePath << std::endl;
+    // std::cout << "OSNMA Public key successfully read from file " << crtFilePath << std::endl;
     LOG(INFO) << "OSNMA Public key successfully read from file " << crtFilePath;
     return true;
 }

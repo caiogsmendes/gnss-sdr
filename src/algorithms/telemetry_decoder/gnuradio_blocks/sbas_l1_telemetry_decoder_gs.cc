@@ -465,7 +465,7 @@ int sbas_l1_telemetry_decoder_gs::general_work(int noutput_items __attribute__((
             // and send them to the SBAS raw message queue
             // for(std::vector<Sbas_Raw_Msg>::iterator it = sbas_raw_msgs.begin(); it != sbas_raw_msgs.end(); it++)
             //    {
-            // std::cout << "SBAS message type " << it->get_msg_type() << " from PRN" << it->get_prn() << " received\n";
+            // // std::cout << "SBAS message type " << it->get_msg_type() << " from PRN" << it->get_prn() << " received\n";
             // sbas_telemetry_data.update(*it);
             //    }
 

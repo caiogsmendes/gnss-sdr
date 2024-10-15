@@ -55,16 +55,16 @@ GalileoE1DllPllVemlTrackingFpga::GalileoE1DllPllVemlTrackingFpga(
     if (trk_params_fpga.extend_correlation_symbols < 1)
         {
             trk_params_fpga.extend_correlation_symbols = 1;
-            std::cout << TEXT_RED << "WARNING: Galileo E1. extend_correlation_symbols must be bigger than 0. Coherent integration has been set to 1 symbol (4 ms)" << TEXT_RESET << '\n';
+            // std::cout << TEXT_RED << "WARNING: Galileo E1. extend_correlation_symbols must be bigger than 0. Coherent integration has been set to 1 symbol (4 ms)" << TEXT_RESET << '\n';
         }
     else if (!trk_params_fpga.track_pilot and trk_params_fpga.extend_correlation_symbols > 1)
         {
             trk_params_fpga.extend_correlation_symbols = 1;
-            std::cout << TEXT_RED << "WARNING: Galileo E1. Extended coherent integration is not allowed when tracking the data component. Coherent integration has been set to 4 ms (1 symbol)" << TEXT_RESET << '\n';
+            // std::cout << TEXT_RED << "WARNING: Galileo E1. Extended coherent integration is not allowed when tracking the data component. Coherent integration has been set to 4 ms (1 symbol)" << TEXT_RESET << '\n';
         }
     if ((trk_params_fpga.extend_correlation_symbols > 1) and (trk_params_fpga.pll_bw_narrow_hz > trk_params_fpga.pll_bw_hz or trk_params_fpga.dll_bw_narrow_hz > trk_params_fpga.dll_bw_hz))
         {
-            std::cout << TEXT_RED << "WARNING: Galileo E1. PLL or DLL narrow tracking bandwidth is higher than wide tracking one" << TEXT_RESET << '\n';
+            // std::cout << TEXT_RED << "WARNING: Galileo E1. PLL or DLL narrow tracking bandwidth is higher than wide tracking one" << TEXT_RESET << '\n';
         }
     track_pilot_ = trk_params_fpga.track_pilot;
     const auto vector_length = static_cast<int32_t>(std::round(trk_params_fpga.fs_in / (GALILEO_E1_CODE_CHIP_RATE_CPS / GALILEO_E1_B_CODE_LENGTH_CHIPS)));
@@ -220,7 +220,7 @@ void GalileoE1DllPllVemlTrackingFpga::set_channel(unsigned int channel)
     // find the uio device file corresponding to the tracking multicorrelator
     if (find_uio_dev_file_name(device_io_name, device_name_, channel_ - num_prev_assigned_ch_) < 0)
         {
-            std::cout << "Cannot find the FPGA uio device file corresponding to device name " << device_name_ << std::endl;
+            // std::cout << "Cannot find the FPGA uio device file corresponding to device name " << device_name_ << std::endl;
             throw std::exception();
         }
     tracking_fpga_sc_sptr_->set_channel(channel_, device_io_name);

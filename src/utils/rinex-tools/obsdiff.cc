@@ -115,7 +115,7 @@ std::map<int, arma::mat> ReadRinexObs(const std::string& rinex_file, char system
     std::map<int, arma::mat> obs_map;
     if (not file_exist(rinex_file.c_str()))
         {
-            std::cout << "Warning: RINEX Obs file " << rinex_file << " does not exist\n";
+            // std::cout << "Warning: RINEX Obs file " << rinex_file << " does not exist\n";
             return obs_map;
         }
     // Open and read _baseerence RINEX observables file
@@ -159,7 +159,7 @@ std::map<int, arma::mat> ReadRinexObs(const std::string& rinex_file, char system
                     PRN_set = available_gps_prn;
                 }
 
-            std::cout << "Reading RINEX OBS file " << rinex_file << " ...\n";
+            // std::cout << "Reading RINEX OBS file " << rinex_file << " ...\n";
             while (r_base >> r_base_data)
                 {
                     for (const auto& prn_it : PRN_set)
@@ -243,7 +243,7 @@ std::map<int, arma::mat> ReadRinexObs(const std::string& rinex_file, char system
                                         }
                                     else
                                         {
-                                            std::cout << "ReadRinexObs unknown signal requested: " << signal << '\n';
+                                            // std::cout << "ReadRinexObs unknown signal requested: " << signal << '\n';
                                             return obs_map;
                                         }
                                 }
@@ -252,23 +252,23 @@ std::map<int, arma::mat> ReadRinexObs(const std::string& rinex_file, char system
         }          // End of 'try' block
     catch (const gnsstk::FFStreamError& e)
         {
-            std::cout << e;
+            // std::cout << e;
             return obs_map;
         }
     catch (const gnsstk::Exception& e)
         {
-            std::cout << e;
+            // std::cout << e;
             return obs_map;
         }
     catch (const std::exception& e)
         {
-            std::cout << "Exception: " << e.what();
-            std::cout << "unknown error.  I don't feel so well...\n";
+            // std::cout << "Exception: " << e.what();
+            // std::cout << "unknown error.  I don't feel so well...\n";
             return obs_map;
         }
     if (obs_map.empty())
         {
-            std::cout << "Warning: file "
+            // std::cout << "Warning: file "
                       << rinex_file
                       << " contains no data.\n";
         }
@@ -284,7 +284,7 @@ bool save_mat_xy(std::vector<double>& x, std::vector<double>& y, std::string fil
             mat_t* matfp;
             matvar_t* matvar;
             filename.append(".mat");
-            // std::cout << "save_mat_xy write " << filename << '\n';
+            // // std::cout << "save_mat_xy write " << filename << '\n';
             matfp = Mat_CreateVer(filename.c_str(), nullptr, MAT_FT_MAT5);
             if (reinterpret_cast<int64_t*>(matfp) != nullptr)
                 {
@@ -299,14 +299,14 @@ bool save_mat_xy(std::vector<double>& x, std::vector<double>& y, std::string fil
                 }
             else
                 {
-                    std::cout << "save_mat_xy: error creating file\n";
+                    // std::cout << "save_mat_xy: error creating file\n";
                 }
             Mat_Close(matfp);
             return true;
         }
     catch (const std::exception& ex)
         {
-            std::cout << "save_mat_xy: " << ex.what() << '\n';
+            // std::cout << "save_mat_xy: " << ex.what() << '\n';
             return false;
         }
 }
@@ -320,7 +320,7 @@ bool save_mat_x(std::vector<double>* x, std::string filename)
             mat_t* matfp;
             matvar_t* matvar;
             filename.append(".mat");
-            std::cout << "save_mat_x write " << filename << '\n';
+            // std::cout << "save_mat_x write " << filename << '\n';
             matfp = Mat_CreateVer(filename.c_str(), nullptr, MAT_FT_MAT5);
             if (reinterpret_cast<int64_t*>(matfp) != nullptr)
                 {
@@ -331,14 +331,14 @@ bool save_mat_x(std::vector<double>* x, std::string filename)
                 }
             else
                 {
-                    std::cout << "save_mat_x: error creating file\n";
+                    // std::cout << "save_mat_x: error creating file\n";
                 }
             Mat_Close(matfp);
             return true;
         }
     catch (const std::exception& ex)
         {
-            std::cout << "save_mat_x: " << ex.what() << '\n';
+            // std::cout << "save_mat_x: " << ex.what() << '\n';
             return false;
         }
 }
@@ -418,7 +418,7 @@ void carrier_phase_double_diff(
 
             // 5. report
             std::streamsize ss = std::cout.precision();
-            std::cout << std::setprecision(10) << data_title << "Double diff Carrier Phase RMSE = "
+            // std::cout << std::setprecision(10) << data_title << "Double diff Carrier Phase RMSE = "
                       << rmse << ", mean = " << error_mean
                       << ", stdev = " << sqrt(error_var)
                       << " (max,min) = " << max_error
@@ -455,7 +455,7 @@ void carrier_phase_double_diff(
         }
     else
         {
-            std::cout << "No valid data\n";
+            // std::cout << "No valid data\n";
         }
 }
 
@@ -506,7 +506,7 @@ void carrier_phase_single_diff(
 
             // 5. report
             std::streamsize ss = std::cout.precision();
-            std::cout << std::setprecision(10) << data_title << "Single diff Carrier Phase RMSE = "
+            // std::cout << std::setprecision(10) << data_title << "Single diff Carrier Phase RMSE = "
                       << rmse << ", mean = " << error_mean
                       << ", stdev = " << sqrt(error_var)
                       << " (max,min) = " << max_error
@@ -543,7 +543,7 @@ void carrier_phase_single_diff(
         }
     else
         {
-            std::cout << "No valid data\n";
+            // std::cout << "No valid data\n";
         }
 }
 
@@ -617,7 +617,7 @@ void carrier_doppler_double_diff(
 
             // 5. report
             std::streamsize ss = std::cout.precision();
-            std::cout << std::setprecision(10) << data_title << "Double diff Carrier Doppler RMSE = "
+            // std::cout << std::setprecision(10) << data_title << "Double diff Carrier Doppler RMSE = "
                       << rmse << ", mean = " << error_mean
                       << ", stdev = " << sqrt(error_var)
                       << " (max,min) = " << max_error
@@ -654,7 +654,7 @@ void carrier_doppler_double_diff(
         }
     else
         {
-            std::cout << "No valid data\n";
+            // std::cout << "No valid data\n";
         }
 }
 
@@ -704,7 +704,7 @@ void carrier_doppler_single_diff(
 
             // 5. report
             std::streamsize ss = std::cout.precision();
-            std::cout << std::setprecision(10) << data_title << "Single diff Carrier Doppler RMSE = "
+            // std::cout << std::setprecision(10) << data_title << "Single diff Carrier Doppler RMSE = "
                       << rmse << ", mean = " << error_mean
                       << ", stdev = " << sqrt(error_var)
                       << " (max,min) = " << max_error
@@ -741,7 +741,7 @@ void carrier_doppler_single_diff(
         }
     else
         {
-            std::cout << "No valid data\n";
+            // std::cout << "No valid data\n";
         }
 }
 
@@ -816,7 +816,7 @@ void code_pseudorange_double_diff(
 
             // 5. report
             std::streamsize ss = std::cout.precision();
-            std::cout << std::setprecision(10) << data_title << "Double diff Pseudorange RMSE = "
+            // std::cout << std::setprecision(10) << data_title << "Double diff Pseudorange RMSE = "
                       << rmse << ", mean = " << error_mean
                       << ", stdev = " << sqrt(error_var)
                       << " (max,min) = " << max_error
@@ -853,7 +853,7 @@ void code_pseudorange_double_diff(
         }
     else
         {
-            std::cout << "No valid data\n";
+            // std::cout << "No valid data\n";
         }
 }
 
@@ -905,7 +905,7 @@ void code_pseudorange_single_diff(
 
             // 5. report
             std::streamsize ss = std::cout.precision();
-            std::cout << std::setprecision(10) << data_title << "Single diff Pseudorange RMSE = "
+            // std::cout << std::setprecision(10) << data_title << "Single diff Pseudorange RMSE = "
                       << rmse << ", mean = " << error_mean
                       << ", stdev = " << sqrt(error_var)
                       << " (max,min) = " << max_error
@@ -942,7 +942,7 @@ void code_pseudorange_single_diff(
         }
     else
         {
-            std::cout << "No valid data\n";
+            // std::cout << "No valid data\n";
         }
 }
 
@@ -967,13 +967,13 @@ void coderate_phaserate_consistence(
     arma::uvec idx = arma::find(prange < mincodeval);
     if (idx.n_elem > 0)
         {
-            std::cout << "Warning: Pseudorange measurement is less than minimum acceptable value of " << mincodeval << " meters.\n";
+            // std::cout << "Warning: Pseudorange measurement is less than minimum acceptable value of " << mincodeval << " meters.\n";
         }
 
     idx = arma::find(prange > maxcodeval);
     if (idx.n_elem > 0)
         {
-            std::cout << "Warning: Pseudorange measurement is above than maximum acceptable value of " << maxcodeval << " meters.\n";
+            // std::cout << "Warning: Pseudorange measurement is above than maximum acceptable value of " << maxcodeval << " meters.\n";
         }
 
     // 2) It checks that the pseduorange rate is within a certain threshold
@@ -985,7 +985,7 @@ void coderate_phaserate_consistence(
 
     if (NaN_in_measured_data.n_elem > 0)
         {
-            std::cout << "Warning: Pseudorange rate have NaN values. \n";
+            // std::cout << "Warning: Pseudorange rate have NaN values. \n";
         }
 
     double mincoderate = 0.001;
@@ -994,7 +994,7 @@ void coderate_phaserate_consistence(
     idx = arma::find(coderate > maxcoderate and coderate < mincoderate);
     if (idx.n_elem > 0)
         {
-            std::cout << "Warning: bad code rate \n";
+            // std::cout << "Warning: bad code rate \n";
         }
 
     // 3) It checks that the phase rate is within a certain threshold
@@ -1005,7 +1005,7 @@ void coderate_phaserate_consistence(
 
     if (NaN_in_measured_data.n_elem > 0)
         {
-            std::cout << "Warning: Carrier phase rate have NaN values. \n";
+            // std::cout << "Warning: Carrier phase rate have NaN values. \n";
         }
 
     double minphaserate = 0.001;
@@ -1014,7 +1014,7 @@ void coderate_phaserate_consistence(
     idx = arma::find(phaserate > maxphaserate and phaserate < minphaserate);
     if (idx.n_elem > 0)
         {
-            std::cout << "Warning: bad phase rate \n";
+            // std::cout << "Warning: bad phase rate \n";
         }
 
     // 4) It checks the difference between code and phase rates
@@ -1035,7 +1035,7 @@ void coderate_phaserate_consistence(
     idx = arma::find(ratediff > maxratediff);
     if (idx.n_elem > 0)
         {
-            std::cout << "Warning: bad code and phase rate difference \n";
+            // std::cout << "Warning: bad code and phase rate difference \n";
         }
 
     std::vector<double>
@@ -1058,7 +1058,7 @@ void coderate_phaserate_consistence(
 
     // 5. report
     std::streamsize ss = std::cout.precision();
-    std::cout << std::setprecision(10) << data_title << " RMSE = "
+    // std::cout << std::setprecision(10) << data_title << " RMSE = "
               << rmse << ", mean = " << error_mean
               << ", stdev = " << sqrt(error_var)
               << " (max,min) = " << max_error
@@ -1146,7 +1146,7 @@ void code_phase_diff(
 
             // 5. report
             std::streamsize ss = std::cout.precision();
-            std::cout << std::setprecision(10) << data_title << " RMSE = "
+            // std::cout << std::setprecision(10) << data_title << " RMSE = "
                       << rmse << ", mean = " << error_mean
                       << ", stdev = " << sqrt(error_var)
                       << " (max,min) = " << max_error
@@ -1183,17 +1183,17 @@ void code_phase_diff(
         }
     else
         {
-            std::cout << "No valid data\n";
+            // std::cout << "No valid data\n";
         }
 }
 
 
 double compute_rx_clock_error(const std::string& rinex_nav_filename, const std::string& rinex_obs_file)
 {
-    std::cout << "Computing receiver's clock error...\n";
+    // std::cout << "Computing receiver's clock error...\n";
     if (not file_exist(rinex_nav_filename.c_str()))
         {
-            std::cout << "Warning: RINEX Nav file " << rinex_nav_filename << " does not exist, receiver's clock error could not be computed!\n";
+            // std::cout << "Warning: RINEX Nav file " << rinex_nav_filename << " does not exist, receiver's clock error could not be computed!\n";
             return 0.0;
         }
         // Declaration of objects for storing ephemerides and handling RAIM
@@ -1351,7 +1351,7 @@ double compute_rx_clock_error(const std::string& rinex_nav_filename, const std::
                                         ///  RMSFlag, SlopeFlag 0  ok
                                         case -1:
 
-                                            std::cout << " algorithm failed to converge at time: " << rod.time
+                                            // std::cout << " algorithm failed to converge at time: " << rod.time
                                                       << " \n";
                                             break;
                                         case -2:
@@ -1360,7 +1360,7 @@ double compute_rx_clock_error(const std::string& rinex_nav_filename, const std::
                                                 << rod.time << " \n";
                                             break;
                                         case -3:
-                                            std::cout << " not enough good data (> 4) to form a (RAIM) "
+                                            // std::cout << " not enough good data (> 4) to form a (RAIM) "
                                                          "solution at time: "
                                                       << rod.time << " \n";
                                             break;
@@ -1381,15 +1381,15 @@ double compute_rx_clock_error(const std::string& rinex_nav_filename, const std::
                             // If we got a valid solution, let's print it
                             if (raimSolver.isValid())
                                 {
-                                    std::cout << "RX POS ECEF [XYZ] " << std::fixed << std::setprecision(3) << " "
+                                    // std::cout << "RX POS ECEF [XYZ] " << std::fixed << std::setprecision(3) << " "
                                               << std::setw(12) << raimSolver.Solution(0) << " "
                                               << std::setw(12) << raimSolver.Solution(1) << " "
                                               << std::setw(12) << raimSolver.Solution(2) << "\n";
 
-                                    std::cout << "RX CLK " << std::fixed << std::setprecision(16)
+                                    // std::cout << "RX CLK " << std::fixed << std::setprecision(16)
                                               << raimSolver.Solution(3) / gnsstk::C_MPS << " [s] \n";
 
-                                    std::cout << "NSATS, DOPs " << std::setw(2) << raimSolver.Nsvs << std::fixed
+                                    // std::cout << "NSATS, DOPs " << std::setw(2) << raimSolver.Nsvs << std::fixed
                                               << std::setprecision(2) << " "
                                               << std::setw(4) << raimSolver.PDOP << " " << std::setw(4) << raimSolver.GDOP
                                               << " " << std::setw(8) << raimSolver.RMSResidual << "\n";
@@ -1399,7 +1399,7 @@ double compute_rx_clock_error(const std::string& rinex_nav_filename, const std::
                                     double lat_deg = rx_pos.geodeticLatitude();
                                     double lon_deg = rx_pos.longitude();
                                     double Alt_m = rx_pos.getAltitude();
-                                    std::cout << "RX POS GEO [Lat,Long,H]" << std::fixed << std::setprecision(10) << " "
+                                    // std::cout << "RX POS GEO [Lat,Long,H]" << std::fixed << std::setprecision(10) << " "
                                               << std::setw(12) << lat_deg << ","
                                               << std::setw(12) << lon_deg << ","
                                               << std::setw(12) << Alt_m << " [deg],[deg],[m]\n";
@@ -1413,15 +1413,15 @@ double compute_rx_clock_error(const std::string& rinex_nav_filename, const std::
         }
     catch (const gnsstk::FFStreamError& e)
         {
-            std::cout << "GPSTK exception: " << e << '\n';
+            // std::cout << "GPSTK exception: " << e << '\n';
         }
     catch (const gnsstk::Exception& e)
         {
-            std::cout << "GPSTK exception: " << e << '\n';
+            // std::cout << "GPSTK exception: " << e << '\n';
         }
     catch (...)
         {
-            std::cout << "Caught an unexpected exception.\n";
+            // std::cout << "Caught an unexpected exception.\n";
         }
 
     return rx_clock_error_s;
@@ -1449,7 +1449,7 @@ void RINEX_doublediff_dupli_sat()
 #else
     double initial_transitory_s = absl::GetFlag(FLAGS_skip_obs_transitory_s);
 #endif
-    std::cout << "Skipping initial transitory of " << initial_transitory_s << " [s]\n";
+    // std::cout << "Skipping initial transitory of " << initial_transitory_s << " [s]\n";
     arma::uvec index;
     for (auto& rover_ob : rover_obs)
         {
@@ -1478,7 +1478,7 @@ void RINEX_doublediff_dupli_sat()
 
     if (prn_pairs.size() % 2 != 0)
         {
-            std::cout << "Test settings error: duplicated_satellites_prns are even\n";
+            // std::cout << "Test settings error: duplicated_satellites_prns are even\n";
         }
     else
         {
@@ -1487,8 +1487,8 @@ void RINEX_doublediff_dupli_sat()
                     // compute double differences
                     if (rover_obs.find(prn_pairs.at(n)) != rover_obs.end() and rover_obs.find(prn_pairs.at(n + 1)) != rover_obs.end())
                         {
-                            std::cout << "Computing single difference observables for duplicated SV pairs...\n";
-                            std::cout << "SD = OBS_ROVER(SV" << prn_pairs.at(n) << ") - OBS_ROVER(SV" << prn_pairs.at(n + 1) << ")\n";
+                            // std::cout << "Computing single difference observables for duplicated SV pairs...\n";
+                            // std::cout << "SD = OBS_ROVER(SV" << prn_pairs.at(n) << ") - OBS_ROVER(SV" << prn_pairs.at(n + 1) << ")\n";
 
                             code_pseudorange_single_diff(rover_obs.at(prn_pairs.at(n)),
                                 rover_obs.at(prn_pairs.at(n + 1)),
@@ -1504,7 +1504,7 @@ void RINEX_doublediff_dupli_sat()
                         }
                     else
                         {
-                            std::cout << "Satellite ID " << prn_pairs.at(n) << " and/or " << prn_pairs.at(n + 1) << " not found in RINEX file\n";
+                            // std::cout << "Satellite ID " << prn_pairs.at(n) << " and/or " << prn_pairs.at(n + 1) << " not found in RINEX file\n";
                         }
                 }
         }
@@ -1552,7 +1552,7 @@ void RINEX_doublediff(bool remove_rx_clock_error)
 #else
     double initial_transitory_s = absl::GetFlag(FLAGS_skip_obs_transitory_s);
 #endif
-    std::cout << "Skipping initial transitory of " << initial_transitory_s << " [s]\n";
+    // std::cout << "Skipping initial transitory of " << initial_transitory_s << " [s]\n";
     arma::uvec index;
     for (auto& rover_ob : rover_obs)
         {
@@ -1571,7 +1571,7 @@ void RINEX_doublediff(bool remove_rx_clock_error)
         {
             // there are more rover observations than base observations
             // cut rover vector
-            std::cout << "Cutting rover observations vector end..\n";
+            // std::cout << "Cutting rover observations vector end..\n";
             arma::uvec index2;
             for (auto& rover_ob : rover_obs)
                 {
@@ -1586,7 +1586,7 @@ void RINEX_doublediff(bool remove_rx_clock_error)
         {
             // there are more base observations than rover observations
             // cut base vector
-            std::cout << "Cutting base observations vector end..\n";
+            // std::cout << "Cutting base observations vector end..\n";
             for (auto& base_ob : base_obs)
                 {
                     index = arma::find(base_ob.second.col(0) >= rover_obs_time.back(), 1, "first");
@@ -1606,7 +1606,7 @@ void RINEX_doublediff(bool remove_rx_clock_error)
 #else
     double skip_ends_s = absl::GetFlag(FLAGS_skip_obs_ends_s);
 #endif
-    std::cout << "Skipping last " << skip_ends_s << " [s] of observations\n";
+    // std::cout << "Skipping last " << skip_ends_s << " [s] of observations\n";
     for (auto& rover_ob : rover_obs)
         {
             index = arma::find(rover_ob.second.col(0) >= (rover_obs_time.back() - skip_ends_s), 1, "first");
@@ -1625,11 +1625,11 @@ void RINEX_doublediff(bool remove_rx_clock_error)
         }
 
     // Save observations in .mat files
-    std::cout << "Saving RAW observables inputs to .mat files...\n";
+    // std::cout << "Saving RAW observables inputs to .mat files...\n";
     for (auto& base_ob : base_obs)
         {
-            // std::cout << it->first << " => " << it->second.n_rows << '\n';
-            // std::cout << it->first << " has NaN values: " << it->second.has_nan() << '\n';
+            // // std::cout << it->first << " => " << it->second.n_rows << '\n';
+            // // std::cout << it->first << " has NaN values: " << it->second.has_nan() << '\n';
             std::vector<double> tmp_time_vec(base_ob.second.col(0).colptr(0),
                 base_ob.second.col(0).colptr(0) + base_ob.second.n_rows);
             std::vector<double> tmp_vector(base_ob.second.col(2).colptr(0),
@@ -1646,8 +1646,8 @@ void RINEX_doublediff(bool remove_rx_clock_error)
         }
     for (auto& rover_ob : rover_obs)
         {
-            // std::cout << it->first << " => " << it->second.n_rows << '\n';
-            // std::cout << it->first << " has NaN values: " << it->second.has_nan() << '\n';
+            // // std::cout << it->first << " => " << it->second.n_rows << '\n';
+            // // std::cout << it->first << " has NaN values: " << it->second.has_nan() << '\n';
             std::vector<double> tmp_time_vec(rover_ob.second.col(0).colptr(0),
                 rover_ob.second.col(0).colptr(0) + rover_ob.second.n_rows);
             std::vector<double> tmp_vector(rover_ob.second.col(2).colptr(0),
@@ -1682,15 +1682,15 @@ void RINEX_doublediff(bool remove_rx_clock_error)
     // compute double differences
     if (base_obs.find(reference_sat_id) != base_obs.end() and rover_obs.find(reference_sat_id) != rover_obs.end())
         {
-            std::cout << "Using reference satellite SV " << reference_sat_id << " with minimum range of " << min_range << " [meters]\n";
+            // std::cout << "Using reference satellite SV " << reference_sat_id << " with minimum range of " << min_range << " [meters]\n";
             for (const auto& current_sat_id : PRN_set)
                 {
                     if (current_sat_id != reference_sat_id)
                         {
                             if (base_obs.find(current_sat_id) != base_obs.end() and rover_obs.find(current_sat_id) != rover_obs.end())
                                 {
-                                    std::cout << "Computing double difference observables for SV " << current_sat_id << '\n';
-                                    std::cout << "DD = (OBS_ROVER(SV" << current_sat_id << ") - OBS_ROVER(SV" << reference_sat_id << "))"
+                                    // std::cout << "Computing double difference observables for SV " << current_sat_id << '\n';
+                                    // std::cout << "DD = (OBS_ROVER(SV" << current_sat_id << ") - OBS_ROVER(SV" << reference_sat_id << "))"
                                               << " - (OBS_BASE(SV" << current_sat_id << ") - OBS_BASE(SV" << reference_sat_id << "))\n";
 
                                     code_pseudorange_double_diff(base_obs.at(reference_sat_id),
@@ -1716,7 +1716,7 @@ void RINEX_doublediff(bool remove_rx_clock_error)
         }
     else
         {
-            std::cout << "Satellite ID " << reference_sat_id << " not found in both RINEX files\n";
+            // std::cout << "Satellite ID " << reference_sat_id << " not found in both RINEX files\n";
         }
 }
 
@@ -1741,7 +1741,7 @@ void RINEX_singlediff()
 #else
     double initial_transitory_s = absl::GetFlag(FLAGS_skip_obs_transitory_s);
 #endif
-    std::cout << "Skipping initial transitory of " << initial_transitory_s << " [s]\n";
+    // std::cout << "Skipping initial transitory of " << initial_transitory_s << " [s]\n";
     arma::uvec index;
     for (auto& rover_ob : rover_obs)
         {
@@ -1760,7 +1760,7 @@ void RINEX_singlediff()
 #else
     double skip_ends_s = absl::GetFlag(FLAGS_skip_obs_ends_s);
 #endif
-    std::cout << "Skipping last " << skip_ends_s << " [s] of observations\n";
+    // std::cout << "Skipping last " << skip_ends_s << " [s] of observations\n";
     for (auto& rover_ob : rover_obs)
         {
             index = arma::find(rover_ob.second.col(0) >= (rover_obs_time.back() - skip_ends_s), 1, "first");
@@ -1771,12 +1771,12 @@ void RINEX_singlediff()
         }
 
     // Save observations in .mat files
-    std::cout << "Saving RAW observables inputs to .mat files...\n";
+    // std::cout << "Saving RAW observables inputs to .mat files...\n";
 
     for (auto& rover_ob : rover_obs)
         {
-            // std::cout << it->first << " => " << it->second.n_rows << '\n';
-            // std::cout << it->first << " has NaN values: " << it->second.has_nan() << '\n';
+            // // std::cout << it->first << " => " << it->second.n_rows << '\n';
+            // // std::cout << it->first << " has NaN values: " << it->second.has_nan() << '\n';
             std::vector<double> tmp_time_vec(rover_ob.second.col(0).colptr(0),
                 rover_ob.second.col(0).colptr(0) + rover_ob.second.n_rows);
             std::vector<double> tmp_vector(rover_ob.second.col(2).colptr(0),
@@ -1794,12 +1794,12 @@ void RINEX_singlediff()
 
     // compute single differences
     std::set<int> PRN_set = available_gps_prn;
-    std::cout << "Computing Code Pseudorange rate vs. Carrier phase rate difference...\n";
+    // std::cout << "Computing Code Pseudorange rate vs. Carrier phase rate difference...\n";
     for (const auto& current_sat_id : PRN_set)
         {
             if (rover_obs.find(current_sat_id) != rover_obs.end())
                 {
-                    std::cout << "RateError = PR_rate(SV" << current_sat_id << ") - Phase_rate(SV" << current_sat_id << ")\n";
+                    // std::cout << "RateError = PR_rate(SV" << current_sat_id << ") - Phase_rate(SV" << current_sat_id << ")\n";
                     coderate_phaserate_consistence(rover_obs.at(current_sat_id), "PRN " + std::to_string(current_sat_id) + " ");
                 }
         }
@@ -1808,7 +1808,7 @@ void RINEX_singlediff()
 
 int main(int argc, char** argv)
 {
-    std::cout << "Running RINEX observables difference tool...\n";
+    // std::cout << "Running RINEX observables difference tool...\n";
 #if USE_GLOG_AND_GFLAGS
     gflags::ParseCommandLineFlags(&argc, &argv, true);
 #else

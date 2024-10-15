@@ -113,7 +113,7 @@ LabsatSignalSource::LabsatSignalSource(const ConfigurationInterface* configurati
                                 }
                             dump_filename.push_back(aux + extension);
                         }
-                    std::cout << "Dumping output into file " << dump_filename.back() << '\n';
+                    // std::cout << "Dumping output into file " << dump_filename.back() << '\n';
                     file_sink_.push_back(gr::blocks::file_sink::make(item_size_, dump_filename.back().c_str()));
                     DLOG(INFO) << "file_sink(" << file_sink_.back()->unique_id() << ")";
                 }

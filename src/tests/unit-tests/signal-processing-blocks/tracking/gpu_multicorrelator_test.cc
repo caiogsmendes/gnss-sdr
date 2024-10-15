@@ -122,7 +122,7 @@ TEST(GpuMulticorrelatorTest, MeasureExecutionTime)
         for (int correlation_sizes_idx = 0; correlation_sizes_idx < 3; correlation_sizes_idx++) {
             for (int current_max_threads = 1; current_max_threads < (max_threads + 1); current_max_threads++)
                 {
-                    std::cout << "Running " << current_max_threads << " concurrent correlators\n";
+                    // std::cout << "Running " << current_max_threads << " concurrent correlators\n";
                     start = std::chrono::system_clock::now();
                     // create the concurrent correlator threads
                     for (int current_thread = 0; current_thread < current_max_threads; current_thread++)
@@ -151,7 +151,7 @@ TEST(GpuMulticorrelatorTest, MeasureExecutionTime)
 #else
                     execution_times[correlation_sizes_idx] = elapsed_seconds.count() / static_cast<double>(absl::GetFlag(FLAGS_gpu_multicorrelator_iterations_test));
 #endif
-                    std::cout << "GPU Multicorrelator execution time for length=" << correlation_sizes[correlation_sizes_idx] << " : " << execution_times[correlation_sizes_idx] << " [s]\n";
+                    // std::cout << "GPU Multicorrelator execution time for length=" << correlation_sizes[correlation_sizes_idx] << " : " << execution_times[correlation_sizes_idx] << " [s]\n";
                 }
         });
 

@@ -64,7 +64,7 @@ Nmea_Printer::Nmea_Printer(const std::string& filename,
                                 {
                                     if (!fs::create_directory(new_folder, ec))
                                         {
-                                            std::cout << "Could not create the " << new_folder << " folder." << std::endl;
+                                            // std::cout << "Could not create the " << new_folder << " folder." << std::endl;
                                             nmea_base_path = full_path.string();
                                         }
                                 }
@@ -78,7 +78,7 @@ Nmea_Printer::Nmea_Printer(const std::string& filename,
 
             if ((nmea_base_path != ".") and (d_flag_nmea_output_file == true))
                 {
-                    std::cout << "NMEA files will be stored at " << nmea_base_path << std::endl;
+                    // std::cout << "NMEA files will be stored at " << nmea_base_path << std::endl;
                 }
 
             nmea_base_path = nmea_base_path + fs::path::preferred_separator;
@@ -92,7 +92,7 @@ Nmea_Printer::Nmea_Printer(const std::string& filename,
                 }
             else
                 {
-                    std::cout << "File " << nmea_filename << " cannot be saved. Wrong permissions?" << std::endl;
+                    // std::cout << "File " << nmea_filename << " cannot be saved. Wrong permissions?" << std::endl;
                 }
         }
 

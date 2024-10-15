@@ -55,9 +55,9 @@ TEST(MultiplyTest, StandardCDoubleImplementation)
     end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
 #if USE_GLOG_AND_GFLAGS
-    std::cout << "Element-wise multiplication of " << FLAGS_size_multiply_test
+    // std::cout << "Element-wise multiplication of " << FLAGS_size_multiply_test
 #else
-    std::cout << "Element-wise multiplication of " << absl::GetFlag(FLAGS_size_multiply_test)
+    // std::cout << "Element-wise multiplication of " << absl::GetFlag(FLAGS_size_multiply_test)
 #endif
               << " doubles in standard C finished in " << elapsed_seconds.count() * 1e6
               << " microseconds\n";
@@ -96,9 +96,9 @@ TEST(MultiplyTest, ArmadilloImplementation)
     end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
 #if USE_GLOG_AND_GFLAGS
-    std::cout << "Element-wise multiplication of " << FLAGS_size_multiply_test
+    // std::cout << "Element-wise multiplication of " << FLAGS_size_multiply_test
 #else
-    std::cout << "Element-wise multiplication of " << absl::GetFlag(FLAGS_size_multiply_test)
+    // std::cout << "Element-wise multiplication of " << absl::GetFlag(FLAGS_size_multiply_test)
 #endif
               << "-length double Armadillo vectors finished in " << elapsed_seconds.count() * 1e6
               << " microseconds\n";
@@ -133,9 +133,9 @@ TEST(MultiplyTest, StandardCComplexImplementation)
     end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
 #if USE_GLOG_AND_GFLAGS
-    std::cout << "Element-wise multiplication of " << FLAGS_size_multiply_test
+    // std::cout << "Element-wise multiplication of " << FLAGS_size_multiply_test
 #else
-    std::cout << "Element-wise multiplication of " << absl::GetFlag(FLAGS_size_multiply_test)
+    // std::cout << "Element-wise multiplication of " << absl::GetFlag(FLAGS_size_multiply_test)
 #endif
               << " complex<float> in standard C finished in " << elapsed_seconds.count() * 1e6
               << " microseconds\n";
@@ -179,9 +179,9 @@ TEST(MultiplyTest, C11ComplexImplementation)
     end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
 #if USE_GLOG_AND_GFLAGS
-    std::cout << "Element-wise multiplication of " << FLAGS_size_multiply_test
+    // std::cout << "Element-wise multiplication of " << FLAGS_size_multiply_test
 #else
-    std::cout << "Element-wise multiplication of " << absl::GetFlag(FLAGS_size_multiply_test)
+    // std::cout << "Element-wise multiplication of " << absl::GetFlag(FLAGS_size_multiply_test)
 #endif
               << " complex<float> vector (C++11-style) finished in " << elapsed_seconds.count() * 1e6
               << " microseconds\n";
@@ -212,9 +212,9 @@ TEST(MultiplyTest, ArmadilloComplexImplementation)
     std::chrono::duration<double> elapsed_seconds = end - start;
 
 #if USE_GLOG_AND_GFLAGS
-    std::cout << "Element-wise multiplication of " << FLAGS_size_multiply_test
+    // std::cout << "Element-wise multiplication of " << FLAGS_size_multiply_test
 #else
-    std::cout << "Element-wise multiplication of " << absl::GetFlag(FLAGS_size_multiply_test)
+    // std::cout << "Element-wise multiplication of " << absl::GetFlag(FLAGS_size_multiply_test)
 #endif
               << "-length complex float Armadillo vectors finished in " << elapsed_seconds.count() * 1e6
               << " microseconds\n";
@@ -247,9 +247,9 @@ TEST(MultiplyTest, VolkComplexImplementation)
     end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
 #if USE_GLOG_AND_GFLAGS
-    std::cout << "Element-wise multiplication of " << FLAGS_size_multiply_test
+    // std::cout << "Element-wise multiplication of " << FLAGS_size_multiply_test
 #else
-    std::cout << "Element-wise multiplication of " << absl::GetFlag(FLAGS_size_multiply_test)
+    // std::cout << "Element-wise multiplication of " << absl::GetFlag(FLAGS_size_multiply_test)
 #endif
               << "-length complex float vector using VOLK finished in " << elapsed_seconds.count() * 1e6
               << " microseconds\n";
@@ -304,9 +304,9 @@ TEST(MultiplyTest, VolkComplexImplementationAlloc)
     std::chrono::duration<double> elapsed_seconds = end - start;
 
 #if USE_GLOG_AND_GFLAGS
-    std::cout << "Element-wise multiplication of " << FLAGS_size_multiply_test
+    // std::cout << "Element-wise multiplication of " << FLAGS_size_multiply_test
 #else
-    std::cout << "Element-wise multiplication of " << absl::GetFlag(FLAGS_size_multiply_test)
+    // std::cout << "Element-wise multiplication of " << absl::GetFlag(FLAGS_size_multiply_test)
 #endif
               << "-length complex float vector using VOLK ALLOC finished in " << elapsed_seconds.count() * 1e6
               << " microseconds\n";

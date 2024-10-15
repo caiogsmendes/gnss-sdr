@@ -73,14 +73,14 @@ Fpga_buffer_monitor::Fpga_buffer_monitor(
     if (d_map_base == reinterpret_cast<void *>(-1))
         {
             LOG(WARNING) << "Cannot map the FPGA buffer monitor module";
-            std::cout << "Could not map the FPGA buffer monitor \n";
+            // std::cout << "Could not map the FPGA buffer monitor \n";
         }
 
     // sanity check: check test register
     if (buffer_monitor_test_register() < 0)
         {
             LOG(WARNING) << "FPGA buffer monitor test register sanity check failed";
-            std::cout << "FPGA buffer monitor test register sanity check failed\n";
+            // std::cout << "FPGA buffer monitor test register sanity check failed\n";
         }
     else
         {
@@ -267,7 +267,7 @@ void Fpga_buffer_monitor::close_device()
     auto *aux = const_cast<unsigned *>(d_map_base);
     if (munmap(static_cast<void *>(aux), FPGA_PAGE_SIZE) == -1)
         {
-            std::cout << "Failed to unmap memory uio\n";
+            // std::cout << "Failed to unmap memory uio\n";
         }
 
     close(d_device_descriptor);

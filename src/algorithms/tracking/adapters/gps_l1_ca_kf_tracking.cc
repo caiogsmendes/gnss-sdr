@@ -55,18 +55,18 @@ GpsL1CaKfTracking::GpsL1CaKfTracking(
     if (trk_params.extend_correlation_symbols < 1)
         {
             trk_params.extend_correlation_symbols = 1;
-            std::cout << TEXT_RED << "WARNING: GPS L1 C/A. extend_correlation_symbols must be bigger than 1. Coherent integration has been set to 1 symbol (1 ms)" << TEXT_RESET << '\n';
+            // std::cout << TEXT_RED << "WARNING: GPS L1 C/A. extend_correlation_symbols must be bigger than 1. Coherent integration has been set to 1 symbol (1 ms)" << TEXT_RESET << '\n';
         }
     else if (trk_params.extend_correlation_symbols > 20)
         {
             trk_params.extend_correlation_symbols = 20;
-            std::cout << TEXT_RED << "WARNING: GPS L1 C/A. extend_correlation_symbols must be lower than 21. Coherent integration has been set to 20 symbols (20 ms)" << TEXT_RESET << '\n';
+            // std::cout << TEXT_RED << "WARNING: GPS L1 C/A. extend_correlation_symbols must be lower than 21. Coherent integration has been set to 20 symbols (20 ms)" << TEXT_RESET << '\n';
         }
     trk_params.track_pilot = configuration->property(role_ + ".track_pilot", false);
     if (trk_params.track_pilot)
         {
             trk_params.track_pilot = false;
-            std::cout << TEXT_RED << "WARNING: GPS L1 C/A does not have pilot signal. Data tracking has been enabled" << TEXT_RESET << '\n';
+            // std::cout << TEXT_RED << "WARNING: GPS L1 C/A does not have pilot signal. Data tracking has been enabled" << TEXT_RESET << '\n';
         }
 
     trk_params.system = 'G';

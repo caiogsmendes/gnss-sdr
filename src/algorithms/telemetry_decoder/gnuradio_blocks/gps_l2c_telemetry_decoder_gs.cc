@@ -269,10 +269,10 @@ int gps_l2c_telemetry_decoder_gs::general_work(int noutput_items __attribute__((
 #else
                     const auto default_precision{std::cout.precision()};
 #endif
-                    std::cout << TEXT_BLUE << "New GPS CNAV message received in channel " << d_channel
-                              << ": ephemeris from satellite " << d_satellite
-                              << " with CN0=" << std::setprecision(2) << current_synchro_data.CN0_dB_hz << std::setprecision(default_precision)
-                              << " dB-Hz" << TEXT_RESET << std::endl;
+                    // std::cout << TEXT_BLUE << "New GPS CNAV message received in channel " << d_channel
+                            //   << ": ephemeris from satellite " << d_satellite
+                            //   << " with CN0=" << std::setprecision(2) << current_synchro_data.CN0_dB_hz << std::setprecision(default_precision)
+                            //   << " dB-Hz" << TEXT_RESET << std::endl;
                 }
             if (d_CNAV_Message.have_new_iono() == true)
                 {
@@ -283,10 +283,10 @@ int gps_l2c_telemetry_decoder_gs::general_work(int noutput_items __attribute__((
 #else
                     const auto default_precision{std::cout.precision()};
 #endif
-                    std::cout << TEXT_BLUE << "New GPS CNAV message received in channel " << d_channel
-                              << ": iono model parameters from satellite " << d_satellite
-                              << " with CN0=" << std::setprecision(2) << current_synchro_data.CN0_dB_hz << std::setprecision(default_precision)
-                              << " dB-Hz" << TEXT_RESET << std::endl;
+                    // std::cout << TEXT_BLUE << "New GPS CNAV message received in channel " << d_channel
+                            //   << ": iono model parameters from satellite " << d_satellite
+                            //   << " with CN0=" << std::setprecision(2) << current_synchro_data.CN0_dB_hz << std::setprecision(default_precision)
+                            //   << " dB-Hz" << TEXT_RESET << std::endl;
                 }
 
             if (d_CNAV_Message.have_new_utc_model() == true)
@@ -298,10 +298,10 @@ int gps_l2c_telemetry_decoder_gs::general_work(int noutput_items __attribute__((
 #else
                     const auto default_precision{std::cout.precision()};
 #endif
-                    std::cout << TEXT_BLUE << "New GPS CNAV message received in channel " << d_channel
-                              << ": UTC model parameters from satellite " << d_satellite
-                              << " with CN0=" << std::setprecision(2) << current_synchro_data.CN0_dB_hz << std::setprecision(default_precision)
-                              << " dB-Hz" << TEXT_RESET << std::endl;
+                    // std::cout << TEXT_BLUE << "New GPS CNAV message received in channel " << d_channel
+                            //   << ": UTC model parameters from satellite " << d_satellite
+                            //   << " with CN0=" << std::setprecision(2) << current_synchro_data.CN0_dB_hz << std::setprecision(default_precision)
+                            //   << " dB-Hz" << TEXT_RESET << std::endl;
                 }
 
             // update TOW at the preamble instant

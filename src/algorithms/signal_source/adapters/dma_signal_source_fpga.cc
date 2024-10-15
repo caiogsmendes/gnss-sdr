@@ -137,8 +137,8 @@ DMASignalSourceFPGA::DMASignalSourceFPGA(const ConfigurationInterface *configura
                     return;
                 }
             std::streamsize ss = std::cout.precision();
-            std::cout << std::setprecision(16);
-            std::cout << "Processing file " << filename0_ << ", which contains " << static_cast<double>(size) << " [bytes]\n";
+            // std::cout << std::setprecision(16);
+            // std::cout << "Processing file " << filename0_ << ", which contains " << static_cast<double>(size) << " [bytes]\n";
             std::cout.precision(ss);
 
             if (size > 0)
@@ -164,8 +164,8 @@ DMASignalSourceFPGA::DMASignalSourceFPGA(const ConfigurationInterface *configura
                             return;
                         }
                     std::streamsize ss = std::cout.precision();
-                    std::cout << std::setprecision(16);
-                    std::cout << "Processing file " << filename1_ << ", which contains " << static_cast<double>(size) << " [bytes]\n";
+                    // std::cout << std::setprecision(16);
+                    // std::cout << "Processing file " << filename1_ << ", which contains " << static_cast<double>(size) << " [bytes]\n";
                     std::cout.precision(ss);
 
                     int64_t samples_rx2 = 0;
@@ -183,7 +183,7 @@ DMASignalSourceFPGA::DMASignalSourceFPGA(const ConfigurationInterface *configura
     double signal_duration_s = (static_cast<double>(samples_) * (1 / static_cast<double>(sample_rate_))) / 2.0;
 
     DLOG(INFO) << "Total number samples to be processed= " << samples_ << " GNSS signal duration= " << signal_duration_s << " [s]";
-    std::cout << "GNSS signal recorded time to be processed: " << signal_duration_s << " [s]\n";
+    // std::cout << "GNSS signal recorded time to be processed: " << signal_duration_s << " [s]\n";
 
     if (filename1_.empty())
         {

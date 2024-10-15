@@ -416,7 +416,7 @@ void pcps_acquisition::dump_results(int32_t effective_fft_size)
     mat_t* matfp = Mat_CreateVer(filename.c_str(), nullptr, MAT_FT_MAT73);
     if (matfp == nullptr)
         {
-            std::cout << "Unable to create or open Acquisition dump file\n";
+            // std::cout << "Unable to create or open Acquisition dump file\n";
             // d_acq_parameters.dump = false;
         }
     else

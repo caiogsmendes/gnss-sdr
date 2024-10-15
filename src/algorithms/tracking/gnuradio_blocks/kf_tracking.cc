@@ -374,7 +374,7 @@ kf_tracking::kf_tracking(const Kf_Conf &conf_)
             else
                 {
                     LOG(WARNING) << "Invalid Signal argument when instantiating tracking blocks";
-                    std::cout << "Invalid Signal argument when instantiating tracking blocks\n";
+                    // std::cout << "Invalid Signal argument when instantiating tracking blocks\n";
                     d_correlation_length_ms = 1;
                     d_secondary = false;
                     d_signal_carrier_freq = 0.0;
@@ -431,7 +431,7 @@ kf_tracking::kf_tracking(const Kf_Conf &conf_)
             else
                 {
                     LOG(WARNING) << "Invalid Signal argument when instantiating tracking blocks";
-                    std::cout << "Invalid Signal argument when instantiating tracking blocks\n";
+                    // std::cout << "Invalid Signal argument when instantiating tracking blocks\n";
                     d_correlation_length_ms = 1;
                     d_secondary = false;
                     d_signal_carrier_freq = 0.0;
@@ -635,12 +635,12 @@ void kf_tracking::msg_handler_pvt_to_trk(const pmt::pmt_t &msg)
             if (pmt::any_ref(msg).type().hash_code() == typeid(const std::shared_ptr<TrackingCmd>).hash_code())
                 {
                     const auto cmd = wht::any_cast<const std::shared_ptr<TrackingCmd>>(pmt::any_ref(msg));
-                    // std::cout << "RX pvt-to-trk cmd with delay: "
+                    // // std::cout << "RX pvt-to-trk cmd with delay: "
                     //           << static_cast<double>(nitems_read(0) - cmd->sample_counter) / d_trk_parameters.fs_in << " [s]\n";
                 }
             else
                 {
-                    std::cout << "hash code not match\n";
+                    // std::cout << "hash code not match\n";
                 }
         }
     catch (const wht::bad_any_cast &e)
@@ -850,7 +850,7 @@ void kf_tracking::start_tracking()
     // Initialize tracking  ==========================================
 
     // DEBUG OUTPUT
-    std::cout << "Tracking of " << d_systemName << " " << d_signal_pretty_name << " signal started on channel " << d_channel << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
+    // std::cout << "Tracking of " << d_systemName << " " << d_signal_pretty_name << " signal started on channel " << d_channel << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
     DLOG(INFO) << "Starting tracking of satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << " on channel " << d_channel;
 
     // enable tracking pull-in
@@ -1089,7 +1089,7 @@ bool kf_tracking::cn0_and_tracking_lock_status(double coh_integration_time_s)
         }
     if (d_carrier_lock_fail_counter > d_trk_parameters.max_carrier_lock_fail or d_code_lock_fail_counter > d_trk_parameters.max_code_lock_fail)
         {
-            std::cout << "Loss of lock in channel " << d_channel << "!\n";
+            // std::cout << "Loss of lock in channel " << d_channel << "!\n";
             LOG(INFO) << "Loss of lock in channel " << d_channel
                       << " (carrier_lock_fail_counter:" << d_carrier_lock_fail_counter
                       << " code_lock_fail_counter : " << d_code_lock_fail_counter << ")";
@@ -1405,7 +1405,7 @@ void kf_tracking::save_correlation_results()
                     else
                         {
                             d_P_data_accu += *d_Prompt;
-                            // std::cout << "s[" << d_current_data_symbol << "]=" << (int)((*d_Prompt).real() > 0) << '\n';
+                            // // std::cout << "s[" << d_current_data_symbol << "]=" << (int)((*d_Prompt).real() > 0) << '\n';
                         }
                     d_current_data_symbol++;
                     d_current_data_symbol %= d_symbols_per_bit;
@@ -1548,7 +1548,7 @@ int32_t kf_tracking::save_matfile() const
     dump_filename_.append(std::to_string(d_channel));
     // add extension
     dump_filename_.append(".dat");
-    std::cout << "Generating .mat file for " << dump_filename_ << '\n';
+    // std::cout << "Generating .mat file for " << dump_filename_ << '\n';
     dump_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     try
         {
@@ -1894,8 +1894,8 @@ int kf_tracking::general_work(int noutput_items __attribute__((unused)), gr_vect
                                                     {
                                                         LOG(INFO) << d_systemName << " " << d_signal_pretty_name << " secondary code locked in channel " << d_channel
                                                                   << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
-                                                        std::cout << d_systemName << " " << d_signal_pretty_name << " secondary code locked in channel " << d_channel
-                                                                  << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
+                                                        // std::cout << d_systemName << " " << d_signal_pretty_name << " secondary code locked in channel " << d_channel
+                                                                //   << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
                                                     }
                                             }
                                     }
@@ -1910,8 +1910,8 @@ int kf_tracking::general_work(int noutput_items __attribute__((unused)), gr_vect
                                                     {
                                                         LOG(INFO) << d_systemName << " " << d_signal_pretty_name << " tracking bit synchronization locked in channel " << d_channel
                                                                   << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
-                                                        std::cout << d_systemName << " " << d_signal_pretty_name << " tracking bit synchronization locked in channel " << d_channel
-                                                                  << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
+                                                        // std::cout << d_systemName << " " << d_signal_pretty_name << " tracking bit synchronization locked in channel " << d_channel
+                                                                //   << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
                                                     }
                                             }
                                     }
@@ -1945,9 +1945,9 @@ int kf_tracking::general_work(int noutput_items __attribute__((unused)), gr_vect
                                         LOG(INFO) << "Enabled " << d_trk_parameters.extend_correlation_symbols * static_cast<int32_t>(d_code_period * 1000.0) << " ms extended correlator in channel "
                                                   << d_channel
                                                   << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN);
-                                        std::cout << "Enabled " << d_trk_parameters.extend_correlation_symbols * static_cast<int32_t>(d_code_period * 1000.0) << " ms extended correlator in channel "
-                                                  << d_channel
-                                                  << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
+                                        // std::cout << "Enabled " << d_trk_parameters.extend_correlation_symbols * static_cast<int32_t>(d_code_period * 1000.0) << " ms extended correlator in channel "
+                                                //   << d_channel
+                                                //   << " for satellite " << Gnss_Satellite(d_systemName, d_acquisition_gnss_synchro->PRN) << '\n';
                                         // Set narrow taps delay values [chips]
                                         update_kf_narrow_integration_time();
                                         if (d_veml)

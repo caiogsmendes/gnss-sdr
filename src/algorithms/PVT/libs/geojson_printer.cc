@@ -49,7 +49,7 @@ GeoJSON_Printer::GeoJSON_Printer(const std::string& base_path) : geojson_base_pa
                         {
                             if (!fs::create_directory(new_folder, ec))
                                 {
-                                    std::cout << "Could not create the " << new_folder << " folder.\n";
+                                    // std::cout << "Could not create the " << new_folder << " folder.\n";
                                     geojson_base_path = full_path.string();
                                 }
                         }
@@ -62,7 +62,7 @@ GeoJSON_Printer::GeoJSON_Printer(const std::string& base_path) : geojson_base_pa
         }
     if (geojson_base_path != ".")
         {
-            std::cout << "GeoJSON files will be stored at " << geojson_base_path << '\n';
+            // std::cout << "GeoJSON files will be stored at " << geojson_base_path << '\n';
         }
 
     geojson_base_path = geojson_base_path + fs::path::preferred_separator;
@@ -156,7 +156,7 @@ bool GeoJSON_Printer::set_headers(const std::string& filename, bool time_tag_nam
             return true;
         }
 
-    std::cout << "File " << filename_ << " cannot be saved. Wrong permissions?\n";
+    // std::cout << "File " << filename_ << " cannot be saved. Wrong permissions?\n";
     return false;
 }
 

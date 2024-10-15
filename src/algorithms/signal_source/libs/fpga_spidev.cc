@@ -80,7 +80,7 @@ int Fpga_spidev::write_reg32(char addr, uint32_t data)
     res = ioctl(d_fd, SPI_IOC_MESSAGE(2), xfer);
     if (res < 0)
         {
-            std::cout << "Error sending SPI message\n";
+            // std::cout << "Error sending SPI message\n";
             return res;
         }
     return 0;
@@ -110,7 +110,7 @@ int Fpga_spidev::read_reg32(uint8_t addr, uint32_t* copy_to)
     res = ioctl(d_fd, SPI_IOC_MESSAGE(2), xfer);
     if (res < 0)
         {
-            std::cout << "Error sending SPI message\n";
+            // std::cout << "Error sending SPI message\n";
             return res;
         }
 

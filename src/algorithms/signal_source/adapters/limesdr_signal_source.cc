@@ -82,11 +82,11 @@ LimesdrSignalSource::LimesdrSignalSource(const ConfigurationInterface* configura
                         {
                             if (limesdr_source_->set_ext_clk(ext_clock_MHz_))
                                 {
-                                    std::cout << "External clock enabled with expected frequency input of " << ext_clock_MHz_ << " MHz\n";
+                                    // std::cout << "External clock enabled with expected frequency input of " << ext_clock_MHz_ << " MHz\n";
                                 }
                             else
                                 {
-                                    std::cout << "Error setting external reference clock\n";
+                                    // std::cout << "Error setting external reference clock\n";
                                 }
                         }
                     else
@@ -117,34 +117,34 @@ LimesdrSignalSource::LimesdrSignalSource(const ConfigurationInterface* configura
              */
 
             limesdr_source_->set_antenna(antenna_, channel_);
-            std::cout << "LimeSDR RX antenna set to " << antenna_ << " for channel " << channel_ << '\n';
+            // std::cout << "LimeSDR RX antenna set to " << antenna_ << " for channel " << channel_ << '\n';
             LOG(INFO) << "LimeSDR RX antenna set to " << antenna_ << " for channel " << channel_;
 
             // 2. set sampling rate
             double actual_sample_rate = limesdr_source_->set_sample_rate(sample_rate_);
-            std::cout << "Actual RX Rate: " << actual_sample_rate << " [SPS]...\n";
+            // std::cout << "Actual RX Rate: " << actual_sample_rate << " [SPS]...\n";
             LOG(INFO) << "Actual RX Rate: " << actual_sample_rate << " [SPS]...";
 
             // 3. set rx frequency
             double actual_center_freq = limesdr_source_->set_center_freq(freq_);
 
-            std::cout << "Actual RX Freq: " << actual_center_freq << " [Hz]...\n";
+            // std::cout << "Actual RX Freq: " << actual_center_freq << " [Hz]...\n";
             LOG(INFO) << "Actual RX Freq: " << actual_center_freq << " [Hz]...";
 
             // TODO: Assign the remnant IF from the PLL tune error
-            std::cout << "PLL Frequency tune error: " << actual_center_freq - freq_ << " [Hz]...\n";
+            // std::cout << "PLL Frequency tune error: " << actual_center_freq - freq_ << " [Hz]...\n";
             LOG(INFO) << "PLL Frequency tune error: " << actual_center_freq - freq_ << " [Hz]...\n";
 
             // TODO: gr-limesdr does not report PLL tune frequency error...
 
             // 4. set rx gain
             double actual_gain = limesdr_source_->set_gain(gain_, channel_);
-            std::cout << "Actual RX Gain: " << actual_gain << " [dB]...\n";
+            // std::cout << "Actual RX Gain: " << actual_gain << " [dB]...\n";
             LOG(INFO) << "Actual RX Gain: " << actual_gain << " [dB]...";
 
             // Set analog bandwidth
             double current_analog_bw = limesdr_source_->set_bandwidth(analog_bw_hz_, channel_);
-            std::cout << "Actual Analog Bandwidth: " << current_analog_bw << " [Hz]...\n";
+            // std::cout << "Actual Analog Bandwidth: " << current_analog_bw << " [Hz]...\n";
             LOG(INFO) << "Actual Analog Bandwidth: : " << current_analog_bw << " [Hz]...";
 
             // Set digital bandwidth

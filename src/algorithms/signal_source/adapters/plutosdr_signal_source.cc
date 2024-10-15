@@ -69,17 +69,17 @@ PlutosdrSignalSource::PlutosdrSignalSource(const ConfigurationInterface* configu
 
     if (item_type_ != "gr_complex")
         {
-            std::cout << "Configuration error: item_type must be gr_complex\n";
+            // std::cout << "Configuration error: item_type must be gr_complex\n";
             LOG(FATAL) << "Configuration error: item_type must be gr_complex!";
         }
 
     // basic check
     if ((gain_mode_ != "manual") && (gain_mode_ != "slow_attack") && (gain_mode_ != "fast_attack") && (gain_mode_ != "hybrid"))
         {
-            std::cout << "Configuration parameter gain_mode should take one of these values:\n";
-            std::cout << " manual, slow_attack, fast_attack, hybrid\n";
-            std::cout << "Error: provided value gain_mode=" << gain_mode_ << " is not among valid values\n";
-            std::cout << " This parameter has been set to its default value gain_mode=" << default_gain_mode << '\n';
+            // std::cout << "Configuration parameter gain_mode should take one of these values:\n";
+            // std::cout << " manual, slow_attack, fast_attack, hybrid\n";
+            // std::cout << "Error: provided value gain_mode=" << gain_mode_ << " is not among valid values\n";
+            // std::cout << " This parameter has been set to its default value gain_mode=" << default_gain_mode << '\n';
             gain_mode_ = default_gain_mode;
             LOG(WARNING) << "Invalid configuration value for gain_mode parameter. Set to gain_mode=" << default_gain_mode;
         }
@@ -88,9 +88,9 @@ PlutosdrSignalSource::PlutosdrSignalSource(const ConfigurationInterface* configu
         {
             if (rf_gain_ > 73.0 || rf_gain_ < -1.0)
                 {
-                    std::cout << "Configuration parameter rf_gain should take values between -1.0 and 73 dB\n";
-                    std::cout << "Error: provided value rf_gain=" << rf_gain_ << " is not among valid values\n";
-                    std::cout << " This parameter has been set to its default value rf_gain=64.0\n";
+                    // std::cout << "Configuration parameter rf_gain should take values between -1.0 and 73 dB\n";
+                    // std::cout << "Error: provided value rf_gain=" << rf_gain_ << " is not among valid values\n";
+                    // std::cout << " This parameter has been set to its default value rf_gain=64.0\n";
                     rf_gain_ = 64.0;
                     LOG(WARNING) << "Invalid configuration value for rf_gain parameter. Set to rf_gain=64.0";
                 }
@@ -98,33 +98,33 @@ PlutosdrSignalSource::PlutosdrSignalSource(const ConfigurationInterface* configu
 
     if ((filter_source_ != "Off") && (filter_source_ != "Auto") && (filter_source_ != "File") && (filter_source_ != "Design"))
         {
-            std::cout << "Configuration parameter filter_source should take one of these values:\n";
-            std::cout << "  Off: Disable filter\n";
-            std::cout << "  Auto: Use auto-generated filters\n";
-            std::cout << "  File: User-provided filter in filter_filename parameter\n";
+            // std::cout << "Configuration parameter filter_source should take one of these values:\n";
+            // std::cout << "  Off: Disable filter\n";
+            // std::cout << "  Auto: Use auto-generated filters\n";
+            // std::cout << "  File: User-provided filter in filter_filename parameter\n";
 #if LIBAD9361_VERSION_GREATER_THAN_01
-            std::cout << "  Design: Create filter from Fpass, Fstop, sampling_frequency and bandwidth parameters\n";
+            // std::cout << "  Design: Create filter from Fpass, Fstop, sampling_frequency and bandwidth parameters\n";
 #endif
-            std::cout << "Error: provided value filter_source=" << filter_source_ << " is not among valid values\n";
-            std::cout << " This parameter has been set to its default value filter_source=Off\n";
+            // std::cout << "Error: provided value filter_source=" << filter_source_ << " is not among valid values\n";
+            // std::cout << " This parameter has been set to its default value filter_source=Off\n";
             filter_source_ = std::string("Off");
             LOG(WARNING) << "Invalid configuration value for filter_source parameter. Set to filter_source=Off";
         }
 
     if (bandwidth_ < 200000 || bandwidth_ > 56000000)
         {
-            std::cout << "Configuration parameter bandwidth should take values between 200000 and 56000000 Hz\n";
-            std::cout << "Error: provided value bandwidth=" << bandwidth_ << " is not among valid values\n";
-            std::cout << " This parameter has been set to its default value bandwidth=2000000\n";
+            // std::cout << "Configuration parameter bandwidth should take values between 200000 and 56000000 Hz\n";
+            // std::cout << "Error: provided value bandwidth=" << bandwidth_ << " is not among valid values\n";
+            // std::cout << " This parameter has been set to its default value bandwidth=2000000\n";
             bandwidth_ = 2000000;
             LOG(WARNING) << "Invalid configuration value for bandwidth parameter. Set to bandwidth=2000000";
         }
 
-    std::cout << "device address: " << uri_ << '\n';
-    std::cout << "frequency : " << freq_ << " Hz\n";
-    std::cout << "sample rate: " << sample_rate_ << " Sps\n";
-    std::cout << "gain mode: " << gain_mode_ << '\n';
-    std::cout << "item type: " << item_type_ << '\n';
+    // std::cout << "device address: " << uri_ << '\n';
+    // std::cout << "frequency : " << freq_ << " Hz\n";
+    // std::cout << "sample rate: " << sample_rate_ << " Sps\n";
+    // std::cout << "gain mode: " << gain_mode_ << '\n';
+    // std::cout << "item type: " << item_type_ << '\n';
 
 #if GNURADIO_API_IIO
 #if GR_IIO_TEMPLATIZED_API

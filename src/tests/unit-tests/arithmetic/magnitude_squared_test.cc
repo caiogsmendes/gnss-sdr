@@ -63,9 +63,9 @@ TEST(MagnitudeSquaredTest, StandardCComplexImplementation)
     std::chrono::duration<double> elapsed_seconds = end - start;
 
 #if USE_GLOG_AND_GFLAGS
-    std::cout << "The squared magnitude of a " << FLAGS_size_magnitude_test
+    // std::cout << "The squared magnitude of a " << FLAGS_size_magnitude_test
 #else
-    std::cout << "The squared magnitude of a " << absl::GetFlag(FLAGS_size_magnitude_test)
+    // std::cout << "The squared magnitude of a " << absl::GetFlag(FLAGS_size_magnitude_test)
 #endif
               << "-length complex vector in standard C computed in " << elapsed_seconds.count() * 1e6
               << " microseconds\n";
@@ -97,9 +97,9 @@ TEST(MagnitudeSquaredTest, C11ComplexImplementation)
     std::chrono::duration<double> elapsed_seconds = end - start;
 
 #if USE_GLOG_AND_GFLAGS
-    std::cout << "The squared magnitude of a " << FLAGS_size_magnitude_test
+    // std::cout << "The squared magnitude of a " << FLAGS_size_magnitude_test
 #else
-    std::cout << "The squared magnitude of a " << absl::GetFlag(FLAGS_size_magnitude_test)
+    // std::cout << "The squared magnitude of a " << absl::GetFlag(FLAGS_size_magnitude_test)
 #endif
               << " complex<float> vector (C++11-style) finished in " << elapsed_seconds.count() * 1e6
               << " microseconds\n";
@@ -133,9 +133,9 @@ TEST(MagnitudeSquaredTest, ArmadilloComplexImplementation)
     std::chrono::duration<double> elapsed_seconds = end - start;
 
 #if USE_GLOG_AND_GFLAGS
-    std::cout << "The squared magnitude of a " << FLAGS_size_magnitude_test
+    // std::cout << "The squared magnitude of a " << FLAGS_size_magnitude_test
 #else
-    std::cout << "The squared magnitude of a " << absl::GetFlag(FLAGS_size_magnitude_test)
+    // std::cout << "The squared magnitude of a " << absl::GetFlag(FLAGS_size_magnitude_test)
 #endif
               << "-length vector using Armadillo computed in " << elapsed_seconds.count() * 1e6
               << " microseconds\n";
@@ -166,9 +166,9 @@ TEST(MagnitudeSquaredTest, VolkComplexImplementation)
     std::chrono::duration<double> elapsed_seconds = end - start;
 
 #if USE_GLOG_AND_GFLAGS
-    std::cout << "The squared magnitude of a " << FLAGS_size_magnitude_test
+    // std::cout << "The squared magnitude of a " << FLAGS_size_magnitude_test
 #else
-    std::cout << "The squared magnitude of a " << absl::GetFlag(FLAGS_size_magnitude_test)
+    // std::cout << "The squared magnitude of a " << absl::GetFlag(FLAGS_size_magnitude_test)
 #endif
               << "-length vector using VOLK computed in " << elapsed_seconds.count() * 1e6
               << " microseconds\n";
@@ -200,9 +200,9 @@ TEST(MagnitudeSquaredTest, VolkComplexImplementationAlloc)
     end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
 #if USE_GLOG_AND_GFLAGS
-    std::cout << "The squared magnitude of a " << FLAGS_size_magnitude_test
+    // std::cout << "The squared magnitude of a " << FLAGS_size_magnitude_test
 #else
-    std::cout << "The squared magnitude of a " << absl::GetFlag(FLAGS_size_magnitude_test)
+    // std::cout << "The squared magnitude of a " << absl::GetFlag(FLAGS_size_magnitude_test)
 #endif
               << "-length vector using VOLK ALLOC computed in " << elapsed_seconds.count() * 1e6
               << " microseconds\n";

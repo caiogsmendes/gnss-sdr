@@ -328,7 +328,7 @@ void Gps_L1_Ca_Gaussian_Tracking_cc::start_tracking()
               << " Code Phase correction [samples]=" << delay_correction_samples
               << " PULL-IN Code Phase [samples]=" << d_acq_code_phase_samples;
 
-    std::cout << "Tracking of GPS L1 C/A signal started on channel " << d_channel << " for satellite " << Gnss_Satellite(systemName[sys], d_acquisition_gnss_synchro->PRN) << '\n';
+    // std::cout << "Tracking of GPS L1 C/A signal started on channel " << d_channel << " for satellite " << Gnss_Satellite(systemName[sys], d_acquisition_gnss_synchro->PRN) << '\n';
     LOG(INFO) << "Starting tracking of satellite " << Gnss_Satellite(systemName[sys], d_acquisition_gnss_synchro->PRN) << " on channel " << d_channel;
 }
 
@@ -350,7 +350,7 @@ Gps_L1_Ca_Gaussian_Tracking_cc::~Gps_L1_Ca_Gaussian_Tracking_cc()
         {
             if (d_channel == 0)
                 {
-                    std::cout << "Writing .mat files ...";
+                    // std::cout << "Writing .mat files ...";
                 }
             try
                 {
@@ -363,7 +363,7 @@ Gps_L1_Ca_Gaussian_Tracking_cc::~Gps_L1_Ca_Gaussian_Tracking_cc()
 
             if (d_channel == 0)
                 {
-                    std::cout << " done.\n";
+                    // std::cout << " done.\n";
                 }
         }
     try
@@ -788,7 +788,7 @@ int Gps_L1_Ca_Gaussian_Tracking_cc::general_work(int noutput_items __attribute__
 #endif
                         {
                             // if (d_channel == 1)
-                            // std::cout << "Carrier Lock Test Fail in channel " << d_channel << ": " << d_carrier_lock_test << " < " << d_carrier_lock_threshold << "," << nfail++ << '\n';
+                            // // std::cout << "Carrier Lock Test Fail in channel " << d_channel << ": " << d_carrier_lock_test << " < " << d_carrier_lock_threshold << "," << nfail++ << '\n';
                             d_carrier_lock_fail_counter++;
                             // nfail++;
                         }
@@ -805,7 +805,7 @@ int Gps_L1_Ca_Gaussian_Tracking_cc::general_work(int noutput_items __attribute__
                     if (d_carrier_lock_fail_counter > absl::GetFlag(FLAGS_max_lock_fail))
 #endif
                         {
-                            std::cout << "Loss of lock in channel " << d_channel << "!\n";
+                            // std::cout << "Loss of lock in channel " << d_channel << "!\n";
                             LOG(INFO) << "Loss of lock in channel " << d_channel << "!";
                             this->message_port_pub(pmt::mp("events"), pmt::from_long(3));  // 3 -> loss of lock
                             d_carrier_lock_fail_counter = 0;

@@ -69,8 +69,8 @@ Channel::Channel(const ConfigurationInterface* configuration,
             const int64_t deprecation_warning = configuration->property("GNSS-SDR.internal_fs_hz", 0);
             if (deprecation_warning != 0)
                 {
-                    std::cout << "WARNING: The global parameter name GNSS-SDR.internal_fs_hz has been DEPRECATED.\n";
-                    std::cout << "WARNING: Please replace it by GNSS-SDR.internal_fs_sps in your configuration file.\n";
+                    // std::cout << "WARNING: The global parameter name GNSS-SDR.internal_fs_hz has been DEPRECATED.\n";
+                    // std::cout << "WARNING: Please replace it by GNSS-SDR.internal_fs_sps in your configuration file.\n";
                 }
         }
 

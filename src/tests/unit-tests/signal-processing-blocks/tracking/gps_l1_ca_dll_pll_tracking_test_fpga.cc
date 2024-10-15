@@ -328,13 +328,13 @@ int GpsL1CADllPllTrackingTestFpga::generate_signal()
     else if (pid == 0)
         {
             execv(&generator_binary[0], parmList);
-            std::cout << "Return not expected. Must be an execv err.\n";
+            // std::cout << "Return not expected. Must be an execv err.\n";
             std::terminate();
         }
 
     waitpid(pid, &child_status, 0);
 
-    std::cout << "Signal and Observables RINEX and RAW files created.\n";
+    // std::cout << "Signal and Observables RINEX and RAW files created.\n";
     return 0;
 }
 
@@ -396,7 +396,7 @@ void GpsL1CADllPllTrackingTestFpga::check_results_doppler(arma::vec &true_time_s
 
     // 5. report
     std::streamsize ss = std::cout.precision();
-    std::cout << std::setprecision(10) << "TRK Doppler RMSE=" << rmse
+    // std::cout << std::setprecision(10) << "TRK Doppler RMSE=" << rmse
               << ", mean=" << error_mean << ", stdev=" << sqrt(error_var)
               << " (max,min)=" << max_error << "," << min_error << " [Hz]"
               << '\n';
@@ -435,7 +435,7 @@ void GpsL1CADllPllTrackingTestFpga::check_results_acc_carrier_phase(
 
     // 5. report
     std::streamsize ss = std::cout.precision();
-    std::cout << std::setprecision(10) << "TRK acc carrier phase RMSE=" << rmse
+    // std::cout << std::setprecision(10) << "TRK acc carrier phase RMSE=" << rmse
               << ", mean=" << error_mean << ", stdev=" << sqrt(error_var)
               << " (max,min)=" << max_error << "," << min_error << " [Hz]"
               << '\n';
@@ -473,7 +473,7 @@ void GpsL1CADllPllTrackingTestFpga::check_results_codephase(
 
     // 5. report
     std::streamsize ss = std::cout.precision();
-    std::cout << std::setprecision(10) << "TRK code phase RMSE=" << rmse
+    // std::cout << std::setprecision(10) << "TRK code phase RMSE=" << rmse
               << ", mean=" << error_mean << ", stdev=" << sqrt(error_var)
               << " (max,min)=" << max_error << "," << min_error << " [Chips]"
               << '\n';
@@ -501,7 +501,7 @@ TEST_F(GpsL1CADllPllTrackingTestFpga, ValidationOfResultsFpga)
 #else
     int test_satellite_PRN = absl::GetFlag(FLAGS_test_satellite_PRN);
 #endif
-    std::cout << "Testing satellite PRN=" << test_satellite_PRN << '\n';
+    // std::cout << "Testing satellite PRN=" << test_satellite_PRN << '\n';
     std::string true_obs_file = std::string("./gps_l1_ca_obs_prn");
     true_obs_file.append(std::to_string(test_satellite_PRN));
     true_obs_file.append(".dat");
@@ -533,7 +533,7 @@ TEST_F(GpsL1CADllPllTrackingTestFpga, ValidationOfResultsFpga)
     // restart the epoch counter
     true_obs_data.restart();
 
-    std::cout << "Initial Doppler [Hz]=" << true_obs_data.doppler_l1_hz
+    // std::cout << "Initial Doppler [Hz]=" << true_obs_data.doppler_l1_hz
               << " Initial code delay [Chips]=" << true_obs_data.prn_delay_chips
               << '\n';
 
@@ -592,7 +592,7 @@ TEST_F(GpsL1CADllPllTrackingTestFpga, ValidationOfResultsFpga)
     // check results
     // load the true values
     int64_t nepoch = true_obs_data.num_epochs();
-    std::cout << "True observation epochs=" << nepoch << '\n';
+    // std::cout << "True observation epochs=" << nepoch << '\n';
 
     arma::vec true_timestamp_s = arma::zeros(nepoch, 1);
     arma::vec true_acc_carrier_phase_cycles = arma::zeros(nepoch, 1);
@@ -623,7 +623,7 @@ TEST_F(GpsL1CADllPllTrackingTestFpga, ValidationOfResultsFpga)
         << "Failure opening tracking dump file";
 
     nepoch = trk_dump.num_epochs();
-    std::cout << "Measured observation epochs=" << nepoch << '\n';
+    // std::cout << "Measured observation epochs=" << nepoch << '\n';
 
     arma::vec trk_timestamp_s = arma::zeros(nepoch, 1);
     arma::vec trk_acc_carrier_phase_cycles = arma::zeros(nepoch, 1);
@@ -658,5 +658,5 @@ TEST_F(GpsL1CADllPllTrackingTestFpga, ValidationOfResultsFpga)
         true_acc_carrier_phase_cycles, trk_timestamp_s,
         trk_acc_carrier_phase_cycles);
 
-    std::cout << "Signal tracking completed in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
+    // std::cout << "Signal tracking completed in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
 }

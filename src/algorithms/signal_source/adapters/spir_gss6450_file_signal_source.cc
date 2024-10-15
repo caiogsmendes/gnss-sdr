@@ -127,12 +127,12 @@ SpirGSS6450FileSignalSource::SpirGSS6450FileSignalSource(const ConfigurationInte
                 }
             else
                 {
-                    std::cout << "file_signal_source: Unable to open the samples file " << filename_.c_str() << '\n';
+                    // std::cout << "file_signal_source: Unable to open the samples file " << filename_.c_str() << '\n';
                     LOG(ERROR) << "file_signal_source: Unable to open the samples file " << filename_.c_str();
                 }
             std::streamsize ss = std::cout.precision();
-            std::cout << std::setprecision(16);
-            std::cout << "Processing file " << filename_ << ", which contains " << size << " [bytes]\n";
+            // std::cout << std::setprecision(16);
+            // std::cout << "Processing file " << filename_ << ", which contains " << size << " [bytes]\n";
             std::cout.precision(ss);
 
             if (size > 0)
@@ -145,7 +145,7 @@ SpirGSS6450FileSignalSource::SpirGSS6450FileSignalSource(const ConfigurationInte
     CHECK(samples_ > 0) << "File does not contain enough samples to process.";
     double signal_duration_s = static_cast<double>(samples_) / sampling_frequency_;
     LOG(INFO) << "Total number samples to be processed= " << samples_ << " GNSS signal duration= " << signal_duration_s << " [s]";
-    std::cout << "GNSS signal recorded time to be processed: " << signal_duration_s << " [s]\n";
+    // std::cout << "GNSS signal recorded time to be processed: " << signal_duration_s << " [s]\n";
 
     for (int32_t i = 0; i < n_channels_; i++)
         {

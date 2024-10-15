@@ -274,13 +274,13 @@ int GpsL1CATelemetryDecoderTest::generate_signal()
     else if (pid == 0)
         {
             execv(&generator_binary[0], parmList);
-            std::cout << "Return not expected. Must be an execv err.\n";
+            // std::cout << "Return not expected. Must be an execv err.\n";
             std::terminate();
         }
 
     waitpid(pid, &child_status, 0);
 
-    std::cout << "Signal and Observables RINEX and RAW files created.\n";
+    // std::cout << "Signal and Observables RINEX and RAW files created.\n";
     return 0;
 }
 
@@ -343,7 +343,7 @@ void GpsL1CATelemetryDecoderTest::check_results(arma::vec& true_time_s,
 
     // 5. report
     std::streamsize ss = std::cout.precision();
-    std::cout << std::setprecision(10) << "TLM TOW RMSE="
+    // std::cout << std::setprecision(10) << "TLM TOW RMSE="
               << rmse << ", mean=" << error_mean
               << ", stdev=" << sqrt(error_var)
               << " (max,min)=" << max_error
@@ -387,7 +387,7 @@ TEST_F(GpsL1CATelemetryDecoderTest, ValidationOfResults)
 #else
     int test_satellite_PRN = absl::GetFlag(FLAGS_test_satellite_PRN);
 #endif
-    std::cout << "Testing satellite PRN=" << test_satellite_PRN << '\n';
+    // std::cout << "Testing satellite PRN=" << test_satellite_PRN << '\n';
     std::string true_obs_file = std::string("./gps_l1_ca_obs_prn");
     true_obs_file.append(std::to_string(test_satellite_PRN));
     true_obs_file.append(".dat");
@@ -415,7 +415,7 @@ TEST_F(GpsL1CATelemetryDecoderTest, ValidationOfResults)
     // restart the epoch counter
     true_obs_data.restart();
 
-    std::cout << "Initial Doppler [Hz]=" << true_obs_data.doppler_l1_hz << " Initial code delay [Chips]=" << true_obs_data.prn_delay_chips << '\n';
+    // std::cout << "Initial Doppler [Hz]=" << true_obs_data.doppler_l1_hz << " Initial code delay [Chips]=" << true_obs_data.prn_delay_chips << '\n';
     gnss_synchro.Acq_delay_samples = (GPS_L1_CA_CODE_LENGTH_CHIPS - true_obs_data.prn_delay_chips / GPS_L1_CA_CODE_LENGTH_CHIPS) * baseband_sampling_freq * GPS_L1_CA_CODE_PERIOD_S;
     gnss_synchro.Acq_doppler_hz = true_obs_data.doppler_l1_hz;
     gnss_synchro.Acq_samplestamp_samples = 0;
@@ -462,7 +462,7 @@ TEST_F(GpsL1CATelemetryDecoderTest, ValidationOfResults)
     // check results
     // load the true values
     int64_t nepoch = true_obs_data.num_epochs();
-    std::cout << "True observation epochs=" << nepoch << '\n';
+    // std::cout << "True observation epochs=" << nepoch << '\n';
 
     arma::vec true_timestamp_s = arma::zeros(nepoch, 1);
     arma::vec true_acc_carrier_phase_cycles = arma::zeros(nepoch, 1);
@@ -491,7 +491,7 @@ TEST_F(GpsL1CATelemetryDecoderTest, ValidationOfResults)
     }) << "Failure opening telemetry dump file";
 
     nepoch = tlm_dump.num_epochs();
-    std::cout << "Measured observation epochs=" << nepoch << '\n';
+    // std::cout << "Measured observation epochs=" << nepoch << '\n';
 
     arma::vec tlm_timestamp_s = arma::zeros(nepoch, 1);
     arma::vec tlm_TOW_at_Preamble = arma::zeros(nepoch, 1);
@@ -514,5 +514,5 @@ TEST_F(GpsL1CATelemetryDecoderTest, ValidationOfResults)
 
     check_results(true_timestamp_s, true_tow_s, tlm_timestamp_s, tlm_tow_s);
 
-    std::cout << "Test completed in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
+    // std::cout << "Test completed in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
 }

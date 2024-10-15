@@ -96,14 +96,14 @@ void Fpga_dynamic_bit_selection::open_device(volatile unsigned **d_map_base, int
     if (find_uio_dev_file_name(device_name, dyn_bit_sel_device_name, freq_band) < 0)
         {
             std::cerr << "Cannot find the FPGA uio device file corresponding to device name " << dyn_bit_sel_device_name << '\n';
-            std::cout << "Cannot find the FPGA uio device file corresponding to device name " << dyn_bit_sel_device_name << '\n';
+            // std::cout << "Cannot find the FPGA uio device file corresponding to device name " << dyn_bit_sel_device_name << '\n';
             return;
         }
     // dynamic bits selection corresponding to frequency band 1
     if ((d_dev_descr = open(device_name.c_str(), O_RDWR | O_SYNC)) == -1)
         {
             LOG(WARNING) << "Cannot open deviceio" << device_name;
-            std::cout << "Cannot open deviceio" << device_name << std::endl;
+            // std::cout << "Cannot open deviceio" << device_name << std::endl;
         }
     *d_map_base = reinterpret_cast<volatile unsigned *>(mmap(nullptr, FPGA_PAGE_SIZE,
         PROT_READ | PROT_WRITE, MAP_SHARED, d_dev_descr, 0));
@@ -111,7 +111,7 @@ void Fpga_dynamic_bit_selection::open_device(volatile unsigned **d_map_base, int
     if (*d_map_base == reinterpret_cast<void *>(-1))
         {
             LOG(WARNING) << "Cannot map the FPGA dynamic bit selection module in frequency band 1 into tracking memory";
-            std::cout << "Could not map dynamic bit selection memory corresponding to frequency band 1.\n";
+            // std::cout << "Could not map dynamic bit selection memory corresponding to frequency band 1.\n";
         }
 }
 
@@ -147,7 +147,7 @@ void Fpga_dynamic_bit_selection::close_device(volatile unsigned *d_map_base, int
     auto *aux = const_cast<unsigned *>(d_map_base);
     if (munmap(static_cast<void *>(aux), FPGA_PAGE_SIZE) == -1)
         {
-            std::cout << "Failed to unmap memory uio\n";
+            // std::cout << "Failed to unmap memory uio\n";
         }
     close(d_dev_descr);
 }

@@ -446,7 +446,7 @@ void TtffTest::print_TTFF_report(const std::vector<double> &ttff_v, const std::s
         }
     stm << "---------------------------\n";
 
-    std::cout << stm.rdbuf();
+    // std::cout << stm.rdbuf();
     if (ttff_report_file.is_open())
         {
             ttff_report_file << stm.str();
@@ -492,9 +492,9 @@ TEST_F(TtffTest /*unused*/, ColdStart /*unused*/)
 
                 // record startup time
 #if USE_GLOG_AND_GFLAGS
-            std::cout << "Starting measurement " << num_measurements + 1 << " / " << FLAGS_num_measurements << '\n';
+            // std::cout << "Starting measurement " << num_measurements + 1 << " / " << FLAGS_num_measurements << '\n';
 #else
-            std::cout << "Starting measurement " << num_measurements + 1 << " / " << absl::GetFlag(FLAGS_num_measurements) << '\n';
+            // std::cout << "Starting measurement " << num_measurements + 1 << " / " << absl::GetFlag(FLAGS_num_measurements) << '\n';
 
 #endif
             std::chrono::time_point<std::chrono::system_clock> start;
@@ -507,11 +507,11 @@ TEST_F(TtffTest /*unused*/, ColdStart /*unused*/)
                 }
             catch (const boost::exception &e)
                 {
-                    std::cout << "Boost exception: " << boost::diagnostic_information(e);
+                    // std::cout << "Boost exception: " << boost::diagnostic_information(e);
                 }
             catch (const std::exception &ex)
                 {
-                    std::cout << "STD exception: " << ex.what();
+                    // std::cout << "STD exception: " << ex.what();
                 }
 
             // stop clock
@@ -523,7 +523,7 @@ TEST_F(TtffTest /*unused*/, ColdStart /*unused*/)
             EXPECT_FALSE(flowgraph->running());
 
             num_measurements = num_measurements + 1;
-            std::cout << "Just finished measurement " << num_measurements << ", which took " << ttff << " seconds.\n";
+            // std::cout << "Just finished measurement " << num_measurements << ", which took " << ttff << " seconds.\n";
 #if USE_GLOG_AND_GFLAGS
             if (n < FLAGS_num_measurements - 1)
 #else
@@ -535,8 +535,8 @@ TEST_F(TtffTest /*unused*/, ColdStart /*unused*/)
                     std::uniform_real_distribution<float> uniform_dist(0, 1);
                     float random_variable_0_1 = uniform_dist(e1);
                     int random_delay_s = static_cast<int>(random_variable_0_1 * 25.0);
-                    std::cout << "Waiting a random amount of time (from 5 to 30 s) to start a new measurement... \n";
-                    std::cout << "This time will wait " << random_delay_s + 5 << " s.\n"
+                    // std::cout << "Waiting a random amount of time (from 5 to 30 s) to start a new measurement... \n";
+                    // std::cout << "This time will wait " << random_delay_s + 5 << " s.\n"
                               << '\n';
                     std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::seconds(5) + std::chrono::seconds(random_delay_s));
                 }
@@ -598,9 +598,9 @@ TEST_F(TtffTest /*unused*/, HotStart /*unused*/)
                 }
                 // record startup time
 #if USE_GLOG_AND_GFLAGS
-            std::cout << "Starting measurement " << num_measurements + 1 << " / " << FLAGS_num_measurements << '\n';
+            // std::cout << "Starting measurement " << num_measurements + 1 << " / " << FLAGS_num_measurements << '\n';
 #else
-            std::cout << "Starting measurement " << num_measurements + 1 << " / " << absl::GetFlag(FLAGS_num_measurements) << '\n';
+            // std::cout << "Starting measurement " << num_measurements + 1 << " / " << absl::GetFlag(FLAGS_num_measurements) << '\n';
 #endif
             std::chrono::time_point<std::chrono::system_clock> start;
             std::chrono::time_point<std::chrono::system_clock> end;
@@ -613,11 +613,11 @@ TEST_F(TtffTest /*unused*/, HotStart /*unused*/)
                 }
             catch (const boost::exception &e)
                 {
-                    std::cout << "Boost exception: " << boost::diagnostic_information(e);
+                    // std::cout << "Boost exception: " << boost::diagnostic_information(e);
                 }
             catch (const std::exception &ex)
                 {
-                    std::cout << "STD exception: " << ex.what();
+                    // std::cout << "STD exception: " << ex.what();
                 }
 
             // stop clock
@@ -629,7 +629,7 @@ TEST_F(TtffTest /*unused*/, HotStart /*unused*/)
             EXPECT_FALSE(flowgraph->running());
 
             num_measurements = num_measurements + 1;
-            std::cout << "Just finished measurement " << num_measurements << ", which took " << ttff << " seconds.\n";
+            // std::cout << "Just finished measurement " << num_measurements << ", which took " << ttff << " seconds.\n";
 #if USE_GLOG_AND_GFLAGS
             if (n < FLAGS_num_measurements - 1)
 #else
@@ -641,8 +641,8 @@ TEST_F(TtffTest /*unused*/, HotStart /*unused*/)
                     std::uniform_real_distribution<float> uniform_dist(0, 1);
                     float random_variable_0_1 = uniform_dist(e1);
                     int random_delay_s = static_cast<int>(random_variable_0_1 * 25.0);
-                    std::cout << "Waiting a random amount of time (from 5 to 30 s) to start new measurement... \n";
-                    std::cout << "This time will wait " << random_delay_s + 5 << " s.\n"
+                    // std::cout << "Waiting a random amount of time (from 5 to 30 s) to start new measurement... \n";
+                    // std::cout << "This time will wait " << random_delay_s + 5 << " s.\n"
                               << '\n';
                     std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::seconds(5) + std::chrono::seconds(random_delay_s));
                 }
@@ -667,7 +667,7 @@ TEST_F(TtffTest /*unused*/, HotStart /*unused*/)
 
 int main(int argc, char **argv)
 {
-    std::cout << "Running Time-To-First-Fix test...\n";
+    // std::cout << "Running Time-To-First-Fix test...\n";
     int res = 0;
     TTFF_v.clear();
     try
@@ -705,7 +705,7 @@ int main(int argc, char **argv)
     int msgflg = IPC_CREAT | 0666;
     if ((sysv_msqid = msgget(sysv_msg_key, msgflg)) == -1)
         {
-            std::cout << "GNSS-SDR can not create message queues!\n";
+            // std::cout << "GNSS-SDR can not create message queues!\n";
             return 1;
         }
     ttff_msgbuf msg;

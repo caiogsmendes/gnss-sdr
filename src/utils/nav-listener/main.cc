@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 
             unsigned short port = boost::lexical_cast<unsigned short>(argv[1]);
             Nav_Msg_Udp_Listener udp_listener(port);
-            std::cout << "Listening on port " << static_cast<int>(port) << ", press Control+C to exit ...\n";
+            // std::cout << "Listening on port " << static_cast<int>(port) << ", press Control+C to exit ...\n";
 
             while (true)
                 {
@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
                         }
                     else
                         {
-                            std::cout << "Error: the message cannot be parsed." << std::endl;
+                            // std::cout << "Error: the message cannot be parsed." << std::endl;
                         }
                 }
         }

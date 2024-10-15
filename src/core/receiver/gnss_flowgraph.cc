@@ -147,8 +147,8 @@ void GNSSFlowgraph::init()
     // Avoid segmentation fault caused by wrong configuration
     if (sources_count_ == 2 && configuration_->property("SignalSource.implementation", std::string("")) == "Multichannel_File_Signal_Source")
         {
-            std::cout << " * Please set GNSS-SDR.num_sources=1 in your configuration file\n";
-            std::cout << "   if you are using the Multichannel_File_Signal_Source implementation.\n";
+            // std::cout << " * Please set GNSS-SDR.num_sources=1 in your configuration file\n";
+            // std::cout << "   if you are using the Multichannel_File_Signal_Source implementation.\n";
             sources_count_ = 1;
         }
 
@@ -160,7 +160,7 @@ void GNSSFlowgraph::init()
             auto check_not_nullptr = block_factory->GetSignalSource(configuration_.get(), queue_.get(), i);
             if (!check_not_nullptr)
                 {
-                    std::cout << "GNSS-SDR program ended.\n";
+                    // std::cout << "GNSS-SDR program ended.\n";
                     exit(1);
                 }
             sig_source_.push_back(std::move(check_not_nullptr));
@@ -170,7 +170,7 @@ void GNSSFlowgraph::init()
                     auto RF_Channels = src->getRfChannels();
                     if (sources_count_ == 1)
                         {
-                            std::cout << "RF Channels: " << RF_Channels << '\n';
+                            // std::cout << "RF Channels: " << RF_Channels << '\n';
                         }
                     for (auto j = 0U; j < RF_Channels; ++j)
                         {
@@ -181,7 +181,7 @@ void GNSSFlowgraph::init()
         }
     if (sources_count_ != 1 && !enable_fpga_offloading_)
         {
-            std::cout << "RF Channels: " << sources_count_ << '\n';
+            // std::cout << "RF Channels: " << sources_count_ << '\n';
         }
     if (!sig_conditioner_.empty())
         {
@@ -909,7 +909,7 @@ int GNSSFlowgraph::connect_sample_counter()
             if (fs == 0.0)
                 {
                     LOG(WARNING) << "Set GNSS-SDR.internal_fs_sps in configuration file";
-                    std::cout << "Set GNSS-SDR.internal_fs_sps in configuration file\n";
+                    // std::cout << "Set GNSS-SDR.internal_fs_sps in configuration file\n";
                     throw(std::invalid_argument("Set GNSS-SDR.internal_fs_sps in configuration"));
                 }
 
@@ -939,7 +939,7 @@ int GNSSFlowgraph::connect_fpga_sample_counter()
             if (fs == 0.0)
                 {
                     LOG(WARNING) << "Set GNSS-SDR.internal_fs_sps in configuration file";
-                    std::cout << "Set GNSS-SDR.internal_fs_sps in configuration file\n";
+                    // std::cout << "Set GNSS-SDR.internal_fs_sps in configuration file\n";
                     throw(std::invalid_argument("Set GNSS-SDR.internal_fs_sps in configuration"));
                 }
             const int observable_interval_ms = configuration_->property("GNSS-SDR.observable_interval_ms", 20);
@@ -988,10 +988,10 @@ int GNSSFlowgraph::connect_signal_sources_to_signal_conditioners()
                     if (src->implementation() == "Raw_Array_Signal_Source")
                         {
                             // Multichannel Array
-                            std::cout << "ARRAY MODE\n";
+                            // std::cout << "ARRAY MODE\n";
                             for (int j = 0; j < GNSS_SDR_ARRAY_SIGNAL_CONDITIONER_CHANNELS; j++)
                                 {
-                                    std::cout << "connecting ch " << j << '\n';
+                                    // std::cout << "connecting ch " << j << '\n';
                                     top_block_->connect(src->get_right_block(), j, sig_conditioner_.at(i)->get_left_block(), j);
                                 }
                         }
@@ -1250,7 +1250,7 @@ int GNSSFlowgraph::connect_observables_to_pvt()
                     pmt::pmt_t ports_in = channels_.at(i)->get_left_block_trk()->message_ports_in();
                     for (size_t n = 0; n < pmt::length(ports_in); n++)
                         {
-                            // std::cout << "pmt: " << pmt::symbol_to_string(pmt::vector_ref(ports_in, n)) << "\n";
+                            // // std::cout << "pmt: " << pmt::symbol_to_string(pmt::vector_ref(ports_in, n)) << "\n";
                             if (pmt::symbol_to_string(pmt::vector_ref(ports_in, n)) == "pvt_to_trk")
                                 {
                                     top_block_->msg_connect(pvt_->get_left_block(), pmt::mp("pvt_to_trk"), channels_.at(i)->get_left_block_trk(), pmt::mp("pvt_to_trk"));
@@ -2788,7 +2788,7 @@ Gnss_Signal GNSSFlowgraph::search_next_signal(const std::string& searched_signal
                                         {
                                             estimated_doppler = static_cast<float>(current_status.second->Carrier_Doppler_hz);
                                             RX_time = current_status.second->RX_time;
-                                            // std::cout << " Channel: " << it->first << " => Doppler: " << estimated_doppler << "[Hz] \n";
+                                            // // std::cout << " Channel: " << it->first << " => Doppler: " << estimated_doppler << "[Hz] \n";
                                             // 3. return the GPS L5 satellite and remove it from list
                                             result = *it2;
                                             available_GPS_L5_signals_.erase(it2);
@@ -2833,7 +2833,7 @@ Gnss_Signal GNSSFlowgraph::search_next_signal(const std::string& searched_signal
                                         {
                                             estimated_doppler = static_cast<float>(current_status.second->Carrier_Doppler_hz);
                                             RX_time = current_status.second->RX_time;
-                                            // std::cout << " Channel: " << it->first << " => Doppler: " << estimated_doppler << "[Hz] \n";
+                                            // // std::cout << " Channel: " << it->first << " => Doppler: " << estimated_doppler << "[Hz] \n";
                                             // 3. return the Gal 5X satellite and remove it from list
                                             result = *it2;
                                             available_GAL_5X_signals_.erase(it2);
@@ -2871,7 +2871,7 @@ Gnss_Signal GNSSFlowgraph::search_next_signal(const std::string& searched_signal
                                         {
                                             estimated_doppler = static_cast<float>(current_status.second->Carrier_Doppler_hz);
                                             RX_time = current_status.second->RX_time;
-                                            // std::cout << " Channel: " << it->first << " => Doppler: " << estimated_doppler << "[Hz] \n";
+                                            // // std::cout << " Channel: " << it->first << " => Doppler: " << estimated_doppler << "[Hz] \n";
                                             // 3. return the Gal 7X satellite and remove it from list
                                             result = *it2;
                                             available_GAL_7X_signals_.erase(it2);
@@ -2909,7 +2909,7 @@ Gnss_Signal GNSSFlowgraph::search_next_signal(const std::string& searched_signal
                                         {
                                             estimated_doppler = static_cast<float>(current_status.second->Carrier_Doppler_hz);
                                             RX_time = current_status.second->RX_time;
-                                            // std::cout << " Channel: " << it->first << " => Doppler: " << estimated_doppler << "[Hz] \n";
+                                            // // std::cout << " Channel: " << it->first << " => Doppler: " << estimated_doppler << "[Hz] \n";
                                             // 3. return the Gal E6 satellite and remove it from list
                                             result = *it2;
                                             available_GAL_E6_signals_.erase(it2);

@@ -241,13 +241,13 @@ int GpsL1CAGaussianTrackingTest::generate_signal()
     else if (pid == 0)
         {
             execv(&generator_binary[0], parmList);
-            std::cout << "Return not expected. Must be an execv err.\n";
+            // std::cout << "Return not expected. Must be an execv err.\n";
             std::terminate();
         }
 
     waitpid(pid, &child_status, 0);
 
-    std::cout << "Signal and Observables RINEX and RAW files created.\n";
+    // std::cout << "Signal and Observables RINEX and RAW files created.\n";
     return 0;
 }
 
@@ -322,7 +322,7 @@ void GpsL1CAGaussianTrackingTest::check_results_doppler(arma::vec& true_time_s,
 
     // 5. report
     std::streamsize ss = std::cout.precision();
-    std::cout << std::setprecision(10) << "TRK Doppler RMSE=" << rmse
+    // std::cout << std::setprecision(10) << "TRK Doppler RMSE=" << rmse
               << ", mean=" << error_mean
               << ", stdev=" << sqrt(error_var) << " (max,min)=" << max_error << "," << min_error << " [Hz]\n";
     std::cout.precision(ss);
@@ -361,7 +361,7 @@ void GpsL1CAGaussianTrackingTest::check_results_acc_carrier_phase(arma::vec& tru
 
     // 5. report
     std::streamsize ss = std::cout.precision();
-    std::cout << std::setprecision(10) << "TRK acc carrier phase RMSE=" << rmse
+    // std::cout << std::setprecision(10) << "TRK acc carrier phase RMSE=" << rmse
               << ", mean=" << error_mean
               << ", stdev=" << sqrt(error_var) << " (max,min)=" << max_error << "," << min_error << " [Hz]\n";
     std::cout.precision(ss);
@@ -401,7 +401,7 @@ void GpsL1CAGaussianTrackingTest::check_results_codephase(arma::vec& true_time_s
 
     // 5. report
     std::streamsize ss = std::cout.precision();
-    std::cout << std::setprecision(10) << "TRK code phase RMSE=" << rmse
+    // std::cout << std::setprecision(10) << "TRK code phase RMSE=" << rmse
               << ", mean=" << error_mean
               << ", stdev=" << sqrt(error_var) << " (max,min)=" << max_error << "," << min_error << " [Chips]\n";
     std::cout.precision(ss);
@@ -436,7 +436,7 @@ TEST_F(GpsL1CAGaussianTrackingTest, ValidationOfResults)
 #else
     int test_satellite_PRN = absl::GetFlag(FLAGS_test_satellite_PRN);
 #endif
-    std::cout << "Testing satellite PRN=" << test_satellite_PRN << '\n';
+    // std::cout << "Testing satellite PRN=" << test_satellite_PRN << '\n';
     std::string true_obs_file = std::string("./gps_l1_ca_obs_prn");
     true_obs_file.append(std::to_string(test_satellite_PRN));
     true_obs_file.append(".dat");
@@ -462,7 +462,7 @@ TEST_F(GpsL1CAGaussianTrackingTest, ValidationOfResults)
     // restart the epoch counter
     true_obs_data.restart();
 
-    std::cout << "Initial Doppler [Hz]=" << true_obs_data.doppler_l1_hz << " Initial code delay [Chips]=" << true_obs_data.prn_delay_chips << '\n';
+    // std::cout << "Initial Doppler [Hz]=" << true_obs_data.doppler_l1_hz << " Initial code delay [Chips]=" << true_obs_data.prn_delay_chips << '\n';
     gnss_synchro.Acq_delay_samples = (GPS_L1_CA_CODE_LENGTH_CHIPS - true_obs_data.prn_delay_chips / GPS_L1_CA_CODE_LENGTH_CHIPS) * baseband_sampling_freq * GPS_L1_CA_CODE_PERIOD_S;
     gnss_synchro.Acq_doppler_hz = true_obs_data.doppler_l1_hz;
     gnss_synchro.Acq_samplestamp_samples = 0;
@@ -502,7 +502,7 @@ TEST_F(GpsL1CAGaussianTrackingTest, ValidationOfResults)
     // check results
     // load the true values
     long int nepoch = true_obs_data.num_epochs();
-    std::cout << "True observation epochs=" << nepoch << '\n';
+    // std::cout << "True observation epochs=" << nepoch << '\n';
 
     arma::vec true_timestamp_s = arma::zeros(nepoch, 1);
     arma::vec true_acc_carrier_phase_cycles = arma::zeros(nepoch, 1);
@@ -528,7 +528,7 @@ TEST_F(GpsL1CAGaussianTrackingTest, ValidationOfResults)
         << "Failure opening tracking dump file";
 
     nepoch = trk_dump.num_epochs();
-    std::cout << "Measured observation epochs=" << nepoch << '\n';
+    // std::cout << "Measured observation epochs=" << nepoch << '\n';
     // trk_dump.restart();
 
     arma::vec trk_timestamp_s = arma::zeros(nepoch, 1);
@@ -573,7 +573,7 @@ TEST_F(GpsL1CAGaussianTrackingTest, ValidationOfResults)
     check_results_acc_carrier_phase(true_timestamp_s, true_acc_carrier_phase_cycles, trk_timestamp_s, trk_acc_carrier_phase_cycles);
 
     std::chrono::duration<double> elapsed_seconds = end - start;
-    std::cout << "Signal tracking completed in " << elapsed_seconds.count() << " seconds.\n";
+    // std::cout << "Signal tracking completed in " << elapsed_seconds.count() << " seconds.\n";
 #if USE_GLOG_AND_GFLAGS
     if (FLAGS_plot_gps_l1_gaussian_tracking_test == true)
         {
@@ -585,9 +585,9 @@ TEST_F(GpsL1CAGaussianTrackingTest, ValidationOfResults)
 #endif
             if (gnuplot_executable.empty())
                 {
-                    std::cout << "WARNING: Although the flag plot_gps_l1_tracking_test has been set to TRUE,\n";
-                    std::cout << "gnuplot has not been found in your system.\n";
-                    std::cout << "Test results will not be plotted.\n";
+                    // std::cout << "WARNING: Although the flag plot_gps_l1_tracking_test has been set to TRUE,\n";
+                    // std::cout << "gnuplot has not been found in your system.\n";
+                    // std::cout << "Test results will not be plotted.\n";
                 }
             else
                 {
@@ -666,7 +666,7 @@ TEST_F(GpsL1CAGaussianTrackingTest, ValidationOfResults)
                         }
                     catch (const GnuplotException& ge)
                         {
-                            std::cout << ge.what() << '\n';
+                            // std::cout << ge.what() << '\n';
                         }
                 }
         }

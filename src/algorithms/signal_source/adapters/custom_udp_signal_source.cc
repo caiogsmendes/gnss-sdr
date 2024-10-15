@@ -78,7 +78,7 @@ CustomUDPSignalSource::CustomUDPSignalSource(const ConfigurationInterface* confi
         }
     else
         {
-            std::cout << "Configuration error: RF_channels<channels_in_use\n";
+            // std::cout << "Configuration error: RF_channels<channels_in_use\n";
             exit(0);
         }
 

@@ -40,7 +40,7 @@ bool pps_tcp_rx::send_cmd(std::string cmd) const
                 }
             else
                 {
-                    std::cout << "sent bytes..\n";
+                    // std::cout << "sent bytes..\n";
                 }
         }
     else
@@ -67,7 +67,7 @@ void pps_tcp_rx::receive_pps(const std::string &ip_address, int port)
         (sockaddr *)&sendSockAddr, sizeof(sendSockAddr));
     if (status < 0)
         {
-            std::cout << "pps_tcp_rx: Error connecting to PPS TCP server IP " << ip_address << " at port " << port << std::endl;
+            // std::cout << "pps_tcp_rx: Error connecting to PPS TCP server IP " << ip_address << " at port " << port << std::endl;
             return;
         }
     std::string new_pps_line;
@@ -85,7 +85,7 @@ void pps_tcp_rx::receive_pps(const std::string &ip_address, int port)
                                 {
                                     if (new_pps_line.length() > 0)
                                         {
-                                            // std::cout << "pps_tcp_rx debug: " << new_pps_line << "\n";
+                                            // // std::cout << "pps_tcp_rx debug: " << new_pps_line << "\n";
                                             // parse string and push PPS data to the PPS queue
                                             std::stringstream ss(new_pps_line);
                                             std::vector<std::string> data;
@@ -108,12 +108,12 @@ void pps_tcp_rx::receive_pps(const std::string &ip_address, int port)
                                                                 }
                                                             catch (const std::exception &ex)
                                                                 {
-                                                                    std::cout << "pps_tcp_rx debug: sc parse error str " << data.at(0) << "\n";
+                                                                    // std::cout << "pps_tcp_rx debug: sc parse error str " << data.at(0) << "\n";
                                                                 }
                                                         }
                                                     else
                                                         {
-                                                            std::cout << "pps_tcp_rx debug: sc parse error str " << data.at(0) << "\n";
+                                                            // std::cout << "pps_tcp_rx debug: sc parse error str " << data.at(0) << "\n";
                                                         }
                                                     found = data.at(1).find("o=");
                                                     if (found != std::string::npos)
@@ -124,19 +124,19 @@ void pps_tcp_rx::receive_pps(const std::string &ip_address, int port)
                                                                 }
                                                             catch (const std::exception &ex)
                                                                 {
-                                                                    std::cout << "pps_tcp_rx debug: o parse error str " << data.at(0) << "\n";
+                                                                    // std::cout << "pps_tcp_rx debug: o parse error str " << data.at(0) << "\n";
                                                                 }
                                                         }
                                                     else
                                                         {
-                                                            std::cout << "pps_tcp_rx debug: o parse error str " << data.at(1) << "\n";
+                                                            // std::cout << "pps_tcp_rx debug: o parse error str " << data.at(1) << "\n";
                                                         }
                                                     Pps_queue->push(new_pps);
-                                                    // std::cout << "pps_tcp_rx debug: pps pushed!\n";
+                                                    // // std::cout << "pps_tcp_rx debug: pps pushed!\n";
                                                 }
                                             else
                                                 {
-                                                    std::cout << "pps_tcp_rx debug: protocol error!\n";
+                                                    // std::cout << "pps_tcp_rx debug: protocol error!\n";
                                                 }
                                             new_pps_line = "";
                                         }
@@ -149,7 +149,7 @@ void pps_tcp_rx::receive_pps(const std::string &ip_address, int port)
                 }
             else
                 {
-                    std::cout << "pps_tcp_rx: Socket disconnected!\n!";
+                    // std::cout << "pps_tcp_rx: Socket disconnected!\n!";
                     break;
                 }
         }

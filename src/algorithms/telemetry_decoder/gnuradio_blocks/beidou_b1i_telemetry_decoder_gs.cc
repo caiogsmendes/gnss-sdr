@@ -309,9 +309,9 @@ void beidou_b1i_telemetry_decoder_gs::decode_subframe(float *frame_symbols, doub
 #else
             const auto default_precision{std::cout.precision()};
 #endif
-            std::cout << "New BEIDOU B1I DNAV message received in channel " << d_channel
-                      << ": ephemeris from satellite " << d_satellite
-                      << " with CN0=" << std::setprecision(2) << cn0 << std::setprecision(default_precision) << " dB-Hz" << std::endl;
+            // std::cout << "New BEIDOU B1I DNAV message received in channel " << d_channel
+                    //   << ": ephemeris from satellite " << d_satellite
+                    //   << " with CN0=" << std::setprecision(2) << cn0 << std::setprecision(default_precision) << " dB-Hz" << std::endl;
         }
     if (d_nav.have_new_utc_model() == true)
         {
@@ -324,11 +324,11 @@ void beidou_b1i_telemetry_decoder_gs::decode_subframe(float *frame_symbols, doub
 #else
             const auto default_precision{std::cout.precision()};
 #endif
-            std::cout << "New BEIDOU B1I DNAV utc model message received in channel "
-                      << d_channel
-                      << ": UTC model parameters from satellite " << d_satellite
-                      << " with CN0=" << std::setprecision(2) << cn0 << std::setprecision(default_precision)
-                      << " dB-Hz" << std::endl;
+            // std::cout << "New BEIDOU B1I DNAV utc model message received in channel "
+                    //   << d_channel
+                    //   << ": UTC model parameters from satellite " << d_satellite
+                    //   << " with CN0=" << std::setprecision(2) << cn0 << std::setprecision(default_precision)
+                    //   << " dB-Hz" << std::endl;
         }
     if (d_nav.have_new_iono() == true)
         {
@@ -341,10 +341,10 @@ void beidou_b1i_telemetry_decoder_gs::decode_subframe(float *frame_symbols, doub
 #else
             const auto default_precision{std::cout.precision()};
 #endif
-            std::cout << "New BEIDOU B1I DNAV Iono message received in channel " << d_channel
-                      << ": Iono model parameters from satellite " << d_satellite
-                      << " with CN0=" << cn0 << std::setprecision(default_precision)
-                      << " dB-Hz" << std::endl;
+            // std::cout << "New BEIDOU B1I DNAV Iono message received in channel " << d_channel
+                    //   << ": Iono model parameters from satellite " << d_satellite
+                    //   << " with CN0=" << cn0 << std::setprecision(default_precision)
+                    //   << " dB-Hz" << std::endl;
         }
     if (d_nav.have_new_almanac() == true)
         {
@@ -357,10 +357,10 @@ void beidou_b1i_telemetry_decoder_gs::decode_subframe(float *frame_symbols, doub
 #else
             const auto default_precision{std::cout.precision()};
 #endif
-            std::cout << "New BEIDOU B1I DNAV almanac received in channel " << d_channel
-                      << " from satellite " << d_satellite
-                      << " with CN0=" << std::setprecision(2) << cn0 << std::setprecision(default_precision)
-                      << " dB-Hz" << std::endl;
+            // std::cout << "New BEIDOU B1I DNAV almanac received in channel " << d_channel
+                    //   << " from satellite " << d_satellite
+                    //   << " with CN0=" << std::setprecision(2) << cn0 << std::setprecision(default_precision)
+                    //   << " dB-Hz" << std::endl;
         }
 }
 
