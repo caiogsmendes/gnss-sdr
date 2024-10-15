@@ -140,7 +140,7 @@ void option_list::parse(int argc, char** argv)
                                         }
                                     catch (std::exception& exc)
                                         {
-                                            // std::cout << "An int option can only receive a number"
+                                            std::cout << "An int option can only receive a number"
                                                       << std::endl;
                                             throw std::exception();
                                         };
@@ -153,7 +153,7 @@ void option_list::parse(int argc, char** argv)
                                         }
                                     catch (std::exception& exc)
                                         {
-                                            // std::cout << "A float option can only receive a number"
+                                            std::cout << "A float option can only receive a number"
                                                       << std::endl;
                                             throw std::exception();
                                         };
@@ -251,8 +251,8 @@ bool option_list::present(std::string option_name)
 
 void option_list::help()
 {
-    // std::cout << d_program_name << std::endl;
-    // std::cout << "  -h [ --help ] \t\tdisplay this help message" << std::endl;
+    std::cout << d_program_name << std::endl;
+    std::cout << "  -h [ --help ] \t\tdisplay this help message" << std::endl;
     for (std::vector<option_t>::iterator this_option = d_internal_list.begin();
          this_option != d_internal_list.end();
          this_option++)
@@ -272,6 +272,6 @@ void option_list::help()
                     help_line += " ";
                 }
             help_line += this_option->msg;
-            // std::cout << help_line << std::endl;
+            std::cout << help_line << std::endl;
         }
 }
