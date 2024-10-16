@@ -78,7 +78,7 @@ option(ENABLE_CUDA "Enable building of processing blocks implemented with CUDA (
 option(ENABLE_FPGA "Enable building of processing blocks implementing FPGA offloading" OFF)
 
 # Building and packaging options
-option(ENABLE_PACKAGING "Enable software packaging" OFF)
+option(ENABLE_PACKAGING "Enable software packaging" ON) #caio
 
 option(ENABLE_OWN_GLOG "Download glog and link it to gflags" OFF)
 
