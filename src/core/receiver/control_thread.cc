@@ -1056,8 +1056,8 @@ std::vector<std::pair<int, Gnss_Satellite>> ControlThread::get_visible_sats(time
     tstruct = *gmtime(&rx_utc_time);
     strftime(buf, sizeof(buf), "%d/%m/%Y %H:%M:%S ", &tstruct);
     const std::string str_time = std::string(buf);
-    // std::cout << "Get visible satellites at " << str_time
-            //   << "UTC, assuming RX position " << LLH[0] << " [deg], " << LLH[1] << " [deg], " << LLH[2] << " [m]\n";
+    std::cout << "Get visible satellites at " << str_time
+              << "UTC, assuming RX position " << LLH[0] << " [deg], " << LLH[1] << " [deg], " << LLH[2] << " [m]\n";
 
     const std::map<int, Gps_Ephemeris> gps_eph_map = pvt_ptr->get_gps_ephemeris();
     for (const auto &it : gps_eph_map)
@@ -1077,7 +1077,7 @@ std::vector<std::pair<int, Gnss_Satellite>> ControlThread::get_visible_sats(time
             // push sat
             if (El > 0)
                 {
-                    // std::cout << "Using GPS Ephemeris: Sat " << it.second.PRN << " Az: " << Az << " El: " << El << '\n';
+                    std::cout << "Using GPS Ephemeris: Sat " << it.second.PRN << " Az: " << Az << " El: " << El << '\n';
                     available_satellites.emplace_back(floor(El),
                         (Gnss_Satellite(std::string("GPS"), it.second.PRN)));
                     visible_gps.push_back(it.second.PRN);
@@ -1102,7 +1102,7 @@ std::vector<std::pair<int, Gnss_Satellite>> ControlThread::get_visible_sats(time
             // push sat
             if (El > 0)
                 {
-                    // std::cout << "Using Galileo Ephemeris: Sat " << it.second.PRN << " Az: " << Az << " El: " << El << '\n';
+                    std::cout << "Using Galileo Ephemeris: Sat " << it.second.PRN << " Az: " << Az << " El: " << El << '\n';
                     available_satellites.emplace_back(floor(El),
                         (Gnss_Satellite(std::string("Galileo"), it.second.PRN)));
                     visible_gal.push_back(it.second.PRN);
@@ -1132,7 +1132,7 @@ std::vector<std::pair<int, Gnss_Satellite>> ControlThread::get_visible_sats(time
                     it2 = std::find(visible_gps.begin(), visible_gps.end(), it.second.PRN);
                     if (it2 == visible_gps.end())
                         {
-                            // std::cout << "Using GPS Almanac:  Sat " << it.second.PRN << " Az: " << Az << " El: " << El << '\n';
+                            std::cout << "Using GPS Almanac:  Sat " << it.second.PRN << " Az: " << Az << " El: " << El << '\n';
                             available_satellites.emplace_back(floor(El),
                                 (Gnss_Satellite(std::string("GPS"), it.second.PRN)));
                         }
@@ -1162,7 +1162,7 @@ std::vector<std::pair<int, Gnss_Satellite>> ControlThread::get_visible_sats(time
                     it2 = std::find(visible_gal.begin(), visible_gal.end(), it.second.PRN);
                     if (it2 == visible_gal.end())
                         {
-                            // std::cout << "Using Galileo Almanac:  Sat " << it.second.PRN << " Az: " << Az << " El: " << El << '\n';
+                            std::cout << "Using Galileo Almanac:  Sat " << it.second.PRN << " Az: " << Az << " El: " << El << '\n';
                             available_satellites.emplace_back(floor(El),
                                 (Gnss_Satellite(std::string("Galileo"), it.second.PRN)));
                         }

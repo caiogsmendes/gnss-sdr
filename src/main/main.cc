@@ -42,6 +42,7 @@
 #include <memory>                                      // for unique_ptr
 #include <ostream>                                     // fro std::flush
 #include <string>                                      // for string
+// #include <cstdio>
 
 #if USE_GLOG_AND_GFLAGS
 #include <gflags/gflags.h>  // for ShutDownCommandLineFlags
@@ -107,6 +108,7 @@ Concurrent_Map<Gps_Acq_Assist> global_gps_acq_assist_map;
 
 int main(int argc, char** argv)
 {
+    // freopen("/dev/null","w",stdout);
     try
         {
             const std::string intro_help(
