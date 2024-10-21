@@ -115,6 +115,9 @@ private:
     void satellitePosVelComputation(double transmitTime, std::array<double, 7>& pos_vel_dtr) const;
     double check_t(double time) const;
     double sv_clock_relativistic_term(double transmitTime) const;
+
+    //Caio
+    void satelliteAzElAltComputation();
 };
 
 #endif  // GNSS_SDR_GNSS_EPHEMERIS_H

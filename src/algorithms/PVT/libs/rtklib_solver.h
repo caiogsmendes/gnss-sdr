@@ -130,6 +130,9 @@ public:
     Beidou_Dnav_Iono beidou_dnav_iono;
     std::map<int, Beidou_Dnav_Almanac> beidou_dnav_almanac_map;
 
+    //Caio
+    gtime_t rtklib_pvt_sol_time{};
+
 private:
     bool save_matfile() const;
 

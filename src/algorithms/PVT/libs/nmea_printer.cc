@@ -33,6 +33,8 @@
 
 #include <unistd.h>
 #include "HEtechSerial.h"
+#include "geofunctions.h"
+#include "rtklib_ephemeris.h"
 
 #if USE_GLOG_AND_GFLAGS
 #include <glog/logging.h>
@@ -482,29 +484,51 @@ int Nmea_Printer::get_msgvec_w_GAL(const Rtklib_Solver* const pvt_data)
                 {
                     if (y.second.PRN == x.second.PRN)
                         {
-                            double tempoo = (y.second.RX_time) - y.second.Pseudorange_m / SPEED_OF_LIGHT_M_S;  // Tempo de transmissão do satélite
-                            gps_ephem.at(x.first).satellitePosition(tempoo);
-                            float deltaprange_f = -SPEED_OF_LIGHT_M_S * (y.second.Carrier_Doppler_hz / 1575420000) - ((pvt_data->get_clock_drift_ppm() * 1e-6) - x.second.af1) * SPEED_OF_LIGHT_M_S;
-                            double prange = y.second.Pseudorange_m + (x.second.dtr) * SPEED_OF_LIGHT_M_S;
-                            satvX = (float)x.second.satvel_X;
-                            satvY = (float)x.second.satvel_Y;
-                            satvZ = (float)x.second.satvel_Z;
-                            dummyfloat = (float)y.second.CN0_dB_hz;
-                            
-                            msgvec[index + 0] = (uint8_t)x.second.PRN;
-                            Double2Hex(&msgvec[index + 1], &prange);
-                            Float2Hex(&msgvec[index + 9], &deltaprange_f);
-                            Double2Hex(&msgvec[index + 13], &x.second.satpos_X);
-                            Double2Hex(&msgvec[index + 21], &x.second.satpos_Y);
-                            Double2Hex(&msgvec[index + 29], &x.second.satpos_Z);
-                            Float2Hex(&msgvec[index + 37], &satvX);
-                            Float2Hex(&msgvec[index + 41], &satvY);
-                            Float2Hex(&msgvec[index + 45], &satvZ);
-                            Float2Hex(&msgvec[index + 49], &dummyfloat);
-                            
-                            
-                            cont+=1;
-                            index += 53;
+                            if (y.second.System == 'G')
+                                {
+                                    double tempoo = (y.second.RX_time) - y.second.Pseudorange_m / SPEED_OF_LIGHT_M_S;  // Tempo de transmissão do satélite
+                                    gps_ephem.at(x.first).satellitePosition(tempoo);
+                                    float deltaprange_f = -SPEED_OF_LIGHT_M_S * (y.second.Carrier_Doppler_hz / 1575420000) - ((pvt_data->get_clock_drift_ppm() * 1e-6) - x.second.af1) * SPEED_OF_LIGHT_M_S;
+                                    double prange = y.second.Pseudorange_m + (x.second.dtr) * SPEED_OF_LIGHT_M_S;
+                                    satvX = (float)x.second.satvel_X;
+                                    satvY = (float)x.second.satvel_Y;
+                                    satvZ = (float)x.second.satvel_Z;
+                                    dummyfloat = (float)y.second.CN0_dB_hz;
+
+                                    // #######  Check Sat. Elevation  #######
+                                    const eph_t rtklib_eph = eph_to_rtklib(x.second, 0);
+                                    double clock_bias_s;
+                                    double sat_pos_variance_m2;
+                                    std::array<double, 3> r_sat{};
+                                    // eph2pos(gps_gtime, &rtklib_eph, r_sat.data(), &clock_bias_s, &sat_pos_variance_m2);
+                                    eph2pos(pvt_data->rtklib_pvt_sol_time, &rtklib_eph, r_sat.data(), &clock_bias_s, &sat_pos_variance_m2);
+                                    double Az;
+                                    double El;
+                                    double dist_m;
+                                    const arma::vec r_rx = arma::vec{pvt_data->pvt_sol.rr[0], pvt_data->pvt_sol.rr[1], pvt_data->pvt_sol.rr[2]};
+                                    const arma::vec r_sat_eb_e = arma::vec{r_sat[0], r_sat[1], r_sat[2]};
+                                    const arma::vec dx = r_sat_eb_e - r_rx;
+                                    topocent(&Az, &El, &dist_m, r_rx, dx);
+                                    // dummyfloat = (float)El;
+                                    // #################################################
+                                    if (El >= 15.0)
+                                        {
+                                            msgvec[index + 0] = (uint8_t)x.second.PRN;
+                                            Double2Hex(&msgvec[index + 1], &prange);
+                                            Float2Hex(&msgvec[index + 9], &deltaprange_f);
+                                            Double2Hex(&msgvec[index + 13], &x.second.satpos_X);
+                                            Double2Hex(&msgvec[index + 21], &x.second.satpos_Y);
+                                            Double2Hex(&msgvec[index + 29], &x.second.satpos_Z);
+                                            Float2Hex(&msgvec[index + 37], &satvX);
+                                            Float2Hex(&msgvec[index + 41], &satvY);
+                                            Float2Hex(&msgvec[index + 45], &satvZ);
+                                            Float2Hex(&msgvec[index + 49], &dummyfloat);
+
+
+                                            cont += 1;
+                                            index += 53;
+                                        }
+                                }
                         }
                 }
         }

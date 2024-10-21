@@ -2451,6 +2451,17 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                         }
                                 }
                         }
+                    // else
+                    //     {
+                    //         if (d_nmea_output_file_enabled)
+                    //             {
+                    //                 // if (current_RX_time_ms % d_output_rate_ms == 0)
+                    //                 if (current_RX_time_ms % d_display_rate_ms == 0)
+                    //                     {
+                    //                         d_nmea_printer->Print_Nmea_Line(d_user_pvt_solver.get());
+                    //                     }
+                    //             }
+                    //     }
 
                     // DEBUG MESSAGE: Display position in console output
                     if (d_user_pvt_solver->is_valid_position() && flag_display_pvt)
