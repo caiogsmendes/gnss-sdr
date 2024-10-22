@@ -884,6 +884,9 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
     pvt_output_parameters.rtcm_output_file_path = configuration->property(role + ".rtcm_output_file_path", default_output_path);
     pvt_output_parameters.has_output_file_path = configuration->property(role + ".has_output_file_path", default_output_path);
 
+    //Caio
+    pvt_output_parameters.elevation_mask = elevation_mask;
+
     // Read PVT MONITOR Configuration
     pvt_output_parameters.monitor_enabled = configuration->property(role + ".enable_monitor", false);
     pvt_output_parameters.udp_addresses = configuration->property(role + ".monitor_client_addresses", std::string("127.0.0.1"));

@@ -103,6 +103,8 @@ public:
     double measures_ecef_vel_sd_ms = 0.1;
     double system_ecef_pos_sd_m = 0.01;
     double system_ecef_vel_sd_ms = 0.001;
+
+    float elevation_mask = 10;
 };
 
 

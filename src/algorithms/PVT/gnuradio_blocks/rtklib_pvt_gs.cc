@@ -2462,7 +2462,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                     //                     }
                     //             }
                     //     }
-
+                    
                     // DEBUG MESSAGE: Display position in console output
                     if (d_user_pvt_solver->is_valid_position() && flag_display_pvt)
                         {

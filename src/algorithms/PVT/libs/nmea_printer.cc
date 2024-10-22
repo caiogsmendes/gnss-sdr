@@ -511,7 +511,7 @@ int Nmea_Printer::get_msgvec_w_GAL(const Rtklib_Solver* const pvt_data)
                                     topocent(&Az, &El, &dist_m, r_rx, dx);
                                     // dummyfloat = (float)El;
                                     // #################################################
-                                    if (El >= 15.0)
+                                    if (El >= pvt_data->d_conf.elevation_mask)
                                         {
                                             msgvec[index + 0] = (uint8_t)x.second.PRN;
                                             Double2Hex(&msgvec[index + 1], &prange);

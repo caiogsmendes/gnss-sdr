@@ -132,6 +132,7 @@ public:
 
     //Caio
     gtime_t rtklib_pvt_sol_time{};
+    Pvt_Conf d_conf;
 
 private:
     bool save_matfile() const;
@@ -158,7 +159,7 @@ private:
     rtk_t d_rtk{};
     nav_t d_nav_data{};
     Monitor_Pvt d_monitor_pvt{};
-    Pvt_Conf d_conf;
+    // Pvt_Conf d_conf;
     Pvt_Kf d_pvt_kf;
     uint32_t d_type_of_rx;
     bool d_flag_dump_enabled;
