@@ -30,6 +30,8 @@
 #include <absl/log/log.h>
 #endif
 
+#include "gnss_synchro.h"
+
 
 using namespace std::string_literals;
 

@@ -80,6 +80,17 @@ public:
     bool Flag_valid_pseudorange{};         //!< Set by Observables processing block
     bool Flag_PLL_180_deg_phase_locked{};  //!< Set by Telemetry Decoder processing block
 
+    // Flags Especiais - Caio
+    uint8_t modo;
+    uint8_t estado;
+
+    bool Flag_Source_RF;
+    bool Flag_Acq_blk;
+    bool Flag_Trk_blk;
+    bool Flag_Tel_blk;
+    double RF_inputPwr;
+
+
     /// Copy constructor
     Gnss_Synchro(const Gnss_Synchro& other) noexcept = default;
 

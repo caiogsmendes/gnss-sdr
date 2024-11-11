@@ -122,6 +122,7 @@ target_link_libraries(core_system_parameters
         Boost::date_time
         Boost::serialization
         Boost::headers
+        gpiod
     PRIVATE
         Pugixml::pugixml
 )

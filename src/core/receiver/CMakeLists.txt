@@ -59,6 +59,7 @@ else()
         ${GNSS_RECEIVER_SOURCES}
         ${GNSS_RECEIVER_HEADERS}
         ${GNSS_RECEIVER_INTERFACE_HEADERS}
+
     )
 endif()
 

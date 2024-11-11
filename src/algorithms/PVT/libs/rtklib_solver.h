@@ -133,6 +133,8 @@ public:
     //Caio
     gtime_t rtklib_pvt_sol_time{};
     Pvt_Conf d_conf;
+    std::map<int, Gnss_Synchro> gnss_observables_map;
+    uint8_t msgvec[12*53+46]; //Output Buffer
 
 private:
     bool save_matfile() const;

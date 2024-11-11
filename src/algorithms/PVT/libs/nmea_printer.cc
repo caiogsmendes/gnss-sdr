@@ -202,7 +202,7 @@ void Nmea_Printer::close_serial() const
 }
 
 
-bool Nmea_Printer::Print_Nmea_Line(const Rtklib_Solver* const pvt_data)
+bool Nmea_Printer::Print_Nmea_Line(Rtklib_Solver* pvt_data)
 {
     // set the new PVT data
     d_PVT_data = pvt_data;
@@ -224,7 +224,7 @@ bool Nmea_Printer::Print_Nmea_Line(const Rtklib_Solver* const pvt_data)
     //         try
     //             {
     //                 nmea_file_descriptor
-    //                     << msgvec_test
+    //                     << pvt_data->msgvec_test
     //                     //<< GPRMC
     //                     // << GPGGA  // GPGGA (Global Positioning System Fixed Data)
     //                     // << GPGSA
@@ -240,9 +240,9 @@ bool Nmea_Printer::Print_Nmea_Line(const Rtklib_Solver* const pvt_data)
     // write to serial device
     if (nmea_dev_descriptor != -1)
         {
-            // int resultt = write(nmea_dev_descriptor, &msgvec_test[0], 365);
-            // int resultt = write(comms.fd, &msgvec_test[0], 357);
-            int resultt = write(nmea_dev_descriptor, &msgvec[0], bytes);
+            // int resultt = write(nmea_dev_descriptor, &pvt_data->msgvec_test[0], 365);
+            // int resultt = write(comms.fd, &pvt_data->msgvec_test[0], 357);
+            int resultt = write(nmea_dev_descriptor, &pvt_data->msgvec[0], bytes);
             if (resultt == -1)
                 {
                     // DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
@@ -456,22 +456,22 @@ std::string Nmea_Printer::get_GPGGA() const
     // $GPGGA,104427.591,5920.7009,N,01803.2938,E,1,05,3.3,78.2,M,23.2,M,0.0,0000*4A
 }
 
-int Nmea_Printer::get_msgvec_w_GAL(const Rtklib_Solver* const pvt_data)
+int Nmea_Printer::get_msgvec_w_GAL(Rtklib_Solver* pvt_data)
 {
-    msgvec[0]=0xd4;
-    msgvec[1]=0x4f;
-    msgvec[2]=4;
-    // msgvec[3]=pvt_data->pvt_sol.ns;
-    Double2Hex(&msgvec[6],&pvt_data->pvt_sol.rr[0]);
-    Double2Hex(&msgvec[14], &pvt_data->pvt_sol.rr[1]);
-    Double2Hex(&msgvec[22], &pvt_data->pvt_sol.rr[2]);
+    pvt_data->msgvec[0] = 0xd4;
+    pvt_data->msgvec[1]=0x4f;
+    pvt_data->msgvec[2]=4;
+    // pvt_data->msgvec[3]=pvt_data->pvt_sol.ns;
+    Double2Hex(&pvt_data->msgvec[6],&pvt_data->pvt_sol.rr[0]);
+    Double2Hex(&pvt_data->msgvec[14], &pvt_data->pvt_sol.rr[1]);
+    Double2Hex(&pvt_data->msgvec[22], &pvt_data->pvt_sol.rr[2]);
     float velX = (float)pvt_data->pvt_sol.rr[3];
     float velY = (float)pvt_data->pvt_sol.rr[4];
     float velZ = (float)pvt_data->pvt_sol.rr[5];
-    Float2Hex(&msgvec[30], &velX);
-    Float2Hex(&msgvec[34], &velY);
-    Float2Hex(&msgvec[38], &velZ);
-    Integer2Hex(&msgvec[42], &pvt_data->tow_symbol_ms);
+    Float2Hex(&pvt_data->msgvec[30], &velX);
+    Float2Hex(&pvt_data->msgvec[34], &velY);
+    Float2Hex(&pvt_data->msgvec[38], &velZ);
+    Integer2Hex(&pvt_data->msgvec[42], &pvt_data->tow_symbol_ms);
     int index = 46; int cont=0;
     float dummyfloat = 456.7;
     std::map<int,Gps_Ephemeris>gps_ephem = pvt_data->gps_ephemeris_map;
@@ -494,6 +494,7 @@ int Nmea_Printer::get_msgvec_w_GAL(const Rtklib_Solver* const pvt_data)
                                     satvY = (float)x.second.satvel_Y;
                                     satvZ = (float)x.second.satvel_Z;
                                     dummyfloat = (float)y.second.CN0_dB_hz;
+                                    // dummyfloat = (float)y.second.RF_inputPwr;
 
                                     // #######  Check Sat. Elevation  #######
                                     const eph_t rtklib_eph = eph_to_rtklib(x.second, 0);
@@ -513,16 +514,16 @@ int Nmea_Printer::get_msgvec_w_GAL(const Rtklib_Solver* const pvt_data)
                                     // #################################################
                                     if (El >= pvt_data->d_conf.elevation_mask)
                                         {
-                                            msgvec[index + 0] = (uint8_t)x.second.PRN;
-                                            Double2Hex(&msgvec[index + 1], &prange);
-                                            Float2Hex(&msgvec[index + 9], &deltaprange_f);
-                                            Double2Hex(&msgvec[index + 13], &x.second.satpos_X);
-                                            Double2Hex(&msgvec[index + 21], &x.second.satpos_Y);
-                                            Double2Hex(&msgvec[index + 29], &x.second.satpos_Z);
-                                            Float2Hex(&msgvec[index + 37], &satvX);
-                                            Float2Hex(&msgvec[index + 41], &satvY);
-                                            Float2Hex(&msgvec[index + 45], &satvZ);
-                                            Float2Hex(&msgvec[index + 49], &dummyfloat);
+                                            pvt_data->msgvec[index + 0] = (uint8_t)x.second.PRN;
+                                            Double2Hex(&pvt_data->msgvec[index + 1], &prange);
+                                            Float2Hex(&pvt_data->msgvec[index + 9], &deltaprange_f);
+                                            Double2Hex(&pvt_data->msgvec[index + 13], &x.second.satpos_X);
+                                            Double2Hex(&pvt_data->msgvec[index + 21], &x.second.satpos_Y);
+                                            Double2Hex(&pvt_data->msgvec[index + 29], &x.second.satpos_Z);
+                                            Float2Hex(&pvt_data->msgvec[index + 37], &satvX);
+                                            Float2Hex(&pvt_data->msgvec[index + 41], &satvY);
+                                            Float2Hex(&pvt_data->msgvec[index + 45], &satvZ);
+                                            Float2Hex(&pvt_data->msgvec[index + 49], &dummyfloat);
 
 
                                             cont += 1;
@@ -534,12 +535,12 @@ int Nmea_Printer::get_msgvec_w_GAL(const Rtklib_Solver* const pvt_data)
         }
     index += 1;
     uint8_t checks{0};
-    msgvec[3]=(uint8_t)cont;
-    Int2Hex(&msgvec[4],&index);
+    pvt_data->msgvec[3]=(uint8_t)cont;
+    Int2Hex(&pvt_data->msgvec[4],&index);
     for (int i = 0; i < index-1; i++)
         {
-            checks ^= msgvec[i];
+            checks ^= pvt_data->msgvec[i];
         }
-    msgvec[index-1] = checks;
+    pvt_data->msgvec[index-1] = checks;
     return index;
 }

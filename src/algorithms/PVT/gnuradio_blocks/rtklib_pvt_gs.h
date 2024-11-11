@@ -128,6 +128,8 @@ public:
         double* course_over_ground_deg,
         time_t* UTC_time) const;
 
+    std::map<int, Gnss_Synchro> get_observables_map(void) const;
+
     int work(int noutput_items, gr_vector_const_void_star& input_items,
         gr_vector_void_star& output_items);  //!< PVT Signal Processing
 

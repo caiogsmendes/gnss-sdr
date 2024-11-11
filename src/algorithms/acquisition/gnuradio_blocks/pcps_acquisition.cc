@@ -529,7 +529,8 @@ float pcps_acquisition::max_to_input_power_statistic(uint32_t& indext, int32_t& 
         {
             doppler = static_cast<int32_t>(d_doppler_center_step_two + (static_cast<float>(index_doppler) - static_cast<float>(floor(d_num_doppler_bins_step2 / 2.0))) * d_acq_parameters.doppler_step2);
         }
-
+    //     double dummydum = d_input_power;
+    // d_gnss_synchro->RF_inputPwr = d_input_power;
     return grid_maximum / d_input_power;
 }
 

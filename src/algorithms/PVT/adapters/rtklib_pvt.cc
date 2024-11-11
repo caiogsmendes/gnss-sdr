@@ -1025,3 +1025,9 @@ gr::basic_block_sptr Rtklib_Pvt::get_right_block()
 {
     return nullptr;  // this is a sink, nothing downstream
 }
+
+//Caio
+std::map<int, Gnss_Synchro> Rtklib_Pvt::get_gnss_observables() const
+{
+    return pvt_->get_observables_map();
+}
