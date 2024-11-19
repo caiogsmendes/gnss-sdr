@@ -1031,3 +1031,8 @@ std::map<int, Gnss_Synchro> Rtklib_Pvt::get_gnss_observables() const
 {
     return pvt_->get_observables_map();
 }
+
+uint8_t* Rtklib_Pvt::get_msgvec_ptr(void) const
+{
+    return pvt_->get_msgvec_ptr();
+}

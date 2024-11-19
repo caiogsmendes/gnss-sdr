@@ -60,6 +60,7 @@ public:
 
     //Caio
     virtual std::map<int, Gnss_Synchro> get_gnss_observables() const = 0;
+    virtual uint8_t* get_msgvec_ptr() const = 0;
 
     virtual bool get_latest_PVT(double* longitude_deg,
         double* latitude_deg,

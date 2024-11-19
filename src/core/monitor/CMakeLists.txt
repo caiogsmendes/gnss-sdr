@@ -10,12 +10,14 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${GNSSSDR_SOURCE_DIR}/docs/protobuf/
 set(CORE_MONITOR_LIBS_SOURCES
     gnss_synchro_monitor.cc
     gnss_synchro_udp_sink.cc
+    gnss_serial_monitor.cc
 )
 
 set(CORE_MONITOR_LIBS_HEADERS
     gnss_synchro_monitor.h
     gnss_synchro_udp_sink.h
     serdes_gnss_synchro.h
+    gnss_serial_monitor.h
 )
 
 list(SORT CORE_MONITOR_LIBS_HEADERS)

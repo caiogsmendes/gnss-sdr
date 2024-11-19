@@ -238,38 +238,38 @@ bool Nmea_Printer::Print_Nmea_Line(Rtklib_Solver* pvt_data)
     //     }
 
     // write to serial device
-    if (nmea_dev_descriptor != -1)
-        {
-            // int resultt = write(nmea_dev_descriptor, &pvt_data->msgvec_test[0], 365);
-            // int resultt = write(comms.fd, &pvt_data->msgvec_test[0], 357);
-            int resultt = write(nmea_dev_descriptor, &pvt_data->msgvec[0], bytes);
-            if (resultt == -1)
-                {
-                    // DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
-                    return false;
-                }
+    // if (nmea_dev_descriptor != -1)
+    //     {
+    //         // int resultt = write(nmea_dev_descriptor, &pvt_data->msgvec_test[0], 365);
+    //         // int resultt = write(comms.fd, &pvt_data->msgvec_test[0], 357);
+    //         int resultt = write(nmea_dev_descriptor, &pvt_data->msgvec[0], bytes);
+    //         if (resultt == -1)
+    //             {
+    //                 // DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
+    //                 return false;
+    //             }
 
-            // if (write(nmea_dev_descriptor, GPRMC.c_str(), GPRMC.length()) == -1)
-            //     {
-            //         DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
-            //         return false;
-            //     }
-            // if (write(nmea_dev_descriptor, GPGGA.c_str(), GPGGA.length()) == -1)
-            //     {
-            //         DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
-            //         return false;
-            //     }
-            // if (write(nmea_dev_descriptor, GPGSA.c_str(), GPGSA.length()) == -1)
-            //     {
-            //         DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
-            //         return false;
-            //     }
-            // if (write(nmea_dev_descriptor, GPGSV.c_str(), GPGSV.length()) == -1)
-            //     {
-            //         DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
-            //         return false;
-            //     }
-        }
+    //         // if (write(nmea_dev_descriptor, GPRMC.c_str(), GPRMC.length()) == -1)
+    //         //     {
+    //         //         DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
+    //         //         return false;
+    //         //     }
+    //         // if (write(nmea_dev_descriptor, GPGGA.c_str(), GPGGA.length()) == -1)
+    //         //     {
+    //         //         DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
+    //         //         return false;
+    //         //     }
+    //         // if (write(nmea_dev_descriptor, GPGSA.c_str(), GPGSA.length()) == -1)
+    //         //     {
+    //         //         DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
+    //         //         return false;
+    //         //     }
+    //         // if (write(nmea_dev_descriptor, GPGSV.c_str(), GPGSV.length()) == -1)
+    //         //     {
+    //         //         DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
+    //         //         return false;
+    //         //     }
+    //     }
     return true;
 }
 

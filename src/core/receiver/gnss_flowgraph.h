@@ -187,6 +187,9 @@ private:
     int connect_tracking_monitor();
     int connect_navdata_monitor();
 
+    //Caio
+    int connect_gnss_serial_monitor();
+
 #if ENABLE_FPGA
     int connect_fpga_flowgraph();
     int connect_fpga_sample_counter();
@@ -228,6 +231,10 @@ private:
 
     std::map<std::string, gr::basic_block_sptr> acq_resamplers_;
     std::vector<gr::blocks::null_sink::sptr> null_sinks_;
+
+    //Caio
+    gr::basic_block_sptr GnssSerialMonitor_;
+    //
 
     gr::basic_block_sptr GnssSynchroMonitor_;
     gr::basic_block_sptr GnssSynchroAcquisitionMonitor_;
@@ -288,6 +295,11 @@ private:
     bool connected_;
     bool running_;
     bool multiband_;
+
+    //Caio
+    bool enable_serial_monitor_;
+    //
+    
     bool enable_monitor_;
     bool enable_acquisition_monitor_;
     bool enable_tracking_monitor_;

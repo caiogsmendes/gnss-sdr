@@ -135,6 +135,7 @@ public:
     Pvt_Conf d_conf;
     std::map<int, Gnss_Synchro> gnss_observables_map;
     uint8_t msgvec[12*53+46]; //Output Buffer
+    uint8_t* ptr_msgvec = &msgvec[0];
 
 private:
     bool save_matfile() const;

@@ -198,6 +198,7 @@ public:
     std::map<int, Galileo_Almanac> get_galileo_almanac() const override;
 
     std::map<int, Gnss_Synchro> get_gnss_observables() const override;
+    uint8_t* get_msgvec_ptr() const override;
 
     void connect(gr::top_block_sptr top_block) override;
     void disconnect(gr::top_block_sptr top_block) override;
@@ -221,6 +222,8 @@ public:
         double* ground_speed_kmh,
         double* course_over_ground_deg,
         time_t* UTC_time) override;
+
+    uint8_t* get_msgvec_ptr();
 
 private:
     rtklib_pvt_gs_sptr pvt_;

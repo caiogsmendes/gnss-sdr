@@ -127,10 +127,13 @@ public:
         return flowgraph_;
     }
 
+    // Caio
     std::shared_ptr<PvtInterface> pvt_ptr;
     std::map<int, Gnss_Synchro> gnss_synchro;
     void _serial_cmd_IO(void);
     std::thread serial_cmd_interface_thread_;
+    std::mutex mtx;
+    //
 
 private:
     /*

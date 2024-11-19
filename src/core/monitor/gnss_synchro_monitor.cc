@@ -19,6 +19,7 @@
 #include "gnss_synchro_monitor.h"
 #include "gnss_sdr_make_unique.h"
 #include "gnss_synchro.h"
+#include "gps_ephemeris.h"
 #include <algorithm>
 #include <iostream>
 #include <utility>
@@ -68,6 +69,7 @@ int gnss_synchro_monitor::general_work(int noutput_items __attribute__((unused))
 {
     // Get the input buffer pointer
     const auto** in = reinterpret_cast<const Gnss_Synchro**>(&input_items[0]);
+    // const auto** in1 = reinterpret_cast<const Gps_Ephemeris**>(&input_items[0]);
 
     // Loop through each input stream channel
     for (int channel_index = 0; channel_index < d_nchannels; channel_index++)

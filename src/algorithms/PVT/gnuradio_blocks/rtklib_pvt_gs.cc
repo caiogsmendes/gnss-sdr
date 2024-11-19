@@ -2549,3 +2549,8 @@ std::map<int, Gnss_Synchro> rtklib_pvt_gs::get_observables_map() const
 {
     return d_internal_pvt_solver->gnss_observables_map;
 }
+
+uint8_t* rtklib_pvt_gs::get_msgvec_ptr()
+{
+    return d_internal_pvt_solver->ptr_msgvec;
+}
