@@ -1339,48 +1339,48 @@ void ControlThread::_serial_cmd_IO(void)
 //     uint8_t *msgvec_ptr = pvt_ptr->get_msgvec_ptr();
 //     mtx.unlock();
     
-    // typedef struct gpiod_line gpiod_pin;
-    // typedef struct gpiod_line_event gpiod_pin_event;
-    // struct gpiod_chip *chip;
-    // gpiod_pin *pin;
-    // const char bank[] = "gpiochip2";
-    // int SODIMM_55 = 18;
-    // // int SODIMM_63;
-    // unsigned int line = SODIMM_55;
+    typedef struct gpiod_line gpiod_pin;
+    typedef struct gpiod_line_event gpiod_pin_event;
+    struct gpiod_chip *chip;
+    gpiod_pin *pin;
+    const char bank[] = "gpiochip2";
+    int SODIMM_55 = 18;
+    // int SODIMM_63;
+    unsigned int line = SODIMM_55;
 
-    // chip = gpiod_chip_open_by_name(&bank[0]);
-    // pin = gpiod_chip_get_line(chip, line);
-    // // gpiod_pin *input_pin;
-    // gpiod_pin_event event;
-    // // int pin_value = 0;
-    // int ret;
-    // ret = gpiod_line_request_rising_edge_events(pin, "gpio-test");
-    // int count = 0;
-    // while (1)
-    //     {
-    //         // mtx.lock();
-    //         // // gnss_synchro = pvt_ptr->get_gnss_observables();
-    //         // // uint8_t *msgvec_ptr = pvt_ptr->get_msgvec_ptr();
-    //         // do
-    //         //     {
-    //         //     }
-    //         // while (counter <= bytess);
-    //         // mtx.unlock();
+    chip = gpiod_chip_open_by_name(&bank[0]);
+    pin = gpiod_chip_get_line(chip, line);
+    // gpiod_pin *input_pin;
+    gpiod_pin_event event;
+    // int pin_value = 0;
+    int ret;
+    ret = gpiod_line_request_rising_edge_events(pin, "gpio-test");
+    int count = 0;
+    while (1)
+        {
+            // mtx.lock();
+            // // gnss_synchro = pvt_ptr->get_gnss_observables();
+            // // uint8_t *msgvec_ptr = pvt_ptr->get_msgvec_ptr();
+            // do
+            //     {
+            //     }
+            // while (counter <= bytess);
+            // mtx.unlock();
 
-    //         /* Waiting for an event on the input pin */
-    //         gpiod_line_event_wait(pin, NULL);
+            /* Waiting for an event on the input pin */
+            gpiod_line_event_wait(pin, NULL);
 
-    //         /* Reading next pending event from the GPIO pin */
-    //         if (gpiod_line_event_read(pin, &event) != 0)
-    //             continue;
+            /* Reading next pending event from the GPIO pin */
+            if (gpiod_line_event_read(pin, &event) != 0)
+                continue;
 
-    //         /* Checking if it is a rising event as previously defined */
-    //         if (event.event_type != GPIOD_LINE_EVENT_RISING_EDGE)
-    //             continue;
+            /* Checking if it is a rising event as previously defined */
+            if (event.event_type != GPIOD_LINE_EVENT_RISING_EDGE)
+                continue;
 
-    //         // std::cout<<"Detected "<<count++;
-    //         // // int result = write(,&pvt_ptr->msgvec[0],bytes);
-    //         std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            // std::cout<<"Detected "<<count++;
+            // // int result = write(,&pvt_ptr->msgvec[0],bytes);
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-    //     }
+        }
 }
