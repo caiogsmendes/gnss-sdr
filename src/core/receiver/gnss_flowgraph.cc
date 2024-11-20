@@ -260,7 +260,7 @@ void GNSSFlowgraph::init()
      */
     //
     std::string serial_default = "/dev/ttyLP2";
-    enable_serial_monitor_ = configuration_->property("Serial_Monitor.enable_serial",true);
+    enable_serial_monitor_ = configuration_->property("Serial_Monitor.enable_serial",false);
     // Retrieve Serial Monitor Parameters from Config.File
     std::string dev_serial_ = configuration_->property("Serial_Monitor.dev_serial",serial_default);
     int baudrate_ = configuration_->property("Serial_Monitor.baudrate",B921600);
