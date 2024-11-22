@@ -183,12 +183,10 @@ private:
     int connect_osnma();
     int connect_gal_e6_has();
     int connect_gnss_synchro_monitor();
+    int connect_gnss_serial_monitor(); //Caio
     int connect_acquisition_monitor();
     int connect_tracking_monitor();
     int connect_navdata_monitor();
-
-    //Caio
-    int connect_gnss_serial_monitor();
 
 #if ENABLE_FPGA
     int connect_fpga_flowgraph();
@@ -232,11 +230,8 @@ private:
     std::map<std::string, gr::basic_block_sptr> acq_resamplers_;
     std::vector<gr::blocks::null_sink::sptr> null_sinks_;
 
-    //Caio
-    gr::basic_block_sptr GnssSerialMonitor_;
-    //
-
     gr::basic_block_sptr GnssSynchroMonitor_;
+    gr::basic_block_sptr GnssSerialMonitor_; //Caio
     gr::basic_block_sptr GnssSynchroAcquisitionMonitor_;
     gr::basic_block_sptr GnssSynchroTrackingMonitor_;
     gr::basic_block_sptr NavDataMonitor_;
@@ -295,11 +290,7 @@ private:
     bool connected_;
     bool running_;
     bool multiband_;
-
-    //Caio
-    bool enable_serial_monitor_;
-    //
-    
+    bool enable_serial_monitor_; //Caio
     bool enable_monitor_;
     bool enable_acquisition_monitor_;
     bool enable_tracking_monitor_;

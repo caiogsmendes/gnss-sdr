@@ -77,19 +77,8 @@ std::string FileConfiguration::property(std::string property_name, std::string d
         {
             return overrided_->property(property_name, default_value);
         }
-        const std::string empty;
     return ini_reader_->Get("GNSS-SDR", property_name, default_value);
 }
-
-// //Caio
-// std::string FileConfiguration::property(std::string property_name, std::string default_value) const
-// {
-//     if (overrided_->is_present(property_name))
-//         {
-//             return overrided_->property(property_name, default_value);
-//         }
-//     return default_value;
-// }
 
 
 bool FileConfiguration::property(std::string property_name, bool default_value) const

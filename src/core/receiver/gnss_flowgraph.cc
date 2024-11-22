@@ -60,10 +60,7 @@
 #include <thread>                    // for std::thread
 #include <utility>                   // for std::move
 
-
-//Caio
 #include "gnss_serial_monitor.h"
-//
 
 #if USE_GLOG_AND_GFLAGS
 #include <glog/logging.h>
@@ -255,12 +252,11 @@ void GNSSFlowgraph::init()
                 enable_protobuf);
         }
 
-    /**
-     * Instanciação do block Monitor Serial - Caio
+    /*
+     * Instantiate the receiver monitor block, if required
      */
-    //
-    std::string serial_default = "/dev/ttyLP2";
-    enable_serial_monitor_ = configuration_->property("Serial_Monitor.enable_serial",false);
+    std::string serial_default = "/dev/ttyUSB0";
+    enable_serial_monitor_ = configuration_->property("Serial_Monitor.enable_serial",true);
     // Retrieve Serial Monitor Parameters from Config.File
     std::string dev_serial_ = configuration_->property("Serial_Monitor.dev_serial",serial_default);
     int baudrate_ = configuration_->property("Serial_Monitor.baudrate",B921600);
@@ -270,7 +266,7 @@ void GNSSFlowgraph::init()
         dev_serial_,
         baudrate_
     );
-    //
+
 
     /*
      * Instantiate the receiver acquisition monitor block, if required
@@ -1316,23 +1312,23 @@ int GNSSFlowgraph::connect_gnss_synchro_monitor()
     return 0;
 }
 
-// Copiando o blk gnss_synchro_monitor
-// # Conecta o serial monitor ao Flowgraph
 int GNSSFlowgraph::connect_gnss_serial_monitor()
 {
     try
-    {
-        for(int i=0;i<channels_count_; i++)
         {
-            top_block_->connect(channels_.at(i)->get_right_block(),i, GnssSerialMonitor_,i);
+            for (int i = 0; i < channels_count_; i++)
+                {
+                    top_block_->connect(observables_->get_right_block(), i, GnssSerialMonitor_, i);
+                }
         }
-    }
     catch (const std::exception& e)
         {
+            LOG(ERROR) << "Can't connect observables to Monitor block: " << e.what();
             top_block_->disconnect_all();
             return 1;
         }
-    
+    // DLOG(INFO) << "gnss_synchro_monitor successfully connected to Observables block";
+    return 0;
 }
 
 
@@ -1403,16 +1399,14 @@ int GNSSFlowgraph::connect_navdata_monitor()
 
 int GNSSFlowgraph::connect_monitors()
 {
-    //Caio
-    //  #GNSS Serial Monitor
-    if(enable_serial_monitor_)
-    {
-        if(connect_gnss_serial_monitor() != 0)
+    // GNSS Serial MONITOR
+    if (enable_serial_monitor_)
         {
-            return 1;
+            if (connect_gnss_serial_monitor() != 0)
+                {
+                    return 1;
+                }
         }
-    }
-    //
 
     // GNSS SYNCHRO MONITOR
     if (enable_monitor_)

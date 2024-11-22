@@ -52,7 +52,6 @@ public:
     FileConfiguration();
     ~FileConfiguration() = default;
     std::string property(std::string property_name, std::string default_value) const override;
-    // std::string property(std::string property_name, std::string default_value) const override;
     bool property(std::string property_name, bool default_value) const override;
     int64_t property(std::string property_name, int64_t default_value) const override;
     uint64_t property(std::string property_name, uint64_t default_value) const override;

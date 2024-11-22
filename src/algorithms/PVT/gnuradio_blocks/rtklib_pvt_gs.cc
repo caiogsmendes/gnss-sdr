@@ -1720,8 +1720,6 @@ void rtklib_pvt_gs::clear_ephemeris()
     d_internal_pvt_solver->galileo_almanac_map.clear();
     d_internal_pvt_solver->beidou_dnav_ephemeris_map.clear();
     d_internal_pvt_solver->beidou_dnav_almanac_map.clear();
-    d_internal_pvt_solver->gnss_observables_map.clear();  // Caio
-    // d_internal_pvt_solver->Gnss_Ephem_map.clear();        // Caio
     if (d_enable_rx_clock_correction == true)
         {
             d_user_pvt_solver->gps_ephemeris_map.clear();
@@ -1730,8 +1728,6 @@ void rtklib_pvt_gs::clear_ephemeris()
             d_user_pvt_solver->galileo_almanac_map.clear();
             d_user_pvt_solver->beidou_dnav_ephemeris_map.clear();
             d_user_pvt_solver->beidou_dnav_almanac_map.clear();
-            d_user_pvt_solver->gnss_observables_map.clear();  // Caio
-            // d_user_pvt_solver->Gnss_Ephem_map.clear();        // Caio
         }
 }
 
@@ -1932,7 +1928,6 @@ std::map<int, Gnss_Synchro> rtklib_pvt_gs::interpolate_observables(const std::ma
                             interp_observables_map.at(observables_iter->first).Pseudorange_m += (observables_map_t1.at(observables_iter->first).Pseudorange_m - observables_iter->second.Pseudorange_m) * time_factor;
                             interp_observables_map.at(observables_iter->first).Carrier_phase_rads += (observables_map_t1.at(observables_iter->first).Carrier_phase_rads - observables_iter->second.Carrier_phase_rads) * time_factor;
                             interp_observables_map.at(observables_iter->first).Carrier_Doppler_hz += (observables_map_t1.at(observables_iter->first).Carrier_Doppler_hz - observables_iter->second.Carrier_Doppler_hz) * time_factor;
-                            // interp_observables_map.at(observables_iter->first).Flag
                         }
                 }
             catch (const std::out_of_range& oor)
@@ -1948,7 +1943,6 @@ void rtklib_pvt_gs::initialize_and_apply_carrier_phase_offset()
 {
     // we have a valid PVT. First check if we need to reset the initial carrier phase offsets to match their pseudoranges
     std::map<int, Gnss_Synchro>::iterator observables_iter;
-    d_internal_pvt_solver->gnss_observables_map = d_gnss_observables_map;
     for (observables_iter = d_gnss_observables_map.begin(); observables_iter != d_gnss_observables_map.end(); observables_iter++)
         {
             // check if an initialization is required (new satellite or loss of lock)
@@ -2175,12 +2169,11 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
 
             // ############ 2 COMPUTE THE PVT ################################
             bool flag_pvt_valid = false;
-            uint32_t current_RX_time_ms = 0;
             if (d_gnss_observables_map.empty() == false)
                 {
                     // LOG(INFO) << "diff raw obs time: " << d_gnss_observables_map.cbegin()->second.RX_time * 1000.0 - old_time_debug;
                     // old_time_debug = d_gnss_observables_map.cbegin()->second.RX_time * 1000.0;
-                    // uint32_t current_RX_time_ms = 0;
+                    uint32_t current_RX_time_ms = 0;
                     // #### solve PVT and store the corrected observable set
                     if (d_internal_pvt_solver->get_PVT(d_gnss_observables_map, d_observable_interval_ms / 1000.0))
                         {
@@ -2396,7 +2389,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                     // std::cout << "First position fix at " << d_user_pvt_solver->get_position_UTC_time() << " UTC";
                                                 }
                                             // std::cout << " is Lat = " << d_user_pvt_solver->get_latitude() << " [deg], Long = " << d_user_pvt_solver->get_longitude()
-                                            //   << " [deg], Height= " << d_user_pvt_solver->get_height() << " [m]\n";
+                                                    //   << " [deg], Height= " << d_user_pvt_solver->get_height() << " [m]\n";
                                             d_ttff_msgbuf ttff;
                                             ttff.mtype = 1;
                                             d_end = std::chrono::system_clock::now();
@@ -2426,14 +2419,14 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                     d_geojson_printer->print_position(d_user_pvt_solver.get());
                                                 }
                                         }
-                                    // if (d_nmea_output_file_enabled)
-                                    //     {
-                                    //         // if (current_RX_time_ms % d_output_rate_ms == 0)
-                                    //         if (current_RX_time_ms % d_display_rate_ms == 0)
-                                    //             {
-                                    //                 d_nmea_printer->Print_Nmea_Line(d_user_pvt_solver.get());
-                                    //             }
-                                    //     }
+                                    if (d_nmea_output_file_enabled)
+                                        {
+                                            // if (current_RX_time_ms % d_output_rate_ms == 0)
+                                            if (current_RX_time_ms % d_display_rate_ms == 0)
+                                                {
+                                                    d_nmea_printer->Print_Nmea_Line(d_user_pvt_solver.get());
+                                                }
+                                        }
                                     if (d_rinex_output_enabled)
                                         {
                                             d_rp->print_rinex_annotation(d_user_pvt_solver.get(), d_gnss_observables_map, d_rx_time, d_type_of_rx, flag_write_RINEX_obs_output);
@@ -2458,13 +2451,18 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                         }
                                 }
                         }
-
-                    if (current_RX_time_ms % d_display_rate_ms == 0)
-                        {
-                            d_nmea_printer->Print_Nmea_Line(d_user_pvt_solver.get());
-                        }
-                    //       
-
+                    // else
+                    //     {
+                    //         if (d_nmea_output_file_enabled)
+                    //             {
+                    //                 // if (current_RX_time_ms % d_output_rate_ms == 0)
+                    //                 if (current_RX_time_ms % d_display_rate_ms == 0)
+                    //                     {
+                    //                         d_nmea_printer->Print_Nmea_Line(d_user_pvt_solver.get());
+                    //                     }
+                    //             }
+                    //     }
+                    
                     // DEBUG MESSAGE: Display position in console output
                     if (d_user_pvt_solver->is_valid_position() && flag_display_pvt)
                         {
@@ -2484,20 +2482,20 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                             std::cout.setf(std::ios::fixed, std::ios::floatfield);
                             auto* facet = new boost::posix_time::time_facet("%Y-%b-%d %H:%M:%S.%f %z");
                             std::cout.imbue(std::locale(std::cout.getloc(), facet));
-                            // std::cout
-                            //     << TEXT_BOLD_GREEN
-                            //     << "Position at " << time_solution << UTC_solution_str
-                            //     << " using " << d_user_pvt_solver->get_num_valid_observations() << " observations is Lat = "
-                            //     << std::fixed << std::setprecision(6) << d_user_pvt_solver->get_latitude()
-                            //     << " [deg], Long = " << d_user_pvt_solver->get_longitude() << " [deg], Height = "
-                            //     << std::fixed << std::setprecision(2) << d_user_pvt_solver->get_height() << std::setprecision(ss) << " [m]" << TEXT_RESET << std::endl;
+                            std::cout
+                                << TEXT_BOLD_GREEN
+                                << "Position at " << time_solution << UTC_solution_str
+                                << " using " << d_user_pvt_solver->get_num_valid_observations() << " observations is Lat = "
+                                << std::fixed << std::setprecision(6) << d_user_pvt_solver->get_latitude()
+                                << " [deg], Long = " << d_user_pvt_solver->get_longitude() << " [deg], Height = "
+                                << std::fixed << std::setprecision(2) << d_user_pvt_solver->get_height() << std::setprecision(ss) << " [m]" << TEXT_RESET << std::endl;
                             DLOG(INFO) << "RX clock offset: " << d_user_pvt_solver->get_time_offset_s() << "[s]";
 
-                            // std::cout
-                            //     << TEXT_BOLD_GREEN
-                            //     << "Velocity: " << std::fixed << std::setprecision(2)
-                            //     << "East: " << d_user_pvt_solver->get_rx_vel()[0] << " [m/s], North: " << d_user_pvt_solver->get_rx_vel()[1]
-                            //     << " [m/s], Up = " << d_user_pvt_solver->get_rx_vel()[2] << std::setprecision(ss) << " [m/s]" << TEXT_RESET << std::endl;
+                            std::cout
+                                << TEXT_BOLD_GREEN
+                                << "Velocity: " << std::fixed << std::setprecision(2)
+                                << "East: " << d_user_pvt_solver->get_rx_vel()[0] << " [m/s], North: " << d_user_pvt_solver->get_rx_vel()[1]
+                                << " [m/s], Up = " << d_user_pvt_solver->get_rx_vel()[2] << std::setprecision(ss) << " [m/s]" << TEXT_RESET << std::endl;
                             DLOG(INFO) << "RX clock drift: " << d_user_pvt_solver->get_clock_drift_ppm() << " [ppm]";
 
                             // boost::posix_time::ptime p_time;
@@ -2543,14 +2541,4 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
         }
 
     return noutput_items;
-}
-
-std::map<int, Gnss_Synchro> rtklib_pvt_gs::get_observables_map() const
-{
-    return d_internal_pvt_solver->gnss_observables_map;
-}
-
-uint8_t* rtklib_pvt_gs::get_msgvec_ptr()
-{
-    return d_internal_pvt_solver->ptr_msgvec;
 }

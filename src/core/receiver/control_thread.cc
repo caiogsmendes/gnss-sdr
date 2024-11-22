@@ -65,13 +65,6 @@
 #include <sys/ipc.h>               // for IPC_CREAT
 #include <sys/msg.h>               // for msgctl, msgget
 
-// Caio
-#include <thread>
-//
-
-#include <gpiod.h>
-#include "gnss_synchro.h"
-
 #if USE_GLOG_AND_GFLAGS
 #include <glog/logging.h>
 #else
@@ -175,7 +168,6 @@ ControlThread::ControlThread(std::shared_ptr<ConfigurationInterface> configurati
 
 void ControlThread::init()
 {
-
     telecommand_enabled_ = configuration_->property("GNSS-SDR.telecommand_enabled", false);
     // OPTIONAL: specify a custom year to override the system time in order to postprocess old gnss records and avoid wrong week rollover
     pre_2009_file_ = configuration_->property("GNSS-SDR.pre_2009_file", false);
@@ -294,13 +286,6 @@ ControlThread::~ControlThread()  // NOLINT(modernize-use-equals-default)
     if (cmd_interface_thread_.joinable())
         {
             cmd_interface_thread_.join();
-        }
-
-    // Caio - ControlThread Destructor -> fecha as threads
-    if (serial_cmd_interface_thread_.joinable())
-        {
-            // std::cout << TEXT_BOLD_BLUE << "Caio: Thread join()" << TEXT_RESET << "\n";
-            serial_cmd_interface_thread_.join();
         }
 }
 
@@ -435,10 +420,6 @@ int ControlThread::run()
 
     // launch GNSS assistance process AFTER the flowgraph is running because the GNU Radio asynchronous queues must be already running to transport msgs
     assist_GNSS();
-
-
-
-
 // start the keyboard_listener thread
 #if USE_GLOG_AND_GFLAGS
     if (FLAGS_keyboard)
@@ -449,12 +430,6 @@ int ControlThread::run()
             keyboard_thread_ = std::thread(&ControlThread::keyboard_listener, this);
         }
     sysv_queue_thread_ = std::thread(&ControlThread::sysv_queue_listener, this);
-
-    //Caio
-    serial_cmd_interface_thread_ = std::thread(&ControlThread::_serial_cmd_IO, this);
-    pvt_ptr = flowgraph_->get_pvt();
-    gnss_synchro = pvt_ptr->get_gnss_observables();
-    //
 
     // start the telecommand listener thread
     cmd_interface_.set_pvt(flowgraph_->get_pvt());
@@ -1328,59 +1303,5 @@ void ControlThread::print_help_at_exit() const
         {
             std::cerr << " * The configuration file must define a PVT.implementation\n"
                       << "   Documentation of the PVT block at https://gnss-sdr.org/docs/sp-blocks/pvt/\n";
-        }
-}
-
-void ControlThread::_serial_cmd_IO(void)
-{
-//     std::map<int, Gps_Ephemeris> gpsephem = pvt_ptr->get_gps_ephemeris();
-//     mtx.lock();
-//     gnss_synchro = pvt_ptr->get_gnss_observables();
-//     uint8_t *msgvec_ptr = pvt_ptr->get_msgvec_ptr();
-//     mtx.unlock();
-    
-    typedef struct gpiod_line gpiod_pin;
-    typedef struct gpiod_line_event gpiod_pin_event;
-    struct gpiod_chip *chip;
-    gpiod_pin *pin;
-    const char bank[] = "gpiochip2";
-    int SODIMM_55 = 18;
-    // int SODIMM_63;
-    unsigned int line = SODIMM_55;
-
-    chip = gpiod_chip_open_by_name(&bank[0]);
-    pin = gpiod_chip_get_line(chip, line);
-    // gpiod_pin *input_pin;
-    gpiod_pin_event event;
-    // int pin_value = 0;
-    int ret;
-    ret = gpiod_line_request_rising_edge_events(pin, "gpio-test");
-    int count = 0;
-    while (1)
-        {
-            // mtx.lock();
-            // // gnss_synchro = pvt_ptr->get_gnss_observables();
-            // // uint8_t *msgvec_ptr = pvt_ptr->get_msgvec_ptr();
-            // do
-            //     {
-            //     }
-            // while (counter <= bytess);
-            // mtx.unlock();
-
-            /* Waiting for an event on the input pin */
-            gpiod_line_event_wait(pin, NULL);
-
-            /* Reading next pending event from the GPIO pin */
-            if (gpiod_line_event_read(pin, &event) != 0)
-                continue;
-
-            /* Checking if it is a rising event as previously defined */
-            if (event.event_type != GPIOD_LINE_EVENT_RISING_EDGE)
-                continue;
-
-            std::cout<<"Detected "<<count++;
-            // // int result = write(,&pvt_ptr->msgvec[0],bytes);
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
         }
 }

@@ -73,23 +73,17 @@ public:
     double RX_time{};        //!< Set by Observables processing block
     double interp_TOW_ms{};  //!< Set by Observables processing block
 
+    //Caio
+    uint8_t msgvec[12*53+46]; //Output Buffer
+
+    //
+
     // Flags
     bool Flag_valid_acquisition{};         //!< Set by Acquisition processing block
     bool Flag_valid_symbol_output{};       //!< Set by Tracking processing block
     bool Flag_valid_word{};                //!< Set by Telemetry Decoder processing block
     bool Flag_valid_pseudorange{};         //!< Set by Observables processing block
     bool Flag_PLL_180_deg_phase_locked{};  //!< Set by Telemetry Decoder processing block
-
-    // Flags Especiais - Caio
-    uint8_t modo;
-    uint8_t estado;
-
-    bool Flag_Source_RF;
-    bool Flag_Acq_blk;
-    bool Flag_Trk_blk;
-    bool Flag_Tel_blk;
-    double RF_inputPwr;
-
 
     /// Copy constructor
     Gnss_Synchro(const Gnss_Synchro& other) noexcept = default;

@@ -80,7 +80,7 @@ private:
         int baudrate
         );
 
-    std::unique_ptr<Gnss_Synchro_Udp_Sink> udp_sink_ptr;
+    // std::unique_ptr<Gnss_Synchro_Udp_Sink> udp_sink_ptr;
     int count;
     int d_nchannels;
     // int d_decimation_factor;
