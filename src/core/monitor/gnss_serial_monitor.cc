@@ -123,10 +123,7 @@ int gnss_serial_monitor::general_work(int noutput_items __attribute__((unused)),
             // mtx.unlock();
 
             /* Waiting for an event on the input pin */
-            if (gpiod_line_event_wait(pin, NULL) == 0)
-                {
-                    std::cout << "Timeout" << "\n";
-                }
+            gpiod_line_event_wait(pin, NULL);
             // else
             // {
             //     std::cout<<"Trigged"<<"\n";
@@ -135,13 +132,13 @@ int gnss_serial_monitor::general_work(int noutput_items __attribute__((unused)),
 
             /* Reading next pending event from the GPIO pin */
             if (gpiod_line_event_read(pin, &event) != 0)
-                // continue;
+                continue;
 
-                /* Checking if it is a rising event as previously defined */
-                if (event.event_type != GPIOD_LINE_EVENT_RISING_EDGE)
-                    {
-                        std::cout << "Trigged" << "\n";
-                    }
+            /* Checking if it is a rising event as previously defined */
+            if (event.event_type != GPIOD_LINE_EVENT_RISING_EDGE)
+                continue;
+            
+            std::cout << "Trigged" << "\n";
             // else{
             //     std::cout<<""<<"\n";
             // }
