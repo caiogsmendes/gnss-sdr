@@ -111,74 +111,72 @@ int gnss_serial_monitor::general_work(int noutput_items __attribute__((unused)),
     int ret;
     ret = gpiod_line_request_rising_edge_events(pin, "gpio-test");
     int count = 0;
-    // while (1)
-    //     {
-    // mtx.lock();
-    // // gnss_synchro = pvt_ptr->get_gnss_observables();
-    // // uint8_t *msgvec_ptr = pvt_ptr->get_msgvec_ptr();
-    // do
-    //     {
-    //     }
-    // while (counter <= bytess);
-    // mtx.unlock();
+    while (1)
+        {
+            // mtx.lock();
+            // // gnss_synchro = pvt_ptr->get_gnss_observables();
+            // // uint8_t *msgvec_ptr = pvt_ptr->get_msgvec_ptr();
+            // do
+            //     {
+            //     }
+            // while (counter <= bytess);
+            // mtx.unlock();
 
-    /* Waiting for an event on the input pin */
-    if(gpiod_line_event_wait(pin, NULL)==0)
-    {
-        std::cout<<"Timeout"<<"\n";
-    }
-    // else
-    // {
-    //     std::cout<<"Trigged"<<"\n";
-    // }
-    // gpiod_line_event_wait(pin, &ts);
+            /* Waiting for an event on the input pin */
+            if (gpiod_line_event_wait(pin, NULL) == 0)
+                {
+                    std::cout << "Timeout" << "\n";
+                }
+            // else
+            // {
+            //     std::cout<<"Trigged"<<"\n";
+            // }
+            // gpiod_line_event_wait(pin, &ts);
 
-    /* Reading next pending event from the GPIO pin */
-    if (gpiod_line_event_read(pin, &event) != 0)
-        // continue;
+            /* Reading next pending event from the GPIO pin */
+            if (gpiod_line_event_read(pin, &event) != 0)
+                // continue;
 
-    /* Checking if it is a rising event as previously defined */
-    if (event.event_type != GPIOD_LINE_EVENT_RISING_EDGE)
-    {
-        std::cout<<"Trigged"<<"\n";
-    }
-    // else{
-    //     std::cout<<""<<"\n";
-    // }
-        // continue;
+                /* Checking if it is a rising event as previously defined */
+                if (event.event_type != GPIOD_LINE_EVENT_RISING_EDGE)
+                    {
+                        std::cout << "Trigged" << "\n";
+                    }
+            // else{
+            //     std::cout<<""<<"\n";
+            // }
+            // continue;
 
             // std::cout << "Detected " << count++;
-    // // int result = write(,&pvt_ptr->msgvec[0],bytes);
-    // std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            // // int result = write(,&pvt_ptr->msgvec[0],bytes);
+            // std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-    // }
+            // }
 
 
+            // // Loop through each input stream channel
+            // for (int channel_index = 0; channel_index < d_nchannels; channel_index++)
+            //     {
+            //         // Loop through each item in each input stream channel
+            //         for (int item_index = 0; item_index < ninput_items[channel_index]; item_index++)
+            //             {
+            //                 // Use the count variable to limit how many items are sent per channel
+            //                 count++;
+            //                 if (count >= 10)
+            //                     {
+            //                         // Convert to a vector and write to the UDP sink
+            //                         std::vector<Gnss_Synchro> stocks;
+            //                         stocks.push_back(in[channel_index][item_index]);
+            //                         // udp_sink_ptr->write_gnss_synchro(stocks);
 
-    // // Loop through each input stream channel
-    // for (int channel_index = 0; channel_index < d_nchannels; channel_index++)
-    //     {
-    //         // Loop through each item in each input stream channel
-    //         for (int item_index = 0; item_index < ninput_items[channel_index]; item_index++)
-    //             {
-    //                 // Use the count variable to limit how many items are sent per channel
-    //                 count++;
-    //                 if (count >= 10)
-    //                     {
-    //                         // Convert to a vector and write to the UDP sink
-    //                         std::vector<Gnss_Synchro> stocks;
-    //                         stocks.push_back(in[channel_index][item_index]);
-    //                         // udp_sink_ptr->write_gnss_synchro(stocks);
-                            
-    //                         // Reset count variable
-    //                         // count = 0;
+            //                         // Reset count variable
+            //                         // count = 0;
 
-    //                         // Consume the number of items for the input stream channel
-    //                         consume(channel_index, ninput_items[channel_index]);
-    //                     }
-    //             }
-        
-    //     }
+            //                         // Consume the number of items for the input stream channel
+            //                         consume(channel_index, ninput_items[channel_index]);
+            //                     }
+            //             }
+        }
     // // Not producing any outputs
     return 0;
 }
