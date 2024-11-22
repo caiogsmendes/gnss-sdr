@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "src/algorithms/resampler/gnuradio_blocks",
+		"source" : "src/algorithms/resampler/gnuradio_blocks"
+	}
+}

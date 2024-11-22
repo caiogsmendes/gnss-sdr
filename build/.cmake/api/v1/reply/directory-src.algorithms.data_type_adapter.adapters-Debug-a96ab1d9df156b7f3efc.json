@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "src/algorithms/data_type_adapter/adapters",
+		"source" : "src/algorithms/data_type_adapter/adapters"
+	}
+}
