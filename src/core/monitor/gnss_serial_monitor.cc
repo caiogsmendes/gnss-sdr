@@ -137,12 +137,12 @@ int gnss_serial_monitor::general_work(int noutput_items __attribute__((unused)),
                 }
 
             /* Checking if it is a rising event as previously defined */
-            if (event.event_type != GPIOD_LINE_EVENT_RISING_EDGE)
+            if (event.event_type == GPIOD_LINE_EVENT_RISING_EDGE)
                 {
-                    
+                    std::cout << "Trigged" << "\n";
                 }
             
-            std::cout << "Trigged" << "\n";
+            
             // else{
             //     std::cout<<""<<"\n";
             // }
