@@ -195,6 +195,10 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
     // Send PVT status to gnss_flowgraph
     this->message_port_register_out(pmt::mp("status"));
 
+    //Caio
+    this->message_port_register_out(pmt::mp("pvtsol_to_serial_monitor"));
+    //
+
     // GPS Ephemeris data message port in
     this->message_port_register_in(pmt::mp("telemetry"));
     this->set_msg_handler(pmt::mp("telemetry"),
@@ -1188,6 +1192,9 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
                         {
                             d_eph_udp_sink_ptr->write_gps_ephemeris(gps_eph);
                         }
+                    // // Caio
+                    // this->message_port_pub(pmt::mp("pvtsol_to_serial_monitor"),pmt::make_any(gps_eph));
+                    // //
                     // update/insert new ephemeris record to the global ephemeris map
                     if (d_rinex_output_enabled && d_rp->is_rinex_header_written())  // The header is already written, we can now log the navigation message data
                         {
@@ -2168,7 +2175,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                 }
 
             // ############ 2 COMPUTE THE PVT ################################
-            bool flag_pvt_valid = false;
+            bool flag_pvt_valid = false; 
             if (d_gnss_observables_map.empty() == false)
                 {
                     // LOG(INFO) << "diff raw obs time: " << d_gnss_observables_map.cbegin()->second.RX_time * 1000.0 - old_time_debug;
@@ -2179,7 +2186,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                         {
                             d_pvt_errors_counter = 0;  // Reset consecutive PVT error counter
                             const double Rx_clock_offset_s = d_internal_pvt_solver->get_time_offset_s();
-
+                            this->message_port_pub(pmt::mp("pvtsol_to_serial_monitor"),pmt::make_any(d_gnss_observables_map));
                             // **************** time tags ****************
                             if (d_enable_rx_clock_correction == false)  // todo: currently only works if clock correction is disabled (computed clock offset is applied here)
                                 {
@@ -2224,6 +2231,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                     if ((d_local_counter_ms - d_timestamp_rx_clock_offset_correction_msg_ms) > 1000)
                                         {
                                             this->message_port_pub(pmt::mp("pvt_to_observables"), pmt::make_any(Rx_clock_offset_s));
+                                            // this->message_port_pub(pmt::mp("pvtsol_to_serial_monitor"), pmt::make_any(d_internal_pvt_solver->gps_ephemeris_map));
                                             d_timestamp_rx_clock_offset_correction_msg_ms = d_local_counter_ms;
                                             LOG(INFO) << "PVT: Sent clock offset correction to observables: " << Rx_clock_offset_s << "[s]";
                                         }
@@ -2482,21 +2490,21 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                             std::cout.setf(std::ios::fixed, std::ios::floatfield);
                             auto* facet = new boost::posix_time::time_facet("%Y-%b-%d %H:%M:%S.%f %z");
                             std::cout.imbue(std::locale(std::cout.getloc(), facet));
-                            std::cout
-                                << TEXT_BOLD_GREEN
-                                << "Position at " << time_solution << UTC_solution_str
-                                << " using " << d_user_pvt_solver->get_num_valid_observations() << " observations is Lat = "
-                                << std::fixed << std::setprecision(6) << d_user_pvt_solver->get_latitude()
-                                << " [deg], Long = " << d_user_pvt_solver->get_longitude() << " [deg], Height = "
-                                << std::fixed << std::setprecision(2) << d_user_pvt_solver->get_height() << std::setprecision(ss) << " [m]" << TEXT_RESET << std::endl;
-                            DLOG(INFO) << "RX clock offset: " << d_user_pvt_solver->get_time_offset_s() << "[s]";
+                            // std::cout
+                            //     << TEXT_BOLD_GREEN
+                            //     << "Position at " << time_solution << UTC_solution_str
+                            //     << " using " << d_user_pvt_solver->get_num_valid_observations() << " observations is Lat = "
+                            //     << std::fixed << std::setprecision(6) << d_user_pvt_solver->get_latitude()
+                            //     << " [deg], Long = " << d_user_pvt_solver->get_longitude() << " [deg], Height = "
+                            //     << std::fixed << std::setprecision(2) << d_user_pvt_solver->get_height() << std::setprecision(ss) << " [m]" << TEXT_RESET << std::endl;
+                            // DLOG(INFO) << "RX clock offset: " << d_user_pvt_solver->get_time_offset_s() << "[s]";
 
-                            std::cout
-                                << TEXT_BOLD_GREEN
-                                << "Velocity: " << std::fixed << std::setprecision(2)
-                                << "East: " << d_user_pvt_solver->get_rx_vel()[0] << " [m/s], North: " << d_user_pvt_solver->get_rx_vel()[1]
-                                << " [m/s], Up = " << d_user_pvt_solver->get_rx_vel()[2] << std::setprecision(ss) << " [m/s]" << TEXT_RESET << std::endl;
-                            DLOG(INFO) << "RX clock drift: " << d_user_pvt_solver->get_clock_drift_ppm() << " [ppm]";
+                            // std::cout
+                            //     << TEXT_BOLD_GREEN
+                            //     << "Velocity: " << std::fixed << std::setprecision(2)
+                            //     << "East: " << d_user_pvt_solver->get_rx_vel()[0] << " [m/s], North: " << d_user_pvt_solver->get_rx_vel()[1]
+                            //     << " [m/s], Up = " << d_user_pvt_solver->get_rx_vel()[2] << std::setprecision(ss) << " [m/s]" << TEXT_RESET << std::endl;
+                            // DLOG(INFO) << "RX clock drift: " << d_user_pvt_solver->get_clock_drift_ppm() << " [ppm]";
 
                             // boost::posix_time::ptime p_time;
                             // gtime_t rtklib_utc_time = gpst2time(adjgpsweek(d_user_pvt_solver->gps_ephemeris_map.cbegin()->second.i_GPS_week), d_rx_time);

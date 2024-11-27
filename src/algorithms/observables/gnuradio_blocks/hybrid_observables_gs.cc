@@ -96,6 +96,10 @@ hybrid_observables_gs::hybrid_observables_gs(const Obs_Conf &conf_)
     // Send Channel status to gnss_flowgraph
     this->message_port_register_out(pmt::mp("status"));
 
+    // // Caio
+    // this->message_port_register_out(pmt::mp("telemetry_to_serial_monitor"));
+    // //
+
     d_gnss_synchro_history = std::make_unique<Gnss_circular_deque<Gnss_Synchro>>(1000, d_nchannels_out);
 
     d_Rx_clock_buffer.set_capacity(std::min(std::max(300U / d_T_rx_step_ms, 3U), 20U));
@@ -813,6 +817,9 @@ int hybrid_observables_gs::general_work(int noutput_items __attribute__((unused)
                             const std::shared_ptr<Gnss_Synchro> gnss_synchro_sptr = std::make_shared<Gnss_Synchro>(epoch_data[n]);
                             // publish valid gnss_synchro to the gnss_flowgraph channel status monitor
                             this->message_port_pub(pmt::mp("status"), pmt::make_any(gnss_synchro_sptr));
+                            // //Caio
+                            // this->message_port_pub(pmt::mp("telemetry_to_serial_monitor"),pmt::make_any());
+                            // //
                         }
                     d_T_status_report_timer_ms = 0;
                 }

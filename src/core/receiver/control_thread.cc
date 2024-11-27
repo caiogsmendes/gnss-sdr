@@ -278,15 +278,15 @@ ControlThread::~ControlThread()  // NOLINT(modernize-use-equals-default)
             msgctl(msqid_, IPC_RMID, nullptr);
         }
 
-    if (sysv_queue_thread_.joinable())
-        {
-            sysv_queue_thread_.join();
-        }
+    // if (sysv_queue_thread_.joinable())
+    //     {
+    //         sysv_queue_thread_.join();
+    //     }
 
-    if (cmd_interface_thread_.joinable())
-        {
-            cmd_interface_thread_.join();
-        }
+    // if (cmd_interface_thread_.joinable())
+    //     {
+    //         cmd_interface_thread_.join();
+    //     }
 }
 
 
@@ -427,19 +427,20 @@ int ControlThread::run()
     if (absl::GetFlag(FLAGS_keyboard))
 #endif
         {
-            keyboard_thread_ = std::thread(&ControlThread::keyboard_listener, this);
+            // keyboard_thread_ = std::thread(&ControlThread::keyboard_listener, this);
         }
-    sysv_queue_thread_ = std::thread(&ControlThread::sysv_queue_listener, this);
+    // sysv_queue_thread_ = std::thread(&ControlThread::sysv_queue_listener, this);
 
-    // start the telecommand listener thread
-    cmd_interface_.set_pvt(flowgraph_->get_pvt());
-    cmd_interface_thread_ = std::thread(&ControlThread::telecommand_listener, this);
+    // // start the telecommand listener thread
+    // cmd_interface_.set_pvt(flowgraph_->get_pvt());
+    // cmd_interface_thread_ = std::thread(&ControlThread::telecommand_listener, this);
 
 #ifdef ENABLE_FPGA
     // Create a task for the acquisition such that id doesn't block the flow of the control thread
     fpga_helper_thread_ = boost::thread(&GNSSFlowgraph::start_acquisition_helper,
         flowgraph_);
 #endif
+    // ###################################################
     // Main loop to read and process the control messages
     pmt::pmt_t msg;
     while (flowgraph_->running() && !stop_)
@@ -449,10 +450,15 @@ int ControlThread::run()
             // call the new sat dispatcher and receiver controller
             event_dispatcher(valid_event, msg);
         }
+    //#####################################################
+
+
     // std::cout << "Stopping GNSS-SDR, please wait!\n";
+
     flowgraph_->stop();
     stop_ = true;
     flowgraph_->disconnect();
+
 
 #ifdef ENABLE_FPGA
     // trigger a HW reset
@@ -464,32 +470,32 @@ int ControlThread::run()
 #endif
 
     // Terminate keyboard thread
-#if USE_GLOG_AND_GFLAGS
-    if (FLAGS_keyboard && keyboard_thread_.joinable())
-#else
-    if (absl::GetFlag(FLAGS_keyboard) && keyboard_thread_.joinable())
-#endif
-        {
-            pthread_t id = keyboard_thread_.native_handle();
-            keyboard_thread_.detach();
-#ifndef ANDROID
-            pthread_cancel(id);
-#else
-            // todo: find alternative
-#endif
-        }
+// #if USE_GLOG_AND_GFLAGS
+//     if (FLAGS_keyboard && keyboard_thread_.joinable())
+// #else
+//     if (absl::GetFlag(FLAGS_keyboard) && keyboard_thread_.joinable())
+// #endif
+//         {
+//             pthread_t id = keyboard_thread_.native_handle();
+//             keyboard_thread_.detach();
+// #ifndef ANDROID
+//             pthread_cancel(id);
+// #else
+//             // todo: find alternative
+// #endif
+//         }
 
-    // Terminate telecommand thread
-    if (telecommand_enabled_)
-        {
-            pthread_t id2 = cmd_interface_thread_.native_handle();
-            cmd_interface_thread_.detach();
-#ifndef ANDROID
-            pthread_cancel(id2);
-#else
-            // todo: find alternative
-#endif
-        }
+//     // Terminate telecommand thread
+//     if (telecommand_enabled_)
+//         {
+//             pthread_t id2 = cmd_interface_thread_.native_handle();
+//             cmd_interface_thread_.detach();
+// #ifndef ANDROID
+//             pthread_cancel(id2);
+// #else
+//             // todo: find alternative
+// #endif
+//         }
 
     LOG(INFO) << "Flowgraph stopped";
 

@@ -28,22 +28,25 @@
 #include <string>
 #include <vector>
 
+#include <gnuradio/sync_block.h>  // for sync_block
+#include <gnuradio/types.h>       // for gr_vector_const_void_star
+#include <pmt/pmt.h>              // for pmt_t
+
+
+#include "HEtechSerial.h"
+
 /** \addtogroup Core
  * \{ */
 /** \addtogroup Gnss_Serial_Monitor core_monitor
  * Classes for the Gnss_Serial monitor.
  * \{ */
 
-
+class Gps_Ephemeris;
 class gnss_serial_monitor;
 
 using gnss_serial_monitor_sptr = gnss_shared_ptr<gnss_serial_monitor>;
 
 gnss_serial_monitor_sptr gnss_serial_make_monitor(int n_channels,
-    // int decimation_factor,
-    // const std::vector<std::string>& udp_ports,
-    // const std::vector<std::string>& udp_addresses,
-    // bool enable_protobuf
     std::string dev_serial,
     int baudrate
     );
@@ -61,21 +64,17 @@ public:
     int general_work(int noutput_items, gr_vector_int& ninput_items,
         gr_vector_const_void_star& input_items, gr_vector_void_star& output_items);
 
+    size_t d_gps_ephemeris_sptr_type_hash_code;
+    void msg_handler_telemetry(const pmt::pmt_t& msg);
+    void msg_handler_pvtsol(const pmt::pmt_t& msg);
+
 private:
     friend gnss_serial_monitor_sptr gnss_serial_make_monitor(int n_channels,
-        // int decimation_factor,
-        // const std::vector<std::string>& udp_ports,
-        // const std::vector<std::string>& udp_addresses,
-        // bool enable_protobuf
         std::string dev_serial,
         int baudrate
         );
 
     gnss_serial_monitor(int n_channels,
-        // int decimation_factor,
-        // const std::vector<std::string>& udp_ports,
-        // const std::vector<std::string>& udp_addresses,
-        // bool enable_protobuf
         std::string dev_serial,
         int baudrate
         );
@@ -86,6 +85,13 @@ private:
     // int d_decimation_factor;
     std::string d_dev_serial;
     int d_baudrate;
+    serial_s_t comms;
+    int contador{0};
+    // Caio
+    uint8_t msgvec[12 * 53 + 46];  // Output Buffer
+    std::map<int, Gnss_Synchro> sync;
+    std::map<int, Gps_Ephemeris> gps_ephemeris_map;
+    std::map<int, Gps_Ephemeris> gpsephem;
 };
 
 

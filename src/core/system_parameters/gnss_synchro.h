@@ -73,8 +73,8 @@ public:
     double RX_time{};        //!< Set by Observables processing block
     double interp_TOW_ms{};  //!< Set by Observables processing block
 
-    //Caio
-    uint8_t msgvec[12*53+46]; //Output Buffer
+    // //Caio
+    // uint8_t msgvec[12*53+46]; //Output Buffer
 
     //
 

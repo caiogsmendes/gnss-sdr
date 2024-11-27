@@ -109,6 +109,10 @@ gps_l1_ca_telemetry_decoder_gs::gps_l1_ca_telemetry_decoder_gs(
     // Control messages to tracking block
     this->message_port_register_out(pmt::mp("telemetry_to_trk"));
 
+    // //Caio
+    // this->message_port_register_out(pmt::mp("telemetry_to_serial_monitor"));
+    // //
+
     if (d_enable_navdata_monitor)
         {
             // register nav message monitor out
@@ -365,6 +369,9 @@ bool gps_l1_ca_telemetry_decoder_gs::decode_subframe(double cn0, bool flag_inver
                                     // get ephemeris object for this SV (mandatory)
                                     const std::shared_ptr<Gps_Ephemeris> tmp_obj = std::make_shared<Gps_Ephemeris>(d_nav.get_ephemeris());
                                     this->message_port_pub(pmt::mp("telemetry"), pmt::make_any(tmp_obj));
+                                    // //Caio
+                                    // this->message_port_pub(pmt::mp("telemetry_to_serial_monitor"), pmt::make_any(tmp_obj));
+                                    // //
                                 }
 
                             break;
@@ -374,6 +381,9 @@ bool gps_l1_ca_telemetry_decoder_gs::decode_subframe(double cn0, bool flag_inver
                                     // get ephemeris object for this SV (mandatory)
                                     const std::shared_ptr<Gps_Ephemeris> tmp_obj = std::make_shared<Gps_Ephemeris>(d_nav.get_ephemeris());
                                     this->message_port_pub(pmt::mp("telemetry"), pmt::make_any(tmp_obj));
+                                    // //Caio
+                                    // this->message_port_pub(pmt::mp("telemetry_to_serial_monitor"), pmt::make_any(tmp_obj));
+                                    // //
                                 }
 
                             break;
@@ -383,6 +393,9 @@ bool gps_l1_ca_telemetry_decoder_gs::decode_subframe(double cn0, bool flag_inver
                                     // get ephemeris object for this SV (mandatory)
                                     const std::shared_ptr<Gps_Ephemeris> tmp_obj = std::make_shared<Gps_Ephemeris>(d_nav.get_ephemeris());
                                     this->message_port_pub(pmt::mp("telemetry"), pmt::make_any(tmp_obj));
+                                    // //Caio
+                                    // this->message_port_pub(pmt::mp("telemetry_to_serial_monitor"), pmt::make_any(tmp_obj));
+                                    // //
                                 }
                             break;
                         case 4:  // Possible IONOSPHERE and UTC model update (page 18)
@@ -390,11 +403,17 @@ bool gps_l1_ca_telemetry_decoder_gs::decode_subframe(double cn0, bool flag_inver
                                 {
                                     const std::shared_ptr<Gps_Iono> tmp_obj = std::make_shared<Gps_Iono>(d_nav.get_iono());
                                     this->message_port_pub(pmt::mp("telemetry"), pmt::make_any(tmp_obj));
+                                    // //Caio
+                                    // this->message_port_pub(pmt::mp("telemetry_to_serial_monitor"), pmt::make_any(tmp_obj));
+                                    // //
                                 }
                             if (d_nav.get_flag_utc_model_valid() == true)
                                 {
                                     const std::shared_ptr<Gps_Utc_Model> tmp_obj = std::make_shared<Gps_Utc_Model>(d_nav.get_utc_model());
                                     this->message_port_pub(pmt::mp("telemetry"), pmt::make_any(tmp_obj));
+                                    // //Caio
+                                    // this->message_port_pub(pmt::mp("telemetry_to_serial_monitor"), pmt::make_any(tmp_obj));
+                                    // //
                                 }
                             break;
                         case 5:
