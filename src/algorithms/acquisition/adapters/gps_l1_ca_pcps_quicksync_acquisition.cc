@@ -84,9 +84,9 @@ GpsL1CaPcpsQuickSyncAcquisition::GpsL1CaPcpsQuickSyncAcquisition(
 
     if (sampled_ms_ % folding_factor_ != 0)
         {
-            LOG(WARNING) << "QuickSync Algorithm requires a coherent_integration_time"
-                         << " multiple of " << folding_factor_ << "ms, Value entered "
-                         << sampled_ms_ << " ms";
+            // // LOG(WARNING) << "QuickSync Algorithm requires a coherent_integration_time"
+                        //  << " multiple of " << folding_factor_ << "ms, Value entered "
+                        //  << sampled_ms_ << " ms";
             if (sampled_ms_ < folding_factor_)
                 {
                     sampled_ms_ = static_cast<int>(folding_factor_);
@@ -96,8 +96,8 @@ GpsL1CaPcpsQuickSyncAcquisition::GpsL1CaPcpsQuickSyncAcquisition(
                     sampled_ms_ = static_cast<int>(sampled_ms_ / folding_factor_) * folding_factor_;
                 }
 
-            LOG(WARNING) << " Coherent_integration_time of "
-                         << sampled_ms_ << " ms will be used instead.";
+            // // LOG(WARNING) << " Coherent_integration_time of "
+                        //  << sampled_ms_ << " ms will be used instead.";
         }
 
     vector_length_ = code_length_ * sampled_ms_;
@@ -118,14 +118,14 @@ GpsL1CaPcpsQuickSyncAcquisition::GpsL1CaPcpsQuickSyncAcquisition(
     int samples_per_ms = round(code_length_);
     code_ = std::vector<std::complex<float>>(code_length_);
 
-    DLOG(INFO) << "role " << role_;
+    // D// LOG(INFO) << "role " << role_;
     /* Object relevant information for debugging */
-    LOG(INFO) << "Implementation: " << this->implementation()
-              << ", Vector Length: " << vector_length_
-              << ", Samples per ms: " << samples_per_ms
-              << ", Folding factor: " << folding_factor_
-              << ", Sampled  ms: " << sampled_ms_
-              << ", Code Length: " << code_length_;
+    // LOG(INFO) << "Implementation: " << this->implementation()
+            //   << ", Vector Length: " << vector_length_
+            //   << ", Samples per ms: " << samples_per_ms
+            //   << ", Folding factor: " << folding_factor_
+            //   << ", Sampled  ms: " << sampled_ms_
+            //   << ", Code Length: " << code_length_;
 
     if (item_type_ == "gr_complex")
         {
@@ -137,14 +137,14 @@ GpsL1CaPcpsQuickSyncAcquisition::GpsL1CaPcpsQuickSyncAcquisition(
             stream_to_vector_ = gr::blocks::stream_to_vector::make(item_size_,
                 code_length_ * folding_factor_);
 
-            DLOG(INFO) << "stream_to_vector_quicksync(" << stream_to_vector_->unique_id() << ")";
-            DLOG(INFO) << "acquisition(" << acquisition_cc_->unique_id() << ")";
+            // D// LOG(INFO) << "stream_to_vector_quicksync(" << stream_to_vector_->unique_id() << ")";
+            // D// LOG(INFO) << "acquisition(" << acquisition_cc_->unique_id() << ")";
         }
     else
         {
             item_size_ = 0;
             acquisition_cc_ = nullptr;
-            LOG(WARNING) << item_type_ << " unknown acquisition item type";
+            // // LOG(WARNING) << item_type_ << " unknown acquisition item type";
         }
 
     if (in_streams_ > 1)
@@ -182,7 +182,7 @@ void GpsL1CaPcpsQuickSyncAcquisition::set_threshold(float threshold)
             threshold_ = calculate_threshold(pfa);
         }
 
-    DLOG(INFO) << "Channel " << channel_ << " Threshold = " << threshold_;
+    // D// LOG(INFO) << "Channel " << channel_ << " Threshold = " << threshold_;
 
     if (item_type_ == "gr_complex")
         {
@@ -282,7 +282,7 @@ float GpsL1CaPcpsQuickSyncAcquisition::calculate_threshold(float pfa) const
         {
             frequency_bins++;
         }
-    DLOG(INFO) << "Channel " << channel_ << "  Pfa = " << pfa;
+    // D// LOG(INFO) << "Channel " << channel_ << "  Pfa = " << pfa;
     unsigned int ncells = (code_length_ / folding_factor_) * frequency_bins;
     double exponent = 1.0 / static_cast<double>(ncells);
     double val = pow(1.0 - pfa, exponent);

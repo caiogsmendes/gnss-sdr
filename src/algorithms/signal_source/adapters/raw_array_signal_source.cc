@@ -57,8 +57,8 @@ RawArraySignalSource::RawArraySignalSource(const ConfigurationInterface* configu
         {
             item_size_ = sizeof(gr_complex);
             raw_array_source_ = gr::dbfcttc::raw_array::make(eth_device_.c_str(), channels_, snapshots_per_frame_, inter_frame_delay_, sampling_freq_);
-            DLOG(INFO) << "Item size " << item_size_;
-            DLOG(INFO) << "raw_array_source(" << raw_array_source_->unique_id() << ")";
+            // D// LOG(INFO) << "Item size " << item_size_;
+            // D// LOG(INFO) << "raw_array_source(" << raw_array_source_->unique_id() << ")";
         }
     //    else if (item_type_.compare("short") == 0)
     //        {
@@ -68,18 +68,18 @@ RawArraySignalSource::RawArraySignalSource(const ConfigurationInterface* configu
     //        }
     else
         {
-            LOG(WARNING) << item_type_ << " unrecognized item type for raw_array_source_";
+            // // LOG(WARNING) << item_type_ << " unrecognized item type for raw_array_source_";
             item_size_ = sizeof(gr_complex);
         }
     if (dump_)
         {
             // TODO: multichannel recorder
-            DLOG(INFO) << "Dumping output into file " << dump_filename_;
+            // D// LOG(INFO) << "Dumping output into file " << dump_filename_;
             file_sink_ = gr::blocks::file_sink::make(item_size_, dump_filename_.c_str());
         }
     if (dump_)
         {
-            DLOG(INFO) << "file_sink(" << file_sink_->unique_id() << ")";
+            // D// LOG(INFO) << "file_sink(" << file_sink_->unique_id() << ")";
         }
 }
 
@@ -90,11 +90,11 @@ void RawArraySignalSource::connect(gr::top_block_sptr top_block)
         {
             // TODO: multichannel recorder
             top_block->connect(raw_array_source_, 0, file_sink_, 0);
-            DLOG(INFO) << "connected raw_array_source_ to file sink";
+            // D// LOG(INFO) << "connected raw_array_source_ to file sink";
         }
     else
         {
-            DLOG(INFO) << "nothing to connect internally";
+            // D// LOG(INFO) << "nothing to connect internally";
         }
 }
 
@@ -111,7 +111,7 @@ void RawArraySignalSource::disconnect(gr::top_block_sptr top_block)
 
 gr::basic_block_sptr RawArraySignalSource::get_left_block()
 {
-    LOG(WARNING) << "Left block of a signal source should not be retrieved";
+    // // LOG(WARNING) << "Left block of a signal source should not be retrieved";
     return gr::block_sptr();
 }
 

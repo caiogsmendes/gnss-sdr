@@ -53,7 +53,7 @@ std::tuple<size_t, bool> NsrFileSignalSource::itemTypeToSize()
         }
     else
         {
-            LOG(WARNING) << item_type() << " unrecognized item type. Using byte.";
+            // // LOG(WARNING) << item_type() << " unrecognized item type. Using byte.";
         }
 
     return std::make_tuple(item_size, is_complex);
@@ -67,17 +67,17 @@ gnss_shared_ptr<gr::block> NsrFileSignalSource::source() const { return unpack_b
 void NsrFileSignalSource::create_file_source_hook()
 {
     unpack_byte_ = make_unpack_byte_2bit_samples();
-    DLOG(INFO) << "unpack_byte_2bit_samples(" << unpack_byte_->unique_id() << ")";
+    // D// LOG(INFO) << "unpack_byte_2bit_samples(" << unpack_byte_->unique_id() << ")";
 }
 
 void NsrFileSignalSource::pre_connect_hook(gr::top_block_sptr top_block)
 {
     top_block->connect(file_source(), 0, unpack_byte_, 0);
-    DLOG(INFO) << "connected file_source to unpacker";
+    // D// LOG(INFO) << "connected file_source to unpacker";
 }
 
 void NsrFileSignalSource::pre_disconnect_hook(gr::top_block_sptr top_block)
 {
     top_block->disconnect(file_source(), 0, unpack_byte_, 0);
-    DLOG(INFO) << "disconnected file_source from unpacker";
+    // D// LOG(INFO) << "disconnected file_source from unpacker";
 }

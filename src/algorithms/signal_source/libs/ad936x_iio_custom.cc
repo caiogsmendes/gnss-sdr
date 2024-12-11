@@ -890,7 +890,7 @@ void ad936x_iio_custom::monitor_thread_fn()
                     std::cout
                         << TEXT_BOLD_RED
                         << "WARNING: IIO status register reported overflow!\n";
-                    LOG(WARNING) << "WARNING: IIO status register reported overflow!";
+                    // // LOG(WARNING) << "WARNING: IIO status register reported overflow!";
                 }
 
             /* Clear bits */
@@ -1077,7 +1077,7 @@ void ad936x_iio_custom::get_PPS_timestamp()
     while (receive_samples == true)
         {
             // std::cout << "[" << pps.samplestamp << "][o:" << pps.overflow_reg << "] uBlox time message received with TOW=" << tow.tow_ms << "\n";
-            LOG(INFO) << "[" << pps.samplestamp << "][o:" << pps.overflow_reg << "] uBlox time message received with TOW=" << tow.tow_ms << "\n";
+            // LOG(INFO) << "[" << pps.samplestamp << "][o:" << pps.overflow_reg << "] uBlox time message received with TOW=" << tow.tow_ms << "\n";
             // write timestamp information to timestamp metadata file:
             // uint64_t: absolute sample counter from the beginning of sample capture associated to the rising edge of the PPS signal
             //            ppstimefile.write(reinterpret_cast<char *>(&pps.samplestamp), sizeof(uint64_t));
@@ -1093,7 +1093,7 @@ void ad936x_iio_custom::get_PPS_timestamp()
                     if (receive_samples == true)
                         {
                             // std::cout << "ERROR: uBlox time message not received, check uBlox GNSS signal quality!\n";
-                            LOG(INFO) << "ERROR: uBlox time message not received!";
+                            // LOG(INFO) << "ERROR: uBlox time message not received!";
                         }
                     break;
                 }
@@ -1102,7 +1102,7 @@ void ad936x_iio_custom::get_PPS_timestamp()
                     if (receive_samples == true)
                         {
                             // std::cout << "ERROR: PPS time message not received, check uBlox GNSS signal quality!\n";
-                            LOG(INFO) << "ERROR: PPS time message not received!";
+                            // LOG(INFO) << "ERROR: PPS time message not received!";
                         }
                     break;
                 }
@@ -1112,7 +1112,7 @@ void ad936x_iio_custom::get_PPS_timestamp()
                         {
                             fpga_overflow = true;
                             // std::cout << "ERROR: FPGA reported RX sample buffer overflow!\n";
-                            LOG(INFO) << "ERROR: FPGA reported RX sample buffer overflow!\n";
+                            // LOG(INFO) << "ERROR: FPGA reported RX sample buffer overflow!\n";
                         }
                     break;
                 }

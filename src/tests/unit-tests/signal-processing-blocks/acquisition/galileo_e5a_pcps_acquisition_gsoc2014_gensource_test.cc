@@ -87,7 +87,7 @@ void GalileoE5aPcpsAcquisitionGSoC2014GensourceTest_msg_rx::msg_handler_channel_
         }
     catch (const wht::bad_any_cast& e)
         {
-            LOG(WARNING) << "msg_handler_channel_events Bad any_cast: " << e.what();
+            // // LOG(WARNING) << "msg_handler_channel_events Bad any_cast: " << e.what();
             rx_message = 0;
         }
 }

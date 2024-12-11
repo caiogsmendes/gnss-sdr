@@ -144,7 +144,7 @@ bool Kml_Printer::set_headers(const std::string& filename, bool time_tag_name)
 
     if (kml_file.is_open() && tmp_file.is_open())
         {
-            DLOG(INFO) << "KML printer writing on " << filename.c_str();
+            // D// LOG(INFO) << "KML printer writing on " << filename.c_str();
             // Set iostream numeric format and precision
             kml_file.setf(kml_file.std::ofstream::fixed, kml_file.std::ofstream::floatfield);
             kml_file << std::setprecision(14);
@@ -310,7 +310,7 @@ bool Kml_Printer::close_file()
 
 Kml_Printer::~Kml_Printer()
 {
-    DLOG(INFO) << "KML printer destructor called.";
+    // D// LOG(INFO) << "KML printer destructor called.";
     try
         {
             close_file();
@@ -324,7 +324,7 @@ Kml_Printer::~Kml_Printer()
             errorlib::error_code ec;
             if (!fs::remove(fs::path(kml_filename), ec))
                 {
-                    LOG(INFO) << "Error deleting temporary KML file";
+                    // LOG(INFO) << "Error deleting temporary KML file";
                 }
         }
 }

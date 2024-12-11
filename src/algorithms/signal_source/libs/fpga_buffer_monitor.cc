@@ -63,7 +63,7 @@ Fpga_buffer_monitor::Fpga_buffer_monitor(
     // open device descriptor
     if ((d_device_descriptor = open(device_io_name.c_str(), O_RDWR | O_SYNC)) == -1)
         {
-            LOG(WARNING) << "Cannot open deviceio" << device_io_name;
+            // // LOG(WARNING) << "Cannot open deviceio" << device_io_name;
         }
 
     // device memory map
@@ -72,22 +72,22 @@ Fpga_buffer_monitor::Fpga_buffer_monitor(
 
     if (d_map_base == reinterpret_cast<void *>(-1))
         {
-            LOG(WARNING) << "Cannot map the FPGA buffer monitor module";
+            // // LOG(WARNING) << "Cannot map the FPGA buffer monitor module";
             // std::cout << "Could not map the FPGA buffer monitor \n";
         }
 
     // sanity check: check test register
     if (buffer_monitor_test_register() < 0)
         {
-            LOG(WARNING) << "FPGA buffer monitor test register sanity check failed";
+            // // LOG(WARNING) << "FPGA buffer monitor test register sanity check failed";
             // std::cout << "FPGA buffer monitor test register sanity check failed\n";
         }
     else
         {
-            LOG(INFO) << "FPGA buffer monitor test register sanity check success !";
+            // LOG(INFO) << "FPGA buffer monitor test register sanity check success !";
         }
 
-    DLOG(INFO) << "FPGA buffer monitor class created";
+    // D// LOG(INFO) << "FPGA buffer monitor class created";
 
     if (d_dump)
         {
@@ -129,11 +129,11 @@ Fpga_buffer_monitor::Fpga_buffer_monitor(
                         {
                             d_dump_file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
                             d_dump_file.open(dump_filename_.c_str(), std::ios::out | std::ios::binary);
-                            LOG(INFO) << "FPGA buffer monitor dump enabled. Log file: " << dump_filename_.c_str();
+                            // LOG(INFO) << "FPGA buffer monitor dump enabled. Log file: " << dump_filename_.c_str();
                         }
                     catch (const std::ofstream::failure &e)
                         {
-                            LOG(WARNING) << "Exception opening FPGA buffer monitor dump file " << e.what();
+                            // // LOG(WARNING) << "Exception opening FPGA buffer monitor dump file " << e.what();
                         }
                 }
         }
@@ -154,7 +154,7 @@ Fpga_buffer_monitor::~Fpga_buffer_monitor()
                         }
                     catch (const std::exception &ex)
                         {
-                            LOG(WARNING) << "Exception in FPGA buffer monitor destructor: " << ex.what();
+                            // // LOG(WARNING) << "Exception in FPGA buffer monitor destructor: " << ex.what();
                         }
                 }
         }

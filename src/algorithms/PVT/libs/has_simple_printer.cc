@@ -127,7 +127,7 @@ Has_Simple_Printer::Has_Simple_Printer(const std::string& base_path,
 
 Has_Simple_Printer::~Has_Simple_Printer()
 {
-    DLOG(INFO) << "HAS Message printer destructor called.";
+    // D// LOG(INFO) << "HAS Message printer destructor called.";
     try
         {
             close_file();
@@ -141,7 +141,7 @@ Has_Simple_Printer::~Has_Simple_Printer()
             errorlib::error_code ec;
             if (!fs::remove(fs::path(d_has_filename), ec))
                 {
-                    LOG(INFO) << "Error deleting temporary HAS Message file.";
+                    // LOG(INFO) << "Error deleting temporary HAS Message file.";
                 }
         }
 }

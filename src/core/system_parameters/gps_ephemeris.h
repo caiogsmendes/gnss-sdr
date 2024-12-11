@@ -25,6 +25,8 @@
 #include <map>
 #include <string>
 
+#include "HEtechSerial.h"
+
 /** \addtogroup Core
  * \{ */
 /** \addtogroup System_Parameters
@@ -58,6 +60,10 @@ public:
     bool fit_interval_flag{};  //!< indicates the curve-fit interval used by the CS (Block II/IIA/IIR/IIR-M/IIF) and SS (Block IIIA) in determining the ephemeris parameters, as follows: 0 = 4 hours, 1 = greater than 4 hours.
     double spare1{};
     double spare2{};
+
+    //Caio
+    serial_s_t* commS1; //piggybacking
+    //
 
     // Flags
 

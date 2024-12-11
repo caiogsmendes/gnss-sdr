@@ -205,7 +205,7 @@ int togeod(double *dphi, double *dlambda, double *h, double a, double finv, doub
                 }
             if (i == (maxit - 1))
                 {
-                    // LOG(WARNING) << "The computation of geodetic coordinates did not converge";
+                    // // // LOG(WARNING) << "The computation of geodetic coordinates did not converge";
                 }
         }
     *dphi = (*dphi) * rtd;

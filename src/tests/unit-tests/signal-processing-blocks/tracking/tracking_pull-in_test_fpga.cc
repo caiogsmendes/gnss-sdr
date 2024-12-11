@@ -108,7 +108,7 @@ void TrackingPullInTest_msg_rx_Fpga::msg_handler_channel_events(const pmt::pmt_t
         }
     catch (const wht::bad_any_cast& e)
         {
-            LOG(WARNING) << "msg_handler_tracking Bad cast!";
+            // // LOG(WARNING) << "msg_handler_tracking Bad cast!";
             rx_message = 0;
         }
 }

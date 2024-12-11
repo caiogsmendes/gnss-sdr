@@ -178,7 +178,7 @@ void FrontEndCal_msg_rx::msg_handler_channel_events(const pmt::pmt_t& msg)
         }
     catch (const wht::bad_any_cast& e)
         {
-            LOG(WARNING) << "msg_handler_telemetry Bad any cast!\n";
+            // // LOG(WARNING) << "msg_handler_telemetry Bad any cast!\n";
             rx_message = 0;
         }
 }
@@ -542,7 +542,7 @@ int main(int argc, char** argv)
                         }
                     catch (const std::exception& e)
                         {
-                            LOG(INFO) << "Exception caught (thread resource error)";
+                            // LOG(INFO) << "Exception caught (thread resource error)";
                         }
                     top_block->run();
                     if (start_msg == true)
@@ -572,7 +572,7 @@ int main(int argc, char** argv)
                         }
                     catch (const boost::exception& e)
                         {
-                            LOG(INFO) << "Exception caught while pushing to the internal queue.";
+                            // LOG(INFO) << "Exception caught while pushing to the internal queue.";
                         }
                     try
                         {
@@ -580,7 +580,7 @@ int main(int argc, char** argv)
                         }
                     catch (const std::exception& e)
                         {
-                            LOG(INFO) << "Exception caught while joining threads.";
+                            // LOG(INFO) << "Exception caught while joining threads.";
                         }
                     gnss_sync_vector.clear();
 #if GNURADIO_USES_STD_POINTERS

@@ -37,7 +37,7 @@ FifoReader::FifoReader(const std::string &file_name, const std::string &sample_t
       file_name_(file_name),
       sample_type_(sample_type)
 {
-    DLOG(INFO) << "Starting FifoReader";
+    // D// LOG(INFO) << "Starting FifoReader";
 }
 
 bool FifoReader::start()

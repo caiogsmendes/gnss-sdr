@@ -595,6 +595,26 @@ extern "C"
             }
     }
 
+
+    void Hex2Int(int *output, uint8_t *input)
+    {
+        for (int i = 0; i < 2; i++)
+            {
+                *((uint8_t *)output + i) = *input;
+                input++;
+            }
+    }
+
+    void Hex2Int8(uint8_t *output, uint8_t *input)
+    {
+        for (int i = 0; i < 1; i++)
+            {
+                *((uint8_t *)output + i) = *input;
+                input++;
+            }
+    }
+
+
     void char2Hex(uint8_t *output, const char *input)
     {
         // Output -> vetor de msg
@@ -620,4 +640,18 @@ extern "C"
 
     }
 
+    bool checkCRC(uint8_t* msg, int tam)
+    {
+        int i = 0;
+        uint8_t check = 0;
+        while (i < tam-1)
+            {
+                check ^= *msg;
+                ++msg;
+                ++i;
+            }
+        if (*msg == check)
+        {return 1;}
+        else{return 0;}
+    }
 }

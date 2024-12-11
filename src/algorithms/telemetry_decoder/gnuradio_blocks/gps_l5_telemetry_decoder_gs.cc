@@ -85,7 +85,7 @@ gps_l5_telemetry_decoder_gs::gps_l5_telemetry_decoder_gs(
     d_max_symbols_without_valid_frame = GPS_L5_CNAV_DATA_PAGE_BITS * GPS_L5_SYMBOLS_PER_BIT * 10;  // rise alarm if 20 consecutive subframes have no valid CRC
 
     d_satellite = Gnss_Satellite(satellite.get_system(), satellite.get_PRN());
-    DLOG(INFO) << "GPS L5 TELEMETRY PROCESSING: satellite " << d_satellite;
+    // D// LOG(INFO) << "GPS L5 TELEMETRY PROCESSING: satellite " << d_satellite;
 
     // initialize the CNAV frame decoder (libswiftcnav)
     cnav_msg_decoder_init(&d_cnav_decoder);
@@ -105,7 +105,7 @@ gps_l5_telemetry_decoder_gs::gps_l5_telemetry_decoder_gs(
 
 gps_l5_telemetry_decoder_gs::~gps_l5_telemetry_decoder_gs()
 {
-    DLOG(INFO) << "GPS L5 Telemetry decoder block (channel " << d_channel << ") destructor called.";
+    // D// LOG(INFO) << "GPS L5 Telemetry decoder block (channel " << d_channel << ") destructor called.";
     size_t pos = 0;
     if (d_dump_file.is_open() == true)
         {
@@ -116,13 +116,13 @@ gps_l5_telemetry_decoder_gs::~gps_l5_telemetry_decoder_gs()
                 }
             catch (const std::exception &ex)
                 {
-                    LOG(WARNING) << "Exception in destructor closing the dump file " << ex.what();
+                    // // LOG(WARNING) << "Exception in destructor closing the dump file " << ex.what();
                 }
             if (pos == 0)
                 {
                     if (!tlm_remove_file(d_dump_filename))
                         {
-                            LOG(WARNING) << "Error deleting temporary file";
+                            // // LOG(WARNING) << "Error deleting temporary file";
                         }
                 }
         }
@@ -133,7 +133,7 @@ gps_l5_telemetry_decoder_gs::~gps_l5_telemetry_decoder_gs()
                 {
                     if (!tlm_remove_file(d_dump_filename))
                         {
-                            LOG(WARNING) << "Error deleting temporary file";
+                            // // LOG(WARNING) << "Error deleting temporary file";
                         }
                 }
         }
@@ -143,7 +143,7 @@ gps_l5_telemetry_decoder_gs::~gps_l5_telemetry_decoder_gs()
 void gps_l5_telemetry_decoder_gs::set_satellite(const Gnss_Satellite &satellite)
 {
     d_satellite = Gnss_Satellite(satellite.get_system(), satellite.get_PRN());
-    DLOG(INFO) << "GPS L5 CNAV telemetry decoder in channel " << this->d_channel << " set to satellite " << d_satellite;
+    // D// LOG(INFO) << "GPS L5 CNAV telemetry decoder in channel " << this->d_channel << " set to satellite " << d_satellite;
     d_CNAV_Message = Gps_CNAV_Navigation_Message();
 }
 
@@ -152,7 +152,7 @@ void gps_l5_telemetry_decoder_gs::set_channel(int32_t channel)
 {
     d_channel = channel;
     d_CNAV_Message = Gps_CNAV_Navigation_Message();
-    DLOG(INFO) << "GPS L5 CNAV channel set to " << channel;
+    // D// LOG(INFO) << "GPS L5 CNAV channel set to " << channel;
     // ############# ENABLE DATA FILE LOG #################
     if (d_dump == true)
         {
@@ -164,12 +164,12 @@ void gps_l5_telemetry_decoder_gs::set_channel(int32_t channel)
                             d_dump_filename.append(".dat");
                             d_dump_file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
                             d_dump_file.open(d_dump_filename.c_str(), std::ios::out | std::ios::binary);
-                            LOG(INFO) << "Telemetry decoder dump enabled on channel " << d_channel
-                                      << " Log file: " << d_dump_filename.c_str();
+                            // LOG(INFO) << "Telemetry decoder dump enabled on channel " << d_channel
+                                    //   << " Log file: " << d_dump_filename.c_str();
                         }
                     catch (const std::ofstream::failure &e)
                         {
-                            LOG(WARNING) << "channel " << d_channel << " Exception opening Telemetry GPS L5 dump file " << e.what();
+                            // // LOG(WARNING) << "channel " << d_channel << " Exception opening Telemetry GPS L5 dump file " << e.what();
                         }
                 }
         }
@@ -189,7 +189,7 @@ void gps_l5_telemetry_decoder_gs::reset()
     d_TOW_at_current_symbol_ms = 0;
     d_sent_tlm_failed_msg = false;
     d_flag_valid_word = false;
-    DLOG(INFO) << "Telemetry decoder reset for satellite " << d_satellite;
+    // D// LOG(INFO) << "Telemetry decoder reset for satellite " << d_satellite;
 }
 
 
@@ -315,9 +315,9 @@ int gps_l5_telemetry_decoder_gs::general_work(int noutput_items __attribute__((u
             d_TOW_at_current_symbol_ms = msg.tow * 6000 + (delay + 12) * GPS_L5I_SYMBOL_PERIOD_MS;
             if (last_d_TOW_at_current_symbol_ms != 0 && std::llabs(static_cast<int64_t>(d_TOW_at_current_symbol_ms) - static_cast<int64_t>(last_d_TOW_at_current_symbol_ms)) > static_cast<int64_t>(GPS_L5I_SYMBOL_PERIOD_MS))
                 {
-                    DLOG(INFO) << "Warning: GPS L5 TOW update in ch " << d_channel
-                               << " does not match the TLM TOW counter " << static_cast<int64_t>(d_TOW_at_current_symbol_ms) - static_cast<int64_t>(last_d_TOW_at_current_symbol_ms) << " ms "
-                               << " with delay: " << delay << " msg tow: " << msg.tow * 6000 << " ms \n";
+                    // D// LOG(INFO) << "Warning: GPS L5 TOW update in ch " << d_channel
+                            //    << " does not match the TLM TOW counter " << static_cast<int64_t>(d_TOW_at_current_symbol_ms) - static_cast<int64_t>(last_d_TOW_at_current_symbol_ms) << " ms "
+                            //    << " with delay: " << delay << " msg tow: " << msg.tow * 6000 << " ms \n";
 
                     d_TOW_at_current_symbol_ms = 0;
                     d_flag_valid_word = false;
@@ -385,7 +385,7 @@ int gps_l5_telemetry_decoder_gs::general_work(int noutput_items __attribute__((u
                         }
                     catch (const std::ofstream::failure &e)
                         {
-                            LOG(WARNING) << "Exception writing Telemetry GPS L5 dump file " << e.what();
+                            // // LOG(WARNING) << "Exception writing Telemetry GPS L5 dump file " << e.what();
                         }
                 }
 

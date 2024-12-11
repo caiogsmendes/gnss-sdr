@@ -24,6 +24,8 @@
 #ifndef GNSS_SDR_GNSS_FLOWGRAPH_H
 #define GNSS_SDR_GNSS_FLOWGRAPH_H
 
+
+#include "HEtechSerial.h"
 #include "channel_status_msg_receiver.h"
 #include "concurrent_queue.h"
 #include "galileo_e6_has_msg_receiver.h"
@@ -157,6 +159,10 @@ public:
      */
     void priorize_satellites(const std::vector<std::pair<int, Gnss_Satellite>>& visible_satellites);
 
+    //Caio
+    serial_s_t comms_flow;
+    std::shared_ptr<ConfigurationInterface> configuration_;
+
 #if ENABLE_FPGA
     void start_acquisition_helper();
 
@@ -183,6 +189,7 @@ private:
     // int connect_osnma();
     int connect_gal_e6_has();
     int connect_gnss_synchro_monitor();
+    int connect_pvt_to_gnss_serial_monitor(); //Caio
     int connect_gnss_serial_monitor(); //Caio
     int connect_acquisition_monitor();
     int connect_tracking_monitor();
@@ -218,7 +225,7 @@ private:
 
     gr::top_block_sptr top_block_;
 
-    std::shared_ptr<ConfigurationInterface> configuration_;
+    // std::shared_ptr<ConfigurationInterface> configuration_;
     std::shared_ptr<Concurrent_Queue<pmt::pmt_t>> queue_;
 
     std::vector<std::shared_ptr<SignalSourceInterface>> sig_source_;
@@ -226,12 +233,13 @@ private:
     std::vector<std::shared_ptr<ChannelInterface>> channels_;
     std::shared_ptr<GNSSBlockInterface> observables_;
     std::shared_ptr<GNSSBlockInterface> pvt_;
+    std::shared_ptr<GNSSBlockInterface> SerialMonitor_;
 
     std::map<std::string, gr::basic_block_sptr> acq_resamplers_;
     std::vector<gr::blocks::null_sink::sptr> null_sinks_;
 
     gr::basic_block_sptr GnssSynchroMonitor_;
-    gr::basic_block_sptr GnssSerialMonitor_; //Caio
+    gr::basic_block_sptr GnssSerialMonitor_; //Cai0
     gr::basic_block_sptr GnssSynchroAcquisitionMonitor_;
     gr::basic_block_sptr GnssSynchroTrackingMonitor_;
     gr::basic_block_sptr NavDataMonitor_;
@@ -298,6 +306,8 @@ private:
     bool enable_fpga_offloading_;
     // bool enable_osnma_rx_;
     bool enable_e6_has_rx_;
+
+    
 };
 
 

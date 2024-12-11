@@ -309,7 +309,7 @@ void receive_msg()
                     if ((ttff_msg != 0) && (ttff_msg != -1))
                         {
                             TTFF_v.push_back(ttff_msg);
-                            LOG(INFO) << "Valid Time-To-First-Fix: " << ttff_msg << "[s]";
+                            // LOG(INFO) << "Valid Time-To-First-Fix: " << ttff_msg << "[s]";
                             // Stop the receiver
                             while (((msqid_stop = msgget(key_stop, 0644))) == -1)
                                 {
@@ -695,7 +695,7 @@ int main(int argc, char **argv)
         }
     catch (...)
         {
-            LOG(WARNING) << "Unexpected catch";
+            // // LOG(WARNING) << "Unexpected catch";
         }
 
     // Terminate the queue thread

@@ -56,7 +56,7 @@ std::tuple<size_t, bool> TwoBitCpxFileSignalSource::itemTypeToSize()
         }
     else
         {
-            LOG(WARNING) << item_type() << " unrecognized item type. Using byte.";
+            // // LOG(WARNING) << item_type() << " unrecognized item type. Using byte.";
         }
 
     return std::make_tuple(item_size, is_complex);
@@ -70,21 +70,21 @@ gnss_shared_ptr<gr::block> TwoBitCpxFileSignalSource::source() const { return in
 void TwoBitCpxFileSignalSource::create_file_source_hook()
 {
     unpack_byte_ = make_unpack_byte_2bit_cpx_samples();
-    DLOG(INFO) << "unpack_byte_2bit_cpx_samples(" << unpack_byte_->unique_id() << ")";
+    // D// LOG(INFO) << "unpack_byte_2bit_cpx_samples(" << unpack_byte_->unique_id() << ")";
     inter_shorts_to_cpx_ = gr::blocks::interleaved_short_to_complex::make(false, true);  // I/Q swap enabled
-    DLOG(INFO) << "interleaved_short_to_complex(" << inter_shorts_to_cpx_->unique_id() << ")";
+    // D// LOG(INFO) << "interleaved_short_to_complex(" << inter_shorts_to_cpx_->unique_id() << ")";
 }
 
 void TwoBitCpxFileSignalSource::pre_connect_hook(gr::top_block_sptr top_block)
 {
     top_block->connect(file_source(), 0, unpack_byte_, 0);
     top_block->connect(unpack_byte_, 0, inter_shorts_to_cpx_, 0);
-    DLOG(INFO) << "connected file_source to unpacker";
+    // D// LOG(INFO) << "connected file_source to unpacker";
 }
 
 void TwoBitCpxFileSignalSource::pre_disconnect_hook(gr::top_block_sptr top_block)
 {
     top_block->disconnect(file_source(), 0, unpack_byte_, 0);
     top_block->disconnect(unpack_byte_, 0, inter_shorts_to_cpx_, 0);
-    DLOG(INFO) << "disconnected file_source from unpacker";
+    // D// LOG(INFO) << "disconnected file_source from unpacker";
 }

@@ -91,7 +91,7 @@ void GalileoE1Pcps8msAmbiguousAcquisitionGSoC2013Test_msg_rx::msg_handler_channe
         }
     catch (const wht::bad_any_cast& e)
         {
-            LOG(WARNING) << "msg_handler_channel_events Bad any_cast: " << e.what();
+            // // LOG(WARNING) << "msg_handler_channel_events Bad any_cast: " << e.what();
             rx_message = 0;
         }
 }
@@ -368,7 +368,7 @@ void GalileoE1Pcps8msAmbiguousAcquisitionGSoC2013Test::wait_message()
                 }
             catch (const boost::exception& e)
                 {
-                    LOG(WARNING) << "Boost exception: " << boost::diagnostic_information(e);
+                    // // LOG(WARNING) << "Boost exception: " << boost::diagnostic_information(e);
                 }
 
             end = std::chrono::system_clock::now();

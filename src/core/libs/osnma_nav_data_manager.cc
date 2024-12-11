@@ -301,22 +301,22 @@ void OSNMA_NavDataManager::log_status() const
 {
     for (const auto& satellite : d_satellite_nav_data)
         {
-            LOG(INFO) << "Galileo OSNMA: NavData status :: SVID=" << satellite.first;
+            // LOG(INFO) << "Galileo OSNMA: NavData status :: SVID=" << satellite.first;
             const auto& tow_data = satellite.second;
             for (const auto& nav_data : tow_data)
                 {
-                    LOG(INFO) << "Galileo OSNMA: IOD_nav=0b" << std::uppercase
-                              << std::bitset<10>(nav_data.second.get_IOD_nav())
-                              << ", TOW_start="
-                              << nav_data.second.get_tow_sf0()
-                              << ", TOW_last="
-                              << nav_data.second.get_last_received_TOW()
-                              << ", l_t="
-                              << nav_data.second.get_verified_bits()
-                              << ", PRNd="
-                              << nav_data.second.get_prn_d()
-                              << ", verified="
-                              << nav_data.second.get_verified_status();
+                    // LOG(INFO) << "Galileo OSNMA: IOD_nav=0b" << std::uppercase
+                            //   << std::bitset<10>(nav_data.second.get_IOD_nav())
+                            //   << ", TOW_start="
+                            //   << nav_data.second.get_tow_sf0()
+                            //   << ", TOW_last="
+                            //   << nav_data.second.get_last_received_TOW()
+                            //   << ", l_t="
+                            //   << nav_data.second.get_verified_bits()
+                            //   << ", PRNd="
+                            //   << nav_data.second.get_prn_d()
+                            //   << ", verified="
+                            //   << nav_data.second.get_verified_status();
                 }
         }
 }

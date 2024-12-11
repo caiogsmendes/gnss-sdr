@@ -99,7 +99,7 @@ beidou_b1i_telemetry_decoder_gs::beidou_b1i_telemetry_decoder_gs(
         }
 
     d_satellite = Gnss_Satellite(satellite.get_system(), satellite.get_PRN());
-    LOG(INFO) << "Initializing BeiDou B1I Telemetry Decoding for satellite " << this->d_satellite;
+    // LOG(INFO) << "Initializing BeiDou B1I Telemetry Decoding for satellite " << this->d_satellite;
 
     // Setting samples of preamble code
     for (int32_t i = 0; i < d_symbols_per_preamble; i++)
@@ -131,7 +131,7 @@ beidou_b1i_telemetry_decoder_gs::beidou_b1i_telemetry_decoder_gs(
 
 beidou_b1i_telemetry_decoder_gs::~beidou_b1i_telemetry_decoder_gs()
 {
-    DLOG(INFO) << "BeiDou B1I Telemetry decoder block (channel " << d_channel << ") destructor called.";
+    // D// LOG(INFO) << "BeiDou B1I Telemetry decoder block (channel " << d_channel << ") destructor called.";
     size_t pos = 0;
     if (d_dump_file.is_open() == true)
         {
@@ -142,13 +142,13 @@ beidou_b1i_telemetry_decoder_gs::~beidou_b1i_telemetry_decoder_gs()
                 }
             catch (const std::exception &ex)
                 {
-                    LOG(WARNING) << "Exception in destructor closing the dump file " << ex.what();
+                    // // LOG(WARNING) << "Exception in destructor closing the dump file " << ex.what();
                 }
             if (pos == 0)
                 {
                     if (!tlm_remove_file(d_dump_filename))
                         {
-                            LOG(WARNING) << "Error deleting temporary file";
+                            // // LOG(WARNING) << "Error deleting temporary file";
                         }
                 }
         }
@@ -159,7 +159,7 @@ beidou_b1i_telemetry_decoder_gs::~beidou_b1i_telemetry_decoder_gs()
                 {
                     if (!tlm_remove_file(d_dump_filename))
                         {
-                            LOG(WARNING) << "Error deleting temporary file";
+                            // // LOG(WARNING) << "Error deleting temporary file";
                         }
                 }
         }
@@ -284,13 +284,13 @@ void beidou_b1i_telemetry_decoder_gs::decode_subframe(float *frame_symbols, doub
     bool crc_ok = d_nav.get_flag_CRC_test();
     if (crc_ok)
         {
-            DLOG(INFO) << "BeiDou DNAV CRC correct in channel " << d_channel
-                       << " from satellite " << d_satellite;
+            // D// LOG(INFO) << "BeiDou DNAV CRC correct in channel " << d_channel
+                    //    << " from satellite " << d_satellite;
         }
     else
         {
-            DLOG(INFO) << "BeiDou DNAV CRC error in channel " << d_channel
-                       << " from satellite " << d_satellite;
+            // D// LOG(INFO) << "BeiDou DNAV CRC error in channel " << d_channel
+                    //    << " from satellite " << d_satellite;
         }
     if (d_dump_crc_stats)
         {
@@ -303,7 +303,7 @@ void beidou_b1i_telemetry_decoder_gs::decode_subframe(float *frame_symbols, doub
             // get object for this SV (mandatory)
             const std::shared_ptr<Beidou_Dnav_Ephemeris> tmp_obj = std::make_shared<Beidou_Dnav_Ephemeris>(d_nav.get_ephemeris());
             this->message_port_pub(pmt::mp("telemetry"), pmt::make_any(tmp_obj));
-            LOG(INFO) << "BEIDOU DNAV Ephemeris have been received in channel" << d_channel << " from satellite " << d_satellite << " with CN0=" << cn0 << " dB-Hz";
+            // LOG(INFO) << "BEIDOU DNAV Ephemeris have been received in channel" << d_channel << " from satellite " << d_satellite << " with CN0=" << cn0 << " dB-Hz";
 #if __cplusplus == 201103L
             const int default_precision = std::cout.precision();
 #else
@@ -318,7 +318,7 @@ void beidou_b1i_telemetry_decoder_gs::decode_subframe(float *frame_symbols, doub
             // get object for this SV (mandatory)
             const std::shared_ptr<Beidou_Dnav_Utc_Model> tmp_obj = std::make_shared<Beidou_Dnav_Utc_Model>(d_nav.get_utc_model());
             this->message_port_pub(pmt::mp("telemetry"), pmt::make_any(tmp_obj));
-            LOG(INFO) << "BEIDOU DNAV UTC Model data have been received in channel" << d_channel << " from satellite " << d_satellite << " with CN0=" << cn0 << " dB-Hz";
+            // LOG(INFO) << "BEIDOU DNAV UTC Model data have been received in channel" << d_channel << " from satellite " << d_satellite << " with CN0=" << cn0 << " dB-Hz";
 #if __cplusplus == 201103L
             const int default_precision = std::cout.precision();
 #else
@@ -335,7 +335,7 @@ void beidou_b1i_telemetry_decoder_gs::decode_subframe(float *frame_symbols, doub
             // get object for this SV (mandatory)
             const std::shared_ptr<Beidou_Dnav_Iono> tmp_obj = std::make_shared<Beidou_Dnav_Iono>(d_nav.get_iono());
             this->message_port_pub(pmt::mp("telemetry"), pmt::make_any(tmp_obj));
-            LOG(INFO) << "BEIDOU DNAV Iono data have been received in channel" << d_channel << " from satellite " << d_satellite << " with CN0=" << cn0 << " dB-Hz";
+            // LOG(INFO) << "BEIDOU DNAV Iono data have been received in channel" << d_channel << " from satellite " << d_satellite << " with CN0=" << cn0 << " dB-Hz";
 #if __cplusplus == 201103L
             const int default_precision = std::cout.precision();
 #else
@@ -351,7 +351,7 @@ void beidou_b1i_telemetry_decoder_gs::decode_subframe(float *frame_symbols, doub
             // uint32_t slot_nbr = d_nav.i_alm_satellite_PRN;
             // std::shared_ptr<Beidou_Dnav_Almanac> tmp_obj = std::make_shared<Beidou_Dnav_Almanac>(d_nav.get_almanac(slot_nbr));
             // this->message_port_pub(pmt::mp("telemetry"), pmt::make_any(tmp_obj));
-            LOG(INFO) << "BEIDOU DNAV Almanac data have been received in channel" << d_channel << " from satellite " << d_satellite << " with CN0=" << cn0 << " dB-Hz";
+            // LOG(INFO) << "BEIDOU DNAV Almanac data have been received in channel" << d_channel << " from satellite " << d_satellite << " with CN0=" << cn0 << " dB-Hz";
 #if __cplusplus == 201103L
             const int default_precision = std::cout.precision();
 #else
@@ -369,8 +369,8 @@ void beidou_b1i_telemetry_decoder_gs::set_satellite(const Gnss_Satellite &satell
 {
     uint32_t sat_prn = 0;
     d_satellite = Gnss_Satellite(satellite.get_system(), satellite.get_PRN());
-    DLOG(INFO) << "Setting decoder Finite State Machine to satellite " << d_satellite;
-    DLOG(INFO) << "Navigation Satellite set to " << d_satellite;
+    // D// LOG(INFO) << "Setting decoder Finite State Machine to satellite " << d_satellite;
+    // D// LOG(INFO) << "Navigation Satellite set to " << d_satellite;
 
     // Update satellite information for DNAV decoder
     sat_prn = d_satellite.get_PRN();
@@ -431,7 +431,7 @@ void beidou_b1i_telemetry_decoder_gs::set_satellite(const Gnss_Satellite &satell
 void beidou_b1i_telemetry_decoder_gs::set_channel(int32_t channel)
 {
     d_channel = channel;
-    LOG(INFO) << "Navigation channel set to " << channel;
+    // LOG(INFO) << "Navigation channel set to " << channel;
     // ############# ENABLE DATA FILE LOG #################
     if (d_dump == true)
         {
@@ -443,11 +443,11 @@ void beidou_b1i_telemetry_decoder_gs::set_channel(int32_t channel)
                             d_dump_filename.append(".dat");
                             d_dump_file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
                             d_dump_file.open(d_dump_filename.c_str(), std::ios::out | std::ios::binary);
-                            LOG(INFO) << "Telemetry decoder dump enabled on channel " << d_channel << " Log file: " << d_dump_filename.c_str();
+                            // LOG(INFO) << "Telemetry decoder dump enabled on channel " << d_channel << " Log file: " << d_dump_filename.c_str();
                         }
                     catch (const std::ofstream::failure &e)
                         {
-                            LOG(WARNING) << "channel " << d_channel << ": exception opening Beidou TLM dump file. " << e.what();
+                            // // LOG(WARNING) << "channel " << d_channel << ": exception opening Beidou TLM dump file. " << e.what();
                         }
                 }
         }
@@ -466,7 +466,7 @@ void beidou_b1i_telemetry_decoder_gs::reset()
     d_TOW_at_current_symbol_ms = 0;
     d_sent_tlm_failed_msg = false;
     d_flag_valid_word = false;
-    DLOG(INFO) << "Beidou B1I Telemetry decoder reset for satellite " << d_satellite;
+    // D// LOG(INFO) << "Beidou B1I Telemetry decoder reset for satellite " << d_satellite;
 }
 
 
@@ -509,7 +509,7 @@ int beidou_b1i_telemetry_decoder_gs::general_work(int noutput_items __attribute_
                 {
                     // Record the preamble sample stamp
                     d_preamble_index = d_sample_counter;
-                    DLOG(INFO) << "Preamble detection for BEIDOU B1I SAT " << this->d_satellite;
+                    // D// LOG(INFO) << "Preamble detection for BEIDOU B1I SAT " << this->d_satellite;
                     // Enter into frame pre-detection status
                     d_stat = 1;
                 }
@@ -523,7 +523,7 @@ int beidou_b1i_telemetry_decoder_gs::general_work(int noutput_items __attribute_
                     if (abs(preamble_diff - d_preamble_period_samples) == 0)
                         {
                             // try to decode frame
-                            DLOG(INFO) << "Starting BeiDou DNAV frame decoding for BeiDou B1I SAT " << this->d_satellite;
+                            // D// LOG(INFO) << "Starting BeiDou DNAV frame decoding for BeiDou B1I SAT " << this->d_satellite;
                             d_preamble_index = d_sample_counter;  // record the preamble sample stamp
 
                             d_stat = 2;
@@ -555,7 +555,7 @@ int beidou_b1i_telemetry_decoder_gs::general_work(int noutput_items __attribute_
                                     if (!d_flag_frame_sync)
                                         {
                                             d_flag_frame_sync = true;
-                                            DLOG(INFO) << "BeiDou DNAV frame sync found for SAT " << this->d_satellite;
+                                            // D// LOG(INFO) << "BeiDou DNAV frame sync found for SAT " << this->d_satellite;
                                         }
                                 }
                             else
@@ -564,7 +564,7 @@ int beidou_b1i_telemetry_decoder_gs::general_work(int noutput_items __attribute_
                                     d_preamble_index = d_sample_counter;  // record the preamble sample stamp
                                     if (d_CRC_error_counter > CRC_ERROR_LIMIT)
                                         {
-                                            DLOG(INFO) << "BeiDou DNAV frame sync lost for SAT " << this->d_satellite;
+                                            // D// LOG(INFO) << "BeiDou DNAV frame sync lost for SAT " << this->d_satellite;
                                             d_flag_frame_sync = false;
                                             d_stat = 0;
                                             d_flag_SOW_set = false;
@@ -577,7 +577,7 @@ int beidou_b1i_telemetry_decoder_gs::general_work(int noutput_items __attribute_
                                 {
                                     d_stat = 0;  // start again
                                 }
-                            DLOG(INFO) << "Failed BeiDou DNAV frame decoding for BeiDou B1I SAT " << this->d_satellite;
+                            // D// LOG(INFO) << "Failed BeiDou DNAV frame decoding for BeiDou B1I SAT " << this->d_satellite;
                         }
                 }
         }
@@ -612,7 +612,7 @@ int beidou_b1i_telemetry_decoder_gs::general_work(int noutput_items __attribute_
                             if (!d_flag_frame_sync)
                                 {
                                     d_flag_frame_sync = true;
-                                    DLOG(INFO) << "BeiDou DNAV frame sync found for SAT " << this->d_satellite;
+                                    // D// LOG(INFO) << "BeiDou DNAV frame sync found for SAT " << this->d_satellite;
                                 }
                         }
                     else
@@ -621,7 +621,7 @@ int beidou_b1i_telemetry_decoder_gs::general_work(int noutput_items __attribute_
                             d_preamble_index = d_sample_counter;  // record the preamble sample stamp
                             if (d_CRC_error_counter > CRC_ERROR_LIMIT)
                                 {
-                                    DLOG(INFO) << "BeiDou DNAV frame sync lost for SAT " << this->d_satellite;
+                                    // D// LOG(INFO) << "BeiDou DNAV frame sync lost for SAT " << this->d_satellite;
                                     d_flag_frame_sync = false;
                                     d_stat = 0;
                                     d_flag_SOW_set = false;
@@ -645,8 +645,8 @@ int beidou_b1i_telemetry_decoder_gs::general_work(int noutput_items __attribute_
 
             if (last_d_TOW_at_current_symbol_ms != 0 && abs(static_cast<int64_t>(d_TOW_at_current_symbol_ms) - int64_t(last_d_TOW_at_current_symbol_ms)) > static_cast<int64_t>(d_symbol_duration_ms))
                 {
-                    LOG(INFO) << "Warning: BEIDOU B1I TOW update in ch " << d_channel
-                              << " does not match the TLM TOW counter " << static_cast<int64_t>(d_TOW_at_current_symbol_ms) - int64_t(last_d_TOW_at_current_symbol_ms) << " ms \n";
+                    // LOG(INFO) << "Warning: BEIDOU B1I TOW update in ch " << d_channel
+                            //   << " does not match the TLM TOW counter " << static_cast<int64_t>(d_TOW_at_current_symbol_ms) - int64_t(last_d_TOW_at_current_symbol_ms) << " ms \n";
 
                     d_TOW_at_current_symbol_ms = 0;
                     d_flag_valid_word = false;
@@ -704,7 +704,7 @@ int beidou_b1i_telemetry_decoder_gs::general_work(int noutput_items __attribute_
                         }
                     catch (const std::ofstream::failure &e)
                         {
-                            LOG(WARNING) << "Exception writing Telemetry GPS L5 dump file " << e.what();
+                            // // LOG(WARNING) << "Exception writing Telemetry GPS L5 dump file " << e.what();
                         }
                 }
 

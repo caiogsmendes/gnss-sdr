@@ -79,9 +79,9 @@ GalileoE1PcpsAmbiguousAcquisition::GalileoE1PcpsAmbiguousAcquisition(
 
     sampled_ms_ = acq_parameters_.sampled_ms;
 
-    DLOG(INFO) << "role " << role_;
+    // D// LOG(INFO) << "role " << role_;
     acquisition_ = pcps_make_acquisition(acq_parameters_);
-    DLOG(INFO) << "acquisition(" << acquisition_->unique_id() << ")";
+    // D// LOG(INFO) << "acquisition(" << acquisition_->unique_id() << ")";
 
     if (item_type_ == "cbyte")
         {
@@ -236,7 +236,7 @@ void GalileoE1PcpsAmbiguousAcquisition::connect(gr::top_block_sptr top_block)
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unknown acquisition item type";
+            // // LOG(WARNING) << item_type_ << " unknown acquisition item type";
         }
 }
 
@@ -255,7 +255,7 @@ void GalileoE1PcpsAmbiguousAcquisition::disconnect(gr::top_block_sptr top_block)
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unknown acquisition item type";
+            // // LOG(WARNING) << item_type_ << " unknown acquisition item type";
         }
 }
 
@@ -271,7 +271,7 @@ gr::basic_block_sptr GalileoE1PcpsAmbiguousAcquisition::get_left_block()
             return cbyte_to_float_x2_;
         }
 
-    LOG(WARNING) << item_type_ << " unknown acquisition item type";
+    // // LOG(WARNING) << item_type_ << " unknown acquisition item type";
     return nullptr;
 }
 

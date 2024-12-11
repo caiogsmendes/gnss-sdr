@@ -176,9 +176,9 @@ GalileoE5aDllPllTrackingFpga::GalileoE5aDllPllTrackingFpga(
         }
 
     // ################# MAKE TRACKING GNURadio object ###################
-    DLOG(INFO) << "role " << role_;
+    // D// LOG(INFO) << "role " << role_;
     tracking_fpga_sc_sptr_ = dll_pll_veml_make_tracking_fpga(trk_params_fpga);
-    DLOG(INFO) << "tracking(" << tracking_fpga_sc_sptr_->unique_id() << ")";
+    // D// LOG(INFO) << "tracking(" << tracking_fpga_sc_sptr_->unique_id() << ")";
 
     if (in_streams_ > 1)
         {

@@ -88,9 +88,9 @@ Pass_Through::Pass_Through(const ConfigurationInterface* configuration,
     if (max_source_buffer_samples > 0)
         {
             kludge_copy_->set_max_output_buffer(max_source_buffer_samples);
-            LOG(INFO) << "Set signal conditioner max output buffer to " << max_source_buffer_samples;
+            // LOG(INFO) << "Set signal conditioner max output buffer to " << max_source_buffer_samples;
         }
-    DLOG(INFO) << "kludge_copy(" << kludge_copy_->unique_id() << ")";
+    // D// LOG(INFO) << "kludge_copy(" << kludge_copy_->unique_id() << ")";
     if (in_streams_ > 1)
         {
             LOG(ERROR) << "This implementation only supports one input stream but it is set to " << in_streams_;
@@ -107,7 +107,7 @@ void Pass_Through::connect(gr::top_block_sptr top_block)
     if (top_block)
         { /* top_block is not null */
         };
-    DLOG(INFO) << "nothing to connect internally";
+    // D// LOG(INFO) << "nothing to connect internally";
 }
 
 
@@ -160,8 +160,8 @@ gr::basic_block_sptr Pass_Through::get_right_block()
                 {
                     return conjugate_ic_;
                 }
-            DLOG(WARNING) << "Setting inverted_spectrum to true with item_type "
-                          << item_type_ << " is not defined and has no effect.";
+            // DLOG(WARNING) << "Setting inverted_spectrum to true with item_type "
+                        //   << item_type_ << " is not defined and has no effect.";
         }
 
     return kludge_copy_;

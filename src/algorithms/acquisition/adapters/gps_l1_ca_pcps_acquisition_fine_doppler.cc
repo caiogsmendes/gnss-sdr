@@ -82,7 +82,7 @@ GpsL1CaPcpsAcquisitionFineDoppler::GpsL1CaPcpsAcquisitionFineDoppler(
     acq_parameters.samples_per_ms = static_cast<float>(vector_length_);
     code_ = std::vector<std::complex<float>>(vector_length_);
 
-    DLOG(INFO) << "role " << role_;
+    // D// LOG(INFO) << "role " << role_;
     if (item_type_ == "gr_complex")
         {
             acquisition_cc_ = pcps_make_acquisition_fine_doppler_cc(acq_parameters);
@@ -91,7 +91,7 @@ GpsL1CaPcpsAcquisitionFineDoppler::GpsL1CaPcpsAcquisitionFineDoppler(
         {
             item_size_ = 0;
             acquisition_cc_ = nullptr;
-            LOG(WARNING) << item_type_ << " unknown acquisition item type";
+            // // LOG(WARNING) << item_type_ << " unknown acquisition item type";
         }
 
     if (in_streams_ > 1)

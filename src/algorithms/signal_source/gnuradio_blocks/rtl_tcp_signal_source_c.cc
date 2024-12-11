@@ -89,13 +89,13 @@ rtl_tcp_signal_source_c::rtl_tcp_signal_source_c(const std::string &address,
     if (ec)
         {
             // std::cout << "Failed to set reuse address option: " << ec << '\n';
-            LOG(WARNING) << "Failed to set reuse address option";
+            // // LOG(WARNING) << "Failed to set reuse address option";
         }
     socket_.set_option(boost::asio::socket_base::linger(true, 0), ec);  // NOLINT(bugprone-unused-return-value)
     if (ec)
         {
             // std::cout << "Failed to set linger option: " << ec << '\n';
-            LOG(WARNING) << "Failed to set linger option";
+            // // LOG(WARNING) << "Failed to set linger option";
         }
 
     // 3. Connect socket
@@ -109,14 +109,14 @@ rtl_tcp_signal_source_c::rtl_tcp_signal_source_c(const std::string &address,
             return;
         }
     // std::cout << "Connected to " << addr << ":" << port << '\n';
-    LOG(INFO) << "Connected to " << addr << ":" << port;
+    // LOG(INFO) << "Connected to " << addr << ":" << port;
 
     // 4. Set nodelay
     socket_.set_option(ip::tcp::no_delay(true), ec);  // NOLINT(bugprone-unused-return-value)
     if (ec)
         {
             // std::cout << "Failed to set no delay option.\n";
-            LOG(WARNING) << "Failed to set no delay option";
+            // // LOG(WARNING) << "Failed to set no delay option";
         }
 
     // 5. Receive dongle info
@@ -124,12 +124,12 @@ rtl_tcp_signal_source_c::rtl_tcp_signal_source_c(const std::string &address,
     if (ec)
         {
             // std::cout << "Failed to read dongle info.\n";
-            LOG(WARNING) << "Failed to read dongle info";
+            // // LOG(WARNING) << "Failed to read dongle info";
         }
     else if (info_.is_valid())
         {
             // std::cout << "Found " << info_.get_type_name() << " tuner.\n";
-            LOG(INFO) << "Found " << info_.get_type_name() << " tuner.";
+            // LOG(INFO) << "Found " << info_.get_type_name() << " tuner.";
         }
 
 // 6. Start reading
@@ -166,7 +166,7 @@ void rtl_tcp_signal_source_c::set_frequency(int frequency)
     if (ec)
         {
             // std::cout << "Failed to set frequency\n";
-            LOG(WARNING) << "Failed to set frequency";
+            // // LOG(WARNING) << "Failed to set frequency";
         }
 }
 
@@ -178,7 +178,7 @@ void rtl_tcp_signal_source_c::set_sample_rate(int sample_rate)
     if (ec)
         {
             // std::cout << "Failed to set sample rate\n";
-            LOG(WARNING) << "Failed to set sample rate";
+            // // LOG(WARNING) << "Failed to set sample rate";
         }
 }
 
@@ -190,13 +190,13 @@ void rtl_tcp_signal_source_c::set_agc_mode(bool agc)
     if (ec)
         {
             // std::cout << "Failed to set gain mode\n";
-            LOG(WARNING) << "Failed to set gain mode";
+            // // LOG(WARNING) << "Failed to set gain mode";
         }
     ec = rtl_tcp_command(RTL_TCP_SET_AGC_MODE, agc, socket_);
     if (ec)
         {
             // std::cout << "Failed to set gain mode\n";
-            LOG(WARNING) << "Failed to set gain mode";
+            // // LOG(WARNING) << "Failed to set gain mode";
         }
 }
 
@@ -208,7 +208,7 @@ void rtl_tcp_signal_source_c::set_gain(int gain)
     if (ec)
         {
             // std::cout << "Failed to set gain\n";
-            LOG(WARNING) << "Failed to set gain";
+            // // LOG(WARNING) << "Failed to set gain";
         }
 }
 
@@ -275,7 +275,7 @@ void rtl_tcp_signal_source_c::set_if_gain(int gain)
             if (ec)
                 {
                     // std::cout << "Failed to set if gain\n";
-                    LOG(WARNING) << "Failed to set if gain";
+                    // // LOG(WARNING) << "Failed to set if gain";
                 }
         }
 }
@@ -287,7 +287,7 @@ void rtl_tcp_signal_source_c::handle_read(const boost::system::error_code &ec,
     if (ec)
         {
             // std::cout << "Error during read: " << ec << '\n';
-            LOG(WARNING) << "Error during read: " << ec;
+            // // LOG(WARNING) << "Error during read: " << ec;
             boost::mutex::scoped_lock lock(mutex_);
             io_context_.stop();
             not_empty_.notify_one();

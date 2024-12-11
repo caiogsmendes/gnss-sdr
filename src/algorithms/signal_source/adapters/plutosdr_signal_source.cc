@@ -81,7 +81,7 @@ PlutosdrSignalSource::PlutosdrSignalSource(const ConfigurationInterface* configu
             // std::cout << "Error: provided value gain_mode=" << gain_mode_ << " is not among valid values\n";
             // std::cout << " This parameter has been set to its default value gain_mode=" << default_gain_mode << '\n';
             gain_mode_ = default_gain_mode;
-            LOG(WARNING) << "Invalid configuration value for gain_mode parameter. Set to gain_mode=" << default_gain_mode;
+            // // LOG(WARNING) << "Invalid configuration value for gain_mode parameter. Set to gain_mode=" << default_gain_mode;
         }
 
     if (gain_mode_ == "manual")
@@ -92,7 +92,7 @@ PlutosdrSignalSource::PlutosdrSignalSource(const ConfigurationInterface* configu
                     // std::cout << "Error: provided value rf_gain=" << rf_gain_ << " is not among valid values\n";
                     // std::cout << " This parameter has been set to its default value rf_gain=64.0\n";
                     rf_gain_ = 64.0;
-                    LOG(WARNING) << "Invalid configuration value for rf_gain parameter. Set to rf_gain=64.0";
+                    // // LOG(WARNING) << "Invalid configuration value for rf_gain parameter. Set to rf_gain=64.0";
                 }
         }
 
@@ -108,7 +108,7 @@ PlutosdrSignalSource::PlutosdrSignalSource(const ConfigurationInterface* configu
             // std::cout << "Error: provided value filter_source=" << filter_source_ << " is not among valid values\n";
             // std::cout << " This parameter has been set to its default value filter_source=Off\n";
             filter_source_ = std::string("Off");
-            LOG(WARNING) << "Invalid configuration value for filter_source parameter. Set to filter_source=Off";
+            // // LOG(WARNING) << "Invalid configuration value for filter_source parameter. Set to filter_source=Off";
         }
 
     if (bandwidth_ < 200000 || bandwidth_ > 56000000)
@@ -117,7 +117,7 @@ PlutosdrSignalSource::PlutosdrSignalSource(const ConfigurationInterface* configu
             // std::cout << "Error: provided value bandwidth=" << bandwidth_ << " is not among valid values\n";
             // std::cout << " This parameter has been set to its default value bandwidth=2000000\n";
             bandwidth_ = 2000000;
-            LOG(WARNING) << "Invalid configuration value for bandwidth parameter. Set to bandwidth=2000000";
+            // // LOG(WARNING) << "Invalid configuration value for bandwidth parameter. Set to bandwidth=2000000";
         }
 
     // std::cout << "device address: " << uri_ << '\n';
@@ -149,16 +149,16 @@ PlutosdrSignalSource::PlutosdrSignalSource(const ConfigurationInterface* configu
 #endif
     if (samples_ != 0)
         {
-            DLOG(INFO) << "Send STOP signal after " << samples_ << " samples";
+            // D// LOG(INFO) << "Send STOP signal after " << samples_ << " samples";
             valve_ = gnss_sdr_make_valve(item_size_, samples_, queue);
-            DLOG(INFO) << "valve(" << valve_->unique_id() << ")";
+            // D// LOG(INFO) << "valve(" << valve_->unique_id() << ")";
         }
 
     if (dump_)
         {
-            DLOG(INFO) << "Dumping output into file " << dump_filename_;
+            // D// LOG(INFO) << "Dumping output into file " << dump_filename_;
             file_sink_ = gr::blocks::file_sink::make(item_size_, dump_filename_.c_str());
-            DLOG(INFO) << "file_sink(" << file_sink_->unique_id() << ")";
+            // D// LOG(INFO) << "file_sink(" << file_sink_->unique_id() << ")";
         }
     if (in_stream_ > 0)
         {
@@ -176,11 +176,11 @@ void PlutosdrSignalSource::connect(gr::top_block_sptr top_block)
     if (samples_ != 0)
         {
             top_block->connect(plutosdr_source_, 0, valve_, 0);
-            DLOG(INFO) << "connected plutosdr source to valve";
+            // D// LOG(INFO) << "connected plutosdr source to valve";
             if (dump_)
                 {
                     top_block->connect(valve_, 0, file_sink_, 0);
-                    DLOG(INFO) << "connected valve to file sink";
+                    // D// LOG(INFO) << "connected valve to file sink";
                 }
         }
     else
@@ -188,7 +188,7 @@ void PlutosdrSignalSource::connect(gr::top_block_sptr top_block)
             if (dump_)
                 {
                     top_block->connect(plutosdr_source_, 0, file_sink_, 0);
-                    DLOG(INFO) << "connected plutosdr source to file sink";
+                    // D// LOG(INFO) << "connected plutosdr source to file sink";
                 }
         }
 }
@@ -216,7 +216,7 @@ void PlutosdrSignalSource::disconnect(gr::top_block_sptr top_block)
 
 gr::basic_block_sptr PlutosdrSignalSource::get_left_block()
 {
-    LOG(WARNING) << "Trying to get signal source left block.";
+    // // LOG(WARNING) << "Trying to get signal source left block.";
     return {};
 }
 

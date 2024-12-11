@@ -81,7 +81,7 @@ GalileoE1PcpsQuickSyncAmbiguousAcquisition::GalileoE1PcpsQuickSyncAmbiguousAcqui
 
     auto samples_per_ms = static_cast<int>(round(code_length_ / 4.0));
 
-    DLOG(INFO) << "role " << role;
+    // D// LOG(INFO) << "role " << role;
     /*Calculate the folding factor value based on the formula described in the paper.
     This may be a bug, but acquisition also work by variying the folding factor at va-
     lues different that the expressed in the paper. In adition, it is important to point
@@ -93,9 +93,9 @@ GalileoE1PcpsQuickSyncAmbiguousAcquisition::GalileoE1PcpsQuickSyncAmbiguousAcqui
 
     if (sampled_ms_ % (folding_factor_ * 4) != 0)
         {
-            LOG(WARNING) << "QuickSync Algorithm requires a coherent_integration_time"
-                         << " multiple of " << (folding_factor_ * 4) << "ms, Value entered "
-                         << sampled_ms_ << " ms";
+            // // LOG(WARNING) << "QuickSync Algorithm requires a coherent_integration_time"
+                        //  << " multiple of " << (folding_factor_ * 4) << "ms, Value entered "
+                        //  << sampled_ms_ << " ms";
 
             if (sampled_ms_ < (folding_factor_ * 4))
                 {
@@ -105,9 +105,9 @@ GalileoE1PcpsQuickSyncAmbiguousAcquisition::GalileoE1PcpsQuickSyncAmbiguousAcqui
                 {
                     sampled_ms_ = static_cast<int>(sampled_ms_ / (folding_factor_ * 4)) * (folding_factor_ * 4);
                 }
-            LOG(WARNING) << "coherent_integration_time should be multiple of "
-                         << "Galileo code length (4 ms). coherent_integration_time = "
-                         << sampled_ms_ << " ms will be used.";
+            // // LOG(WARNING) << "coherent_integration_time should be multiple of "
+                        //  << "Galileo code length (4 ms). coherent_integration_time = "
+                        //  << sampled_ms_ << " ms will be used.";
         }
     // vector_length_ = (sampled_ms_/folding_factor_) * code_length_;
     vector_length_ = sampled_ms_ * samples_per_ms;
@@ -125,11 +125,11 @@ GalileoE1PcpsQuickSyncAmbiguousAcquisition::GalileoE1PcpsQuickSyncAmbiguousAcqui
     bool enable_monitor_output = configuration_->property("AcquisitionMonitor.enable_monitor", false);
 
     code_ = std::vector<std::complex<float>>(code_length_);
-    LOG(INFO) << "Vector Length: " << vector_length_
-              << ", Samples per ms: " << samples_per_ms
-              << ", Folding factor: " << folding_factor_
-              << ", Sampled  ms: " << sampled_ms_
-              << ", Code Length: " << code_length_;
+    // LOG(INFO) << "Vector Length: " << vector_length_
+            //   << ", Samples per ms: " << samples_per_ms
+            //   << ", Folding factor: " << folding_factor_
+            //   << ", Sampled  ms: " << sampled_ms_
+            //   << ", Code Length: " << code_length_;
     if (item_type_ == "gr_complex")
         {
             acquisition_cc_ = pcps_quicksync_make_acquisition_cc(folding_factor_,
@@ -138,16 +138,16 @@ GalileoE1PcpsQuickSyncAmbiguousAcquisition::GalileoE1PcpsQuickSyncAmbiguousAcqui
                 dump_, dump_filename_, enable_monitor_output);
             stream_to_vector_ = gr::blocks::stream_to_vector::make(item_size_,
                 vector_length_);
-            DLOG(INFO) << "stream_to_vector_quicksync("
-                       << stream_to_vector_->unique_id() << ")";
-            DLOG(INFO) << "acquisition_quicksync(" << acquisition_cc_->unique_id()
-                       << ")";
+            // D// LOG(INFO) << "stream_to_vector_quicksync("
+                    //    << stream_to_vector_->unique_id() << ")";
+            // D// LOG(INFO) << "acquisition_quicksync(" << acquisition_cc_->unique_id()
+                    //    << ")";
         }
     else
         {
             acquisition_cc_ = nullptr;
             item_size_ = 0;
-            LOG(WARNING) << item_type_ << " unknown acquisition item type";
+            // // LOG(WARNING) << item_type_ << " unknown acquisition item type";
         }
 
     if (in_streams_ > 1)
@@ -186,7 +186,7 @@ void GalileoE1PcpsQuickSyncAmbiguousAcquisition::set_threshold(float threshold)
             threshold_ = calculate_threshold(pfa);
         }
 
-    DLOG(INFO) << "Channel " << channel_ << " Threshold = " << threshold_;
+    // D// LOG(INFO) << "Channel " << channel_ << " Threshold = " << threshold_;
 
     if (item_type_ == "gr_complex")
         {
@@ -296,7 +296,7 @@ float GalileoE1PcpsQuickSyncAmbiguousAcquisition::calculate_threshold(float pfa)
             frequency_bins++;
         }
 
-    DLOG(INFO) << "Channel " << channel_ << "  Pfa = " << pfa;
+    // D// LOG(INFO) << "Channel " << channel_ << "  Pfa = " << pfa;
 
     unsigned int ncells = code_length_ / folding_factor_ * frequency_bins;
     double exponent = 1.0 / static_cast<double>(ncells);

@@ -45,14 +45,14 @@ Fpga_Switch::Fpga_Switch(void)
 
     if ((d_device_descriptor = open(device_io_name.c_str(), O_RDWR | O_SYNC)) == -1)
         {
-            LOG(WARNING) << "Cannot open deviceio" << device_io_name;
+            // // LOG(WARNING) << "Cannot open deviceio" << device_io_name;
         }
     d_map_base = reinterpret_cast<volatile unsigned *>(mmap(nullptr, FPGA_PAGE_SIZE,
         PROT_READ | PROT_WRITE, MAP_SHARED, d_device_descriptor, 0));
 
     if (d_map_base == reinterpret_cast<void *>(-1))
         {
-            LOG(WARNING) << "Cannot map the FPGA switch module into tracking memory";
+            // // LOG(WARNING) << "Cannot map the FPGA switch module into tracking memory";
             // std::cout << "Could not map switch memory.\n";
         }
     else
@@ -66,14 +66,14 @@ Fpga_Switch::Fpga_Switch(void)
     readval = Fpga_Switch::fpga_switch_test_register(writeval);
     if (writeval != readval)
         {
-            LOG(WARNING) << "Test register sanity check failed";
+            // // LOG(WARNING) << "Test register sanity check failed";
         }
     else
         {
-            LOG(INFO) << "Test register sanity check success !";
+            // LOG(INFO) << "Test register sanity check success !";
         }
 
-    DLOG(INFO) << "Switch FPGA class created";
+    // D// LOG(INFO) << "Switch FPGA class created";
 }
 
 

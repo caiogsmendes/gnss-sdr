@@ -24,6 +24,8 @@
 #include <cstdint>
 #include <utility>
 
+#include "HEtechSerial.h"
+
 /** \addtogroup Core
  * \{ */
 /** \addtogroup System_Parameters core_system_parameters
@@ -75,7 +77,7 @@ public:
 
     // //Caio
     // uint8_t msgvec[12*53+46]; //Output Buffer
-
+    // serial_s_t commS2{}; //Pigback
     //
 
     // Flags
@@ -84,6 +86,11 @@ public:
     bool Flag_valid_word{};                //!< Set by Telemetry Decoder processing block
     bool Flag_valid_pseudorange{};         //!< Set by Observables processing block
     bool Flag_PLL_180_deg_phase_locked{};  //!< Set by Telemetry Decoder processing block
+    
+    // Caio
+    bool Flag_valid_pvt{}; //piggybacking
+    //
+
 
     /// Copy constructor
     Gnss_Synchro(const Gnss_Synchro& other) noexcept = default;
@@ -122,6 +129,7 @@ public:
                 this->Flag_valid_word = rhs.Flag_valid_word;
                 this->Flag_valid_pseudorange = rhs.Flag_valid_pseudorange;
                 this->Flag_PLL_180_deg_phase_locked = rhs.Flag_PLL_180_deg_phase_locked;
+                this->Flag_valid_pvt=rhs.Flag_valid_pvt;
             }
         return *this;
     };
@@ -162,6 +170,7 @@ public:
                 this->Flag_valid_word = other.Flag_valid_word;
                 this->Flag_valid_pseudorange = other.Flag_valid_pseudorange;
                 this->Flag_PLL_180_deg_phase_locked = other.Flag_PLL_180_deg_phase_locked;
+                this->Flag_valid_pvt = other.Flag_valid_pvt;
 
                 // Leave the source object in a valid but unspecified state
                 other.Signal[0] = '\0';
@@ -192,6 +201,7 @@ public:
                 other.Flag_valid_word = false;
                 other.Flag_valid_pseudorange = false;
                 other.Flag_PLL_180_deg_phase_locked = false;
+                other.Flag_valid_pvt=false;
             }
         return *this;
     };
@@ -239,6 +249,7 @@ public:
         ar& BOOST_SERIALIZATION_NVP(Flag_valid_word);
         ar& BOOST_SERIALIZATION_NVP(Flag_valid_pseudorange);
         ar& BOOST_SERIALIZATION_NVP(Flag_PLL_180_deg_phase_locked);
+        ar& BOOST_SERIALIZATION_NVP(Flag_valid_pvt);
     }
 };
 

@@ -104,12 +104,12 @@ void channel_status_msg_receiver::msg_handler_channel_status(const pmt::pmt_t& m
                 }
             else
                 {
-                    LOG(WARNING) << "channel_status_msg_receiver unknown object type!";
+                    // // LOG(WARNING) << "channel_status_msg_receiver unknown object type!";
                 }
         }
     catch (const wht::bad_any_cast& e)
         {
-            LOG(WARNING) << "channel_status_msg_receiver Bad any_cast: " << e.what();
+            // // LOG(WARNING) << "channel_status_msg_receiver Bad any_cast: " << e.what();
         }
 }
 

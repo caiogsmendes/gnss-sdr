@@ -109,19 +109,19 @@ void FileTimestampSignalSource::create_file_source_hook()
                 timestamp_clock_offset_ms_,
                 source_items_to_samples);
         }
-    DLOG(INFO) << "timestamp_block_(" << timestamp_block_->unique_id() << ")";
+    // D// LOG(INFO) << "timestamp_block_(" << timestamp_block_->unique_id() << ")";
 }
 
 
 void FileTimestampSignalSource::pre_connect_hook(gr::top_block_sptr top_block)
 {
     top_block->connect(file_source(), 0, timestamp_block_, 0);
-    DLOG(INFO) << "connected file_source to timestamp_block_";
+    // D// LOG(INFO) << "connected file_source to timestamp_block_";
 }
 
 
 void FileTimestampSignalSource::pre_disconnect_hook(gr::top_block_sptr top_block)
 {
     top_block->disconnect(file_source(), 0, timestamp_block_, 0);
-    DLOG(INFO) << "disconnected file_source from timestamp_block_";
+    // D// LOG(INFO) << "disconnected file_source from timestamp_block_";
 }

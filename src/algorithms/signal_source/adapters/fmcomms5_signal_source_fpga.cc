@@ -99,7 +99,7 @@ Fmcomms5SignalSourceFPGA::Fmcomms5SignalSourceFPGA(const ConfigurationInterface 
             // std::cout << "Error: provided value rf_port_select=" << rf_port_select_ << " is not among valid values\n";
             // std::cout << " This parameter has been set to its default value rf_port_select=" << default_rf_port_select << '\n';
             rf_port_select_ = default_rf_port_select;
-            LOG(WARNING) << "Invalid configuration value for rf_port_select parameter. Set to rf_port_select=" << default_rf_port_select;
+            // // LOG(WARNING) << "Invalid configuration value for rf_port_select parameter. Set to rf_port_select=" << default_rf_port_select;
         }
 
     if ((gain_mode_rx1_ != "manual") && (gain_mode_rx1_ != "slow_attack") && (gain_mode_rx1_ != "fast_attack") && (gain_mode_rx1_ != "hybrid"))
@@ -109,7 +109,7 @@ Fmcomms5SignalSourceFPGA::Fmcomms5SignalSourceFPGA(const ConfigurationInterface 
             // std::cout << "Error: provided value gain_mode_rx1=" << gain_mode_rx1_ << " is not among valid values\n";
             // std::cout << " This parameter has been set to its default value gain_mode_rx1=" << default_gain_mode << '\n';
             gain_mode_rx1_ = default_gain_mode;
-            LOG(WARNING) << "Invalid configuration value for gain_mode_rx1 parameter. Set to gain_mode_rx1=" << default_gain_mode;
+            // // LOG(WARNING) << "Invalid configuration value for gain_mode_rx1 parameter. Set to gain_mode_rx1=" << default_gain_mode;
         }
 
     if ((gain_mode_rx2_ != "manual") && (gain_mode_rx2_ != "slow_attack") && (gain_mode_rx2_ != "fast_attack") && (gain_mode_rx2_ != "hybrid"))
@@ -119,7 +119,7 @@ Fmcomms5SignalSourceFPGA::Fmcomms5SignalSourceFPGA(const ConfigurationInterface 
             // std::cout << "Error: provided value gain_mode_rx2=" << gain_mode_rx2_ << " is not among valid values\n";
             // std::cout << " This parameter has been set to its default value gain_mode_rx2=" << default_gain_mode << '\n';
             gain_mode_rx2_ = default_gain_mode;
-            LOG(WARNING) << "Invalid configuration value for gain_mode_rx2 parameter. Set to gain_mode_rx2=" << default_gain_mode;
+            // // LOG(WARNING) << "Invalid configuration value for gain_mode_rx2 parameter. Set to gain_mode_rx2=" << default_gain_mode;
         }
 
     if (gain_mode_rx1_ == "manual")
@@ -130,7 +130,7 @@ Fmcomms5SignalSourceFPGA::Fmcomms5SignalSourceFPGA(const ConfigurationInterface 
                     // std::cout << "Error: provided value rf_gain_rx1=" << rf_gain_rx1_ << " is not among valid values\n";
                     // std::cout << " This parameter has been set to its default value rf_gain_rx1=" << default_manual_gain_rx1 << '\n';
                     rf_gain_rx1_ = default_manual_gain_rx1;
-                    LOG(WARNING) << "Invalid configuration value for rf_gain_rx1 parameter. Set to rf_gain_rx1=" << default_manual_gain_rx1;
+                    // // LOG(WARNING) << "Invalid configuration value for rf_gain_rx1 parameter. Set to rf_gain_rx1=" << default_manual_gain_rx1;
                 }
         }
 
@@ -142,7 +142,7 @@ Fmcomms5SignalSourceFPGA::Fmcomms5SignalSourceFPGA(const ConfigurationInterface 
                     // std::cout << "Error: provided value rf_gain_rx2=" << rf_gain_rx2_ << " is not among valid values\n";
                     // std::cout << " This parameter has been set to its default value rf_gain_rx2=" << default_manual_gain_rx2 << '\n';
                     rf_gain_rx2_ = default_manual_gain_rx2;
-                    LOG(WARNING) << "Invalid configuration value for rf_gain_rx2 parameter. Set to rf_gain_rx2=" << default_manual_gain_rx2;
+                    // // LOG(WARNING) << "Invalid configuration value for rf_gain_rx2 parameter. Set to rf_gain_rx2=" << default_manual_gain_rx2;
                 }
         }
 
@@ -156,7 +156,7 @@ Fmcomms5SignalSourceFPGA::Fmcomms5SignalSourceFPGA(const ConfigurationInterface 
             // std::cout << "Error: provided value filter_source=" << filter_source_ << " is not among valid values\n";
             // std::cout << " This parameter has been set to its default value filter_source=Off\n";
             filter_source_ = std::string("Off");
-            LOG(WARNING) << "Invalid configuration value for filter_source parameter. Set to filter_source=Off";
+            // // LOG(WARNING) << "Invalid configuration value for filter_source parameter. Set to filter_source=Off";
         }
 
     if (bandwidth_ < 200000 || bandwidth_ > 56000000)
@@ -165,7 +165,7 @@ Fmcomms5SignalSourceFPGA::Fmcomms5SignalSourceFPGA(const ConfigurationInterface 
             // std::cout << "Error: provided value bandwidth=" << bandwidth_ << " is not among valid values\n";
             // std::cout << " This parameter has been set to its default value bandwidth=" << default_bandwidth << '\n';
             bandwidth_ = default_bandwidth;
-            LOG(WARNING) << "Invalid configuration value for bandwidth parameter. Set to bandwidth=" << default_bandwidth;
+            // // LOG(WARNING) << "Invalid configuration value for bandwidth parameter. Set to bandwidth=" << default_bandwidth;
         }
 
     if (enable_rx1_band)
@@ -236,7 +236,7 @@ Fmcomms5SignalSourceFPGA::~Fmcomms5SignalSourceFPGA()
                 {
                     if (!disable_ad9361_rx_local())
                         {
-                            LOG(WARNING) << "Problem shutting down the AD9361 RX channels";
+                            // // LOG(WARNING) << "Problem shutting down the AD9361 RX channels";
                         }
                 }
             catch (const std::exception &e)
@@ -318,7 +318,7 @@ void Fmcomms5SignalSourceFPGA::connect(gr::top_block_sptr top_block)
     if (top_block)
         { /* top_block is not null */
         };
-    DLOG(INFO) << "AD9361 FPGA source nothing to connect";
+    // D// LOG(INFO) << "AD9361 FPGA source nothing to connect";
 }
 
 
@@ -327,13 +327,13 @@ void Fmcomms5SignalSourceFPGA::disconnect(gr::top_block_sptr top_block)
     if (top_block)
         { /* top_block is not null */
         };
-    DLOG(INFO) << "AD9361 FPGA source nothing to disconnect";
+    // D// LOG(INFO) << "AD9361 FPGA source nothing to disconnect";
 }
 
 
 gr::basic_block_sptr Fmcomms5SignalSourceFPGA::get_left_block()
 {
-    LOG(WARNING) << "Trying to get signal source left block.";
+    // // LOG(WARNING) << "Trying to get signal source left block.";
     return {};
 }
 

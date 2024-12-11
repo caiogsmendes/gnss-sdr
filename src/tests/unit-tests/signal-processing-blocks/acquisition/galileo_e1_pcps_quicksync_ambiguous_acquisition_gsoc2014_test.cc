@@ -105,7 +105,7 @@ void GalileoE1PcpsQuickSyncAmbiguousAcquisitionGSoC2014Test_msg_rx::msg_handler_
         }
     catch (const wht::bad_any_cast& e)
         {
-            LOG(WARNING) << "msg_handler_channel_events Bad any_cast: " << e.what();
+            // // LOG(WARNING) << "msg_handler_channel_events Bad any_cast: " << e.what();
             rx_message = 0;
         }
 }
@@ -582,7 +582,7 @@ TEST_F(GalileoE1PcpsQuickSyncAmbiguousAcquisitionGSoC2014Test, Instantiate)
 
 TEST_F(GalileoE1PcpsQuickSyncAmbiguousAcquisitionGSoC2014Test, ConnectAndRun)
 {
-    LOG(INFO) << "**Start connect and run test";
+    // LOG(INFO) << "**Start connect and run test";
     int nsamples = floor(fs_in * integration_time_ms * 1e-3);
     std::chrono::time_point<std::chrono::system_clock> begin, end;
     std::chrono::duration<double> elapsed_seconds(0);
@@ -614,14 +614,14 @@ TEST_F(GalileoE1PcpsQuickSyncAmbiguousAcquisitionGSoC2014Test, ConnectAndRun)
     }) << "Failure running the top_block.";
 
     // std::cout << "Processed " << nsamples << " samples in " << elapsed_seconds.count() * 1e6 << " microseconds\n";
-    LOG(INFO) << "----end connect and run test-----";
-    LOG(INFO) << "**End connect and run test";
+    // LOG(INFO) << "----end connect and run test-----";
+    // LOG(INFO) << "**End connect and run test";
 }
 
 
 TEST_F(GalileoE1PcpsQuickSyncAmbiguousAcquisitionGSoC2014Test, ValidationOfResults)
 {
-    LOG(INFO) << "Start validation of results test";
+    // LOG(INFO) << "Start validation of results test";
     config_1();
     top_block = gr::make_top_block("Acquisition test");
     queue = std::make_shared<Concurrent_Queue<pmt::pmt_t>>();
@@ -705,13 +705,13 @@ TEST_F(GalileoE1PcpsQuickSyncAmbiguousAcquisitionGSoC2014Test, ValidationOfResul
 
             ch_thread.join();
         }
-    DLOG(INFO) << "End validation of results test";
+    // D// LOG(INFO) << "End validation of results test";
 }
 
 
 TEST_F(GalileoE1PcpsQuickSyncAmbiguousAcquisitionGSoC2014Test, ValidationOfResultsWithNoise)
 {
-    LOG(INFO) << "Start validation of results with noise+interference test";
+    // LOG(INFO) << "Start validation of results with noise+interference test";
     config_3();
     top_block = gr::make_top_block("Acquisition test");
     queue = std::make_shared<Concurrent_Queue<pmt::pmt_t>>();
@@ -793,7 +793,7 @@ TEST_F(GalileoE1PcpsQuickSyncAmbiguousAcquisitionGSoC2014Test, ValidationOfResul
                 }
             ch_thread.join();
         }
-    DLOG(INFO) << "End validation of results with noise+interference test";
+    // D// LOG(INFO) << "End validation of results with noise+interference test";
 }
 
 

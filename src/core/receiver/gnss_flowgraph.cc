@@ -95,7 +95,7 @@ GNSSFlowgraph::GNSSFlowgraph(std::shared_ptr<ConfigurationInterface> configurati
 
 GNSSFlowgraph::~GNSSFlowgraph()
 {
-    DLOG(INFO) << "GNSSFlowgraph destructor called";
+    // D// LOG(INFO) << "GNSSFlowgraph destructor called";
     if (connected_)
         {
             GNSSFlowgraph::disconnect();
@@ -109,6 +109,12 @@ void GNSSFlowgraph::init()
      * Instantiates the receiver blocks
      */
     auto block_factory = std::make_unique<GNSSBlockFactory>();
+
+    //Caio - Serial
+    std::string serial_default = "/dev/ttyLP2";
+    // std::string serial_default = configuration_->property("GNSS-SDR.serial_device", "/dev/ttyUSB0");
+    comms_flow = HEserial_connect(serial_default.c_str(), B921600, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
+    //
 
     channels_status_ = channel_status_msg_receiver_make();
 
@@ -158,7 +164,7 @@ void GNSSFlowgraph::init()
 
     for (int i = 0; i < sources_count_; i++)
         {
-            DLOG(INFO) << "Creating source " << i;
+            // D// LOG(INFO) << "Creating source " << i;
             auto check_not_nullptr = block_factory->GetSignalSource(configuration_.get(), queue_.get(), i);
             if (!check_not_nullptr)
                 {
@@ -220,7 +226,7 @@ void GNSSFlowgraph::init()
     // fill the signals queue with the satellites ID's to be searched by the acquisition
     set_signals_list();
     set_channels_state();
-    DLOG(INFO) << "Blocks instantiated. " << channels_count_ << " channels.";
+    // D// LOG(INFO) << "Blocks instantiated. " << channels_count_ << " channels.";
 
     /*
      * Instantiate the receiver monitor block, if required
@@ -252,20 +258,20 @@ void GNSSFlowgraph::init()
                 enable_protobuf);
         }
 
-    /*
-     * Instantiate the receiver monitor block, if required
-     */
-    std::string serial_default = "/dev/ttyUSB0";
-    enable_serial_monitor_ = configuration_->property("Serial_Monitor.enable_serial",true);
-    // Retrieve Serial Monitor Parameters from Config.File
-    std::string dev_serial_ = configuration_->property("Serial_Monitor.dev_serial",serial_default);
-    int baudrate_ = configuration_->property("Serial_Monitor.baudrate",B921600);
-    // Instantiate Serial Monitor Block
-    GnssSerialMonitor_ = gnss_serial_make_monitor(
-        channels_count_,
-        dev_serial_,
-        baudrate_
-    );
+    // /*
+    //  * Instantiate the receiver serial monitor block, if required
+    //  */
+    // std::string serial_default = "/dev/ttyUSB0";
+    // enable_serial_monitor_ = configuration_->property("Serial_Monitor.enable_serial",true);
+    // // Retrieve Serial Monitor Parameters from Config.File
+    // std::string dev_serial_ = configuration_->property("Serial_Monitor.dev_serial",serial_default);
+    // int baudrate_ = configuration_->property("Serial_Monitor.baudrate",B921600);
+    // // Instantiate Serial Monitor Block
+    // GnssSerialMonitor_ = gnss_serial_make_monitor(
+    //     channels_count_,
+    //     dev_serial_,
+    //     baudrate_
+    // );
 
 
     /*
@@ -296,7 +302,7 @@ void GNSSFlowgraph::init()
                 udp_addr_vec,
                 enable_protobuf);
         }
-
+        
     /*
      * Instantiate the receiver tracking monitor block, if required
      */
@@ -346,7 +352,7 @@ void GNSSFlowgraph::start()
 {
     if (running_)
         {
-            LOG(WARNING) << "Already running";
+            // // LOG(WARNING) << "Already running";
             return;
         }
 
@@ -395,11 +401,11 @@ void GNSSFlowgraph::wait()
 {
     if (!running_)
         {
-            LOG(WARNING) << "Can't apply wait. Flowgraph is not running";
+            // // LOG(WARNING) << "Can't apply wait. Flowgraph is not running";
             return;
         }
     top_block_->wait();
-    DLOG(INFO) << "Flowgraph finished calculations";
+    // D// LOG(INFO) << "Flowgraph finished calculations";
     running_ = false;
 }
 
@@ -407,10 +413,10 @@ void GNSSFlowgraph::wait()
 void GNSSFlowgraph::connect()
 {
     // Connects the blocks in the flow graph
-    LOG(INFO) << "Connecting flowgraph";
+    // LOG(INFO) << "Connecting flowgraph";
     if (connected_)
         {
-            LOG(WARNING) << "flowgraph already connected";
+            // // LOG(WARNING) << "flowgraph already connected";
             return;
         }
 
@@ -443,18 +449,18 @@ void GNSSFlowgraph::connect()
 #endif
 
     connected_ = true;
-    LOG(INFO) << "Flowgraph connected";
+    // LOG(INFO) << "Flowgraph connected";
     top_block_->dump();
 }
 
 
 void GNSSFlowgraph::disconnect()
 {
-    LOG(INFO) << "Disconnecting flowgraph";
+    // LOG(INFO) << "Disconnecting flowgraph";
 
     if (!connected_)
         {
-            LOG(INFO) << "Flowgraph was not connected";
+            // LOG(INFO) << "Flowgraph was not connected";
             return;
         }
     connected_ = false;
@@ -464,10 +470,10 @@ void GNSSFlowgraph::disconnect()
         }
     catch (const std::exception& e)
         {
-            LOG(INFO) << "Problem disconnecting the flowgraph: " << e.what();
+            // LOG(INFO) << "Problem disconnecting the flowgraph: " << e.what();
         }
 
-    LOG(INFO) << "Flowgraph disconnected";
+    // LOG(INFO) << "Flowgraph disconnected";
 }
 
 
@@ -570,7 +576,7 @@ int GNSSFlowgraph::connect_desktop_flowgraph()
     std::lock_guard<std::mutex> lock(signal_list_mutex_);
     for (int i = 0; i < channels_count_; i++)
         {
-            LOG(INFO) << "Channel " << i << " assigned to " << channels_.at(i)->get_signal();
+            // LOG(INFO) << "Channel " << i << " assigned to " << channels_.at(i)->get_signal();
             if (channels_state_[i] == 1)
                 {
 #if ENABLE_FPGA
@@ -587,15 +593,15 @@ int GNSSFlowgraph::connect_desktop_flowgraph()
 #else
                     channels_.at(i)->start_acquisition();
 #endif
-                    LOG(INFO) << "Channel " << i << " connected to observables and ready for acquisition";
+                    // LOG(INFO) << "Channel " << i << " connected to observables and ready for acquisition";
                 }
             else
                 {
-                    LOG(INFO) << "Channel " << i << " connected to observables in standby mode";
+                    // LOG(INFO) << "Channel " << i << " connected to observables in standby mode";
                 }
         }
 
-    LOG(INFO) << "The GNU Radio flowgraph for the current GNSS-SDR configuration has been successfully connected";
+    // LOG(INFO) << "The GNU Radio flowgraph for the current GNSS-SDR configuration has been successfully connected";
     return 0;
 }
 
@@ -646,7 +652,7 @@ int GNSSFlowgraph::connect_fpga_flowgraph()
             return 1;
         }
 
-    DLOG(INFO) << "Blocks connected internally to the top_block";
+    // D// LOG(INFO) << "Blocks connected internally to the top_block";
 
     // Connect the counter
     if (connect_fpga_sample_counter() != 0)
@@ -696,7 +702,7 @@ int GNSSFlowgraph::connect_fpga_flowgraph()
 
     check_desktop_conf_in_fpga_env();
 
-    LOG(INFO) << "The GNU Radio flowgraph for the current GNSS-SDR configuration with FPGA off-loading has been successfully connected";
+    // LOG(INFO) << "The GNU Radio flowgraph for the current GNSS-SDR configuration with FPGA off-loading has been successfully connected";
     return 0;
 }
 #endif
@@ -727,7 +733,7 @@ int GNSSFlowgraph::connect_signal_sources()
                     return 1;
                 }
         }
-    DLOG(INFO) << "Signal Source blocks successfully connected to the top_block";
+    // D// LOG(INFO) << "Signal Source blocks successfully connected to the top_block";
     return 0;
 }
 
@@ -747,7 +753,7 @@ int GNSSFlowgraph::connect_signal_conditioners()
                         }
                     sig->connect(top_block_);
                 }
-            DLOG(INFO) << "Signal Conditioner blocks successfully connected to the top_block";
+            // D// LOG(INFO) << "Signal Conditioner blocks successfully connected to the top_block";
             error = 0;  // false
         }
     catch (const std::exception& e)
@@ -840,7 +846,7 @@ int GNSSFlowgraph::connect_channels()
                     return 1;
                 }
         }
-    DLOG(INFO) << "Channel blocks successfully connected to the top_block";
+    // D// LOG(INFO) << "Channel blocks successfully connected to the top_block";
     return 0;
 }
 
@@ -864,7 +870,7 @@ int GNSSFlowgraph::connect_observables()
             top_block_->disconnect_all();
             return 1;
         }
-    DLOG(INFO) << "Observables block successfully connected to the top_block";
+    // D// LOG(INFO) << "Observables block successfully connected to the top_block";
     return 0;
 }
 
@@ -888,7 +894,7 @@ int GNSSFlowgraph::connect_pvt()
             top_block_->disconnect_all();
             return 1;
         }
-    DLOG(INFO) << "PVT block successfully connected to the top_block";
+    // D// LOG(INFO) << "PVT block successfully connected to the top_block";
     return 0;
 }
 
@@ -926,7 +932,7 @@ int GNSSFlowgraph::connect_sample_counter()
             const double fs = static_cast<double>(configuration_->property("GNSS-SDR.internal_fs_sps", 0));
             if (fs == 0.0)
                 {
-                    LOG(WARNING) << "Set GNSS-SDR.internal_fs_sps in configuration file";
+                    // // LOG(WARNING) << "Set GNSS-SDR.internal_fs_sps in configuration file";
                     // std::cout << "Set GNSS-SDR.internal_fs_sps in configuration file\n";
                     throw(std::invalid_argument("Set GNSS-SDR.internal_fs_sps in configuration"));
                 }
@@ -942,7 +948,7 @@ int GNSSFlowgraph::connect_sample_counter()
             top_block_->disconnect_all();
             return 1;
         }
-    DLOG(INFO) << "sample counter successfully connected to Signal Conditioner and Observables blocks";
+    // D// LOG(INFO) << "sample counter successfully connected to Signal Conditioner and Observables blocks";
     return 0;
 }
 
@@ -956,7 +962,7 @@ int GNSSFlowgraph::connect_fpga_sample_counter()
             const double fs = static_cast<double>(configuration_->property("GNSS-SDR.internal_fs_sps", 0));
             if (fs == 0.0)
                 {
-                    LOG(WARNING) << "Set GNSS-SDR.internal_fs_sps in configuration file";
+                    // // LOG(WARNING) << "Set GNSS-SDR.internal_fs_sps in configuration file";
                     // std::cout << "Set GNSS-SDR.internal_fs_sps in configuration file\n";
                     throw(std::invalid_argument("Set GNSS-SDR.internal_fs_sps in configuration"));
                 }
@@ -979,7 +985,7 @@ int GNSSFlowgraph::connect_fpga_sample_counter()
             top_block_->disconnect_all();
             return 1;
         }
-    LOG(INFO) << "FPGA sample counter successfully connected";
+    // LOG(INFO) << "FPGA sample counter successfully connected";
     return 0;
 }
 #endif
@@ -1039,7 +1045,7 @@ int GNSSFlowgraph::connect_signal_sources_to_signal_conditioners()
                                         {
                                             if (sig_conditioner_.size() > signal_conditioner_ID)
                                                 {
-                                                    LOG(INFO) << "connecting sig_source_ " << i << " stream " << j << " to conditioner " << signal_conditioner_ID;
+                                                    // LOG(INFO) << "connecting sig_source_ " << i << " stream " << j << " to conditioner " << signal_conditioner_ID;
                                                     top_block_->connect(src->get_right_block(), j, sig_conditioner_.at(signal_conditioner_ID)->get_left_block(), 0);
                                                 }
                                         }
@@ -1048,13 +1054,13 @@ int GNSSFlowgraph::connect_signal_sources_to_signal_conditioners()
                                             if (j == 0 || !src->get_right_block(j))
                                                 {
                                                     // RF_channel 0 backward compatibility with single channel sources
-                                                    LOG(INFO) << "connecting sig_source_ " << i << " stream " << 0 << " to conditioner " << signal_conditioner_ID;
+                                                    // LOG(INFO) << "connecting sig_source_ " << i << " stream " << 0 << " to conditioner " << signal_conditioner_ID;
                                                     top_block_->connect(src->get_right_block(), 0, sig_conditioner_.at(signal_conditioner_ID)->get_left_block(), 0);
                                                 }
                                             else
                                                 {
                                                     // Multiple channel sources using multiple output blocks of single channel (requires RF_channel selector in call)
-                                                    LOG(INFO) << "connecting sig_source_ " << i << " stream " << j << " to conditioner " << signal_conditioner_ID;
+                                                    // LOG(INFO) << "connecting sig_source_ " << i << " stream " << j << " to conditioner " << signal_conditioner_ID;
                                                     top_block_->connect(src->get_right_block(j), 0, sig_conditioner_.at(signal_conditioner_ID)->get_left_block(), 0);
                                                 }
                                         }
@@ -1084,7 +1090,7 @@ int GNSSFlowgraph::connect_signal_sources_to_signal_conditioners()
                 }
         }
 
-    DLOG(INFO) << "Signal source(s) successfully connected to signal conditioner(s)";
+    // D// LOG(INFO) << "Signal source(s) successfully connected to signal conditioner(s)";
     return 0;
 }
 
@@ -1104,7 +1110,7 @@ int GNSSFlowgraph::connect_signal_conditioners_to_channels()
                 }
             catch (const std::exception& e)
                 {
-                    LOG(WARNING) << e.what();
+                    // // LOG(WARNING) << e.what();
                 }
             try
                 {
@@ -1179,15 +1185,15 @@ int GNSSFlowgraph::connect_signal_conditioners_to_channels()
                                                 {
                                                     top_block_->connect(sig_conditioner_.at(selected_signal_conditioner_ID)->get_right_block(), 0,
                                                         acq_resamplers_.at(map_key), 0);
-                                                    LOG(INFO) << "Created "
-                                                              << channels_.at(i)->get_signal().get_signal_str()
-                                                              << " acquisition resampler for RF channel " << std::to_string(selected_signal_conditioner_ID) << " with " << taps.size() << " taps and decimation factor of " << decimation;
+                                                    // LOG(INFO) << "Created "
+                                                            //   << channels_.at(i)->get_signal().get_signal_str()
+                                                            //   << " acquisition resampler for RF channel " << std::to_string(selected_signal_conditioner_ID) << " with " << taps.size() << " taps and decimation factor of " << decimation;
                                                 }
                                             else
                                                 {
-                                                    LOG(INFO) << "Found existing "
-                                                              << channels_.at(i)->get_signal().get_signal_str()
-                                                              << " acquisition resampler for RF channel " << std::to_string(selected_signal_conditioner_ID) << " with " << taps.size() << " taps and decimation factor of " << decimation;
+                                                    // LOG(INFO) << "Found existing "
+                                                            //   << channels_.at(i)->get_signal().get_signal_str()
+                                                            //   << " acquisition resampler for RF channel " << std::to_string(selected_signal_conditioner_ID) << " with " << taps.size() << " taps and decimation factor of " << decimation;
                                                 }
 
                                             top_block_->connect(acq_resamplers_.at(map_key), 0,
@@ -1198,7 +1204,7 @@ int GNSSFlowgraph::connect_signal_conditioners_to_channels()
                                         }
                                     else
                                         {
-                                            LOG(INFO) << "Disabled acquisition resampler because the input sampling frequency is too low";
+                                            // LOG(INFO) << "Disabled acquisition resampler because the input sampling frequency is too low";
                                             // resampler not required!
                                             top_block_->connect(sig_conditioner_.at(selected_signal_conditioner_ID)->get_right_block(), 0,
                                                 channels_.at(i)->get_left_block_acq(), 0);
@@ -1206,7 +1212,7 @@ int GNSSFlowgraph::connect_signal_conditioners_to_channels()
                                 }
                             else
                                 {
-                                    LOG(INFO) << "Disabled acquisition resampler because the input sampling frequency is too low";
+                                    // LOG(INFO) << "Disabled acquisition resampler because the input sampling frequency is too low";
                                     top_block_->connect(sig_conditioner_.at(selected_signal_conditioner_ID)->get_right_block(), 0,
                                         channels_.at(i)->get_left_block_acq(), 0);
                                 }
@@ -1227,7 +1233,7 @@ int GNSSFlowgraph::connect_signal_conditioners_to_channels()
                 }
 
             signal_conditioner_connected_.at(selected_signal_conditioner_ID) = true;  // annotate that this signal conditioner is connected
-            DLOG(INFO) << "Signal conditioner " << selected_signal_conditioner_ID << " successfully connected to channel " << i;
+            // D// LOG(INFO) << "Signal conditioner " << selected_signal_conditioner_ID << " successfully connected to channel " << i;
         }
     return 0;
 }
@@ -1239,8 +1245,7 @@ int GNSSFlowgraph::connect_channels_to_observables()
         {
             try
                 {
-                    top_block_->connect(channels_.at(i)->get_right_block(), 0,
-                        observables_->get_left_block(), i);
+                    top_block_->connect(channels_.at(i)->get_right_block(), 0,observables_->get_left_block(), i);
                 }
             catch (const std::exception& e)
                 {
@@ -1249,7 +1254,7 @@ int GNSSFlowgraph::connect_channels_to_observables()
                     return 1;
                 }
         }
-    DLOG(INFO) << "Channel blocks successfully connected to the Observables block";
+    // D// LOG(INFO) << "Channel blocks successfully connected to the Observables block";
     return 0;
 }
 
@@ -1272,7 +1277,7 @@ int GNSSFlowgraph::connect_observables_to_pvt()
                             if (pmt::symbol_to_string(pmt::vector_ref(ports_in, n)) == "pvt_to_trk")
                                 {
                                     top_block_->msg_connect(pvt_->get_left_block(), pmt::mp("pvt_to_trk"), channels_.at(i)->get_left_block_trk(), pmt::mp("pvt_to_trk"));
-                                    LOG(INFO) << "pvt_to_trk message port connected in " << channels_.at(i)->implementation();
+                                    // LOG(INFO) << "pvt_to_trk message port connected in " << channels_.at(i)->implementation();
                                 }
                         }
                 }
@@ -1288,7 +1293,7 @@ int GNSSFlowgraph::connect_observables_to_pvt()
             top_block_->disconnect_all();
             return 1;
         }
-    DLOG(INFO) << "Observables successfully connected to the PVT block";
+    // D// LOG(INFO) << "Observables successfully connected to the PVT block";
     return 0;
 }
 
@@ -1308,7 +1313,7 @@ int GNSSFlowgraph::connect_gnss_synchro_monitor()
             top_block_->disconnect_all();
             return 1;
         }
-    DLOG(INFO) << "gnss_synchro_monitor successfully connected to Observables block";
+    // D// LOG(INFO) << "gnss_synchro_monitor successfully connected to Observables block";
     return 0;
 }
 
@@ -1318,8 +1323,13 @@ int GNSSFlowgraph::connect_gnss_serial_monitor()
         {
             for (int i = 0; i < channels_count_; i++)
                 {
-                    top_block_->connect(observables_->get_right_block(), i, GnssSerialMonitor_, i);
+                    top_block_->connect(channels_.at(i)->get_right_block(), 0,GnssSerialMonitor_, i);
+                    // top_block_->connect(observables_->get_right_block(), i, GnssSerialMonitor_, i);
+                    // top_block_->msg_connect(channels_.at(i)->get_right_block(), pmt::mp("telemetry"), pvt_->get_left_block(), pmt::mp("telemetry"));
+                    // top_block_->msg_connect(channels_.at(i)->get_right_block(), pmt::mp("telemetry"), pvt_->get_left_block(), pmt::mp("telemetry"));
+                    // top_block_->msg_connect(channels_.at(i)->get_right_block(), pmt::mp("telemetry_to_serial_monitor"), pvt_->get_left_block(), pmt::mp("telemetry_to_serial_monitor"));
                 }
+                // top_block_->msg_connect(pvt_->get_right_block(), pmt::mp("telemetry_to_serial_monitor"), GnssSerialMonitor_, pmt::mp("telemetry_to_serial_monitor"));
         }
     catch (const std::exception& e)
         {
@@ -1327,7 +1337,31 @@ int GNSSFlowgraph::connect_gnss_serial_monitor()
             top_block_->disconnect_all();
             return 1;
         }
-    // DLOG(INFO) << "gnss_synchro_monitor successfully connected to Observables block";
+    // // D// LOG(INFO) << "gnss_synchro_monitor successfully connected to Observables block";
+    return 0;
+}
+
+int GNSSFlowgraph::connect_pvt_to_gnss_serial_monitor()
+{
+    try
+        {
+            // for (int i = 0; i < channels_count_; i++)
+            //     {
+                    // top_block_->connect(pvt_->get_left_block(), i, GnssSerialMonitor_, i);
+                    // top_block_->connect(observables_->get_right_block(), i, GnssSerialMonitor_, i);
+                    // top_block_->msg_connect(pvt_->get_right_block(), pmt::mp("telemetry"), GnssSerialMonitor_, pmt::mp("telemetry"));
+                    // top_block_->msg_connect(channels_.at(i)->get_right_block(), pmt::mp("telemetry"), GnssSerialMonitor_, pmt::mp("telemetry"));
+                // }
+            top_block_->msg_connect(pvt_->get_right_block(), pmt::mp("telemetry"), GnssSerialMonitor_, pmt::mp("telemetry"));
+                
+        }
+    catch (const std::exception& e)
+        {
+            LOG(ERROR) << "Can't connect observables to Monitor block: " << e.what();
+            top_block_->disconnect_all();
+            return 1;
+        }
+    // // D// LOG(INFO) << "gnss_synchro_monitor successfully connected to Observables block";
     return 0;
 }
 
@@ -1347,7 +1381,7 @@ int GNSSFlowgraph::connect_acquisition_monitor()
             top_block_->disconnect_all();
             return 1;
         }
-    DLOG(INFO) << "acqusition_monitor successfully connected to Channel blocks";
+    // D// LOG(INFO) << "acqusition_monitor successfully connected to Channel blocks";
     return 0;
 }
 
@@ -1367,7 +1401,7 @@ int GNSSFlowgraph::connect_tracking_monitor()
             top_block_->disconnect_all();
             return 1;
         }
-    DLOG(INFO) << "tracking_monitor successfully connected to Channel blocks";
+    // D// LOG(INFO) << "tracking_monitor successfully connected to Channel blocks";
     return 0;
 }
 
@@ -1392,21 +1426,26 @@ int GNSSFlowgraph::connect_navdata_monitor()
             top_block_->disconnect_all();
             return 1;
         }
-    DLOG(INFO) << "navdata monitor successfully connected to Channel blocks";
+    // D// LOG(INFO) << "navdata monitor successfully connected to Channel blocks";
     return 0;
 }
 
 
 int GNSSFlowgraph::connect_monitors()
 {
-    // GNSS Serial MONITOR
-    if (enable_serial_monitor_)
-        {
-            if (connect_gnss_serial_monitor() != 0)
-                {
-                    return 1;
-                }
-        }
+    // // GNSS Serial MONITOR
+    // if (enable_serial_monitor_)
+    //     {
+    //         if (connect_gnss_serial_monitor() != 0)
+    //             {
+    //                 return 1;
+    //             }
+    //         // if (connect_pvt_to_gnss_serial_monitor() != 0)
+    //         //     {
+    //         //         return 1;
+    //         //     }
+    //     }
+
 
     // GNSS SYNCHRO MONITOR
     if (enable_monitor_)
@@ -1478,7 +1517,7 @@ int GNSSFlowgraph::connect_monitors()
 //             top_block_->disconnect_all();
 //             return 1;
 //         }
-//     DLOG(INFO) << "Galileo OSNMA message ports connected";
+//     // D// LOG(INFO) << "Galileo OSNMA message ports connected";
 //     return 0;
 // }
 
@@ -1514,7 +1553,7 @@ int GNSSFlowgraph::connect_gal_e6_has()
             top_block_->disconnect_all();
             return 1;
         }
-    DLOG(INFO) << "Galileo E6 HAS message ports connected";
+    // D// LOG(INFO) << "Galileo E6 HAS message ports connected";
     return 0;
 }
 
@@ -1530,7 +1569,7 @@ void GNSSFlowgraph::check_signal_conditioners()
                     null_sinks_.push_back(gr::blocks::null_sink::make(sizeof(gr_complex)));
                     top_block_->connect(sig_conditioner_.at(n)->get_right_block(), 0,
                         null_sinks_.back(), 0);
-                    LOG(INFO) << "Null sink connected to signal conditioner " << n << " due to lack of connection to any channel\n";
+                    // LOG(INFO) << "Null sink connected to signal conditioner " << n << " due to lack of connection to any channel\n";
                 }
         }
 }
@@ -1549,7 +1588,7 @@ int GNSSFlowgraph::assign_channels()
                 }
             catch (const std::exception& e)
                 {
-                    LOG(WARNING) << e.what();
+                    // // LOG(WARNING) << e.what();
                 }
             if (sat == 0)
                 {
@@ -1662,7 +1701,7 @@ int GNSSFlowgraph::assign_channels()
                 }
             catch (const std::exception& e)
                 {
-                    LOG(WARNING) << e.what();
+                    // // LOG(WARNING) << e.what();
                 }
             if (sat == 0)
                 {
@@ -1793,8 +1832,29 @@ bool GNSSFlowgraph::send_telemetry_msg(const pmt::pmt_t& msg)
     // Push ephemeris to PVT telemetry msg in port using a channel out port
     // it uses the first channel as a message producer (it is already connected to PVT)
     channels_.at(0)->get_right_block()->message_port_pub(pmt::mp("telemetry"), msg);
+    // channels_.at(0)->get_right_block()->message_port_pub(pmt::mp("telemetry_to_serial_monitor"),msg);
     return true;
 }
+
+// // Caio
+// bool GNSSFlowgraph::receive_telemetry_msg(const pmt::pmt_t& msg)
+// {
+    
+// }
+// //
+
+
+// /**
+//  * 
+// */
+// bool GNSSFlowgraph::send_telemetry_msg(const pmt::pmt_t& msg)
+// {
+//     // Push ephemeris to PVT telemetry msg in port using a channel out port
+//     // it uses the first channel as a message producer (it is already connected to PVT)
+//     channels_.at(0)->get_right_block()->message_port_pub(pmt::mp("telemetry"), msg);
+//     return true;
+// }
+
 
 
 void GNSSFlowgraph::push_back_signal(const Gnss_Signal& gs)
@@ -1955,7 +2015,7 @@ void GNSSFlowgraph::acquisition_manager(unsigned int who)
                 }
             catch (const std::exception& e)
                 {
-                    LOG(WARNING) << e.what();
+                    // // LOG(WARNING) << e.what();
                 }
             if ((acq_channels_count_ < max_acq_channels_) && (channels_state_[current_channel] == 0))
                 {
@@ -1986,9 +2046,9 @@ void GNSSFlowgraph::acquisition_manager(unsigned int who)
                         {
                             channels_state_[current_channel] = 1;
                             acq_channels_count_++;
-                            DLOG(INFO) << "Channel " << current_channel
-                                       << " Starting acquisition " << channels_[current_channel]->get_signal().get_satellite()
-                                       << ", Signal " << channels_[current_channel]->get_signal().get_signal_str();
+                            // D// LOG(INFO) << "Channel " << current_channel
+                                    //    << " Starting acquisition " << channels_[current_channel]->get_signal().get_satellite()
+                                    //    << ", Signal " << channels_[current_channel]->get_signal().get_signal_str();
                             if (assistance_available == true and configuration_->property("GNSS-SDR.assist_dual_frequency_acq", multiband_))
                                 {
                                     channels_[current_channel]->assist_acquisition_doppler(project_doppler(channels_[current_channel]->get_signal().get_signal_str(), estimated_doppler));
@@ -2016,13 +2076,13 @@ void GNSSFlowgraph::acquisition_manager(unsigned int who)
                     else
                         {
                             push_back_signal(gnss_signal);
-                            DLOG(INFO) << "Channel " << current_channel
-                                       << " secondary frequency acquisition assistance not available in "
-                                       << channels_[current_channel]->get_signal().get_satellite()
-                                       << ", Signal " << channels_[current_channel]->get_signal().get_signal_str();
+                            // D// LOG(INFO) << "Channel " << current_channel
+                                    //    << " secondary frequency acquisition assistance not available in "
+                                    //    << channels_[current_channel]->get_signal().get_satellite()
+                                    //    << ", Signal " << channels_[current_channel]->get_signal().get_signal_str();
                         }
                 }
-            DLOG(INFO) << "Channel " << current_channel << " in state " << channels_state_[current_channel];
+            // D// LOG(INFO) << "Channel " << current_channel << " in state " << channels_state_[current_channel];
         }
 }
 
@@ -2053,7 +2113,7 @@ void GNSSFlowgraph::apply_action(unsigned int who, unsigned int what)
 {
     // todo: the acquisition events are initiated from the acquisition success or failure queued msg. If the acquisition is disabled for non-assisted secondary freq channels, the engine stops..
     std::lock_guard<std::mutex> lock(signal_list_mutex_);
-    DLOG(INFO) << "Received " << what << " from " << who;
+    // D// LOG(INFO) << "Received " << what << " from " << who;
     unsigned int sat = 0;
     Gnss_Signal gs;
     if (who < 200)
@@ -2064,14 +2124,14 @@ void GNSSFlowgraph::apply_action(unsigned int who, unsigned int what)
                 }
             catch (const std::exception& e)
                 {
-                    LOG(WARNING) << e.what();
+                    // // LOG(WARNING) << e.what();
                 }
         }
     switch (what)
         {
         case 0:
             gs = channels_[who]->get_signal();
-            DLOG(INFO) << "Channel " << who << " ACQ FAILED satellite " << gs.get_satellite() << ", Signal " << gs.get_signal_str();
+            // D// LOG(INFO) << "Channel " << who << " ACQ FAILED satellite " << gs.get_satellite() << ", Signal " << gs.get_signal_str();
             channels_state_[who] = 0;
             if (acq_channels_count_ > 0)
                 {
@@ -2087,7 +2147,7 @@ void GNSSFlowgraph::apply_action(unsigned int who, unsigned int what)
             break;
         case 1:
             gs = channels_[who]->get_signal();
-            DLOG(INFO) << "Channel " << who << " ACQ SUCCESS satellite " << gs.get_satellite();
+            // D// LOG(INFO) << "Channel " << who << " ACQ SUCCESS satellite " << gs.get_satellite();
             // If the satellite is in the list of available ones, remove it.
             remove_signal(gs);
 
@@ -2102,13 +2162,13 @@ void GNSSFlowgraph::apply_action(unsigned int who, unsigned int what)
 
         case 2:
             gs = channels_[who]->get_signal();
-            DLOG(INFO) << "Channel " << who << " TRK FAILED satellite " << gs.get_satellite();
+            // D// LOG(INFO) << "Channel " << who << " TRK FAILED satellite " << gs.get_satellite();
             if (acq_channels_count_ < max_acq_channels_)
                 {
                     // try to acquire the same satellite
                     channels_state_[who] = 1;
                     acq_channels_count_++;
-                    DLOG(INFO) << "Channel " << who << " Starting acquisition " << gs.get_satellite() << ", Signal " << gs.get_signal_str();
+                    // D// LOG(INFO) << "Channel " << who << " Starting acquisition " << gs.get_satellite() << ", Signal " << gs.get_signal_str();
                     channels_[who]->set_signal(channels_[who]->get_signal());
 
 #if ENABLE_FPGA
@@ -2129,7 +2189,7 @@ void GNSSFlowgraph::apply_action(unsigned int who, unsigned int what)
             else
                 {
                     channels_state_[who] = 0;
-                    LOG(INFO) << "Channel " << who << " Idle state";
+                    // LOG(INFO) << "Channel " << who << " Idle state";
                     if (sat == 0)
                         {
                             push_back_signal(channels_[who]->get_signal());
@@ -2231,12 +2291,12 @@ void GNSSFlowgraph::set_configuration(const std::shared_ptr<ConfigurationInterfa
 {
     if (running_)
         {
-            LOG(WARNING) << "Unable to update configuration while flowgraph running";
+            // // LOG(WARNING) << "Unable to update configuration while flowgraph running";
             return;
         }
     if (connected_)
         {
-            LOG(WARNING) << "Unable to update configuration while flowgraph connected";
+            // // LOG(WARNING) << "Unable to update configuration while flowgraph connected";
         }
     configuration_ = configuration;
 }
@@ -2692,7 +2752,7 @@ void GNSSFlowgraph::set_channels_state()
     if (max_acq_channels_ > channels_count_)
         {
             max_acq_channels_ = channels_count_;
-            LOG(WARNING) << "Channels_in_acquisition is bigger than number of channels. Variable acq_channels_count_ is set to " << channels_count_;
+            // // LOG(WARNING) << "Channels_in_acquisition is bigger than number of channels. Variable acq_channels_count_ is set to " << channels_count_;
         }
     channels_state_.reserve(channels_count_);
     for (int i = 0; i < channels_count_; i++)
@@ -2705,10 +2765,10 @@ void GNSSFlowgraph::set_channels_state()
                 {
                     channels_state_.push_back(0);
                 }
-            DLOG(INFO) << "Channel " << i << " in state " << channels_state_[i];
+            // D// LOG(INFO) << "Channel " << i << " in state " << channels_state_[i];
         }
     acq_channels_count_ = max_acq_channels_;
-    DLOG(INFO) << acq_channels_count_ << " channels in acquisition state";
+    // D// LOG(INFO) << acq_channels_count_ << " channels in acquisition state";
 }
 
 

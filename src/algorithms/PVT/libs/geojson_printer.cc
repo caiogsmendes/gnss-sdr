@@ -71,7 +71,7 @@ GeoJSON_Printer::GeoJSON_Printer(const std::string& base_path) : geojson_base_pa
 
 GeoJSON_Printer::~GeoJSON_Printer()
 {
-    DLOG(INFO) << "GeoJSON printer destructor called.";
+    // D// LOG(INFO) << "GeoJSON printer destructor called.";
     try
         {
             GeoJSON_Printer::close_file();
@@ -137,7 +137,7 @@ bool GeoJSON_Printer::set_headers(const std::string& filename, bool time_tag_nam
     first_pos = true;
     if (geojson_file.is_open())
         {
-            DLOG(INFO) << "GeoJSON printer writing on " << filename.c_str();
+            // D// LOG(INFO) << "GeoJSON printer writing on " << filename.c_str();
 
             // Set iostream numeric format and precision
             geojson_file.setf(geojson_file.std::ofstream::fixed, geojson_file.std::ofstream::floatfield);
@@ -201,7 +201,7 @@ bool GeoJSON_Printer::close_file()
                     errorlib::error_code ec;
                     if (!fs::remove(fs::path(filename_), ec))
                         {
-                            LOG(INFO) << "Error deleting temporary file";
+                            // LOG(INFO) << "Error deleting temporary file";
                         }
                 }
             return true;

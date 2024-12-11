@@ -99,7 +99,7 @@ void IONGSMSSignalSource::load_metadata()
             GnssMetadata::XmlProcessor xml_proc;
             if (!xml_proc.Load(metadata_filepath_.c_str(), false, *metadata_))
                 {
-                    LOG(WARNING) << "Could not load XML metadata file " << metadata_filepath_;
+                    // // LOG(WARNING) << "Could not load XML metadata file " << metadata_filepath_;
                     std::cerr << "Could not load XML metadata file " << metadata_filepath_ << std::endl;
                     // std::cout << "GNSS-SDR program ended.\n";
                     exit(1);
@@ -107,14 +107,14 @@ void IONGSMSSignalSource::load_metadata()
         }
     catch (GnssMetadata::ApiException& e)
         {
-            LOG(WARNING) << "API Exception while loading XML metadata file: " << std::to_string(e.Error());
+            // // LOG(WARNING) << "API Exception while loading XML metadata file: " << std::to_string(e.Error());
             std::cerr << "Could not load XML metadata file " << metadata_filepath_ << " : " << std::to_string(e.Error()) << std::endl;
             // std::cout << "GNSS-SDR program ended.\n";
             exit(1);
         }
     catch (std::exception& e)
         {
-            LOG(WARNING) << "Exception while loading XML metadata file: " << e.what();
+            // // LOG(WARNING) << "Exception while loading XML metadata file: " << e.what();
             std::cerr << "Could not load XML metadata file " << metadata_filepath_ << " : " << e.what() << std::endl;
             // std::cout << "GNSS-SDR program ended.\n";
             exit(1);
@@ -216,7 +216,7 @@ void IONGSMSSignalSource::disconnect(gr::top_block_sptr top_block)
 
 gr::basic_block_sptr IONGSMSSignalSource::get_left_block()
 {
-    LOG(WARNING) << "Trying to get signal source left block.";
+    // // LOG(WARNING) << "Trying to get signal source left block.";
     // return gr_basic_block_sptr();
     return IONGSMSFileSource::sptr();
 }
@@ -232,7 +232,7 @@ gr::basic_block_sptr IONGSMSSignalSource::get_right_block(int RF_channel)
 {
     if (RF_channel < 0 || RF_channel >= static_cast<int>(copy_blocks_.size()))
         {
-            LOG(WARNING) << "'RF_channel' out of bounds while trying to get signal source right block.";
+            // // LOG(WARNING) << "'RF_channel' out of bounds while trying to get signal source right block.";
             return valves_[0];
         }
     return valves_[RF_channel];

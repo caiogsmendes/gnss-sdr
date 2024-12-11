@@ -74,7 +74,7 @@ Fpga_Acquisition::Fpga_Acquisition(std::string device_name,
     Fpga_Acquisition::fpga_acquisition_test_register();
     Fpga_Acquisition::close_device();
 
-    DLOG(INFO) << "Acquisition FPGA class created";
+    // D// LOG(INFO) << "Acquisition FPGA class created";
 }
 
 
@@ -102,7 +102,7 @@ void Fpga_Acquisition::open_device()
     // open communication with HW accelerator
     if ((d_fd = open(d_device_name.c_str(), O_RDWR | O_SYNC)) == -1)
         {
-            LOG(WARNING) << "Cannot open deviceio" << d_device_name;
+            // // LOG(WARNING) << "Cannot open deviceio" << d_device_name;
             // std::cout << "Acq: cannot open deviceio" << d_device_name << '\n';
         }
     d_map_base = reinterpret_cast<volatile uint32_t *>(mmap(nullptr, FPGA_PAGE_SIZE,
@@ -110,7 +110,7 @@ void Fpga_Acquisition::open_device()
 
     if (d_map_base == reinterpret_cast<void *>(-1))
         {
-            LOG(WARNING) << "Cannot map the FPGA acquisition module into user memory";
+            // // LOG(WARNING) << "Cannot map the FPGA acquisition module into user memory";
             // std::cout << "Acq: cannot map deviceio" << d_device_name << '\n';
         }
 }
@@ -128,11 +128,11 @@ void Fpga_Acquisition::fpga_acquisition_test_register()
 
     if (writeval != readval)
         {
-            LOG(WARNING) << "Acquisition test register sanity check failed";
+            // // LOG(WARNING) << "Acquisition test register sanity check failed";
         }
     else
         {
-            LOG(INFO) << "Acquisition test register sanity check success!";
+            // LOG(INFO) << "Acquisition test register sanity check success!";
         }
 }
 

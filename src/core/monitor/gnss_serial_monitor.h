@@ -66,6 +66,7 @@ public:
 
     size_t d_gps_ephemeris_sptr_type_hash_code;
     void msg_handler_telemetry(const pmt::pmt_t& msg);
+    void msg_handler_telemetry_2(const pmt::pmt_t& msg);
     void msg_handler_pvtsol(const pmt::pmt_t& msg);
 
 private:

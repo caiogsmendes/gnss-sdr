@@ -22,6 +22,8 @@
 #include <array>
 #include <cstdint>
 
+#include "HEtechSerial.h"
+
 /*!
  * \brief Base class for GNSS ephemeris storage
  */
@@ -107,6 +109,8 @@ public:
     double satvel_X{};  //!< Earth-fixed velocity coordinate x of the satellite [m]
     double satvel_Y{};  //!< Earth-fixed velocity coordinate y of the satellite [m]
     double satvel_Z{};  //!< Earth-fixed velocity coordinate z of the satellite [m]
+
+
 
 protected:
     char System{};  //!< Character ID of the GNSS system. 'G': GPS.  'E': Galileo.  'B': BeiDou

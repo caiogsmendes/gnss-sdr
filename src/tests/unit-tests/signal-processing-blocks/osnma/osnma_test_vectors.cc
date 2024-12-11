@@ -85,12 +85,12 @@ TEST_F(OsnmaTestVectors, NominalTestConf1)
     ASSERT_TRUE(result);
 
     // Assert
-    LOG(INFO) << "Successful tags count= " << osnma->d_count_successful_tags;
-    LOG(INFO) << "Failed tags count= " << osnma->d_count_failed_tags;
-    LOG(INFO) << "Unverified tags count= " << osnma->d_tags_awaiting_verify.size();
-    LOG(INFO) << "Failed Kroot count= " << osnma->d_count_failed_Kroot;
-    LOG(INFO) << "Failed PK count= " << osnma->d_count_failed_pubKey;
-    LOG(INFO) << "Failed MACSEQ count= " << osnma->d_count_failed_macseq;
+    // LOG(INFO) << "Successful tags count= " << osnma->d_count_successful_tags;
+    // LOG(INFO) << "Failed tags count= " << osnma->d_count_failed_tags;
+    // LOG(INFO) << "Unverified tags count= " << osnma->d_tags_awaiting_verify.size();
+    // LOG(INFO) << "Failed Kroot count= " << osnma->d_count_failed_Kroot;
+    // LOG(INFO) << "Failed PK count= " << osnma->d_count_failed_pubKey;
+    // LOG(INFO) << "Failed MACSEQ count= " << osnma->d_count_failed_macseq;
     ASSERT_EQ(osnma->d_count_failed_tags, 0);
     ASSERT_EQ(osnma->d_count_failed_Kroot, 0);
     ASSERT_EQ(osnma->d_count_failed_pubKey, 0);
@@ -119,12 +119,12 @@ TEST_F(OsnmaTestVectors, NominalTestConf2)
     ASSERT_TRUE(result);
 
     // Assert
-    LOG(INFO) << "Successful tags count= " << osnma->d_count_successful_tags;
-    LOG(INFO) << "Failed tags count= " << osnma->d_count_failed_tags;
-    LOG(INFO) << "Unverified tags count= " << osnma->d_tags_awaiting_verify.size();
-    LOG(INFO) << "Failed Kroot count= " << osnma->d_count_failed_Kroot;
-    LOG(INFO) << "Failed PK count= " << osnma->d_count_failed_pubKey;
-    LOG(INFO) << "Failed MACSEQ count= " << osnma->d_count_failed_macseq;
+    // LOG(INFO) << "Successful tags count= " << osnma->d_count_successful_tags;
+    // LOG(INFO) << "Failed tags count= " << osnma->d_count_failed_tags;
+    // LOG(INFO) << "Unverified tags count= " << osnma->d_tags_awaiting_verify.size();
+    // LOG(INFO) << "Failed Kroot count= " << osnma->d_count_failed_Kroot;
+    // LOG(INFO) << "Failed PK count= " << osnma->d_count_failed_pubKey;
+    // LOG(INFO) << "Failed MACSEQ count= " << osnma->d_count_failed_macseq;
     ASSERT_EQ(osnma->d_count_failed_tags, 0);
     ASSERT_EQ(osnma->d_count_failed_Kroot, 0);
     ASSERT_EQ(osnma->d_count_failed_pubKey, 0);
@@ -158,12 +158,12 @@ TEST_F(OsnmaTestVectors, PublicKeyRenewal)
     ASSERT_TRUE(result);
 
     // Assert
-    LOG(INFO) << "Successful tags count= " << osnma->d_count_successful_tags;
-    LOG(INFO) << "Failed tags count= " << osnma->d_count_failed_tags;
-    LOG(INFO) << "Unverified tags count= " << osnma->d_tags_awaiting_verify.size();
-    LOG(INFO) << "Failed Kroot count= " << osnma->d_count_failed_Kroot;
-    LOG(INFO) << "Failed PK count= " << osnma->d_count_failed_pubKey;
-    LOG(INFO) << "Failed MACSEQ count= " << osnma->d_count_failed_macseq;
+    // LOG(INFO) << "Successful tags count= " << osnma->d_count_successful_tags;
+    // LOG(INFO) << "Failed tags count= " << osnma->d_count_failed_tags;
+    // LOG(INFO) << "Unverified tags count= " << osnma->d_tags_awaiting_verify.size();
+    // LOG(INFO) << "Failed Kroot count= " << osnma->d_count_failed_Kroot;
+    // LOG(INFO) << "Failed PK count= " << osnma->d_count_failed_pubKey;
+    // LOG(INFO) << "Failed MACSEQ count= " << osnma->d_count_failed_macseq;
     ASSERT_EQ(osnma->d_count_failed_tags, 0);
     ASSERT_EQ(osnma->d_count_failed_Kroot, 0);
     ASSERT_EQ(osnma->d_count_failed_pubKey, 0);
@@ -196,12 +196,12 @@ TEST_F(OsnmaTestVectors, PublicKeyRevocation)
     ASSERT_TRUE(result);
 
     // Assert
-    LOG(INFO) << "Successful tags count= " << osnma->d_count_successful_tags;
-    LOG(INFO) << "Failed tags count= " << osnma->d_count_failed_tags;
-    LOG(INFO) << "Unverified tags count= " << osnma->d_tags_awaiting_verify.size();
-    LOG(INFO) << "Failed Kroot count= " << osnma->d_count_failed_Kroot;
-    LOG(INFO) << "Failed PK count= " << osnma->d_count_failed_pubKey;
-    LOG(INFO) << "Failed MACSEQ count= " << osnma->d_count_failed_macseq;
+    // LOG(INFO) << "Successful tags count= " << osnma->d_count_successful_tags;
+    // LOG(INFO) << "Failed tags count= " << osnma->d_count_failed_tags;
+    // LOG(INFO) << "Unverified tags count= " << osnma->d_tags_awaiting_verify.size();
+    // LOG(INFO) << "Failed Kroot count= " << osnma->d_count_failed_Kroot;
+    // LOG(INFO) << "Failed PK count= " << osnma->d_count_failed_pubKey;
+    // LOG(INFO) << "Failed MACSEQ count= " << osnma->d_count_failed_macseq;
     ASSERT_EQ(osnma->d_count_failed_tags, 0);
     ASSERT_EQ(osnma->d_count_failed_Kroot, 0);
     ASSERT_EQ(osnma->d_count_failed_pubKey, 0);
@@ -232,12 +232,12 @@ TEST_F(OsnmaTestVectors, ChainRenewal)
     ASSERT_TRUE(result);
 
     // Assert
-    LOG(INFO) << "Successful tags count= " << osnma->d_count_successful_tags;
-    LOG(INFO) << "Failed tags count= " << osnma->d_count_failed_tags;
-    LOG(INFO) << "Unverified tags count= " << osnma->d_tags_awaiting_verify.size();
-    LOG(INFO) << "Failed Kroot count= " << osnma->d_count_failed_Kroot;
-    LOG(INFO) << "Failed PK count= " << osnma->d_count_failed_pubKey;
-    LOG(INFO) << "Failed MACSEQ count= " << osnma->d_count_failed_macseq;
+    // LOG(INFO) << "Successful tags count= " << osnma->d_count_successful_tags;
+    // LOG(INFO) << "Failed tags count= " << osnma->d_count_failed_tags;
+    // LOG(INFO) << "Unverified tags count= " << osnma->d_tags_awaiting_verify.size();
+    // LOG(INFO) << "Failed Kroot count= " << osnma->d_count_failed_Kroot;
+    // LOG(INFO) << "Failed PK count= " << osnma->d_count_failed_pubKey;
+    // LOG(INFO) << "Failed MACSEQ count= " << osnma->d_count_failed_macseq;
     ASSERT_EQ(osnma->d_count_failed_tags, 0);
     ASSERT_EQ(osnma->d_count_failed_Kroot, 0);
     ASSERT_EQ(osnma->d_count_failed_pubKey, 0);
@@ -271,12 +271,12 @@ TEST_F(OsnmaTestVectors, ChainRevocation)
     ASSERT_TRUE(result);
 
     // Assert
-    LOG(INFO) << "Successful tags count= " << osnma->d_count_successful_tags;
-    LOG(INFO) << "Failed tags count= " << osnma->d_count_failed_tags;
-    LOG(INFO) << "Unverified tags count= " << osnma->d_tags_awaiting_verify.size();
-    LOG(INFO) << "Failed Kroot count= " << osnma->d_count_failed_Kroot;
-    LOG(INFO) << "Failed PK count= " << osnma->d_count_failed_pubKey;
-    LOG(INFO) << "Failed MACSEQ count= " << osnma->d_count_failed_macseq;
+    // LOG(INFO) << "Successful tags count= " << osnma->d_count_successful_tags;
+    // LOG(INFO) << "Failed tags count= " << osnma->d_count_failed_tags;
+    // LOG(INFO) << "Unverified tags count= " << osnma->d_tags_awaiting_verify.size();
+    // LOG(INFO) << "Failed Kroot count= " << osnma->d_count_failed_Kroot;
+    // LOG(INFO) << "Failed PK count= " << osnma->d_count_failed_pubKey;
+    // LOG(INFO) << "Failed MACSEQ count= " << osnma->d_count_failed_macseq;
     ASSERT_EQ(osnma->d_count_failed_tags, 0);
     ASSERT_EQ(osnma->d_count_failed_Kroot, 0);
     ASSERT_EQ(osnma->d_count_failed_pubKey, 0);
@@ -307,12 +307,12 @@ TEST_F(OsnmaTestVectors, AlertMessage)
     ASSERT_TRUE(result);
 
     // Assert
-    LOG(INFO) << "Successful tags count= " << osnma->d_count_successful_tags;
-    LOG(INFO) << "Failed tags count= " << osnma->d_count_failed_tags;
-    LOG(INFO) << "Unverified tags count= " << osnma->d_tags_awaiting_verify.size();
-    LOG(INFO) << "Failed Kroot count= " << osnma->d_count_failed_Kroot;
-    LOG(INFO) << "Failed PK count= " << osnma->d_count_failed_pubKey;
-    LOG(INFO) << "Failed MACSEQ count= " << osnma->d_count_failed_macseq;
+    // LOG(INFO) << "Successful tags count= " << osnma->d_count_successful_tags;
+    // LOG(INFO) << "Failed tags count= " << osnma->d_count_failed_tags;
+    // LOG(INFO) << "Unverified tags count= " << osnma->d_tags_awaiting_verify.size();
+    // LOG(INFO) << "Failed Kroot count= " << osnma->d_count_failed_Kroot;
+    // LOG(INFO) << "Failed PK count= " << osnma->d_count_failed_pubKey;
+    // LOG(INFO) << "Failed MACSEQ count= " << osnma->d_count_failed_macseq;
     ASSERT_EQ(osnma->d_count_failed_tags, 0);
     ASSERT_EQ(osnma->d_count_failed_Kroot, 0);
     ASSERT_EQ(osnma->d_count_failed_pubKey, 0);
@@ -478,7 +478,7 @@ bool OsnmaTestVectors::feedOsnmaWithTestVectors(osnma_msg_receiver_sptr osnma_ob
                                                 tv.svId,
                                                 nav_data_ADKD_0_12,
                                                 osnmaMsg_sptr->TOW_sf0);
-                                            // LOG(INFO) << "|---> Galileo OSNMA :: Telemetry Decoder NavData (PRN_d=" << static_cast<int>(tv.svId) << ", TOW=" << static_cast<int>(osnmaMsg_sptr->TOW_sf0) << "): 0b" << nav_data_ADKD_0_12;
+                                            // // LOG(INFO) << "|---> Galileo OSNMA :: Telemetry Decoder NavData (PRN_d=" << static_cast<int>(tv.svId) << ", TOW=" << static_cast<int>(osnmaMsg_sptr->TOW_sf0) << "): 0b" << nav_data_ADKD_0_12;
                                             osnma_object->msg_handler_osnma(pmt::make_any(tmp_obj_osnma));
                                         }
                                 }
@@ -515,7 +515,7 @@ bool OsnmaTestVectors::feedOsnmaWithTestVectors(osnma_msg_receiver_sptr osnma_ob
                                                 tv.svId,
                                                 nav_data_ADKD_4,
                                                 osnmaMsg_sptr->TOW_sf0);
-                                            // LOG(INFO) << "|---> Galileo OSNMA :: Telemetry Decoder NavData (PRN_d=" << static_cast<int>(tv.svId) << ", TOW=" << static_cast<int>(osnmaMsg_sptr->TOW_sf0) << "): 0b" << nav_data_ADKD_4;
+                                            // // LOG(INFO) << "|---> Galileo OSNMA :: Telemetry Decoder NavData (PRN_d=" << static_cast<int>(tv.svId) << ", TOW=" << static_cast<int>(osnmaMsg_sptr->TOW_sf0) << "): 0b" << nav_data_ADKD_4;
                                             osnma_object->msg_handler_osnma(pmt::make_any(tmp_obj_osnma));
                                         }
                                 }

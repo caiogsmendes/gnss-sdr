@@ -40,6 +40,8 @@
 #include <sys/types.h>            // for key_t
 #include <vector>                 // for vector
 
+#include "HEtechSerial.h"
+
 /** \addtogroup PVT
  * \{ */
 /** \addtogroup PVT_gnuradio_blocks pvt_gr_blocks
@@ -131,6 +133,17 @@ public:
     int work(int noutput_items, gr_vector_const_void_star& input_items,
         gr_vector_void_star& output_items);  //!< PVT Signal Processing
 
+    //Caio
+    // void set_serial_comms(serial_s_t* comms_);
+    serial_s_t* comms;
+    // std::shared_ptr<rtklib_pvt_gs> get_rtk_pvt(void);
+    std::map<int, Gnss_Synchro> get_sync(void);
+    serial_s_t commsS2;
+    bool serial_fd_check = false;
+    std::shared_ptr<Rtklib_Solver> d_internal_pvt_solver;
+    std::shared_ptr<Rtklib_Solver> d_user_pvt_solver;
+    //
+
 private:
     friend rtklib_pvt_gs_sptr rtklib_make_pvt_gs(uint32_t nchannels,
         const Pvt_Conf& conf_,
@@ -177,9 +190,9 @@ private:
     bool load_gnss_synchro_map_xml(const std::string& file_name);  // debug helper function
 
     std::fstream d_log_timetag_file;
-
-    std::shared_ptr<Rtklib_Solver> d_internal_pvt_solver;
-    std::shared_ptr<Rtklib_Solver> d_user_pvt_solver;
+    //Caio - movi para public
+    // std::shared_ptr<Rtklib_Solver> d_internal_pvt_solver;
+    // std::shared_ptr<Rtklib_Solver> d_user_pvt_solver;
 
     std::unique_ptr<Rinex_Printer> d_rp;
     std::unique_ptr<Kml_Printer> d_kml_dump;

@@ -65,6 +65,12 @@
 #include <sys/ipc.h>               // for IPC_CREAT
 #include <sys/msg.h>               // for msgctl, msgget
 
+// Caio
+#include "HEtechSerial.h"
+#include <fstream>
+//
+
+
 #if USE_GLOG_AND_GFLAGS
 #include <glog/logging.h>
 #else
@@ -265,6 +271,31 @@ void ControlThread::init()
                     agnss_ref_time_.valid = false;
                 }
         }
+    // // Caio
+    // std::string serial_default = "/dev/ttyUSB0";
+    // comms = HEserial_connect(serial_default.c_str(), B921600, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
+    pvt_ptr_ = flowgraph_->get_pvt();
+    gpio_enabled_ = flowgraph_->configuration_->property("GNSS-SDR.gpio_enabled_", false);
+    thermal_enabled_ = flowgraph_->configuration_->property("GNSS-SDR.thermal_enabled_", false);
+    tickss = flowgraph_->configuration_->property("GNSS-SDR.tickcounter",1);
+    // sync = pvt_ptr_->get_sync();
+    // gps_ephem = pvt_ptr_->get_gps_ephemeris();
+    if (gpio_enabled_)
+        {
+            gpiod_pin *pin;
+            const char bank2[] = "gpiochip2";
+            const char bank4[] = "gpiochip4";
+            int SODIMM_55 = 18;
+            int SODIMM_95 = 17;
+            unsigned int line = SODIMM_55;
+            chip = gpiod_chip_open_by_name(&bank4[0]);
+            pin = gpiod_chip_get_line(chip, line);
+        }
+
+            
+        
+
+    //
 
     receiver_on_standby_ = false;
 }
@@ -272,7 +303,7 @@ void ControlThread::init()
 
 ControlThread::~ControlThread()  // NOLINT(modernize-use-equals-default)
 {
-    DLOG(INFO) << "Control Thread destructor called";
+    // D// LOG(INFO) << "Control Thread destructor called";
     if (msqid_ != -1)
         {
             msgctl(msqid_, IPC_RMID, nullptr);
@@ -287,12 +318,13 @@ ControlThread::~ControlThread()  // NOLINT(modernize-use-equals-default)
     //     {
     //         cmd_interface_thread_.join();
     //     }
+    
 }
 
 
 void ControlThread::handle_signal(int sig)
 {
-    LOG(INFO) << "GNSS-SDR received " << sig << " OS signal";
+    // LOG(INFO) << "GNSS-SDR received " << sig << " OS signal";
     if (sig == SIGINT || sig == SIGTERM || sig == SIGHUP)
         {
             ControlThread::me->control_queue_->push(pmt::make_any(command_event_make(200, 0)));
@@ -306,7 +338,7 @@ void ControlThread::handle_signal(int sig)
         }
     else if (sig == SIGCHLD)
         {
-            LOG(INFO) << "Received SIGCHLD signal";
+            // LOG(INFO) << "Received SIGCHLD signal";
             // todo
         }
 }
@@ -333,16 +365,16 @@ void ControlThread::event_dispatcher(bool &valid_event, pmt::pmt_t &msg)
                     if (receiver_on_standby_ == false)
                         {
                             const auto new_event = wht::any_cast<channel_event_sptr>(pmt::any_ref(msg));
-                            DLOG(INFO) << "New channel event rx from ch id: " << new_event->channel_id
-                                       << " what: " << new_event->event_type;
+                            // D// LOG(INFO) << "New channel event rx from ch id: " << new_event->channel_id
+                                    //    << " what: " << new_event->event_type;
                             flowgraph_->apply_action(new_event->channel_id, new_event->event_type);
                         }
                 }
             else if (msg_type_hash_code == command_event_type_hash_code_)
                 {
                     const auto new_event = wht::any_cast<command_event_sptr>(pmt::any_ref(msg));
-                    DLOG(INFO) << "New command event rx from ch id: " << new_event->command_id
-                               << " what: " << new_event->event_type;
+                    // D// LOG(INFO) << "New command event rx from ch id: " << new_event->command_id
+                            //    << " what: " << new_event->event_type;
 
                     if (new_event->command_id == 200)
                         {
@@ -359,7 +391,7 @@ void ControlThread::event_dispatcher(bool &valid_event, pmt::pmt_t &msg)
                 }
             else
                 {
-                    DLOG(INFO) << "Control Queue: unknown object type!\n";
+                    // D// LOG(INFO) << "Control Queue: unknown object type!\n";
                 }
         }
     else
@@ -401,7 +433,7 @@ int ControlThread::run()
         }
     if (flowgraph_->connected())
         {
-            LOG(INFO) << "Flowgraph connected";
+            // LOG(INFO) << "Flowgraph connected";
         }
     else
         {
@@ -411,7 +443,7 @@ int ControlThread::run()
     flowgraph_->start();
     if (flowgraph_->running())
         {
-            LOG(INFO) << "Flowgraph started";
+            // LOG(INFO) << "Flowgraph started";
         }
     else
         {
@@ -431,9 +463,9 @@ int ControlThread::run()
         }
     // sysv_queue_thread_ = std::thread(&ControlThread::sysv_queue_listener, this);
 
-    // // start the telecommand listener thread
-    // cmd_interface_.set_pvt(flowgraph_->get_pvt());
-    // cmd_interface_thread_ = std::thread(&ControlThread::telecommand_listener, this);
+        // // start the telecommand listener thread
+        // cmd_interface_.set_pvt(flowgraph_->get_pvt());
+        // cmd_interface_thread_ = std::thread(&ControlThread::telecommand_listener, this);
 
 #ifdef ENABLE_FPGA
     // Create a task for the acquisition such that id doesn't block the flow of the control thread
@@ -442,15 +474,53 @@ int ControlThread::run()
 #endif
     // ###################################################
     // Main loop to read and process the control messages
+
     pmt::pmt_t msg;
+    uint8_t bufcmd[10];
+
     while (flowgraph_->running() && !stop_)
         {
+            // Internal Events
             // read event messages, triggered by event signaling with a 100 ms timeout to perform low priority receiver management tasks
-            bool valid_event = control_queue_->timed_wait_and_pop(msg, 100);
+            bool valid_event = control_queue_->timed_wait_and_pop(msg, 10);  // Caio: era timed_wait_and_pop(msg, 100)
             // call the new sat dispatcher and receiver controller
             event_dispatcher(valid_event, msg);
+
+            // GPIO - Trigged
+            if (gpio_enabled_)
+                {
+                    /* Waiting for an event on the input pin */
+                    gpiod_line_event_wait(pin, NULL);
+
+                    /* Reading next pending event from the GPIO pin */
+                    if (gpiod_line_event_read(pin, &event) != 0)
+                        continue;
+
+                    /* Checking if it is a rising event as previously defined */
+                    if (event.event_type == GPIOD_LINE_EVENT_RISING_EDGE)
+                        {
+                            ++tickcount;
+                            if (tickcount == 10)
+                                {
+                                    sendHealthStatus();
+                                    tickcount=0;
+                                }
+                        }
+                    continue;
+                }
+
+            // Input Serial
+            int result = read(flowgraph_->comms_flow.fd, &bufcmd[0], 8);
+            tcflush(flowgraph_->comms_flow.fd, TCIOFLUSH);
+            if (result != -1 && checkCRC(&bufcmd[0],8))
+                {
+                    // std::cout << "Trigged: " << ++contt << " " << valid_event << /*" " << tickcount<<*/ "\n";
+                    int cmd = msg_parser(&bufcmd[0]);
+                    apply_action(cmd);
+                    // tickcount = 0;
+                }
         }
-    //#####################################################
+    // #####################################################
 
 
     // std::cout << "Stopping GNSS-SDR, please wait!\n";
@@ -497,7 +567,7 @@ int ControlThread::run()
 // #endif
 //         }
 
-    LOG(INFO) << "Flowgraph stopped";
+    // LOG(INFO) << "Flowgraph stopped";
 
     if (restart_)
         {
@@ -512,7 +582,7 @@ void ControlThread::set_control_queue(std::shared_ptr<Concurrent_Queue<pmt::pmt_
 {
     if (flowgraph_->running())
         {
-            LOG(WARNING) << "Unable to set control queue while flowgraph is running";
+            // // LOG(WARNING) << "Unable to set control queue while flowgraph is running";
             return;
         }
     control_queue_ = std::move(control_queue);
@@ -721,25 +791,25 @@ bool ControlThread::read_assistance_from_XML()
             // Try to read Ref Time from XML
             if (supl_client_acquisition_.load_ref_time_xml(ref_time_xml_filename) == true)
                 {
-                    LOG(INFO) << "SUPL: Read XML Ref Time";
+                    // LOG(INFO) << "SUPL: Read XML Ref Time";
                     const std::shared_ptr<Agnss_Ref_Time> tmp_obj = std::make_shared<Agnss_Ref_Time>(supl_client_acquisition_.gps_time);
                     flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
                 }
             else
                 {
-                    LOG(INFO) << "SUPL: could not read Ref Time XML";
+                    // LOG(INFO) << "SUPL: could not read Ref Time XML";
                 }
 
             // Try to read Ref Location from XML
             if (supl_client_acquisition_.load_ref_location_xml(ref_location_xml_filename) == true)
                 {
-                    LOG(INFO) << "SUPL: Read XML Ref Location";
+                    // LOG(INFO) << "SUPL: Read XML Ref Location";
                     const std::shared_ptr<Agnss_Ref_Location> tmp_obj = std::make_shared<Agnss_Ref_Location>(supl_client_acquisition_.gps_ref_loc);
                     flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
                 }
             else
                 {
-                    LOG(INFO) << "SUPL: could not read Ref Location XML";
+                    // LOG(INFO) << "SUPL: could not read Ref Location XML";
                 }
         }
 
@@ -971,6 +1041,14 @@ void ControlThread::assist_GNSS()
             // Hot Start
             flowgraph_->apply_action(0, 12);
         }
+
+    // for(auto& i:supl_client_ephemeris_.gps_ephemeris_map)
+    //     {
+            supl_client_ephemeris_.gps_ephemeris_map.begin()->second.commS1 = &(flowgraph_->comms_flow);
+            // std::cout << "SUPL: Received ephemeris data for satellite " << Gnss_Satellite("GPS", gps_eph_iter->second.PRN) << '\n';
+            const std::shared_ptr<Gps_Ephemeris> tmp_obj = std::make_shared<Gps_Ephemeris>(supl_client_ephemeris_.gps_ephemeris_map.begin()->second);
+            flowgraph_->send_telemetry_msg(pmt::make_any(tmp_obj));
+        // }
 }
 
 
@@ -982,20 +1060,20 @@ void ControlThread::apply_action(unsigned int what)
     switch (what)
         {
         case 0:
-            LOG(INFO) << "Received action STOP";
+            // LOG(INFO) << "Received action STOP";
             stop_ = true;
             break;
         case 1:
-            LOG(INFO) << "Received action RESTART";
+            // LOG(INFO) << "Received action RESTART";
             stop_ = true;
             restart_ = true;
             break;
         case 10:  // request standby mode
-            LOG(INFO) << "TC request standby mode";
+            // LOG(INFO) << "TC request standby mode";
             receiver_on_standby_ = true;
             break;
         case 11:
-            LOG(INFO) << "Receiver action COLDSTART";
+            // LOG(INFO) << "Receiver action COLDSTART";
             // delete all ephemeris and almanac information from maps (also the PVT map queue)
             pvt_ptr = flowgraph_->get_pvt();
             pvt_ptr->clear_ephemeris();
@@ -1005,7 +1083,7 @@ void ControlThread::apply_action(unsigned int what)
             receiver_on_standby_ = false;
             break;
         case 12:
-            LOG(INFO) << "Receiver action HOTSTART";
+            // LOG(INFO) << "Receiver action HOTSTART";
             visible_satellites = get_visible_sats(cmd_interface_.get_utc_time(), cmd_interface_.get_LLH());
             // reorder the satellite queue to acquire first those visible satellites
             flowgraph_->priorize_satellites(visible_satellites);
@@ -1013,7 +1091,7 @@ void ControlThread::apply_action(unsigned int what)
             receiver_on_standby_ = false;
             break;
         case 13:
-            LOG(INFO) << "Receiver action WARMSTART";
+            // LOG(INFO) << "Receiver action WARMSTART";
             // delete all ephemeris and almanac information from maps (also the PVT map queue)
             pvt_ptr = flowgraph_->get_pvt();
             pvt_ptr->clear_ephemeris();
@@ -1027,8 +1105,21 @@ void ControlThread::apply_action(unsigned int what)
             // start again the satellite acquisitions
             receiver_on_standby_ = false;
             break;
+        case 14:
+            storeSAT();
+            // storeSAT();
+            // write(comms.fd,&msgOutput[0],index);
+            // pvt_ptr = flowgraph_->get_pvt();
+            // pvt_ptr->set_serial_comms(&comms);
+            break;
+        case 15:
+            sendHealthStatus();
+            break;
+        case 16:
+            sendQualiStatus();
+            break;
         default:
-            LOG(INFO) << "Unrecognized action.";
+            storePVT();
             break;
         }
 }
@@ -1213,7 +1304,7 @@ void ControlThread::gps_acq_assist_data_collector() const
             else
                 {
                     // insert new acq record
-                    LOG(INFO) << "New acq assist record inserted";
+                    // LOG(INFO) << "New acq assist record inserted";
                     global_gps_acq_assist_map.write(gps_acq.PRN, gps_acq);
                 }
         }
@@ -1311,3 +1402,216 @@ void ControlThread::print_help_at_exit() const
                       << "   Documentation of the PVT block at https://gnss-sdr.org/docs/sp-blocks/pvt/\n";
         }
 }
+
+
+int ControlThread::msg_parser(uint8_t* cmd)
+{
+    uint8_t option;
+    Hex2Int8(&option,++cmd);
+    switch ((int)option)
+    {
+    case 0x01:
+        option = 15;
+        break;
+    case 0x02:
+        option = 16;
+        break;
+    // case 0x03:
+    //     option = 99;
+    //     break;
+    default:
+        option = 99;
+        break;
+    }    
+    return option;
+}
+void ControlThread::storeStatus(void)
+{
+    msgOutput[0] = 0xd4;
+    msgOutput[1] = 0x4f;
+    msgOutput[2] = 4;
+    // msgOutput[3]=pvt_ptr_->
+}
+void ControlThread::storePVT(void)
+{
+    mtx.lock();
+    sync = pvt_ptr_->get_sync();
+    // gps_ephem = pvt_ptr_->get_gps_ephemeris();
+    // gps_ephem.begin()->second.commS1.fd = comms.fd;
+    flowgraph_->send_telemetry_msg(pmt::make_any(comms.fd));
+    // Double2Hex(&msgOutput[6],&pvt_data->pvt_sol.rr[0]);
+    // Double2Hex(&msgOutput[14],&pvt_data->pvt_sol.rr[1]);
+    // Double2Hex(&msgOutput[22],&pvt_data->pvt_sol.rr[2]);
+    // float velX = (float)pvt_data->pvt_sol.rr[3];
+    // float velY = (float)pvt_data->pvt_sol.rr[4];
+    // float velZ = (float)pvt_data->pvt_sol.rr[5];
+    // Float2Hex(&msgOutput[30], &velX);
+    // Float2Hex(&msgOutput[34], &velY);
+    // Float2Hex(&msgOutput[38], &velZ);
+    // Integer2Hex(&msgOutput[42], &pvt_data->tow_symbol_ms);
+    // int index = 46;
+    mtx.unlock();
+}
+void ControlThread::storeSAT(void) {}
+
+void ControlThread::sendHealthStatus(void)
+{
+    pvt_ptr_ = flowgraph_->get_pvt();
+    rtk_ptr_ = pvt_ptr_->get_rtk_ptr();
+    std::map<int, Gnss_Synchro>syncro = rtk_ptr_->c_gnss_observables_map;
+    // sync=pvt_ptr_->get_sync();
+    msgHealth[0] = 0xd4;
+    msgHealth[1] = 0xdf;
+    msgHealth[2] = syncro.begin()->second.Flag_valid_pvt? 4 : 3;
+    msgHealth[3] = 0;
+    int index = 10;
+    cont = 0;
+    uint8_t intern_status{};
+    if (syncro.empty())
+        {
+            index += 2;
+        }
+    else
+        {
+            for (auto &i : syncro)
+                {
+                    msgHealth[index] = i.second.PRN;
+                    intern_status |= (i.second.Flag_valid_acquisition << 3);
+                    intern_status |= (i.second.Flag_valid_symbol_output << 2);
+                    intern_status |= (i.second.Flag_valid_word << 1);
+                    intern_status |= (i.second.Flag_valid_pseudorange << 0);
+                    msgHealth[index + 1] = intern_status;
+                    index += 2;
+                    ++cont;
+                }
+        }
+    // if(cont == 1){index+=9;
+    // }
+    if (thermal_enabled_)
+        {
+            thermal.open("/sys/devices/virtual/thermal/thermal_zone0/temp");
+            getline(thermal, temper);
+            float i_temper = (float)stoi(temper) / 1000;
+            Float2Hex(&msgHealth[6], &i_temper);
+            thermal.close();
+            // index += 4;
+        }
+        //    else
+        //        {
+        //         //    index += 4;
+        //        }
+        //    index += 1; //+1 para alocar crc
+           uint8_t checks{0};
+           msgHealth[3] = (uint8_t)cont;
+           int tamo = index+1;
+           Int2Hex(&msgHealth[4], &(tamo));
+           for (int i = 0; i < index; i++)
+               {
+                   checks ^= msgHealth[i];
+               }
+    msgHealth[index] = checks;
+
+    // tcdrain(comms.fd);
+    tcflush(flowgraph_->comms_flow.fd, TCIOFLUSH);
+    int byte = write(flowgraph_->comms_flow.fd, &msgHealth[0], tamo);
+}
+
+void ControlThread::sendQualiStatus(void)
+{
+    mtx.lock();
+    pvt_ptr_ = flowgraph_->get_pvt();
+    sync = pvt_ptr_->get_sync();
+    // sync = rtk_ptr_->c_gnss_observables_map;
+    msgHealth[0] = 0xd4;
+    msgHealth[1] = 0xf4;
+    msgHealth[2] = sync.begin()->second.Flag_valid_pvt ? 4 : 3;
+    msgHealth[3] = 0;
+    pvt_ptr_ = flowgraph_->get_pvt();
+    rtk_ptr_ = pvt_ptr_->get_rtk_ptr();
+    float gdop = rtk_ptr_->get_gdop();
+    float hdop = rtk_ptr_->get_hdop();
+    float vdop = rtk_ptr_->get_vdop();
+    float pdop = rtk_ptr_->get_pdop();
+    mtx.unlock();
+    Float2Hex(&msgHealth[6], &gdop);
+    Float2Hex(&msgHealth[10], &hdop);
+    Float2Hex(&msgHealth[14], &vdop);
+    Float2Hex(&msgHealth[18], &pdop);
+    if (thermal_enabled_)
+        {
+            thermal.open("/sys/devices/virtual/thermal/thermal_zone0/temp");
+            getline(thermal, temper);
+            float i_temper = (float)stoi(temper) / 1000;
+            Float2Hex(&msgHealth[22], &i_temper);
+            thermal.close();
+        }
+    uint8_t checks{0};
+    msgHealth[3] = (uint8_t)cont;
+    int tam = 27;
+    Int2Hex(&msgHealth[4], &tam);
+    for (int i = 0; i < 26; i++)
+        {
+            checks ^= msgHealth[i];
+        }
+    msgHealth[26] = checks;
+
+    // tcdrain(comms.fd);
+    tcflush(flowgraph_->comms_flow.fd, TCIOFLUSH);
+    int byte = write(flowgraph_->comms_flow.fd, &msgHealth[0], 27);
+}
+
+
+// void ControlThread::{
+//     typedef struct gpiod_line gpiod_pin;
+//     typedef struct gpiod_line_event gpiod_pin_event;
+//     struct gpiod_chip *chip;
+//     gpiod_pin *pin;
+//     const char bank[] = "gpiochip2";
+//     int SODIMM_55 = 18;
+//     // int SODIMM_63;
+//     unsigned int line = SODIMM_55;
+
+//     // timespec ts;
+//     // ts.tv_nsec=100000000000;
+
+//     chip = gpiod_chip_open_by_name(&bank[0]);
+//     pin = gpiod_chip_get_line(chip, line);
+//     // gpiod_pin *input_pin;
+//     gpiod_pin_event event;
+//     // int pin_value = 0;
+//     int ret;
+//     ret = gpiod_line_request_rising_edge_events(pin, "gpio-test");
+//     int count = 0;
+//     // while (1)
+//     //     {
+//             // mtx.lock();
+//             // // gnss_synchro = pvt_ptr->get_gnss_observables();
+//             // // uint8_t *msgvec_ptr = pvt_ptr->get_msgvec_ptr();
+//             // do
+//             //     {
+//             //     }
+//             // while (counter <= bytess);
+//             // mtx.unlock();
+
+//             /* Waiting for an event on the input pin */
+//             gpiod_line_event_wait(pin, NULL);
+//             // else
+//             // {
+//             //     std::cout<<"Trigged"<<"\n";
+//             // }
+//             // gpiod_line_event_wait(pin, &ts);
+
+//             /* Reading next pending event from the GPIO pin */
+//             if (gpiod_line_event_read(pin, &event) != 0)
+//                 {
+//                     std::cout<<"Error"<<"\n";
+//                 }
+
+//             /* Checking if it is a rising event as previously defined */
+//             if (event.event_type == GPIOD_LINE_EVENT_RISING_EDGE)
+//                 {
+//                     std::cout << "Trigged" << "\n";
+//                 }
+//             }
+
+

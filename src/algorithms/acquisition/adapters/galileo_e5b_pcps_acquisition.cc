@@ -79,9 +79,9 @@ GalileoE5bPcpsAcquisition::GalileoE5bPcpsAcquisition(const ConfigurationInterfac
 
     sampled_ms_ = acq_parameters_.sampled_ms;
 
-    DLOG(INFO) << "role " << role_;
+    // D// LOG(INFO) << "role " << role_;
     acquisition_ = pcps_make_acquisition(acq_parameters_);
-    DLOG(INFO) << "acquisition(" << acquisition_->unique_id() << ")";
+    // D// LOG(INFO) << "acquisition(" << acquisition_->unique_id() << ")";
 
     if (acq_iq_)
         {
@@ -210,7 +210,7 @@ void GalileoE5bPcpsAcquisition::connect(gr::top_block_sptr top_block __attribute
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unknown acquisition item type";
+            // // LOG(WARNING) << item_type_ << " unknown acquisition item type";
         }
 }
 
@@ -223,7 +223,7 @@ void GalileoE5bPcpsAcquisition::disconnect(gr::top_block_sptr top_block __attrib
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unknown acquisition item type";
+            // // LOG(WARNING) << item_type_ << " unknown acquisition item type";
         }
 }
 

@@ -65,13 +65,13 @@ Gnss_Crypto::Gnss_Crypto()
 #if USE_GNUTLS_FALLBACK
     gnutls_global_init();
 #if !HAVE_GNUTLS_SIGN_ECDSA_SHA256
-    LOG(WARNING) << "The GnuTLS library version you are linking against is too old for some OSNMA functions."
+    // // LOG(WARNING) << "The GnuTLS library version you are linking against is too old for some OSNMA functions."
                  << " Please do not trust OSNMA ouputs or upgrade your system to a newer version of GnuTLS or OpenSSL"
                  << " and rebuild GNSS-SDR against it.";
 #endif
 #else  // OpenSSL
 #if !(USE_OPENSSL_3 || USE_OPENSSL_111)
-    LOG(WARNING) << "The OpenSSL library version you are linking against is too old for some OSNMA functions."
+    // // LOG(WARNING) << "The OpenSSL library version you are linking against is too old for some OSNMA functions."
                  << " Please do not trust OSNMA ouputs or upgrade your system to a newer version of OpenSSL"
                  << " and rebuild GNSS-SDR against it.";
 #endif
@@ -84,13 +84,13 @@ Gnss_Crypto::Gnss_Crypto(const std::string& certFilePath, const std::string& mer
 #if USE_GNUTLS_FALLBACK
     gnutls_global_init();
 #if !HAVE_GNUTLS_SIGN_ECDSA_SHA256
-    LOG(WARNING) << "The GnuTLS library version you are linking against is too old for some OSNMA functions."
+    // // LOG(WARNING) << "The GnuTLS library version you are linking against is too old for some OSNMA functions."
                  << " Please do not trust OSNMA ouputs or upgrade your system to a newer version of GnuTLS or OpenSSL"
                  << " and rebuild GNSS-SDR against it.";
 #endif
 #else  // OpenSSL
 #if !(USE_OPENSSL_3 || USE_OPENSSL_111)
-    LOG(WARNING) << "The OpenSSL library version you are linking against is too old for some OSNMA functions."
+    // // LOG(WARNING) << "The OpenSSL library version you are linking against is too old for some OSNMA functions."
                  << " Please do not trust OSNMA ouputs or upgrade your system to a newer version of OpenSSL"
                  << " and rebuild GNSS-SDR against it.";
 #endif
@@ -146,7 +146,7 @@ bool Gnss_Crypto::store_public_key(const std::string& pubKeyFilePath) const
     std::ofstream pubKeyFile(pubKeyFilePath, std::ios::binary);
     if (!pubKeyFile.is_open())
         {
-            LOG(WARNING) << "Unable to open file for storing the Public Key: " << pubKeyFilePath;
+            // // LOG(WARNING) << "Unable to open file for storing the Public Key: " << pubKeyFilePath;
             return false;
         }
 #if USE_GNUTLS_FALLBACK
@@ -159,7 +159,7 @@ bool Gnss_Crypto::store_public_key(const std::string& pubKeyFilePath) const
 #endif
     if (ret != GNUTLS_E_SUCCESS)
         {
-            LOG(WARNING) << "GnuTLS: Failed to export public key: " << gnutls_strerror(ret);
+            // // LOG(WARNING) << "GnuTLS: Failed to export public key: " << gnutls_strerror(ret);
             return false;
         }
 
@@ -170,7 +170,7 @@ bool Gnss_Crypto::store_public_key(const std::string& pubKeyFilePath) const
     BIO* bio = BIO_new(BIO_s_mem());
     if (!bio)
         {
-            LOG(WARNING) << "OpenSSL: Failed to create BIO";
+            // // LOG(WARNING) << "OpenSSL: Failed to create BIO";
             return false;
         }
 #if USE_OPENSSL_3
@@ -179,7 +179,7 @@ bool Gnss_Crypto::store_public_key(const std::string& pubKeyFilePath) const
     if (!PEM_write_bio_EC_PUBKEY(bio, d_PublicKey))
 #endif
         {
-            LOG(WARNING) << "OpenSSL: Failed to write public key to BIO";
+            // // LOG(WARNING) << "OpenSSL: Failed to write public key to BIO";
             BIO_free(bio);
             return false;
         }
@@ -188,7 +188,7 @@ bool Gnss_Crypto::store_public_key(const std::string& pubKeyFilePath) const
     auto bio_len = BIO_get_mem_data(bio, &bio_data);
     if (bio_len <= 0)
         {
-            LOG(WARNING) << "OpenSSL: Failed to get BIO data";
+            // // LOG(WARNING) << "OpenSSL: Failed to get BIO data";
             BIO_free(bio);
             return false;
         }
@@ -205,7 +205,7 @@ bool Gnss_Crypto::verify_signature_ecdsa_p256(const std::vector<uint8_t>& messag
 {
     if (!have_public_key())
         {
-            LOG(WARNING) << "Signature verification error: Public key is not available";
+            // // LOG(WARNING) << "Signature verification error: Public key is not available";
             return false;
         }
     std::vector<uint8_t> digest = this->compute_SHA_256(message);
@@ -216,7 +216,7 @@ bool Gnss_Crypto::verify_signature_ecdsa_p256(const std::vector<uint8_t>& messag
     std::vector<uint8_t> der_sig;
     if (!convert_raw_to_der_ecdsa(signature, der_sig))
         {
-            LOG(WARNING) << "Failed to convert raw ECDSA signature to DER format";
+            // // LOG(WARNING) << "Failed to convert raw ECDSA signature to DER format";
             return false;
         }
 
@@ -229,11 +229,11 @@ bool Gnss_Crypto::verify_signature_ecdsa_p256(const std::vector<uint8_t>& messag
     success = (ret >= 0);
     if (success)
         {
-            DLOG(INFO) << "GnuTLS: OSNMA signature authenticated successfully";
+            // D// LOG(INFO) << "GnuTLS: OSNMA signature authenticated successfully";
         }
     else
         {
-            LOG(WARNING) << "GnuTLS: OSNMA message authentication failed: " << gnutls_strerror(ret);
+            // // LOG(WARNING) << "GnuTLS: OSNMA message authentication failed: " << gnutls_strerror(ret);
         }
 #else
     if (signature.empty())
@@ -263,13 +263,13 @@ bool Gnss_Crypto::verify_signature_ecdsa_p256(const std::vector<uint8_t>& messag
     ECDSA_SIG* sig = ECDSA_SIG_new();
     if (r == nullptr || s == nullptr || sig == nullptr)
         {
-            LOG(WARNING) << "OpenSSL: Failed to allocate memory for BIGNUMs or ECDSA_SIG";
+            // // LOG(WARNING) << "OpenSSL: Failed to allocate memory for BIGNUMs or ECDSA_SIG";
             return false;
         }
 
     if (ECDSA_SIG_set0(sig, r, s) != 1)
         {
-            LOG(WARNING) << "OpenSSL: Failed to set R and S values in ECDSA_SIG";
+            // // LOG(WARNING) << "OpenSSL: Failed to set R and S values in ECDSA_SIG";
             ECDSA_SIG_free(sig);  // Free the ECDSA_SIG struct as it is no longer needed
             return false;
         }
@@ -280,7 +280,7 @@ bool Gnss_Crypto::verify_signature_ecdsa_p256(const std::vector<uint8_t>& messag
 
     if (derSigLength <= 0)
         {
-            LOG(WARNING) << "OpenSSL: Failed to convert ECDSA_SIG to DER format";
+            // // LOG(WARNING) << "OpenSSL: Failed to convert ECDSA_SIG to DER format";
             return false;
         }
 
@@ -305,34 +305,34 @@ bool Gnss_Crypto::verify_signature_ecdsa_p256(const std::vector<uint8_t>& messag
     if (verification == 1)
         {
             success = true;
-            DLOG(INFO) << "OpenSSL: OSNMA signature authenticated successfully";
+            // D// LOG(INFO) << "OpenSSL: OSNMA signature authenticated successfully";
         }
     else
         {
             uint64_t errCode = ERR_get_error();
             char* err = ERR_error_string(errCode, nullptr);
-            LOG(WARNING) << "OpenSSL: OSNMA message authentication failed: " << err;
+            // // LOG(WARNING) << "OpenSSL: OSNMA message authentication failed: " << err;
         }
 #else  // OpenSSL 1.x
     std::vector<uint8_t> der_sig;
     if (!convert_raw_to_der_ecdsa(signature, der_sig))
         {
-            LOG(WARNING) << "OpenSSL: Failed to convert raw ECDSA signature to DER format";
+            // // LOG(WARNING) << "OpenSSL: Failed to convert raw ECDSA signature to DER format";
             return false;
         }
     int verification = ECDSA_verify(0, digest.data(), SHA256_DIGEST_LENGTH, der_sig.data(), static_cast<int>(der_sig.size()), d_PublicKey);
     if (verification == 1)
         {
             success = true;
-            DLOG(INFO) << "OpenSSL: OSNMA signature authenticated successfully";
+            // D// LOG(INFO) << "OpenSSL: OSNMA signature authenticated successfully";
         }
     else if (verification == 0)
         {
-            LOG(WARNING) << "OpenSSL: invalid signature found when verifying message";
+            // // LOG(WARNING) << "OpenSSL: invalid signature found when verifying message";
         }
     else
         {
-            LOG(WARNING) << "OpenSSL: OSNMA message authentication failed";
+            // // LOG(WARNING) << "OpenSSL: OSNMA message authentication failed";
         }
 #endif
 #endif
@@ -344,20 +344,20 @@ bool Gnss_Crypto::verify_signature_ecdsa_p521(const std::vector<uint8_t>& messag
 {
     if (!have_public_key())
         {
-            LOG(WARNING) << "Signature verification error: Public key is not available";
+            // // LOG(WARNING) << "Signature verification error: Public key is not available";
             return false;
         }
 
     if (signature.size() != 132)
         {
-            LOG(WARNING) << "Invalid signature length for P-521. Expected 132 bytes, got " << signature.size();
+            // // LOG(WARNING) << "Invalid signature length for P-521. Expected 132 bytes, got " << signature.size();
             return false;
         }
 
     std::vector<uint8_t> der_sig;
     if (!convert_raw_to_der_ecdsa(signature, der_sig))
         {
-            LOG(WARNING) << "Failed to convert raw ECDSA signature to DER format";
+            // // LOG(WARNING) << "Failed to convert raw ECDSA signature to DER format";
             return false;
         }
     bool success = false;
@@ -368,7 +368,7 @@ bool Gnss_Crypto::verify_signature_ecdsa_p521(const std::vector<uint8_t>& messag
     int ret = gnutls_hash_init(&hash, GNUTLS_DIG_SHA512);
     if (ret != GNUTLS_E_SUCCESS)
         {
-            LOG(WARNING) << "GnuTLS: gnutls_hash_init failed: " << gnutls_strerror(ret);
+            // // LOG(WARNING) << "GnuTLS: gnutls_hash_init failed: " << gnutls_strerror(ret);
             return false;
         }
 
@@ -383,12 +383,12 @@ bool Gnss_Crypto::verify_signature_ecdsa_p521(const std::vector<uint8_t>& messag
 
     if (ret >= 0)
         {
-            DLOG(INFO) << "GnuTLS: OSNMA signature authenticated successfully";
+            // D// LOG(INFO) << "GnuTLS: OSNMA signature authenticated successfully";
             success = true;
         }
     else
         {
-            LOG(WARNING) << "GnuTLS: OSNMA message authentication failed: " << gnutls_strerror(ret);
+            // // LOG(WARNING) << "GnuTLS: OSNMA message authentication failed: " << gnutls_strerror(ret);
         }
 #else
     if (message.empty())
@@ -401,7 +401,7 @@ bool Gnss_Crypto::verify_signature_ecdsa_p521(const std::vector<uint8_t>& messag
     std::vector<uint8_t> digest(SHA512_DIGEST_LENGTH);
     if (!EVP_Digest(message.data(), message.size(), digest.data(), nullptr, EVP_sha512(), nullptr))
         {
-            LOG(WARNING) << "OpenSSL: EVP_Digest failed";
+            // // LOG(WARNING) << "OpenSSL: EVP_Digest failed";
             return false;
         }
 #if USE_OPENSSL_3
@@ -409,20 +409,20 @@ bool Gnss_Crypto::verify_signature_ecdsa_p521(const std::vector<uint8_t>& messag
     EVP_PKEY_CTX* pctx = EVP_PKEY_CTX_new(d_PublicKey, nullptr);
     if (pctx == nullptr)
         {
-            LOG(WARNING) << "OpenSSL: EVP_PKEY_CTX_new failed";
+            // // LOG(WARNING) << "OpenSSL: EVP_PKEY_CTX_new failed";
             return false;
         }
 
     if (EVP_PKEY_verify_init(pctx) <= 0)
         {
-            LOG(WARNING) << "OpenSSL: EVP_PKEY_verify_init failed";
+            // // LOG(WARNING) << "OpenSSL: EVP_PKEY_verify_init failed";
             EVP_PKEY_CTX_free(pctx);
             return false;
         }
 
     if (EVP_PKEY_CTX_set_signature_md(pctx, EVP_sha512()) <= 0)
         {
-            LOG(WARNING) << "OpenSSL: EVP_PKEY_CTX_set_signature_md failed";
+            // // LOG(WARNING) << "OpenSSL: EVP_PKEY_CTX_set_signature_md failed";
             EVP_PKEY_CTX_free(pctx);
             return false;
         }
@@ -432,39 +432,39 @@ bool Gnss_Crypto::verify_signature_ecdsa_p521(const std::vector<uint8_t>& messag
 
     if (verification == 1)
         {
-            DLOG(INFO) << "OpenSSL: OSNMA signature authenticated successfully";
+            // D// LOG(INFO) << "OpenSSL: OSNMA signature authenticated successfully";
             success = true;
         }
     else if (verification == 0)
         {
-            LOG(WARNING) << "OpenSSL: invalid signature found when verifying message";
+            // // LOG(WARNING) << "OpenSSL: invalid signature found when verifying message";
         }
     else
         {
-            LOG(WARNING) << "OpenSSL: OSNMA message authentication failed";
+            // // LOG(WARNING) << "OpenSSL: OSNMA message authentication failed";
         }
 #else  // OpenSSL 1.x
     const unsigned char* sig_ptr = der_sig.data();
     ECDSA_SIG* ecdsa_sig = d2i_ECDSA_SIG(nullptr, &sig_ptr, der_sig.size());
     if (ecdsa_sig == nullptr)
         {
-            LOG(WARNING) << "OpenSSL: d2i_ECDSA_SIG failed";
+            // // LOG(WARNING) << "OpenSSL: d2i_ECDSA_SIG failed";
             return false;
         }
     int verification = ECDSA_do_verify(digest.data(), digest.size(), ecdsa_sig, d_PublicKey);
     ECDSA_SIG_free(ecdsa_sig);
     if (verification == 1)
         {
-            DLOG(INFO) << "OpenSSL: OSNMA signature authenticated successfully";
+            // D// LOG(INFO) << "OpenSSL: OSNMA signature authenticated successfully";
             success = true;
         }
     else if (verification == 0)
         {
-            LOG(WARNING) << "OpenSSL: invalid signature found when verifying message";
+            // // LOG(WARNING) << "OpenSSL: invalid signature found when verifying message";
         }
     else
         {
-            LOG(WARNING) << "OpenSSL: OSNMA message authentication failed";
+            // // LOG(WARNING) << "OpenSSL: OSNMA message authentication failed";
         }
 #endif
 #endif
@@ -489,19 +489,19 @@ std::vector<uint8_t> Gnss_Crypto::compute_SHA_256(const std::vector<uint8_t>& in
     EVP_MD_CTX* mdCtx = EVP_MD_CTX_new();
     if (!EVP_DigestInit_ex(mdCtx, EVP_sha256(), OPENSSL_ENGINE))
         {
-            // LOG(WARNING) << "OSNMA SHA-256: Message digest initialization failed.";
+            // // // LOG(WARNING) << "OSNMA SHA-256: Message digest initialization failed.";
             EVP_MD_CTX_free(mdCtx);
             return output;
         }
     if (!EVP_DigestUpdate(mdCtx, input.data(), input.size()))
         {
-            // LOG(WARNING) << "OSNMA SHA-256: Message digest update failed.";
+            // // // LOG(WARNING) << "OSNMA SHA-256: Message digest update failed.";
             EVP_MD_CTX_free(mdCtx);
             return output;
         }
     if (!EVP_DigestFinal_ex(mdCtx, output.data(), &mdLen))
         {
-            // LOG(WARNING) << "OSNMA SHA-256: Message digest finalization failed.";
+            // // // LOG(WARNING) << "OSNMA SHA-256: Message digest finalization failed.";
             EVP_MD_CTX_free(mdCtx);
             return output;
         }
@@ -579,7 +579,7 @@ std::vector<uint8_t> Gnss_Crypto::compute_HMAC_SHA_256(const std::vector<uint8_t
     EVP_MAC* mac = EVP_MAC_fetch(nullptr, "HMAC", nullptr);
     if (!mac)
         {
-            LOG(WARNING) << "OSNMA HMAC_SHA_256 computation failed to fetch HMAC";
+            // // LOG(WARNING) << "OSNMA HMAC_SHA_256 computation failed to fetch HMAC";
             return output;
         }
 
@@ -587,7 +587,7 @@ std::vector<uint8_t> Gnss_Crypto::compute_HMAC_SHA_256(const std::vector<uint8_t
     if (!ctx)
         {
             EVP_MAC_free(mac);
-            LOG(WARNING) << "OSNMA HMAC_SHA_256 computation failed to create HMAC context";
+            // // LOG(WARNING) << "OSNMA HMAC_SHA_256 computation failed to create HMAC context";
             return output;
         }
 
@@ -600,7 +600,7 @@ std::vector<uint8_t> Gnss_Crypto::compute_HMAC_SHA_256(const std::vector<uint8_t
         {
             EVP_MAC_CTX_free(ctx);
             EVP_MAC_free(mac);
-            LOG(WARNING) << "OSNMA HMAC_SHA_256 computation failed to initialize HMAC context";
+            // // LOG(WARNING) << "OSNMA HMAC_SHA_256 computation failed to initialize HMAC context";
             return output;
         }
 
@@ -609,7 +609,7 @@ std::vector<uint8_t> Gnss_Crypto::compute_HMAC_SHA_256(const std::vector<uint8_t
         {
             EVP_MAC_CTX_free(ctx);
             EVP_MAC_free(mac);
-            LOG(WARNING) << "OSNMA HMAC_SHA_256 computation failed to update HMAC context";
+            // // LOG(WARNING) << "OSNMA HMAC_SHA_256 computation failed to update HMAC context";
             return output;
         }
 
@@ -618,7 +618,7 @@ std::vector<uint8_t> Gnss_Crypto::compute_HMAC_SHA_256(const std::vector<uint8_t
         {
             EVP_MAC_CTX_free(ctx);
             EVP_MAC_free(mac);
-            LOG(WARNING) << "OSNMA HMAC_SHA_256 computation failed to finalize HMAC";
+            // // LOG(WARNING) << "OSNMA HMAC_SHA_256 computation failed to finalize HMAC";
             return output;
         }
 
@@ -632,7 +632,7 @@ std::vector<uint8_t> Gnss_Crypto::compute_HMAC_SHA_256(const std::vector<uint8_t
     unsigned char* result = HMAC(EVP_sha256(), key.data(), key.size(), input.data(), input.size(), output.data(), &outputLength);
     if (result == nullptr)
         {
-            LOG(WARNING) << "OSNMA HMAC_SHA_256 computation failed to compute HMAC-SHA256";
+            // // LOG(WARNING) << "OSNMA HMAC_SHA_256 computation failed to compute HMAC-SHA256";
             return output;
         }
 
@@ -655,7 +655,7 @@ std::vector<uint8_t> Gnss_Crypto::compute_CMAC_AES(const std::vector<uint8_t>& k
     int ret = gnutls_hmac_init(&hmac, GNUTLS_MAC_AES_CMAC_128, key.data(), key.size());
     if (ret != GNUTLS_E_SUCCESS)
         {
-            LOG(WARNING) << "OSNMA CMAC-AES: gnutls_hmac_init failed: " << gnutls_strerror(ret);
+            // // LOG(WARNING) << "OSNMA CMAC-AES: gnutls_hmac_init failed: " << gnutls_strerror(ret);
             return output;
         }
 
@@ -663,7 +663,7 @@ std::vector<uint8_t> Gnss_Crypto::compute_CMAC_AES(const std::vector<uint8_t>& k
     ret = gnutls_hmac(hmac, input.data(), input.size());
     if (ret != GNUTLS_E_SUCCESS)
         {
-            LOG(WARNING) << "OSNMA CMAC-AES: gnutls_hmac failed: " << gnutls_strerror(ret);
+            // // LOG(WARNING) << "OSNMA CMAC-AES: gnutls_hmac failed: " << gnutls_strerror(ret);
             gnutls_hmac_deinit(hmac, nullptr);
             return output;
         }
@@ -692,14 +692,14 @@ std::vector<uint8_t> Gnss_Crypto::compute_CMAC_AES(const std::vector<uint8_t>& k
     EVP_MAC* mac = EVP_MAC_fetch(nullptr, "CMAC", nullptr);
     if (!mac)
         {
-            LOG(WARNING) << "OSNMA CMAC-AES: Failed to fetch CMAC";
+            // // LOG(WARNING) << "OSNMA CMAC-AES: Failed to fetch CMAC";
             return output;
         }
 
     EVP_MAC_CTX* ctx = EVP_MAC_CTX_new(mac);
     if (!ctx)
         {
-            LOG(WARNING) << "OSNMA CMAC-AES: Failed to create CMAC context";
+            // // LOG(WARNING) << "OSNMA CMAC-AES: Failed to create CMAC context";
             return output;
         }
 
@@ -713,7 +713,7 @@ std::vector<uint8_t> Gnss_Crypto::compute_CMAC_AES(const std::vector<uint8_t>& k
         {
             EVP_MAC_CTX_free(ctx);
             EVP_MAC_free(mac);
-            LOG(WARNING) << "OSNMA CMAC-AES: Failed to initialize CMAC context";
+            // // LOG(WARNING) << "OSNMA CMAC-AES: Failed to initialize CMAC context";
             return output;
         }
 
@@ -722,7 +722,7 @@ std::vector<uint8_t> Gnss_Crypto::compute_CMAC_AES(const std::vector<uint8_t>& k
         {
             EVP_MAC_CTX_free(ctx);
             EVP_MAC_free(mac);
-            LOG(WARNING) << "OSNMA CMAC-AES: Failed to update CMAC context";
+            // // LOG(WARNING) << "OSNMA CMAC-AES: Failed to update CMAC context";
             return output;
         }
 
@@ -731,7 +731,7 @@ std::vector<uint8_t> Gnss_Crypto::compute_CMAC_AES(const std::vector<uint8_t>& k
         {
             EVP_MAC_CTX_free(ctx);
             EVP_MAC_free(mac);
-            LOG(WARNING) << "OSNMA CMAC-AES: Failed to finalize CMAC";
+            // // LOG(WARNING) << "OSNMA CMAC-AES: Failed to finalize CMAC";
             return output;
         }
 
@@ -748,14 +748,14 @@ std::vector<uint8_t> Gnss_Crypto::compute_CMAC_AES(const std::vector<uint8_t>& k
     CMAC_CTX* cmacCtx = CMAC_CTX_new();
     if (!cmacCtx)
         {
-            LOG(WARNING) << "OSNMA CMAC-AES: Failed to create CMAC context";
+            // // LOG(WARNING) << "OSNMA CMAC-AES: Failed to create CMAC context";
             return output;
         }
 
     // Initialize the CMAC context with the key and cipher
     if (CMAC_Init(cmacCtx, key.data(), key.size(), EVP_aes_128_cbc(), nullptr) != 1)
         {
-            LOG(WARNING) << "OSNMA CMAC-AES: MAC_Init failed";
+            // // LOG(WARNING) << "OSNMA CMAC-AES: MAC_Init failed";
             CMAC_CTX_free(cmacCtx);
             return output;
         }
@@ -763,7 +763,7 @@ std::vector<uint8_t> Gnss_Crypto::compute_CMAC_AES(const std::vector<uint8_t>& k
     // Compute the CMAC
     if (CMAC_Update(cmacCtx, input.data(), input.size()) != 1)
         {
-            LOG(WARNING) << "OSNMA CMAC-AES: CMAC_Update failed";
+            // // LOG(WARNING) << "OSNMA CMAC-AES: CMAC_Update failed";
             CMAC_CTX_free(cmacCtx);
             return output;
         }
@@ -771,7 +771,7 @@ std::vector<uint8_t> Gnss_Crypto::compute_CMAC_AES(const std::vector<uint8_t>& k
     // Finalize the CMAC computation and retrieve the output
     if (CMAC_Final(cmacCtx, output.data(), &mac_length) != 1)
         {
-            LOG(WARNING) << "OSNMA CMAC-AES: CMAC_Final failed";
+            // // LOG(WARNING) << "OSNMA CMAC-AES: CMAC_Final failed";
             CMAC_CTX_free(cmacCtx);
             return output;
         }
@@ -828,7 +828,7 @@ void Gnss_Crypto::set_public_key(const std::vector<uint8_t>& publicKey)
         }
     else
         {
-            LOG(WARNING) << "GnuTLS: Invalid public key size";
+            // // LOG(WARNING) << "GnuTLS: Invalid public key size";
             gnutls_pubkey_deinit(pubkey);
             return;
         }
@@ -840,7 +840,7 @@ void Gnss_Crypto::set_public_key(const std::vector<uint8_t>& publicKey)
     if (ret != GNUTLS_E_SUCCESS)
         {
             gnutls_pubkey_deinit(pubkey);
-            LOG(WARNING) << "GnuTLS: error setting the OSNMA public key: " << gnutls_strerror(ret);
+            // // LOG(WARNING) << "GnuTLS: error setting the OSNMA public key: " << gnutls_strerror(ret);
             d_PublicKeyType = std::string("Unknown");
             return;
         }
@@ -971,7 +971,7 @@ void Gnss_Crypto::set_public_key(const std::vector<uint8_t>& publicKey)
     EC_GROUP_free(group);
 #endif  // OpenSSL 1.x
 #endif
-    DLOG(INFO) << "OSNMA Public Key successfully set up.";
+    // D// LOG(INFO) << "OSNMA Public Key successfully set up.";
 }
 
 
@@ -1000,7 +1000,7 @@ void Gnss_Crypto::read_merkle_xml(const std::string& merkleFilePath)
             // If it was not the default, maybe it is a configuration error, warn user
             if (merkleFilePath != MERKLEFILE_DEFAULT && !merkleFilePath.empty())
                 {
-                    LOG(WARNING) << "File " << merkleFilePath << " not found";
+                    // // LOG(WARNING) << "File " << merkleFilePath << " not found";
                 }
             // fill default values
             d_x_4_0 = convert_from_hex_str("832E15EDE55655EAC6E399A539477B7C034CCE24C3C93FFC904ACD9BF842F04E");
@@ -1020,11 +1020,11 @@ void Gnss_Crypto::read_merkle_xml(const std::string& merkleFilePath)
             std::string signalVersion = galHeader.child("signalVersion").text().get();
             std::string dataVersion = galHeader.child("dataVersion").text().get();
 
-            LOG(INFO) << "OSNMA Merkletree - Source: " << source.child_value("mission") << " - " << source.child_value("segment") << " - " << source.child_value("element");
-            LOG(INFO) << "OSNMA Merkletree - Destination: " << destination.child_value("mission") << " - " << destination.child_value("segment") << " - " << destination.child_value("element");
-            LOG(INFO) << "OSNMA Merkletree - Issue Date: " << issueDate;
-            LOG(INFO) << "OSNMA Merkletree - Signal Version: " << signalVersion;
-            LOG(INFO) << "OSNMA Merkletree - Data Version: " << dataVersion;
+            // LOG(INFO) << "OSNMA Merkletree - Source: " << source.child_value("mission") << " - " << source.child_value("segment") << " - " << source.child_value("element");
+            // LOG(INFO) << "OSNMA Merkletree - Destination: " << destination.child_value("mission") << " - " << destination.child_value("segment") << " - " << destination.child_value("element");
+            // LOG(INFO) << "OSNMA Merkletree - Issue Date: " << issueDate;
+            // LOG(INFO) << "OSNMA Merkletree - Signal Version: " << signalVersion;
+            // LOG(INFO) << "OSNMA Merkletree - Data Version: " << dataVersion;
 
             // Accessing data from the body
             pugi::xml_node merkleTree = body.child("MerkleTree");
@@ -1032,8 +1032,8 @@ void Gnss_Crypto::read_merkle_xml(const std::string& merkleFilePath)
             int n = std::stoi(merkleTree.child_value("N"));
             std::string hashFunction = merkleTree.child_value("HashFunction");
 
-            LOG(INFO) << "OSNMA Merkletree - N: " << n;
-            LOG(INFO) << "OSNMA Merkletree - Hash Function: " << hashFunction;
+            // LOG(INFO) << "OSNMA Merkletree - N: " << n;
+            // LOG(INFO) << "OSNMA Merkletree - Hash Function: " << hashFunction;
 
             for (pugi::xml_node publicKey : merkleTree.children("PublicKey"))
                 {
@@ -1043,11 +1043,11 @@ void Gnss_Crypto::read_merkle_xml(const std::string& merkleFilePath)
                     std::string point = publicKey.child_value("point");
                     std::string pkType = publicKey.child_value("PKType");
 
-                    LOG(INFO) << "OSNMA Merkletree - Public Key: " << i;
-                    LOG(INFO) << "OSNMA Merkletree - PKID: " << pkid;
-                    LOG(INFO) << "OSNMA Merkletree - Length in Bits: " << lengthInBits;
-                    LOG(INFO) << "OSNMA Merkletree - Point: " << point;
-                    LOG(INFO) << "OSNMA Merkletree - PK Type: " << pkType;
+                    // LOG(INFO) << "OSNMA Merkletree - Public Key: " << i;
+                    // LOG(INFO) << "OSNMA Merkletree - PKID: " << pkid;
+                    // LOG(INFO) << "OSNMA Merkletree - Length in Bits: " << lengthInBits;
+                    // LOG(INFO) << "OSNMA Merkletree - Point: " << point;
+                    // LOG(INFO) << "OSNMA Merkletree - PK Type: " << pkType;
                     if (pkType == "ECDSA P-256/SHA-256")
                         {
                             d_PublicKeyType = std::string("ECDSA P-256");
@@ -1062,10 +1062,10 @@ void Gnss_Crypto::read_merkle_xml(const std::string& merkleFilePath)
                     int j = std::stoi(treeNode.child_value("j"));
                     int i = std::stoi(treeNode.child_value("i"));
                     int lengthInBits = std::stoi(treeNode.child_value("lengthInBits"));
-                    LOG(INFO) << "OSNMA Merkletree - Node length (bits): " << lengthInBits;
+                    // LOG(INFO) << "OSNMA Merkletree - Node length (bits): " << lengthInBits;
                     std::string x_ji = treeNode.child_value("x_ji");
-                    LOG(INFO) << "OSNMA Merkletree - Size string (bytes): " << x_ji.size();
-                    LOG(INFO) << "OSNMA Merkletree - m_" << j << "_" << i << " = " << x_ji;
+                    // LOG(INFO) << "OSNMA Merkletree - Size string (bytes): " << x_ji.size();
+                    // LOG(INFO) << "OSNMA Merkletree - m_" << j << "_" << i << " = " << x_ji;
                     if (j == 4 && i == 0)
                         {
                             d_x_4_0 = convert_from_hex_str(x_ji);
@@ -1074,12 +1074,12 @@ void Gnss_Crypto::read_merkle_xml(const std::string& merkleFilePath)
         }
     catch (const std::exception& e)
         {
-            LOG(INFO) << "Exception raised reading the " << merkleFilePath << " file: " << e.what();
+            // LOG(INFO) << "Exception raised reading the " << merkleFilePath << " file: " << e.what();
             d_x_4_0 = convert_from_hex_str("832E15EDE55655EAC6E399A539477B7C034CCE24C3C93FFC904ACD9BF842F04E");
             return;
         }
     // std::cout << "OSNMA Merkle Tree successfully read from file " << merkleFilePath << std::endl;
-    LOG(INFO) << "OSNMA Merkle Tree successfully read from file " << merkleFilePath;
+    // LOG(INFO) << "OSNMA Merkle Tree successfully read from file " << merkleFilePath;
 }
 
 
@@ -1106,7 +1106,7 @@ void Gnss_Crypto::readPublicKeyFromPEM(const std::string& pemFilePath)
             std::cerr << "GnuTLS: error reading the OSNMA Public Key from file "
                       << pemFilePath
                       << ". Aborting import" << std::endl;
-            LOG(WARNING) << "GnuTLS: error reading the OSNMA Public Key from file "
+            // // LOG(WARNING) << "GnuTLS: error reading the OSNMA Public Key from file "
                          << pemFilePath << ". Aborting import. Error " << gnutls_strerror(ret);
             return;
         }
@@ -1118,7 +1118,7 @@ void Gnss_Crypto::readPublicKeyFromPEM(const std::string& pemFilePath)
     ret = gnutls_pubkey_get_pk_algorithm(pubkey, &bits);
     if (ret < 0)
         {
-            LOG(WARNING) << "GnuTLS: Failed to get public key algorithm from .pem file: " << gnutls_strerror(ret);
+            // // LOG(WARNING) << "GnuTLS: Failed to get public key algorithm from .pem file: " << gnutls_strerror(ret);
             gnutls_pubkey_deinit(pubkey);
             return;
         }
@@ -1130,7 +1130,7 @@ void Gnss_Crypto::readPublicKeyFromPEM(const std::string& pemFilePath)
             ret = gnutls_pubkey_export_ecc_raw(pubkey, &curve, nullptr, nullptr);
             if (ret < 0)
                 {
-                    LOG(WARNING) << "GnuTLS: Failed to get EC curve from .pem file: " << gnutls_strerror(ret);
+                    // // LOG(WARNING) << "GnuTLS: Failed to get EC curve from .pem file: " << gnutls_strerror(ret);
                     gnutls_pubkey_deinit(pubkey);
                     return;
                 }
@@ -1145,14 +1145,14 @@ void Gnss_Crypto::readPublicKeyFromPEM(const std::string& pemFilePath)
                 }
             else
                 {
-                    LOG(WARNING) << "GnuTLS: Trying to read unknown EC curve from .pem file";
+                    // // LOG(WARNING) << "GnuTLS: Trying to read unknown EC curve from .pem file";
                     gnutls_pubkey_deinit(pubkey);
                     return;
                 }
         }
     else
         {
-            LOG(WARNING) << "GnuTLS: Trying to read unknown key type from .pem file";
+            // // LOG(WARNING) << "GnuTLS: Trying to read unknown key type from .pem file";
             gnutls_pubkey_deinit(pubkey);
             return;
         }
@@ -1163,7 +1163,7 @@ void Gnss_Crypto::readPublicKeyFromPEM(const std::string& pemFilePath)
     BIO* bio = BIO_new_mem_buf(const_cast<char*>(pemContent.c_str()), pemContent.length());
     if (!bio)
         {
-            LOG(WARNING) << "OpenSSL: error creating a BIO object with data read from file " << pemFilePath << ". Aborting import.";
+            // // LOG(WARNING) << "OpenSSL: error creating a BIO object with data read from file " << pemFilePath << ". Aborting import.";
             return;
         }
 #if USE_OPENSSL_3
@@ -1191,7 +1191,7 @@ void Gnss_Crypto::readPublicKeyFromPEM(const std::string& pemFilePath)
                         }
                     else
                         {
-                            LOG(WARNING) << "OpenSSL: Trying to read an unknown EC curve from .pem file";
+                            // // LOG(WARNING) << "OpenSSL: Trying to read an unknown EC curve from .pem file";
                             BIO_free(bio);
                             EVP_PKEY_free(pubkey);
                             return;
@@ -1199,7 +1199,7 @@ void Gnss_Crypto::readPublicKeyFromPEM(const std::string& pemFilePath)
                 }
             else
                 {
-                    LOG(WARNING) << "OpenSSL: Trying to read an unknown EC curve from .pem file";
+                    // // LOG(WARNING) << "OpenSSL: Trying to read an unknown EC curve from .pem file";
                     BIO_free(bio);
                     EVP_PKEY_free(pubkey);
                     return;
@@ -1207,7 +1207,7 @@ void Gnss_Crypto::readPublicKeyFromPEM(const std::string& pemFilePath)
         }
     else
         {
-            LOG(WARNING) << "OpenSSL: Trying to read an unknown key type from .pem file";
+            // // LOG(WARNING) << "OpenSSL: Trying to read an unknown key type from .pem file";
             BIO_free(bio);
             EVP_PKEY_free(pubkey);
             return;
@@ -1219,7 +1219,7 @@ void Gnss_Crypto::readPublicKeyFromPEM(const std::string& pemFilePath)
     pubkey = PEM_read_bio_EC_PUBKEY(bio, nullptr, nullptr, nullptr);
     if (!pubkey)
         {
-            LOG(WARNING) << "OpenSSL: Failed to extract the public key from .pem file";
+            // // LOG(WARNING) << "OpenSSL: Failed to extract the public key from .pem file";
             BIO_free(bio);
             return;
         }
@@ -1265,12 +1265,12 @@ void Gnss_Crypto::readPublicKeyFromPEM(const std::string& pemFilePath)
     if (d_PublicKey == nullptr)
         {
             std::cerr << "OpenSSL: error reading the OSNMA Public Key from file " << pemFilePath << ". Aborting import" << std::endl;
-            LOG(WARNING) << "OpenSSL: error reading the OSNMA Public Key from file " << pemFilePath << ". Aborting import.";
+            // // LOG(WARNING) << "OpenSSL: error reading the OSNMA Public Key from file " << pemFilePath << ". Aborting import.";
             return;
         }
 #endif
     // std::cout << "OSNMA Public key successfully read from file " << pemFilePath << std::endl;
-    LOG(INFO) << "OSNMA Public key successfully read from file " << pemFilePath;
+    // LOG(INFO) << "OSNMA Public key successfully read from file " << pemFilePath;
 }
 
 
@@ -1298,7 +1298,7 @@ bool Gnss_Crypto::readPublicKeyFromCRT(const std::string& crtFilePath)
     int ret = gnutls_x509_crt_import(cert, &buffer_datum, GNUTLS_X509_FMT_PEM);
     if (ret < 0)
         {
-            LOG(WARNING) << "GnuTLS: Failed to import certificate: " << gnutls_strerror(ret);
+            // // LOG(WARNING) << "GnuTLS: Failed to import certificate: " << gnutls_strerror(ret);
             gnutls_x509_crt_deinit(cert);
             return false;
         }
@@ -1309,7 +1309,7 @@ bool Gnss_Crypto::readPublicKeyFromCRT(const std::string& crtFilePath)
     ret = gnutls_pubkey_import_x509(pubkey, cert, 0);
     if (ret < 0)
         {
-            LOG(WARNING) << "GnuTLS: Failed to import public key: " << gnutls_strerror(ret);
+            // // LOG(WARNING) << "GnuTLS: Failed to import public key: " << gnutls_strerror(ret);
             gnutls_pubkey_deinit(pubkey);
             gnutls_x509_crt_deinit(cert);
             return false;
@@ -1322,7 +1322,7 @@ bool Gnss_Crypto::readPublicKeyFromCRT(const std::string& crtFilePath)
     ret = gnutls_pubkey_get_pk_algorithm(pubkey, &bits);
     if (ret < 0)
         {
-            LOG(WARNING) << "GnuTLS: Failed to get public key algorithm: " << gnutls_strerror(ret);
+            // // LOG(WARNING) << "GnuTLS: Failed to get public key algorithm: " << gnutls_strerror(ret);
             gnutls_pubkey_deinit(pubkey);
             gnutls_x509_crt_deinit(cert);
             return false;
@@ -1335,7 +1335,7 @@ bool Gnss_Crypto::readPublicKeyFromCRT(const std::string& crtFilePath)
             ret = gnutls_pubkey_export_ecc_raw(pubkey, &curve, nullptr, nullptr);
             if (ret < 0)
                 {
-                    LOG(WARNING) << "GnuTLS: Failed to get EC curve: " << gnutls_strerror(ret);
+                    // // LOG(WARNING) << "GnuTLS: Failed to get EC curve: " << gnutls_strerror(ret);
                     gnutls_pubkey_deinit(pubkey);
                     gnutls_x509_crt_deinit(cert);
                     return false;
@@ -1351,7 +1351,7 @@ bool Gnss_Crypto::readPublicKeyFromCRT(const std::string& crtFilePath)
                 }
             else
                 {
-                    LOG(WARNING) << "GnuTLS: Trying to read unknown EC curve";
+                    // // LOG(WARNING) << "GnuTLS: Trying to read unknown EC curve";
                     gnutls_x509_crt_deinit(cert);
                     gnutls_pubkey_deinit(pubkey);
                     return false;
@@ -1359,7 +1359,7 @@ bool Gnss_Crypto::readPublicKeyFromCRT(const std::string& crtFilePath)
         }
     else
         {
-            LOG(WARNING) << "GnuTLS: Trying to read unknown key type";
+            // // LOG(WARNING) << "GnuTLS: Trying to read unknown key type";
             gnutls_x509_crt_deinit(cert);
             gnutls_pubkey_deinit(pubkey);
             return false;
@@ -1377,13 +1377,13 @@ bool Gnss_Crypto::readPublicKeyFromCRT(const std::string& crtFilePath)
 #endif
     if (!bio)
         {
-            LOG(WARNING) << "OpenSSL: Unable to create BIO for file: " << crtFilePath;
+            // // LOG(WARNING) << "OpenSSL: Unable to create BIO for file: " << crtFilePath;
             return false;
         }
     X509* cert = PEM_read_bio_X509(bio, nullptr, nullptr, nullptr);
     if (!cert)
         {
-            LOG(WARNING) << "OpenSSL: Unable to read certificate from file: " << crtFilePath;
+            // // LOG(WARNING) << "OpenSSL: Unable to read certificate from file: " << crtFilePath;
             BIO_free(bio);
             return false;
         }
@@ -1392,7 +1392,7 @@ bool Gnss_Crypto::readPublicKeyFromCRT(const std::string& crtFilePath)
     EVP_PKEY* pubkey = X509_get_pubkey(cert);
     if (!pubkey)
         {
-            LOG(WARNING) << "OpenSSL: Failed to extract the public key";
+            // // LOG(WARNING) << "OpenSSL: Failed to extract the public key";
             X509_free(cert);
             BIO_free(bio);
             return false;
@@ -1419,7 +1419,7 @@ bool Gnss_Crypto::readPublicKeyFromCRT(const std::string& crtFilePath)
                         }
                     else
                         {
-                            LOG(WARNING) << "OpenSSL: Trying to read an unknown EC curve";
+                            // // LOG(WARNING) << "OpenSSL: Trying to read an unknown EC curve";
                             X509_free(cert);
                             BIO_free(bio);
                             return false;
@@ -1427,7 +1427,7 @@ bool Gnss_Crypto::readPublicKeyFromCRT(const std::string& crtFilePath)
                 }
             else
                 {
-                    LOG(WARNING) << "OpenSSL: Trying to read an unknown EC curve";
+                    // // LOG(WARNING) << "OpenSSL: Trying to read an unknown EC curve";
                     X509_free(cert);
                     BIO_free(bio);
                     return false;
@@ -1435,7 +1435,7 @@ bool Gnss_Crypto::readPublicKeyFromCRT(const std::string& crtFilePath)
         }
     else
         {
-            LOG(WARNING) << "OpenSSL: Trying to read an unknown key type";
+            // // LOG(WARNING) << "OpenSSL: Trying to read an unknown key type";
             X509_free(cert);
             BIO_free(bio);
             return false;
@@ -1521,7 +1521,7 @@ bool Gnss_Crypto::readPublicKeyFromCRT(const std::string& crtFilePath)
     EVP_PKEY_free(pubkey);
     if (!ec_pubkey)
         {
-            LOG(WARNING) << "OpenSSL: Failed to extract the public key";
+            // // LOG(WARNING) << "OpenSSL: Failed to extract the public key";
             X509_free(cert);
             return false;
         }
@@ -1532,7 +1532,7 @@ bool Gnss_Crypto::readPublicKeyFromCRT(const std::string& crtFilePath)
     X509_free(cert);
 #endif
     // std::cout << "OSNMA Public key successfully read from file " << crtFilePath << std::endl;
-    LOG(INFO) << "OSNMA Public key successfully read from file " << crtFilePath;
+    // LOG(INFO) << "OSNMA Public key successfully read from file " << crtFilePath;
     return true;
 }
 
@@ -1541,7 +1541,7 @@ bool Gnss_Crypto::convert_raw_to_der_ecdsa(const std::vector<uint8_t>& raw_signa
 {
     if (raw_signature.size() % 2 != 0)
         {
-            LOG(WARNING) << "Invalid raw ECDSA signature size";
+            // // LOG(WARNING) << "Invalid raw ECDSA signature size";
             return false;
         }
 
@@ -1753,7 +1753,7 @@ void Gnss_Crypto::decompress_public_key_secp256r1(const std::vector<uint8_t>& co
     if (!tonelli_shanks(y_coord, y_squared, p))
         {
             mpz_clears(p, a, b, x_coord, y_coord, y_squared, tmp, nullptr);
-            LOG(WARNING) << "GnuTLS: Failed to decompress public key: No valid y coordinate";
+            // // LOG(WARNING) << "GnuTLS: Failed to decompress public key: No valid y coordinate";
             return;
         }
 
@@ -1808,7 +1808,7 @@ void Gnss_Crypto::decompress_public_key_secp521r1(const std::vector<uint8_t>& co
     if (!tonelli_shanks(y_coord, y_squared, p))
         {
             mpz_clears(p, a, b, x_coord, y_coord, y_squared, tmp, nullptr);
-            LOG(WARNING) << "GnuTLS: Failed to decompress public key: No valid y coordinate";
+            // // LOG(WARNING) << "GnuTLS: Failed to decompress public key: No valid y coordinate";
             return;
         }
 

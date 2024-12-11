@@ -55,7 +55,7 @@ GpsL2MPcpsAcquisition::GpsL2MPcpsAcquisition(
     acq_parameters_.ms_per_code = 20;
     acq_parameters_.SetFromConfiguration(configuration, role, GPS_L2_M_CODE_RATE_CPS, GPS_L2C_OPT_ACQ_FS_SPS);
 
-    DLOG(INFO) << "Role " << role;
+    // D// LOG(INFO) << "Role " << role;
 
 #if USE_GLOG_AND_GFLAGS
     if (FLAGS_doppler_max != 0)
@@ -79,7 +79,7 @@ GpsL2MPcpsAcquisition::GpsL2MPcpsAcquisition(
     code_ = volk_gnsssdr::vector<std::complex<float>>(vector_length_);
 
     acquisition_ = pcps_make_acquisition(acq_parameters_);
-    DLOG(INFO) << "acquisition(" << acquisition_->unique_id() << ")";
+    // D// LOG(INFO) << "acquisition(" << acquisition_->unique_id() << ")";
 
     if (item_type_ == "cbyte")
         {
@@ -210,7 +210,7 @@ void GpsL2MPcpsAcquisition::connect(gr::top_block_sptr top_block)
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unknown acquisition item type";
+            // // LOG(WARNING) << item_type_ << " unknown acquisition item type";
         }
 }
 
@@ -229,7 +229,7 @@ void GpsL2MPcpsAcquisition::disconnect(gr::top_block_sptr top_block)
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unknown acquisition item type";
+            // // LOG(WARNING) << item_type_ << " unknown acquisition item type";
         }
 }
 
@@ -245,7 +245,7 @@ gr::basic_block_sptr GpsL2MPcpsAcquisition::get_left_block()
             return cbyte_to_float_x2_;
         }
 
-    LOG(WARNING) << item_type_ << " unknown acquisition item type";
+    // // LOG(WARNING) << item_type_ << " unknown acquisition item type";
     return nullptr;
 }
 

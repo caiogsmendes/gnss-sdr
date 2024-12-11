@@ -49,8 +49,8 @@ bool Nav_Message_Udp_Sink::write_nav_message(const std::shared_ptr<Nav_Message_P
                     socket.connect(endpoint, error);          // NOLINT(bugprone-unused-return-value)
                     if (error)
                         {
-                            LOG(WARNING) << "Error connecting to IP address " << endpoint.address()
-                                         << ", port " << static_cast<int>(endpoint.port()) << ": " << error.message();
+                            // // LOG(WARNING) << "Error connecting to IP address " << endpoint.address()
+                                        //  << ", port " << static_cast<int>(endpoint.port()) << ": " << error.message();
                             return false;
                         }
 

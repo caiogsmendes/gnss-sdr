@@ -42,7 +42,7 @@ An_Packet_Printer::An_Packet_Printer(const std::string& an_dump_devname)
 {
     if (d_an_dev_descriptor != -1)
         {
-            DLOG(INFO) << "AN Printer writing on " << d_an_devname;
+            // D// LOG(INFO) << "AN Printer writing on " << d_an_devname;
         }
 }
 
@@ -347,7 +347,7 @@ int An_Packet_Printer::init_serial(const std::string& serial_device)
 
     if (fcntl(fd, F_SETFL, 0) == -1)
         {
-            LOG(INFO) << "Error enabling direct I/O";  // clear all flags on descriptor, enable direct I/O
+            // LOG(INFO) << "Error enabling direct I/O";  // clear all flags on descriptor, enable direct I/O
         }
     tcgetattr(fd, &options);  // read serial port options
 

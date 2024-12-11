@@ -74,17 +74,17 @@ GpsL1CaKfTracking::GpsL1CaKfTracking(
     std::copy_n(sig.data(), 3, trk_params.signal);
 
     // ################# Make a GNU Radio Tracking block object ################
-    DLOG(INFO) << "role " << role_;
+    // D// LOG(INFO) << "role " << role_;
     if (trk_params.item_type == "gr_complex")
         {
             tracking_sptr_ = kf_make_tracking(trk_params);
-            DLOG(INFO) << "tracking(" << tracking_sptr_->unique_id() << ")";
+            // D// LOG(INFO) << "tracking(" << tracking_sptr_->unique_id() << ")";
         }
     else
         {
             item_size_ = 0;
             tracking_sptr_ = nullptr;
-            LOG(WARNING) << trk_params.item_type << " unknown tracking item type.";
+            // // LOG(WARNING) << trk_params.item_type << " unknown tracking item type.";
         }
 
     if (in_streams_ > 1)

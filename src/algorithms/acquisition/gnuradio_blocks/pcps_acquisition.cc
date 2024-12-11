@@ -222,13 +222,13 @@ bool pcps_acquisition::is_fdma()
     if (strcmp(d_gnss_synchro->Signal, "1G") == 0)
         {
             d_doppler_bias = static_cast<int32_t>(DFRQ1_GLO * GLONASS_PRN.at(d_gnss_synchro->PRN));
-            DLOG(INFO) << "Trying to acquire SV PRN " << d_gnss_synchro->PRN << " with freq " << d_doppler_bias << " in Glonass Channel " << GLONASS_PRN.at(d_gnss_synchro->PRN) << '\n';
+            // D// LOG(INFO) << "Trying to acquire SV PRN " << d_gnss_synchro->PRN << " with freq " << d_doppler_bias << " in Glonass Channel " << GLONASS_PRN.at(d_gnss_synchro->PRN) << '\n';
             return true;
         }
     if (strcmp(d_gnss_synchro->Signal, "2G") == 0)
         {
             d_doppler_bias += static_cast<int32_t>(DFRQ2_GLO * GLONASS_PRN.at(d_gnss_synchro->PRN));
-            DLOG(INFO) << "Trying to acquire SV PRN " << d_gnss_synchro->PRN << " with freq " << d_doppler_bias << " in Glonass Channel " << GLONASS_PRN.at(d_gnss_synchro->PRN) << '\n';
+            // D// LOG(INFO) << "Trying to acquire SV PRN " << d_gnss_synchro->PRN << " with freq " << d_doppler_bias << " in Glonass Channel " << GLONASS_PRN.at(d_gnss_synchro->PRN) << '\n';
             return true;
         }
     return false;
@@ -346,16 +346,16 @@ void pcps_acquisition::send_positive_acquisition()
 {
     // Declare positive acquisition using a message port
     // 0=STOP_CHANNEL 1=ACQ_SUCCEES 2=ACQ_FAIL
-    DLOG(INFO) << "positive acquisition"
-               << ", satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
-               << ", sample_stamp " << d_sample_counter
-               << ", test statistics value " << d_test_statistics
-               << ", test statistics threshold " << d_threshold
-               << ", code phase " << d_gnss_synchro->Acq_delay_samples
-               << ", doppler " << d_gnss_synchro->Acq_doppler_hz
-               << ", magnitude " << d_mag
-               << ", input signal power " << d_input_power
-               << ", Assist doppler_center " << d_doppler_center;
+    // D// LOG(INFO) << "positive acquisition"
+            //    << ", satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
+            //    << ", sample_stamp " << d_sample_counter
+            //    << ", test statistics value " << d_test_statistics
+            //    << ", test statistics threshold " << d_threshold
+            //    << ", code phase " << d_gnss_synchro->Acq_delay_samples
+            //    << ", doppler " << d_gnss_synchro->Acq_doppler_hz
+            //    << ", magnitude " << d_mag
+            //    << ", input signal power " << d_input_power
+            //    << ", Assist doppler_center " << d_doppler_center;
     d_positive_acq = 1;
 
     if (!d_channel_fsm.expired())
@@ -382,15 +382,15 @@ void pcps_acquisition::send_negative_acquisition()
 {
     // Declare negative acquisition using a message port
     // 0=STOP_CHANNEL 1=ACQ_SUCCEES 2=ACQ_FAIL
-    DLOG(INFO) << "negative acquisition"
-               << ", satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
-               << ", sample_stamp " << d_sample_counter
-               << ", test statistics value " << d_test_statistics
-               << ", test statistics threshold " << d_threshold
-               << ", code phase " << d_gnss_synchro->Acq_delay_samples
-               << ", doppler " << d_gnss_synchro->Acq_doppler_hz
-               << ", magnitude " << d_mag
-               << ", input signal power " << d_input_power;
+    // D// LOG(INFO) << "negative acquisition"
+            //    << ", satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
+            //    << ", sample_stamp " << d_sample_counter
+            //    << ", test statistics value " << d_test_statistics
+            //    << ", test statistics threshold " << d_threshold
+            //    << ", code phase " << d_gnss_synchro->Acq_delay_samples
+            //    << ", doppler " << d_gnss_synchro->Acq_doppler_hz
+            //    << ", magnitude " << d_mag
+            //    << ", input signal power " << d_input_power;
     d_positive_acq = 0;
     this->message_port_pub(pmt::mp("events"), pmt::from_long(2));
 }
@@ -629,12 +629,12 @@ void pcps_acquisition::acquisition_core(uint64_t samp_count)
     d_mag = 0.0;
     d_num_noncoherent_integrations_counter++;
 
-    DLOG(INFO) << "Channel: " << d_channel
-               << " , doing acquisition of satellite: " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
-               << " ,sample stamp: " << samp_count << ", threshold: "
-               << d_threshold << ", doppler_max: " << d_acq_parameters.doppler_max
-               << ", doppler_step: " << d_doppler_step
-               << ", use_CFAR_algorithm_flag: " << (d_use_CFAR_algorithm_flag ? "true" : "false");
+    // D// LOG(INFO) << "Channel: " << d_channel
+            //    << " , doing acquisition of satellite: " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
+            //    << " ,sample stamp: " << samp_count << ", threshold: "
+            //    << d_threshold << ", doppler_max: " << d_acq_parameters.doppler_max
+            //    << ", doppler_step: " << d_doppler_step
+            //    << ", use_CFAR_algorithm_flag: " << (d_use_CFAR_algorithm_flag ? "true" : "false");
 
     if (d_acq_parameters.blocking)
         {
@@ -912,7 +912,7 @@ void pcps_acquisition::set_doppler_center(int32_t doppler_center)
     gr::thread::scoped_lock lock(d_setlock);  // require mutex with work function called by the scheduler
     if (doppler_center != d_doppler_center)
         {
-            DLOG(INFO) << " Doppler assistance for Channel: " << d_channel << " => Doppler: " << doppler_center << "[Hz]";
+            // D// LOG(INFO) << " Doppler assistance for Channel: " << d_channel << " => Doppler: " << doppler_center << "[Hz]";
             d_doppler_center = doppler_center;
             update_grid_doppler_wipeoffs();
         }

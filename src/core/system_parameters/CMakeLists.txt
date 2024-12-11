@@ -119,6 +119,7 @@ endif()
 
 target_link_libraries(core_system_parameters
     PUBLIC
+    pvt_libs
         Boost::date_time
         Boost::serialization
         Boost::headers

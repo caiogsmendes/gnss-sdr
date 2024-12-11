@@ -142,7 +142,7 @@ GalileoE1PcpsAmbiguousAcquisitionFpga::GalileoE1PcpsAmbiguousAcquisitionFpga(
 
     acq_parameters_.all_fft_codes = d_all_fft_codes_.data();
 
-    DLOG(INFO) << "role " << role_;
+    // D// LOG(INFO) << "role " << role_;
     acquisition_fpga_ = pcps_make_acquisition_fpga(acq_parameters_);
 
     if (in_streams_ > 1)
@@ -165,7 +165,7 @@ void GalileoE1PcpsAmbiguousAcquisitionFpga::stop_acquisition()
 
 void GalileoE1PcpsAmbiguousAcquisitionFpga::set_threshold(float threshold)
 {
-    DLOG(INFO) << "Channel " << channel_ << " Threshold = " << threshold;
+    // D// LOG(INFO) << "Channel " << channel_ << " Threshold = " << threshold;
     acquisition_fpga_->set_threshold(threshold);
 }
 

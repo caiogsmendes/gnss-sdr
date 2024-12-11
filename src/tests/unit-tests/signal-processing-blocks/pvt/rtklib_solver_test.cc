@@ -94,7 +94,7 @@ rtk_t configure_rtklib_options()
     if ((elevation_mask < 0.0) || (elevation_mask > 90.0))
         {
             // warn user and set the default
-            LOG(WARNING) << "Erroneous Elevation Mask. Setting to default value of 15.0 degrees";
+            // // LOG(WARNING) << "Erroneous Elevation Mask. Setting to default value of 15.0 degrees";
             elevation_mask = 15.0;
         }
 
@@ -102,7 +102,7 @@ rtk_t configure_rtklib_options()
     if ((dynamics_model < 0) || (dynamics_model > 2))
         {
             // warn user and set the default
-            LOG(WARNING) << "Erroneous Dynamics Model configuration. Setting to default value of (0:none)";
+            // // LOG(WARNING) << "Erroneous Dynamics Model configuration. Setting to default value of (0:none)";
             dynamics_model = 0;
         }
 
@@ -202,7 +202,7 @@ rtk_t configure_rtklib_options()
     if ((navigation_system < 1) || (navigation_system > 255))                           /* GPS: 1   SBAS: 2   GPS+SBAS: 3 Galileo: 8  Galileo+GPS: 9 GPS+SBAS+Galileo: 11 All: 255 */
         {
             // warn user and set the default
-            LOG(WARNING) << "Erroneous Navigation System. Setting to default value of (0:none)";
+            // // LOG(WARNING) << "Erroneous Navigation System. Setting to default value of (0:none)";
             navigation_system = nsys;
         }
 
@@ -244,7 +244,7 @@ rtk_t configure_rtklib_options()
     if ((integer_ambiguity_resolution_glo < 0) || (integer_ambiguity_resolution_glo > 3))
         {
             // warn user and set the default
-            LOG(WARNING) << "Erroneous Integer Ambiguity Resolution for GLONASS . Setting to default value of (1:on)";
+            // // LOG(WARNING) << "Erroneous Integer Ambiguity Resolution for GLONASS . Setting to default value of (1:on)";
             integer_ambiguity_resolution_glo = 1;
         }
 
@@ -252,7 +252,7 @@ rtk_t configure_rtklib_options()
     if ((integer_ambiguity_resolution_bds < 0) || (integer_ambiguity_resolution_bds > 1))
         {
             // warn user and set the default
-            LOG(WARNING) << "Erroneous Integer Ambiguity Resolution for BEIDOU . Setting to default value of (1:on)";
+            // // LOG(WARNING) << "Erroneous Integer Ambiguity Resolution for BEIDOU . Setting to default value of (1:on)";
             integer_ambiguity_resolution_bds = 1;
         }
 

@@ -110,7 +110,7 @@ Adrv9361z7035SignalSourceFPGA::Adrv9361z7035SignalSourceFPGA(const Configuration
             // std::cout << "Error: provided value rf_port_select=" << rf_port_select_ << " is not among valid values\n";
             // std::cout << " This parameter has been set to its default value rf_port_select=" << default_rf_port_select << '\n';
             rf_port_select_ = default_rf_port_select;
-            LOG(WARNING) << "Invalid configuration value for rf_port_select parameter. Set to rf_port_select=" << default_rf_port_select;
+            // // LOG(WARNING) << "Invalid configuration value for rf_port_select parameter. Set to rf_port_select=" << default_rf_port_select;
         }
 
     if ((gain_mode_rx1_ != "manual") && (gain_mode_rx1_ != "slow_attack") && (gain_mode_rx1_ != "fast_attack") && (gain_mode_rx1_ != "hybrid"))
@@ -120,7 +120,7 @@ Adrv9361z7035SignalSourceFPGA::Adrv9361z7035SignalSourceFPGA(const Configuration
             // std::cout << "Error: provided value gain_mode_rx1=" << gain_mode_rx1_ << " is not among valid values\n";
             // std::cout << " This parameter has been set to its default value gain_mode_rx1=" << default_gain_mode << '\n';
             gain_mode_rx1_ = default_gain_mode;
-            LOG(WARNING) << "Invalid configuration value for gain_mode_rx1 parameter. Set to gain_mode_rx1=" << default_gain_mode;
+            // // LOG(WARNING) << "Invalid configuration value for gain_mode_rx1 parameter. Set to gain_mode_rx1=" << default_gain_mode;
         }
 
     if ((gain_mode_rx2_ != "manual") && (gain_mode_rx2_ != "slow_attack") && (gain_mode_rx2_ != "fast_attack") && (gain_mode_rx2_ != "hybrid"))
@@ -130,7 +130,7 @@ Adrv9361z7035SignalSourceFPGA::Adrv9361z7035SignalSourceFPGA(const Configuration
             // std::cout << "Error: provided value gain_mode_rx2=" << gain_mode_rx2_ << " is not among valid values\n";
             // std::cout << " This parameter has been set to its default value gain_mode_rx2=" << default_gain_mode << '\n';
             gain_mode_rx2_ = default_gain_mode;
-            LOG(WARNING) << "Invalid configuration value for gain_mode_rx2 parameter. Set to gain_mode_rx2=" << default_gain_mode;
+            // // LOG(WARNING) << "Invalid configuration value for gain_mode_rx2 parameter. Set to gain_mode_rx2=" << default_gain_mode;
         }
 
     if (gain_mode_rx1_ == "manual")
@@ -141,7 +141,7 @@ Adrv9361z7035SignalSourceFPGA::Adrv9361z7035SignalSourceFPGA(const Configuration
                     // std::cout << "Error: provided value rf_gain_rx1=" << rf_gain_rx1_ << " is not among valid values\n";
                     // std::cout << " This parameter has been set to its default value rf_gain_rx1=" << default_manual_gain_rx1 << '\n';
                     rf_gain_rx1_ = default_manual_gain_rx1;
-                    LOG(WARNING) << "Invalid configuration value for rf_gain_rx1 parameter. Set to rf_gain_rx1=" << default_manual_gain_rx1;
+                    // // LOG(WARNING) << "Invalid configuration value for rf_gain_rx1 parameter. Set to rf_gain_rx1=" << default_manual_gain_rx1;
                 }
         }
 
@@ -153,7 +153,7 @@ Adrv9361z7035SignalSourceFPGA::Adrv9361z7035SignalSourceFPGA(const Configuration
                     // std::cout << "Error: provided value rf_gain_rx2=" << rf_gain_rx2_ << " is not among valid values\n";
                     // std::cout << " This parameter has been set to its default value rf_gain_rx2=" << default_manual_gain_rx2 << '\n';
                     rf_gain_rx2_ = default_manual_gain_rx2;
-                    LOG(WARNING) << "Invalid configuration value for rf_gain_rx2 parameter. Set to rf_gain_rx2=" << default_manual_gain_rx2;
+                    // // LOG(WARNING) << "Invalid configuration value for rf_gain_rx2 parameter. Set to rf_gain_rx2=" << default_manual_gain_rx2;
                 }
         }
 
@@ -167,7 +167,7 @@ Adrv9361z7035SignalSourceFPGA::Adrv9361z7035SignalSourceFPGA(const Configuration
             // std::cout << "Error: provided value filter_source=" << filter_source_ << " is not among valid values\n";
             // std::cout << " This parameter has been set to its default value filter_source=Off\n";
             filter_source_ = std::string("Off");
-            LOG(WARNING) << "Invalid configuration value for filter_source parameter. Set to filter_source=Off";
+            // // LOG(WARNING) << "Invalid configuration value for filter_source parameter. Set to filter_source=Off";
         }
 
     if (bandwidth_ < 200000 || bandwidth_ > 56000000)
@@ -176,7 +176,7 @@ Adrv9361z7035SignalSourceFPGA::Adrv9361z7035SignalSourceFPGA(const Configuration
             // std::cout << "Error: provided value bandwidth=" << bandwidth_ << " is not among valid values\n";
             // std::cout << " This parameter has been set to its default value bandwidth=" << default_bandwidth << '\n';
             bandwidth_ = default_bandwidth;
-            LOG(WARNING) << "Invalid configuration value for bandwidth parameter. Set to bandwidth=" << default_bandwidth;
+            // // LOG(WARNING) << "Invalid configuration value for bandwidth parameter. Set to bandwidth=" << default_bandwidth;
         }
 
     // std::cout << "LO frequency : " << freq0_ << " Hz\n";
@@ -218,7 +218,7 @@ Adrv9361z7035SignalSourceFPGA::Adrv9361z7035SignalSourceFPGA(const Configuration
                     // std::cout << "Error: provided value tx_bandwidth=" << tx_bandwidth_ << " is not among valid values\n";
                     // std::cout << " This parameter has been set to its default value tx_bandwidth=500000\n";
                     tx_bandwidth_ = 500000;
-                    LOG(WARNING) << "Invalid configuration value for tx_bandwidth parameter. Set to tx_bandwidth=500000";
+                    // // LOG(WARNING) << "Invalid configuration value for tx_bandwidth parameter. Set to tx_bandwidth=500000";
                 }
             if (tx_attenuation_db_ > 0.0 || tx_attenuation_db_ < -89.75)
                 {
@@ -226,7 +226,7 @@ Adrv9361z7035SignalSourceFPGA::Adrv9361z7035SignalSourceFPGA(const Configuration
                     // std::cout << "Error: provided value tx_attenuation_db=" << tx_attenuation_db_ << " is not among valid values\n";
                     // std::cout << " This parameter has been set to its default value tx_attenuation_db=" << default_tx_attenuation_db << '\n';
                     tx_attenuation_db_ = default_tx_attenuation_db;
-                    LOG(WARNING) << "Invalid configuration value for tx_attenuation_db parameter. Set to tx_attenuation_db=" << default_tx_attenuation_db;
+                    // // LOG(WARNING) << "Invalid configuration value for tx_attenuation_db parameter. Set to tx_attenuation_db=" << default_tx_attenuation_db;
                 }
             try
                 {
@@ -278,12 +278,12 @@ Adrv9361z7035SignalSourceFPGA::~Adrv9361z7035SignalSourceFPGA()
                 {
                     if (!disable_ad9361_rx_local())
                         {
-                            LOG(WARNING) << "Problem shutting down the AD9361 RX channels";
+                            // // LOG(WARNING) << "Problem shutting down the AD9361 RX channels";
                         }
                 }
             catch (const std::exception &e)
                 {
-                    LOG(WARNING) << "Problem shutting down the AD9361 RX channels: " << e.what();
+                    // // LOG(WARNING) << "Problem shutting down the AD9361 RX channels: " << e.what();
                     std::cerr << "Problem shutting down the AD9361 RX channels: " << e.what() << '\n';
                 }
 
@@ -295,7 +295,7 @@ Adrv9361z7035SignalSourceFPGA::~Adrv9361z7035SignalSourceFPGA()
                         }
                     catch (const std::exception &e)
                         {
-                            LOG(WARNING) << "Problem shutting down the AD9361 TX stream: " << e.what();
+                            // // LOG(WARNING) << "Problem shutting down the AD9361 TX stream: " << e.what();
                         }
                 }
         }
@@ -373,7 +373,7 @@ void Adrv9361z7035SignalSourceFPGA::connect(gr::top_block_sptr top_block)
     if (top_block)
         { /* top_block is not null */
         };
-    DLOG(INFO) << "AD9361 FPGA source nothing to connect";
+    // D// LOG(INFO) << "AD9361 FPGA source nothing to connect";
 }
 
 
@@ -382,13 +382,13 @@ void Adrv9361z7035SignalSourceFPGA::disconnect(gr::top_block_sptr top_block)
     if (top_block)
         { /* top_block is not null */
         };
-    DLOG(INFO) << "AD9361 FPGA source nothing to disconnect";
+    // D// LOG(INFO) << "AD9361 FPGA source nothing to disconnect";
 }
 
 
 gr::basic_block_sptr Adrv9361z7035SignalSourceFPGA::get_left_block()
 {
-    LOG(WARNING) << "Trying to get signal source left block.";
+    // // LOG(WARNING) << "Trying to get signal source left block.";
     return {};
 }
 

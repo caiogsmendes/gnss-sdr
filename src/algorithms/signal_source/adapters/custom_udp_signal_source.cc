@@ -86,7 +86,7 @@ CustomUDPSignalSource::CustomUDPSignalSource(const ConfigurationInterface* confi
         {
             for (int n = 0; n < channels_in_udp_; n++)
                 {
-                    DLOG(INFO) << "Dumping output into file " << (dump_filename_ + "c_h" + std::to_string(n) + ".bin");
+                    // D// LOG(INFO) << "Dumping output into file " << (dump_filename_ + "c_h" + std::to_string(n) + ".bin");
                     file_sink_.emplace_back(gr::blocks::file_sink::make(item_size_, (dump_filename_ + "_ch" + std::to_string(n) + ".bin").c_str()));
                 }
         }
@@ -108,14 +108,14 @@ void CustomUDPSignalSource::connect(gr::top_block_sptr top_block)
         {
             top_block->connect(udp_gnss_rx_source_, n, null_sinks_.at(n), 0);
         }
-    DLOG(INFO) << "connected udp_source to null_sinks to enable the use of spare channels\n";
+    // D// LOG(INFO) << "connected udp_source to null_sinks to enable the use of spare channels\n";
 
     if (dump_)
         {
             for (int n = 0; n < channels_in_udp_; n++)
                 {
                     top_block->connect(udp_gnss_rx_source_, n, file_sink_.at(n), 0);
-                    DLOG(INFO) << "connected source to file sink";
+                    // D// LOG(INFO) << "connected source to file sink";
                 }
         }
 }
@@ -133,16 +133,16 @@ void CustomUDPSignalSource::disconnect(gr::top_block_sptr top_block)
             for (int n = 0; n < channels_in_udp_; n++)
                 {
                     top_block->disconnect(udp_gnss_rx_source_, n, file_sink_.at(n), 0);
-                    DLOG(INFO) << "disconnected source to file sink";
+                    // D// LOG(INFO) << "disconnected source to file sink";
                 }
         }
-    DLOG(INFO) << "disconnected udp_source\n";
+    // D// LOG(INFO) << "disconnected udp_source\n";
 }
 
 
 gr::basic_block_sptr CustomUDPSignalSource::get_left_block()
 {
-    LOG(WARNING) << "Left block of a signal source should not be retrieved";
+    // // LOG(WARNING) << "Left block of a signal source should not be retrieved";
     return gr::block_sptr();
 }
 

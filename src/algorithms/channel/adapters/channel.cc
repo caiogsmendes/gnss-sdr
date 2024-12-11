@@ -92,7 +92,7 @@ Channel::Channel(const ConfigurationInterface* configuration,
             doppler_step = static_cast<uint32_t>(absl::GetFlag(FLAGS_doppler_step));
         }
 #endif
-    DLOG(INFO) << "Channel " << channel_ << " Doppler_step = " << doppler_step;
+    // D// LOG(INFO) << "Channel " << channel_ << " Doppler_step = " << doppler_step;
 
     acq_->set_doppler_step(doppler_step);
 
@@ -143,7 +143,7 @@ void Channel::connect(gr::top_block_sptr top_block)
         {
             top_block->msg_connect(nav_->get_left_block(), pmt::mp("preamble_timestamp_samples"), trk_->get_right_block(), pmt::mp("preamble_timestamp_samples"));
         }
-    DLOG(INFO) << "tracking -> telemetry_decoder";
+    // D// LOG(INFO) << "tracking -> telemetry_decoder";
 
     // Message ports
     if (!flag_enable_fpga_)
@@ -160,7 +160,7 @@ void Channel::disconnect(gr::top_block_sptr top_block)
 {
     if (!connected_)
         {
-            LOG(WARNING) << "Channel already disconnected internally";
+            // // LOG(WARNING) << "Channel already disconnected internally";
             return;
         }
 
@@ -255,10 +255,10 @@ void Channel::stop_channel()
     const bool result = channel_fsm_->Event_stop_channel();
     if (!result)
         {
-            LOG(WARNING) << "Invalid channel event";
+            // // LOG(WARNING) << "Invalid channel event";
             return;
         }
-    DLOG(INFO) << "Channel stop_channel()";
+    // D// LOG(INFO) << "Channel stop_channel()";
 }
 
 
@@ -283,10 +283,10 @@ void Channel::start_acquisition()
         }
     if (!result)
         {
-            LOG(WARNING) << "Invalid channel event";
+            // // LOG(WARNING) << "Invalid channel event";
             return;
         }
-    DLOG(INFO) << "Channel start_acquisition()";
+    // D// LOG(INFO) << "Channel start_acquisition()";
 }
 
 bool Channel::glonass_dll_pll_c_aid_tracking_check() const

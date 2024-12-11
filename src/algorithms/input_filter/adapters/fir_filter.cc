@@ -38,15 +38,15 @@ FirFilter::FirFilter(const ConfigurationInterface* configuration,
       out_streams_(out_streams)
 {
     (*this).init();
-    DLOG(INFO) << "role " << role_;
+    // D// LOG(INFO) << "role " << role_;
     if ((taps_item_type_ == "float") && (input_item_type_ == "gr_complex") && (output_item_type_ == "gr_complex"))
         {
             item_size_ = sizeof(gr_complex);
             fir_filter_ccf_ = gr::filter::fir_filter_ccf::make(1, taps_);
-            DLOG(INFO) << "input_filter(" << fir_filter_ccf_->unique_id() << ")";
+            // D// LOG(INFO) << "input_filter(" << fir_filter_ccf_->unique_id() << ")";
             if (dump_)
                 {
-                    DLOG(INFO) << "Dumping output into file " << dump_filename_;
+                    // D// LOG(INFO) << "Dumping output into file " << dump_filename_;
                     file_sink_ = gr::blocks::file_sink::make(item_size_, dump_filename_.c_str());
                 }
         }
@@ -56,14 +56,14 @@ FirFilter::FirFilter(const ConfigurationInterface* configuration,
             cshort_to_float_x2_ = make_cshort_to_float_x2();
             fir_filter_fff_1_ = gr::filter::fir_filter_fff::make(1, taps_);
             fir_filter_fff_2_ = gr::filter::fir_filter_fff::make(1, taps_);
-            DLOG(INFO) << "I input_filter(" << fir_filter_fff_1_->unique_id() << ")";
-            DLOG(INFO) << "Q input_filter(" << fir_filter_fff_2_->unique_id() << ")";
+            // D// LOG(INFO) << "I input_filter(" << fir_filter_fff_1_->unique_id() << ")";
+            // D// LOG(INFO) << "Q input_filter(" << fir_filter_fff_2_->unique_id() << ")";
             float_to_short_1_ = gr::blocks::float_to_short::make();
             float_to_short_2_ = gr::blocks::float_to_short::make();
             short_x2_to_cshort_ = make_short_x2_to_cshort();
             if (dump_)
                 {
-                    DLOG(INFO) << "Dumping output into file " << dump_filename_;
+                    // D// LOG(INFO) << "Dumping output into file " << dump_filename_;
                     file_sink_ = gr::blocks::file_sink::make(item_size_, dump_filename_.c_str());
                 }
         }
@@ -73,12 +73,12 @@ FirFilter::FirFilter(const ConfigurationInterface* configuration,
             cshort_to_float_x2_ = make_cshort_to_float_x2();
             fir_filter_fff_1_ = gr::filter::fir_filter_fff::make(1, taps_);
             fir_filter_fff_2_ = gr::filter::fir_filter_fff::make(1, taps_);
-            DLOG(INFO) << "I input_filter(" << fir_filter_fff_1_->unique_id() << ")";
-            DLOG(INFO) << "Q input_filter(" << fir_filter_fff_2_->unique_id() << ")";
+            // D// LOG(INFO) << "I input_filter(" << fir_filter_fff_1_->unique_id() << ")";
+            // D// LOG(INFO) << "Q input_filter(" << fir_filter_fff_2_->unique_id() << ")";
             float_to_complex_ = gr::blocks::float_to_complex::make();
             if (dump_)
                 {
-                    DLOG(INFO) << "Dumping output into file " << dump_filename_;
+                    // D// LOG(INFO) << "Dumping output into file " << dump_filename_;
                     file_sink_ = gr::blocks::file_sink::make(item_size_, dump_filename_.c_str());
                 }
         }
@@ -90,14 +90,14 @@ FirFilter::FirFilter(const ConfigurationInterface* configuration,
 
             fir_filter_fff_1_ = gr::filter::fir_filter_fff::make(1, taps_);
             fir_filter_fff_2_ = gr::filter::fir_filter_fff::make(1, taps_);
-            DLOG(INFO) << "I input_filter(" << fir_filter_fff_1_->unique_id() << ")";
-            DLOG(INFO) << "Q input_filter(" << fir_filter_fff_2_->unique_id() << ")";
+            // D// LOG(INFO) << "I input_filter(" << fir_filter_fff_1_->unique_id() << ")";
+            // D// LOG(INFO) << "Q input_filter(" << fir_filter_fff_2_->unique_id() << ")";
 
             float_to_complex_ = gr::blocks::float_to_complex::make();
 
             if (dump_)
                 {
-                    DLOG(INFO) << "Dumping output into file " << dump_filename_;
+                    // D// LOG(INFO) << "Dumping output into file " << dump_filename_;
                     file_sink_ = gr::blocks::file_sink::make(item_size_, dump_filename_.c_str());
                 }
         }
@@ -108,8 +108,8 @@ FirFilter::FirFilter(const ConfigurationInterface* configuration,
 
             fir_filter_fff_1_ = gr::filter::fir_filter_fff::make(1, taps_);
             fir_filter_fff_2_ = gr::filter::fir_filter_fff::make(1, taps_);
-            DLOG(INFO) << "I input_filter(" << fir_filter_fff_1_->unique_id() << ")";
-            DLOG(INFO) << "Q input_filter(" << fir_filter_fff_2_->unique_id() << ")";
+            // D// LOG(INFO) << "I input_filter(" << fir_filter_fff_1_->unique_id() << ")";
+            // D// LOG(INFO) << "Q input_filter(" << fir_filter_fff_2_->unique_id() << ")";
 
             float_to_char_1_ = gr::blocks::float_to_char::make();
             float_to_char_2_ = gr::blocks::float_to_char::make();
@@ -118,7 +118,7 @@ FirFilter::FirFilter(const ConfigurationInterface* configuration,
 
             if (dump_)
                 {
-                    DLOG(INFO) << "Dumping output into file " << dump_filename_;
+                    // D// LOG(INFO) << "Dumping output into file " << dump_filename_;
                     file_sink_ = gr::blocks::file_sink::make(item_size_, dump_filename_.c_str());
                 }
         }
@@ -209,7 +209,7 @@ void FirFilter::connect(gr::top_block_sptr top_block)
                 }
             else
                 {
-                    DLOG(INFO) << "Nothing to connect internally";
+                    // D// LOG(INFO) << "Nothing to connect internally";
                 }
         }
     else if ((taps_item_type_ == "float") && (input_item_type_ == "cshort") && (output_item_type_ == "cshort"))
@@ -353,7 +353,7 @@ gr::basic_block_sptr FirFilter::get_left_block()
         {
             return cshort_to_float_x2_;
         }
-    LOG(WARNING) << "Unknown item type conversion";
+    // // LOG(WARNING) << "Unknown item type conversion";
     return nullptr;
 }
 
@@ -380,6 +380,6 @@ gr::basic_block_sptr FirFilter::get_right_block()
         {
             return float_to_complex_;
         }
-    LOG(WARNING) << "Unknown input filter taps item type";
+    // // LOG(WARNING) << "Unknown input filter taps item type";
     return nullptr;
 }

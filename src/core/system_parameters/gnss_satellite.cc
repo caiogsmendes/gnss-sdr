@@ -144,7 +144,7 @@ void Gnss_Satellite::set_system(const std::string& system_)
         }
     else
         {
-            DLOG(INFO) << "System " << system_ << " is not defined {GPS, Glonass, SBAS, Galileo, Beidou}. Initialization?";
+            // D// LOG(INFO) << "System " << system_ << " is not defined {GPS, Glonass, SBAS, Galileo, Beidou}. Initialization?";
             system = std::string("");
         }
 }
@@ -154,14 +154,14 @@ void Gnss_Satellite::update_PRN(uint32_t PRN_)
 {
     if (system != "Glonass")
         {
-            DLOG(INFO) << "Trying to update PRN for not GLONASS system";
+            // D// LOG(INFO) << "Trying to update PRN for not GLONASS system";
             PRN = 0;
         }
     else
         {
             if (PRN_ < 1 or PRN_ > 24)
                 {
-                    DLOG(INFO) << "This PRN is not defined";
+                    // D// LOG(INFO) << "This PRN is not defined";
                     // Adjusting for PRN 26, now used in
                     PRN = PRN_;
                 }
@@ -178,14 +178,14 @@ void Gnss_Satellite::set_PRN(uint32_t PRN_)
     // Set satellite's PRN
     if (system.empty())
         {
-            DLOG(INFO) << "Trying to define PRN while system is not defined";
+            // D// LOG(INFO) << "Trying to define PRN while system is not defined";
             PRN = 0;
         }
     if (system == "GPS")
         {
             if (PRN_ < 1 or PRN_ > 32)
                 {
-                    DLOG(INFO) << "This PRN is not defined";
+                    // D// LOG(INFO) << "This PRN is not defined";
                     PRN = 0;
                 }
             else
@@ -197,7 +197,7 @@ void Gnss_Satellite::set_PRN(uint32_t PRN_)
         {
             if (PRN_ < 1 or PRN_ > 24)
                 {
-                    DLOG(INFO) << "This PRN is not defined";
+                    // D// LOG(INFO) << "This PRN is not defined";
                     PRN = 0;
                 }
             else
@@ -218,7 +218,7 @@ void Gnss_Satellite::set_PRN(uint32_t PRN_)
                 }
             else
                 {
-                    DLOG(INFO) << "This PRN is not defined";
+                    // D// LOG(INFO) << "This PRN is not defined";
                     PRN = 0;
                 }
         }
@@ -226,7 +226,7 @@ void Gnss_Satellite::set_PRN(uint32_t PRN_)
         {
             if (PRN_ < 1 or PRN_ > 36)
                 {
-                    DLOG(INFO) << "This PRN is not defined";
+                    // D// LOG(INFO) << "This PRN is not defined";
                     PRN = 0;
                 }
             else
@@ -238,7 +238,7 @@ void Gnss_Satellite::set_PRN(uint32_t PRN_)
         {
             if (PRN_ < 1 or PRN_ > 63)
                 {
-                    DLOG(INFO) << "This PRN is not defined";
+                    // D// LOG(INFO) << "This PRN is not defined";
                     PRN = 0;
                 }
             else
@@ -249,7 +249,7 @@ void Gnss_Satellite::set_PRN(uint32_t PRN_)
 
     else
         {
-            DLOG(INFO) << "System " << system << " is not defined";
+            // D// LOG(INFO) << "System " << system << " is not defined";
             PRN = 0;
         }
 }

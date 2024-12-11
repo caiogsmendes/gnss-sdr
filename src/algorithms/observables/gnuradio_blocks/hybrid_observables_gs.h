@@ -71,6 +71,11 @@ private:
     const size_t d_double_type_hash_code = typeid(double).hash_code();
     const size_t d_int_type_hash_code = typeid(int).hash_code();
 
+    //Caio
+    const size_t d_bool_type_hash_code = typeid(bool).hash_code();
+    bool flag_status_pvt=false;
+    //
+
     void msg_handler_pvt_to_observables(const pmt::pmt_t& msg);
     double compute_T_rx_s(const Gnss_Synchro& a) const;
     bool interp_trk_obs(Gnss_Synchro& interpolated_obs, uint32_t ch, uint64_t rx_clock) const;

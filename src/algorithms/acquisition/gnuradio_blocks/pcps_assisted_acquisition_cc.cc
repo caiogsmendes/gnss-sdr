@@ -294,12 +294,12 @@ int32_t pcps_assisted_acquisition_cc::compute_and_accumulate_grid(gr_vector_cons
     // initialize acquisition algorithm
     const auto *in = reinterpret_cast<const gr_complex *>(input_items[0]);  // Get the input samples pointer
 
-    DLOG(INFO) << "Channel: " << d_channel
-               << " , doing acquisition of satellite: " << d_gnss_synchro->System << " "
-               << d_gnss_synchro->PRN
-               << " ,sample stamp: " << d_sample_counter << ", threshold: "
-               << d_threshold << ", doppler_max: " << d_doppler_max
-               << ", doppler_step: " << d_doppler_step;
+    // D// LOG(INFO) << "Channel: " << d_channel
+            //    << " , doing acquisition of satellite: " << d_gnss_synchro->System << " "
+            //    << d_gnss_synchro->PRN
+            //    << " ,sample stamp: " << d_sample_counter << ", threshold: "
+            //    << d_threshold << ", doppler_max: " << d_doppler_max
+            //    << ", doppler_step: " << d_doppler_step;
 
     // 2- Doppler frequency search loop
     std::vector<float> p_tmp_vector(d_fft_size);
@@ -410,14 +410,14 @@ int pcps_assisted_acquisition_cc::general_work(int noutput_items,
             d_state = 2;
             break;
         case 5:  // Positive_Acq
-            DLOG(INFO) << "positive acquisition";
-            DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
-            DLOG(INFO) << "sample_stamp " << d_sample_counter;
-            DLOG(INFO) << "test statistics value " << d_test_statistics;
-            DLOG(INFO) << "test statistics threshold " << d_threshold;
-            DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
-            DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
-            DLOG(INFO) << "input signal power " << d_input_power;
+            // D// LOG(INFO) << "positive acquisition";
+            // D// LOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
+            // D// LOG(INFO) << "sample_stamp " << d_sample_counter;
+            // D// LOG(INFO) << "test statistics value " << d_test_statistics;
+            // D// LOG(INFO) << "test statistics threshold " << d_threshold;
+            // D// LOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
+            // D// LOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
+            // D// LOG(INFO) << "input signal power " << d_input_power;
             d_active = false;
             // Send message to channel port //0=STOP_CHANNEL 1=ACQ_SUCCESS 2=ACQ_FAIL
             this->message_port_pub(pmt::mp("events"), pmt::from_long(1));
@@ -436,14 +436,14 @@ int pcps_assisted_acquisition_cc::general_work(int noutput_items,
                 }
             break;
         case 6:  // Negative_Acq
-            DLOG(INFO) << "negative acquisition";
-            DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
-            DLOG(INFO) << "sample_stamp " << d_sample_counter;
-            DLOG(INFO) << "test statistics value " << d_test_statistics;
-            DLOG(INFO) << "test statistics threshold " << d_threshold;
-            DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
-            DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
-            DLOG(INFO) << "input signal power " << d_input_power;
+            // D// LOG(INFO) << "negative acquisition";
+            // D// LOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
+            // D// LOG(INFO) << "sample_stamp " << d_sample_counter;
+            // D// LOG(INFO) << "test statistics value " << d_test_statistics;
+            // D// LOG(INFO) << "test statistics threshold " << d_threshold;
+            // D// LOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
+            // D// LOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
+            // D// LOG(INFO) << "input signal power " << d_input_power;
             d_active = false;
             // Send message to channel port //0=STOP_CHANNEL 1=ACQ_SUCCESS 2=ACQ_FAIL
             this->message_port_pub(pmt::mp("events"), pmt::from_long(2));

@@ -130,30 +130,30 @@ SignalGenerator::SignalGenerator(const ConfigurationInterface* configuration,
     if (item_type_ == "gr_complex")
         {
             item_size_ = sizeof(gr_complex);
-            DLOG(INFO) << "Item size " << item_size_;
+            // D// LOG(INFO) << "Item size " << item_size_;
             gen_source_ = signal_make_generator_c(signal1, system, PRN, CN0_dB, doppler_Hz, delay_chips, delay_sec,
                 data_flag, noise_flag, fs_in, vector_length, BW_BB);
 
             vector_to_stream_ = gr::blocks::vector_to_stream::make(item_size_, vector_length);
 
-            DLOG(INFO) << "vector_to_stream(" << vector_to_stream_->unique_id() << ")";
-            DLOG(INFO) << "gen_source(" << gen_source_->unique_id() << ")";
+            // D// LOG(INFO) << "vector_to_stream(" << vector_to_stream_->unique_id() << ")";
+            // D// LOG(INFO) << "gen_source(" << gen_source_->unique_id() << ")";
         }
 
     else
         {
-            LOG(WARNING) << item_type_ << " unrecognized item type for resampler";
+            // // LOG(WARNING) << item_type_ << " unrecognized item type for resampler";
             item_size_ = sizeof(int16_t);
         }
 
     if (dump_)
         {
-            DLOG(INFO) << "Dumping output into file " << dump_filename_;
+            // D// LOG(INFO) << "Dumping output into file " << dump_filename_;
             file_sink_ = gr::blocks::file_sink::make(item_size_, dump_filename_.c_str());
         }
     if (dump_)
         {
-            DLOG(INFO) << "file_sink(" << file_sink_->unique_id() << ")";
+            // D// LOG(INFO) << "file_sink(" << file_sink_->unique_id() << ")";
         }
     if (in_stream_ > 0)
         {
@@ -171,12 +171,12 @@ void SignalGenerator::connect(gr::top_block_sptr top_block)
     if (item_type_ == "gr_complex")
         {
             top_block->connect(gen_source_, 0, vector_to_stream_, 0);
-            DLOG(INFO) << "connected gen_source to vector_to_stream";
+            // D// LOG(INFO) << "connected gen_source to vector_to_stream";
 
             if (dump_)
                 {
                     top_block->connect(vector_to_stream_, 0, file_sink_, 0);
-                    DLOG(INFO) << "connected vector_to_stream_ to file sink";
+                    // D// LOG(INFO) << "connected vector_to_stream_ to file sink";
                 }
         }
 }
@@ -197,7 +197,7 @@ void SignalGenerator::disconnect(gr::top_block_sptr top_block)
 
 gr::basic_block_sptr SignalGenerator::get_left_block()
 {
-    LOG(WARNING) << "Left block of a signal source should not be retrieved";
+    // // LOG(WARNING) << "Left block of a signal source should not be retrieved";
     return gr::block_sptr();
 }
 

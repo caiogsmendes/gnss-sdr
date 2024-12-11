@@ -35,7 +35,7 @@ void errchk(int v, const char *what)
 {
     if (v < 0)
         {
-            LOG(WARNING) << "Error " << v << " writing to channel " << what << " value may not be supported. ";
+            // // LOG(WARNING) << "Error " << v << " writing to channel " << what << " value may not be supported. ";
         }
 }
 

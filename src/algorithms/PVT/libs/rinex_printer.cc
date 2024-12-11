@@ -213,7 +213,7 @@ Rinex_Printer::Rinex_Printer(int32_t conf_version,
 
 Rinex_Printer::~Rinex_Printer()
 {
-    DLOG(INFO) << "RINEX printer destructor called.";
+    // D// LOG(INFO) << "RINEX printer destructor called.";
     // close RINEX files
     const auto posn = navFile.tellp();
     const auto poso = obsFile.tellp();
@@ -243,7 +243,7 @@ Rinex_Printer::~Rinex_Printer()
             errorlib::error_code ec;
             if (!fs::remove(fs::path(navfilename), ec))
                 {
-                    LOG(INFO) << "Error deleting temporary file";
+                    // LOG(INFO) << "Error deleting temporary file";
                 }
         }
     if (poso == 0)
@@ -251,7 +251,7 @@ Rinex_Printer::~Rinex_Printer()
             errorlib::error_code ec;
             if (!fs::remove(fs::path(obsfilename), ec))
                 {
-                    LOG(INFO) << "Error deleting temporary file";
+                    // LOG(INFO) << "Error deleting temporary file";
                 }
         }
     if (poss == 0)
@@ -259,7 +259,7 @@ Rinex_Printer::~Rinex_Printer()
             errorlib::error_code ec;
             if (!fs::remove(fs::path(sbsfilename), ec))
                 {
-                    LOG(INFO) << "Error deleting temporary file";
+                    // LOG(INFO) << "Error deleting temporary file";
                 }
         }
     if (posng == 0)
@@ -267,7 +267,7 @@ Rinex_Printer::~Rinex_Printer()
             errorlib::error_code ec;
             if (!fs::remove(fs::path(navGalfilename), ec))
                 {
-                    LOG(INFO) << "Error deleting temporary file";
+                    // LOG(INFO) << "Error deleting temporary file";
                 }
         }
     if (posmn == 0)
@@ -275,7 +275,7 @@ Rinex_Printer::~Rinex_Printer()
             errorlib::error_code ec;
             if (!fs::remove(fs::path(navMixfilename), ec))
                 {
-                    LOG(INFO) << "Error deleting temporary file";
+                    // LOG(INFO) << "Error deleting temporary file";
                 }
         }
     if (posnr == 0)
@@ -283,7 +283,7 @@ Rinex_Printer::~Rinex_Printer()
             errorlib::error_code ec;
             if (!fs::remove(fs::path(navGlofilename), ec))
                 {
-                    LOG(INFO) << "Error deleting temporary file";
+                    // LOG(INFO) << "Error deleting temporary file";
                 }
         }
     if (posnc == 0)
@@ -291,7 +291,7 @@ Rinex_Printer::~Rinex_Printer()
             errorlib::error_code ec;
             if (!fs::remove(fs::path(navBdsfilename), ec))
                 {
-                    LOG(INFO) << "Error deleting temporary file";
+                    // LOG(INFO) << "Error deleting temporary file";
                 }
         }
 }
@@ -5077,7 +5077,7 @@ void Rinex_Printer::log_rinex_nav(std::fstream& out, const std::map<int32_t, Gps
                 }
             else
                 {
-                    LOG(WARNING) << "Discontinued reception of Frame 2 and 3";
+                    // // LOG(WARNING) << "Discontinued reception of Frame 2 and 3";
                 }
             line += std::string(1, ' ');
             line += Rinex_Printer::doub2for(gps_ephemeris_iter->second.Crs, 18, 2);

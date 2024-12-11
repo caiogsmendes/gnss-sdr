@@ -75,7 +75,10 @@ void Integer2Hex(uint8_t *, const uint32_t *);
 void Integer2Hexx(uint8_t *, const uint32_t);
 void Hex2char(char *, uint8_t *);
 void char2Hex(uint8_t *, const char *);
+void Hex2Int(int *, uint8_t *);
+void Hex2Int8(uint8_t *, uint8_t *);
 void msgPrep(uint8_t*, int);
+bool checkCRC(uint8_t*, int);
 
 #ifdef __cplusplus
 }

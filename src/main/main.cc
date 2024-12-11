@@ -247,7 +247,7 @@ int main(int argc, char** argv)
         {
             if (GOOGLE_STRIP_LOG == 0)
                 {
-                    LOG(WARNING) << "Boost exception: " << boost::diagnostic_information(e);
+                    // // LOG(WARNING) << "Boost exception: " << boost::diagnostic_information(e);
                     std::cerr << boost::diagnostic_information(e) << '\n';
                 }
             else
@@ -260,7 +260,7 @@ int main(int argc, char** argv)
         {
             if (GOOGLE_STRIP_LOG == 0)
                 {
-                    LOG(WARNING) << "C++ Standard Library exception: " << ex.what();
+                    // // LOG(WARNING) << "C++ Standard Library exception: " << ex.what();
                     std::cerr << ex.what() << '\n';
                 }
             else
@@ -273,7 +273,7 @@ int main(int argc, char** argv)
         {
             if (GOOGLE_STRIP_LOG == 0)
                 {
-                    LOG(WARNING) << "Unexpected catch. This should not happen.";
+                    // // LOG(WARNING) << "Unexpected catch. This should not happen.";
                     std::cerr << "Unexpected error.\n";
                 }
             else

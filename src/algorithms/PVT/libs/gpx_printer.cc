@@ -122,7 +122,7 @@ bool Gpx_Printer::set_headers(const std::string& filename, bool time_tag_name)
 
     if (gpx_file.is_open())
         {
-            DLOG(INFO) << "GPX printer writing on " << filename.c_str();
+            // D// LOG(INFO) << "GPX printer writing on " << filename.c_str();
             // Set iostream numeric format and precision
             gpx_file.setf(gpx_file.std::ofstream::fixed, gpx_file.std::ofstream::floatfield);
             gpx_file << std::setprecision(14);
@@ -197,7 +197,7 @@ bool Gpx_Printer::close_file()
 
 Gpx_Printer::~Gpx_Printer()
 {
-    DLOG(INFO) << "GPX printer destructor called.";
+    // D// LOG(INFO) << "GPX printer destructor called.";
     try
         {
             close_file();
@@ -211,7 +211,7 @@ Gpx_Printer::~Gpx_Printer()
             errorlib::error_code ec;
             if (!fs::remove(fs::path(gpx_filename), ec))
                 {
-                    LOG(INFO) << "Error deleting temporary GPX file";
+                    // LOG(INFO) << "Error deleting temporary GPX file";
                 }
         }
 }

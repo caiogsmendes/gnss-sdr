@@ -54,7 +54,7 @@ GpsL1CaPcpsOpenClAcquisition::GpsL1CaPcpsOpenClAcquisition(
     const std::string default_item_type("gr_complex");
     std::string default_dump_filename = "./data/acquisition.dat";
 
-    DLOG(INFO) << "role " << role;
+    // D// LOG(INFO) << "role " << role;
 
     item_type_ = configuration->property(role + ".item_type",
         default_item_type);
@@ -106,13 +106,13 @@ GpsL1CaPcpsOpenClAcquisition::GpsL1CaPcpsOpenClAcquisition(
 
             stream_to_vector_ = gr::blocks::stream_to_vector::make(item_size_, vector_length_);
 
-            DLOG(INFO) << "stream_to_vector(" << stream_to_vector_->unique_id() << ")";
-            DLOG(INFO) << "acquisition(" << acquisition_cc_->unique_id() << ")";
+            // D// LOG(INFO) << "stream_to_vector(" << stream_to_vector_->unique_id() << ")";
+            // D// LOG(INFO) << "acquisition(" << acquisition_cc_->unique_id() << ")";
         }
     else
         {
             item_size_ = sizeof(gr_complex);
-            LOG(WARNING) << item_type_ << " unknown acquisition item type";
+            // // LOG(WARNING) << item_type_ << " unknown acquisition item type";
         }
 
     if (in_streams_ > 1)
@@ -150,7 +150,7 @@ void GpsL1CaPcpsOpenClAcquisition::set_threshold(float threshold)
             threshold_ = calculate_threshold(pfa);
         }
 
-    DLOG(INFO) << "Channel " << channel_ << " Threshold = " << threshold_;
+    // D// LOG(INFO) << "Channel " << channel_ << " Threshold = " << threshold_;
 
     if (item_type_ == "gr_complex")
         {
@@ -245,7 +245,7 @@ float GpsL1CaPcpsOpenClAcquisition::calculate_threshold(float pfa) const
             frequency_bins++;
         }
 
-    DLOG(INFO) << "Channel " << channel_ << "  Pfa = " << pfa;
+    // D// LOG(INFO) << "Channel " << channel_ << "  Pfa = " << pfa;
 
     unsigned int ncells = vector_length_ * frequency_bins;
     double exponent = 1 / static_cast<double>(ncells);

@@ -60,7 +60,7 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
     const std::string default_nmea_dump_filename("./nmea_pvt.nmea");
     const std::string default_nmea_dump_devname("/dev/tty1");
     const std::string default_rtcm_dump_devname("/dev/pts/1");
-    DLOG(INFO) << "role " << role;
+    // D// LOG(INFO) << "role " << role;
     pvt_output_parameters.dump = configuration->property(role + ".dump", false);
     pvt_output_parameters.dump_filename = configuration->property(role + ".dump_filename", default_dump_filename);
     pvt_output_parameters.dump_mat = configuration->property(role + ".dump_mat", true);
@@ -553,7 +553,7 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
         }
     if (num_bands > 3)
         {
-            LOG(WARNING) << "Too much bands: The PVT engine can only handle 3 bands, but " << num_bands << " were set";
+            // // LOG(WARNING) << "Too much bands: The PVT engine can only handle 3 bands, but " << num_bands << " were set";
             num_bands = 3;
         }
 
@@ -568,7 +568,7 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
     if ((elevation_mask < 0.0) || (elevation_mask > 90.0))
         {
             // warn user and set the default
-            LOG(WARNING) << "Erroneous Elevation Mask. Setting to default value of 15.0 degrees";
+            // // LOG(WARNING) << "Erroneous Elevation Mask. Setting to default value of 15.0 degrees";
             elevation_mask = 15.0;
         }
 
@@ -576,7 +576,7 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
     if ((dynamics_model < 0) || (dynamics_model > 2))
         {
             // warn user and set the default
-            LOG(WARNING) << "Erroneous Dynamics Model configuration. Setting to default value of (0:none)";
+            // // LOG(WARNING) << "Erroneous Dynamics Model configuration. Setting to default value of (0:none)";
             dynamics_model = 0;
         }
 
@@ -692,7 +692,7 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
     if ((navigation_system < 1) || (navigation_system > 255))                           /* GPS: 1   SBAS: 2   GPS+SBAS: 3 Galileo: 8  Galileo+GPS: 9 GPS+SBAS+Galileo: 11 All: 255 */
         {
             // warn user and set the default
-            LOG(WARNING) << "Erroneous Navigation System. Setting to default value of (0:none)";
+            // // LOG(WARNING) << "Erroneous Navigation System. Setting to default value of (0:none)";
             navigation_system = nsys;
         }
 
@@ -735,7 +735,7 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
     if ((integer_ambiguity_resolution_glo < 0) || (integer_ambiguity_resolution_glo > 3))
         {
             // warn user and set the default
-            LOG(WARNING) << "Erroneous Integer Ambiguity Resolution for GLONASS . Setting to default value of (1:on)";
+            // // LOG(WARNING) << "Erroneous Integer Ambiguity Resolution for GLONASS . Setting to default value of (1:on)";
             integer_ambiguity_resolution_glo = 1;
         }
 
@@ -743,7 +743,7 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
     if ((integer_ambiguity_resolution_bds < 0) || (integer_ambiguity_resolution_bds > 1))
         {
             // warn user and set the default
-            LOG(WARNING) << "Erroneous Integer Ambiguity Resolution for BEIDOU . Setting to default value of (1:on)";
+            // // LOG(WARNING) << "Erroneous Integer Ambiguity Resolution for BEIDOU . Setting to default value of (1:on)";
             integer_ambiguity_resolution_bds = 1;
         }
 
@@ -935,7 +935,7 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
 
     // make PVT object
     pvt_ = rtklib_make_pvt_gs(in_streams_, pvt_output_parameters, rtk);
-    DLOG(INFO) << "pvt(" << pvt_->unique_id() << ")";
+    // D// LOG(INFO) << "pvt(" << pvt_->unique_id() << ")";
     if (out_streams_ > 0)
         {
             LOG(ERROR) << "The PVT block does not have an output stream";
@@ -945,7 +945,7 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
 
 Rtklib_Pvt::~Rtklib_Pvt()
 {
-    DLOG(INFO) << "PVT adapter destructor called.";
+    // D// LOG(INFO) << "PVT adapter destructor called.";
     rtkfree(&rtk);
 }
 
@@ -964,6 +964,27 @@ bool Rtklib_Pvt::get_latest_PVT(double* longitude_deg,
         course_over_ground_deg,
         UTC_time);
 }
+
+// //Caio
+// void Rtklib_Pvt::set_serial_comms(serial_s_t* comms)
+// {
+//     pvt_->comms = comms;
+// }
+// std::shared_ptr<rtklib_pvt_gs> Rtklib_Pvt::get_rtk_pvt(void)
+// {
+//     return pvt_;
+// }
+std::map<int, Gnss_Synchro> Rtklib_Pvt::get_sync(void)
+{
+    return pvt_->get_sync();
+}
+
+std::shared_ptr<Rtklib_Solver> Rtklib_Pvt::get_rtk_ptr(void)
+{
+    return pvt_->d_internal_pvt_solver;
+}
+// //
+
 
 
 void Rtklib_Pvt::clear_ephemeris()
@@ -1002,7 +1023,7 @@ void Rtklib_Pvt::connect(gr::top_block_sptr top_block)
         { /* top_block is not null */
         };
     // Nothing to connect internally
-    DLOG(INFO) << "nothing to connect internally";
+    // D// LOG(INFO) << "nothing to connect internally";
 }
 
 

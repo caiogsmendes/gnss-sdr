@@ -36,11 +36,11 @@ GalileoE5bTelemetryDecoder::GalileoE5bTelemetryDecoder(
                                 in_streams_(in_streams),
                                 out_streams_(out_streams)
 {
-    DLOG(INFO) << "role " << role;
+    // D// LOG(INFO) << "role " << role;
     tlm_parameters_.SetFromConfiguration(configuration, role);
     // make telemetry decoder object
     telemetry_decoder_ = galileo_make_telemetry_decoder_gs(satellite_, tlm_parameters_, 1);  // unified galileo decoder set to INAV (frame_type=1)
-    DLOG(INFO) << "telemetry_decoder(" << telemetry_decoder_->unique_id() << ")";
+    // D// LOG(INFO) << "telemetry_decoder(" << telemetry_decoder_->unique_id() << ")";
 
     if (in_streams_ > 1)
         {
@@ -57,7 +57,7 @@ void GalileoE5bTelemetryDecoder::set_satellite(const Gnss_Satellite& satellite)
 {
     satellite_ = Gnss_Satellite(satellite.get_system(), satellite.get_PRN());
     telemetry_decoder_->set_satellite(satellite_);
-    DLOG(INFO) << "GALILEO TELEMETRY DECODER: satellite set to " << satellite_;
+    // D// LOG(INFO) << "GALILEO TELEMETRY DECODER: satellite set to " << satellite_;
 }
 
 
@@ -68,7 +68,7 @@ void GalileoE5bTelemetryDecoder::connect(gr::top_block_sptr top_block)
             /* top_block is not null */
         };
     // Nothing to connect internally
-    DLOG(INFO) << "nothing to connect internally";
+    // D// LOG(INFO) << "nothing to connect internally";
 }
 
 

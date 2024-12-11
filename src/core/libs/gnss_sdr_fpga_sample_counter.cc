@@ -147,7 +147,7 @@ void gnss_sdr_fpga_sample_counter::open_device()
     // open communication with HW accelerator
     if ((fd = open(device_io_name.c_str(), O_RDWR | O_SYNC)) == -1)
         {
-            LOG(WARNING) << "Cannot open deviceio" << device_io_name;
+            // // LOG(WARNING) << "Cannot open deviceio" << device_io_name;
             // std::cout << "Counter-Intr: cannot open deviceio" << device_io_name << '\n';
         }
     map_base = reinterpret_cast<volatile uint32_t *>(mmap(nullptr, FPGA_PAGE_SIZE,
@@ -155,7 +155,7 @@ void gnss_sdr_fpga_sample_counter::open_device()
 
     if (map_base == reinterpret_cast<void *>(-1))
         {
-            LOG(WARNING) << "Cannot map the FPGA acquisition module into user memory";
+            // // LOG(WARNING) << "Cannot map the FPGA acquisition module into user memory";
             // std::cout << "Counter-Intr: cannot map deviceio" << device_io_name << '\n';
         }
 
@@ -165,11 +165,11 @@ void gnss_sdr_fpga_sample_counter::open_device()
     readval = gnss_sdr_fpga_sample_counter::test_register(writeval);
     if (writeval != readval)
         {
-            LOG(WARNING) << "Acquisition test register sanity check failed";
+            // // LOG(WARNING) << "Acquisition test register sanity check failed";
         }
     else
         {
-            LOG(INFO) << "Acquisition test register sanity check success!";
+            // LOG(INFO) << "Acquisition test register sanity check success!";
             // // std::cout << "Acquisition test register sanity check success!\n";
         }
 }

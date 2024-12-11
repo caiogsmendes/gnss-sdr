@@ -129,7 +129,7 @@ DMASignalSourceFPGA::DMASignalSourceFPGA(const ConfigurationInterface *configura
             if (file.is_open())
                 {
                     size = file.tellg();
-                    DLOG(INFO) << "Total samples in the file= " << floor(static_cast<double>(size) / static_cast<double>(item_size_));
+                    // D// LOG(INFO) << "Total samples in the file= " << floor(static_cast<double>(size) / static_cast<double>(item_size_));
                 }
             else
                 {
@@ -156,7 +156,7 @@ DMASignalSourceFPGA::DMASignalSourceFPGA(const ConfigurationInterface *configura
                     if (file.is_open())
                         {
                             size = file.tellg();
-                            DLOG(INFO) << "Total samples in the file= " << floor(static_cast<double>(size) / static_cast<double>(item_size_));
+                            // D// LOG(INFO) << "Total samples in the file= " << floor(static_cast<double>(size) / static_cast<double>(item_size_));
                         }
                     else
                         {
@@ -182,23 +182,23 @@ DMASignalSourceFPGA::DMASignalSourceFPGA(const ConfigurationInterface *configura
     CHECK(samples_ > 0) << "File does not contain enough samples to process.";
     double signal_duration_s = (static_cast<double>(samples_) * (1 / static_cast<double>(sample_rate_))) / 2.0;
 
-    DLOG(INFO) << "Total number samples to be processed= " << samples_ << " GNSS signal duration= " << signal_duration_s << " [s]";
+    // D// LOG(INFO) << "Total number samples to be processed= " << samples_ << " GNSS signal duration= " << signal_duration_s << " [s]";
     // std::cout << "GNSS signal recorded time to be processed: " << signal_duration_s << " [s]\n";
 
     if (filename1_.empty())
         {
-            DLOG(INFO) << "File source filename " << filename0_;
+            // D// LOG(INFO) << "File source filename " << filename0_;
         }
     else
         {
-            DLOG(INFO) << "File source filename rx1 " << filename0_;
-            DLOG(INFO) << "File source filename rx2 " << filename1_;
+            // D// LOG(INFO) << "File source filename rx1 " << filename0_;
+            // D// LOG(INFO) << "File source filename rx2 " << filename1_;
         }
-    DLOG(INFO) << "Samples " << samples_;
-    DLOG(INFO) << "Sampling frequency " << sample_rate_;
-    DLOG(INFO) << "Item type " << std::string("ibyte");
-    DLOG(INFO) << "Item size " << item_size_;
-    DLOG(INFO) << "Repeat " << repeat_;
+    // D// LOG(INFO) << "Samples " << samples_;
+    // D// LOG(INFO) << "Sampling frequency " << sample_rate_;
+    // D// LOG(INFO) << "Item type " << std::string("ibyte");
+    // D// LOG(INFO) << "Item size " << item_size_;
+    // D// LOG(INFO) << "Repeat " << repeat_;
     //        }
 
     // dynamic bits selection
@@ -555,7 +555,7 @@ void DMASignalSourceFPGA::connect(gr::top_block_sptr top_block)
     if (top_block)
         { /* top_block is not null */
         };
-    DLOG(INFO) << "AD9361 FPGA source nothing to connect";
+    // D// LOG(INFO) << "AD9361 FPGA source nothing to connect";
 }
 
 
@@ -564,13 +564,13 @@ void DMASignalSourceFPGA::disconnect(gr::top_block_sptr top_block)
     if (top_block)
         { /* top_block is not null */
         };
-    DLOG(INFO) << "AD9361 FPGA source nothing to disconnect";
+    // D// LOG(INFO) << "AD9361 FPGA source nothing to disconnect";
 }
 
 
 gr::basic_block_sptr DMASignalSourceFPGA::get_left_block()
 {
-    LOG(WARNING) << "Trying to get signal source left block.";
+    // // LOG(WARNING) << "Trying to get signal source left block.";
     return {};
 }
 

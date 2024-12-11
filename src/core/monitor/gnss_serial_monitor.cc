@@ -70,14 +70,18 @@ gnss_serial_monitor::gnss_serial_monitor(
       d_nchannels(n_channels),
       d_dev_serial(dev_serial),
       d_baudrate(baudrate)
-{
-    // Caio -> PVT Solution data message Port in
-    this->message_port_register_in(pmt::mp("pvtsol_to_serial_monitor"));
-    this->set_msg_handler(pmt::mp("pvtsol_to_serial_monitor"),[this](auto&& PH1){msg_handler_pvtsol(PH1);});
+{   
+    // Caio - Teste de recepção do stream de "telemetry"
+    this->message_port_register_in(pmt::mp("telemetry"));
+    this->set_msg_handler(pmt::mp("telemetry"),[this](auto&& PH1){msg_handler_telemetry(PH1);});
+
+    // // Caio -> PVT Solution data message Port in
+    // this->message_port_register_in(pmt::mp("pvtsol_to_serial_monitor"));
+    // this->set_msg_handler(pmt::mp("pvtsol_to_serial_monitor"),[this](auto&& PH1){msg_handler_pvtsol(PH1);});
 
     // GPS Ephemeris data message port in
     this->message_port_register_in(pmt::mp("telemetry_to_serial_monitor"));
-    this->set_msg_handler(pmt::mp("telemetry_to_serial_monitor"),[this](auto&& PH2) { msg_handler_telemetry(PH2); });
+    this->set_msg_handler(pmt::mp("telemetry_to_serial_monitor"),[this](auto&& PH2) { msg_handler_telemetry_2(PH2); });
 
     std::string devv = "/dev/ttyUSB0";
     // comms = HEserial_connect(dev_serial.c_str(), B921600, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
@@ -101,6 +105,8 @@ int gnss_serial_monitor::general_work(int noutput_items __attribute__((unused)),
     msgvec[0] = 0xd4;
     msgvec[1] = 0x4f;
     msgvec[2] = 3;
+
+    std::cout<<"contagem: "<<++count<<"\n";
 
     // // Get the input buffer pointer
     const auto** in = reinterpret_cast<const Gnss_Synchro**>(&input_items[0]);
@@ -295,7 +301,44 @@ int gnss_serial_monitor::general_work(int noutput_items __attribute__((unused)),
 //     return index;
 // }
 
- void gnss_serial_monitor::msg_handler_telemetry(const pmt::pmt_t& msg)
+void gnss_serial_monitor::msg_handler_telemetry(const pmt::pmt_t& msg)
+{
+    try
+        {
+            const size_t msg_type_hash_code = pmt::any_ref(msg).type().hash_code();
+            // ************************* GPS telemetry *************************
+            if (msg_type_hash_code == d_gps_ephemeris_sptr_type_hash_code)
+                {
+                    // ### GPS EPHEMERIS ###
+                    const auto gps_eph = wht::any_cast<std::shared_ptr<Gps_Ephemeris>>(pmt::any_ref(msg));
+
+                    gps_ephemeris_map[gps_eph->PRN] = *gps_eph;
+                    // if (d_enable_rx_clock_correction == true)
+                    //     {
+                    //         d_user_pvt_solver->gps_ephemeris_map[gps_eph->PRN] = *gps_eph;
+                    //     }
+                    if (gps_eph->SV_health != 0)
+                        {
+                            // std::cout << TEXT_RED << "Satellite " << Gnss_Satellite(std::string("GPS"), gps_eph->PRN)
+                            //   << " reports an unhealthy status,";
+                            // if (d_use_unhealthy_sats)
+                            //     {
+                            //         // std::cout << " use PVT solutions at your own risk" << TEXT_RESET << '\n';
+                            //     }
+                            // else
+                            //     {
+                            //         // std::cout << " not used for navigation" << TEXT_RESET << '\n';
+                            //     }
+                        }
+                }
+        }
+    catch (const wht::bad_any_cast& e)
+        {
+            // // // LOG(WARNING) << "msg_handler_telemetry Bad any_cast: " << e.what();
+        }
+}
+
+ void gnss_serial_monitor::msg_handler_telemetry_2(const pmt::pmt_t& msg)
 {
     try
         {
@@ -328,7 +371,7 @@ int gnss_serial_monitor::general_work(int noutput_items __attribute__((unused)),
                         }
     catch (const wht::bad_any_cast& e)
         {
-            // LOG(WARNING) << "msg_handler_telemetry Bad any_cast: " << e.what();
+            // // // LOG(WARNING) << "msg_handler_telemetry Bad any_cast: " << e.what();
         }
 }
 
@@ -365,6 +408,6 @@ void gnss_serial_monitor::msg_handler_pvtsol(const pmt::pmt_t& msg)
         }
     catch (const wht::bad_any_cast& e)
         {
-            // LOG(WARNING) << "msg_handler_telemetry Bad any_cast: " << e.what();
+            // // // LOG(WARNING) << "msg_handler_telemetry Bad any_cast: " << e.what();
         }
 }

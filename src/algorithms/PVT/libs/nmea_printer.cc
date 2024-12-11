@@ -50,7 +50,7 @@ Nmea_Printer::Nmea_Printer(const std::string& filename,
     const std::string& base_path) : nmea_base_path(base_path),
                                     d_flag_nmea_output_file(flag_nmea_output_file)
 {
-    comms = HEserial_connect(nmea_dump_devname.c_str(), B921600, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
+    // comms = HEserial_connect(nmea_dump_devname.c_str(), B921600, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
     if (d_flag_nmea_output_file == true)
         {
             fs::path full_path(fs::current_path());
@@ -90,7 +90,7 @@ Nmea_Printer::Nmea_Printer(const std::string& filename,
             nmea_file_descriptor.open(nmea_filename.c_str(), std::ios::out);
             if (nmea_file_descriptor.is_open())
                 {
-                    DLOG(INFO) << "NMEA printer writing on " << nmea_filename.c_str();
+                    // D// LOG(INFO) << "NMEA printer writing on " << nmea_filename.c_str();
                 }
             else
                 {
@@ -104,7 +104,7 @@ Nmea_Printer::Nmea_Printer(const std::string& filename,
             nmea_dev_descriptor = init_serial(nmea_devname);
             if (nmea_dev_descriptor != -1)
                 {
-                    DLOG(INFO) << "NMEA printer writing on " << nmea_devname.c_str();
+                    // D// LOG(INFO) << "NMEA printer writing on " << nmea_devname.c_str();
                 }
         }
     else
@@ -119,7 +119,7 @@ Nmea_Printer::Nmea_Printer(const std::string& filename,
 Nmea_Printer::~Nmea_Printer()
 {
     HEserial_disconnect(&comms);
-    DLOG(INFO) << "NMEA printer destructor called.";
+    // D// LOG(INFO) << "NMEA printer destructor called.";
     const auto pos = nmea_file_descriptor.tellp();
     try
         {
@@ -178,7 +178,7 @@ int Nmea_Printer::init_serial(const std::string& serial_device)
 
     if (fcntl(fd, F_SETFL, 0) == -1)
         {
-            LOG(INFO) << "Error enabling direct I/O";  // clear all flags on descriptor, enable direct I/O
+            // LOG(INFO) << "Error enabling direct I/O";  // clear all flags on descriptor, enable direct I/O
         }
     tcgetattr(fd, &options);  // read serial port options
 
@@ -202,7 +202,7 @@ void Nmea_Printer::close_serial() const
 }
 
 
-bool Nmea_Printer::Print_Nmea_Line(const Rtklib_Solver* const pvt_data)
+bool Nmea_Printer::Print_Nmea_Line(const Rtklib_Solver* const pvt_data, serial_s_t commsS2)
 {
     // set the new PVT data
     d_PVT_data = pvt_data;
@@ -233,7 +233,7 @@ bool Nmea_Printer::Print_Nmea_Line(const Rtklib_Solver* const pvt_data)
     //             }
     //         catch (const std::exception& ex)
     //             {
-    //                 DLOG(INFO) << "NMEA printer can not write on output file" << nmea_filename.c_str();
+    //                 // D// LOG(INFO) << "NMEA printer can not write on output file" << nmea_filename.c_str();
     //             }
     //     }
 
@@ -242,31 +242,35 @@ bool Nmea_Printer::Print_Nmea_Line(const Rtklib_Solver* const pvt_data)
         {
             // int resultt = write(nmea_dev_descriptor, &msgvec_test[0], 365);
             // int resultt = write(comms.fd, &msgvec_test[0], 357);
-            int resultt = write(nmea_dev_descriptor, &msgvec[0], bytes);
+            // int resultt = write(nmea_dev_descriptor, &msgvec[0], bytes);
+            // tcdrain(commsS2->fd);
+            tcflush(commsS2.fd, TCIOFLUSH);
+            int resultt = write(commsS2.fd, &msgvec[0], bytes);
+            tcdrain(commsS2.fd);
             if (resultt == -1)
                 {
-                    // DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
+                    // // D// LOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
                     return false;
                 }
 
             // if (write(nmea_dev_descriptor, GPRMC.c_str(), GPRMC.length()) == -1)
             //     {
-            //         DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
+            //         // D// LOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
             //         return false;
             //     }
             // if (write(nmea_dev_descriptor, GPGGA.c_str(), GPGGA.length()) == -1)
             //     {
-            //         DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
+            //         // D// LOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
             //         return false;
             //     }
             // if (write(nmea_dev_descriptor, GPGSA.c_str(), GPGSA.length()) == -1)
             //     {
-            //         DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
+            //         // D// LOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
             //         return false;
             //     }
             // if (write(nmea_dev_descriptor, GPGSV.c_str(), GPGSV.length()) == -1)
             //     {
-            //         DLOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
+            //         // D// LOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
             //         return false;
             //     }
         }
@@ -523,8 +527,6 @@ int Nmea_Printer::get_msgvec_w_GAL(const Rtklib_Solver* const pvt_data)
                                             Float2Hex(&msgvec[index + 41], &satvY);
                                             Float2Hex(&msgvec[index + 45], &satvZ);
                                             Float2Hex(&msgvec[index + 49], &dummyfloat);
-
-
                                             cont += 1;
                                             index += 53;
                                         }

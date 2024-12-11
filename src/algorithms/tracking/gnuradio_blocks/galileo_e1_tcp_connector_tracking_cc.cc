@@ -198,13 +198,13 @@ void Galileo_E1_Tcp_Connector_Tracking_cc::start_tracking()
 
     // DEBUG OUTPUT
     // std::cout << "Tracking of Galileo E1 signal started on channel " << d_channel << " for satellite " << Gnss_Satellite(systemName[sys], d_acquisition_gnss_synchro->PRN) << '\n';
-    LOG(INFO) << "Tracking of Galileo E1 signal for satellite " << Gnss_Satellite(systemName[sys], d_acquisition_gnss_synchro->PRN) << " on channel " << d_channel;
+    // LOG(INFO) << "Tracking of Galileo E1 signal for satellite " << Gnss_Satellite(systemName[sys], d_acquisition_gnss_synchro->PRN) << " on channel " << d_channel;
 
     // enable tracking
     d_pull_in = true;
     d_enable_tracking = true;
 
-    LOG(INFO) << "PULL-IN Doppler [Hz]=" << d_carrier_doppler_hz << " PULL-IN Code Phase [samples]=" << d_acq_code_phase_samples;
+    // LOG(INFO) << "PULL-IN Doppler [Hz]=" << d_carrier_doppler_hz << " PULL-IN Code Phase [samples]=" << d_acq_code_phase_samples;
 }
 
 
@@ -218,7 +218,7 @@ Galileo_E1_Tcp_Connector_Tracking_cc::~Galileo_E1_Tcp_Connector_Tracking_cc()
                 }
             catch (const std::exception &ex)
                 {
-                    LOG(WARNING) << "Exception in Tracking block destructor: " << ex.what();
+                    // // LOG(WARNING) << "Exception in Tracking block destructor: " << ex.what();
                 }
         }
     try
@@ -228,7 +228,7 @@ Galileo_E1_Tcp_Connector_Tracking_cc::~Galileo_E1_Tcp_Connector_Tracking_cc()
         }
     catch (const std::exception &ex)
         {
-            LOG(WARNING) << "Exception in Tracking block destructor: " << ex.what();
+            // // LOG(WARNING) << "Exception in Tracking block destructor: " << ex.what();
         }
 }
 
@@ -236,7 +236,7 @@ Galileo_E1_Tcp_Connector_Tracking_cc::~Galileo_E1_Tcp_Connector_Tracking_cc()
 void Galileo_E1_Tcp_Connector_Tracking_cc::set_channel(uint32_t channel)
 {
     d_channel = channel;
-    LOG(INFO) << "Tracking Channel set to " << d_channel;
+    // LOG(INFO) << "Tracking Channel set to " << d_channel;
     // ############# ENABLE DATA FILE LOG #################
     if (d_dump == true)
         {
@@ -248,11 +248,11 @@ void Galileo_E1_Tcp_Connector_Tracking_cc::set_channel(uint32_t channel)
                             d_dump_filename.append(".dat");
                             d_dump_file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
                             d_dump_file.open(d_dump_filename.c_str(), std::ios::out | std::ios::binary);
-                            LOG(INFO) << "Tracking dump enabled on channel " << d_channel << " Log file: " << d_dump_filename.c_str();
+                            // LOG(INFO) << "Tracking dump enabled on channel " << d_channel << " Log file: " << d_dump_filename.c_str();
                         }
                     catch (const std::ofstream::failure &e)
                         {
-                            LOG(WARNING) << "channel " << d_channel << " Exception opening trk dump file " << e.what();
+                            // // LOG(WARNING) << "channel " << d_channel << " Exception opening trk dump file " << e.what();
                         }
                 }
         }
@@ -428,7 +428,7 @@ int Galileo_E1_Tcp_Connector_Tracking_cc::general_work(int noutput_items __attri
 #endif
                         {
                             // std::cout << "Loss of lock in channel " << d_channel << "!\n";
-                            LOG(INFO) << "Loss of lock in channel " << d_channel << "!";
+                            // LOG(INFO) << "Loss of lock in channel " << d_channel << "!";
                             this->message_port_pub(pmt::mp("events"), pmt::from_long(3));  // 3 -> loss of lock
 
                             d_carrier_lock_fail_counter = 0;
@@ -532,7 +532,7 @@ int Galileo_E1_Tcp_Connector_Tracking_cc::general_work(int noutput_items __attri
                 }
             catch (const std::ofstream::failure &e)
                 {
-                    LOG(WARNING) << "Exception writing trk dump file " << e.what();
+                    // // LOG(WARNING) << "Exception writing trk dump file " << e.what();
                 }
         }
     consume_each(d_current_prn_length_samples);        // this is needed in gr::block derivates

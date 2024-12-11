@@ -49,7 +49,7 @@ ChannelFsm::ChannelFsm(std::shared_ptr<AcquisitionInterface> acquisition)
 bool ChannelFsm::Event_stop_channel()
 {
     std::lock_guard<std::mutex> lk(mx_);
-    DLOG(INFO) << "CH = " << channel_ << ". Ev stop channel";
+    // D// LOG(INFO) << "CH = " << channel_ << ". Ev stop channel";
     switch (state_)
         {
         case 0:  // already in stanby
@@ -77,7 +77,7 @@ bool ChannelFsm::Event_start_acquisition_fpga()
             return false;
         }
     state_ = 1;
-    DLOG(INFO) << "CH = " << channel_ << ". Ev start acquisition FPGA";
+    // D// LOG(INFO) << "CH = " << channel_ << ". Ev start acquisition FPGA";
     return true;
 }
 
@@ -91,7 +91,7 @@ bool ChannelFsm::Event_start_acquisition()
         }
     state_ = 1;
     start_acquisition();
-    DLOG(INFO) << "CH = " << channel_ << ". Ev start acquisition";
+    // D// LOG(INFO) << "CH = " << channel_ << ". Ev start acquisition";
     return true;
 }
 
@@ -105,7 +105,7 @@ bool ChannelFsm::Event_valid_acquisition()
         }
     state_ = 2;
     start_tracking();
-    DLOG(INFO) << "CH = " << channel_ << ". Ev valid acquisition";
+    // D// LOG(INFO) << "CH = " << channel_ << ". Ev valid acquisition";
     return true;
 }
 
@@ -119,7 +119,7 @@ bool ChannelFsm::Event_failed_acquisition_repeat()
         }
     state_ = 1;
     start_acquisition();
-    DLOG(INFO) << "CH = " << channel_ << ". Ev failed acquisition repeat";
+    // D// LOG(INFO) << "CH = " << channel_ << ". Ev failed acquisition repeat";
     return true;
 }
 
@@ -133,7 +133,7 @@ bool ChannelFsm::Event_failed_acquisition_no_repeat()
         }
     state_ = 3;
     request_satellite();
-    DLOG(INFO) << "CH = " << channel_ << ". Ev failed acquisition no repeat";
+    // D// LOG(INFO) << "CH = " << channel_ << ". Ev failed acquisition no repeat";
     return true;
 }
 
@@ -147,7 +147,7 @@ bool ChannelFsm::Event_failed_tracking_standby()
         }
     state_ = 0U;
     notify_stop_tracking();
-    DLOG(INFO) << "CH = " << channel_ << ". Ev failed tracking standby";
+    // D// LOG(INFO) << "CH = " << channel_ << ". Ev failed tracking standby";
     return true;
 }
 

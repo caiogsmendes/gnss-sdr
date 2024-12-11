@@ -141,18 +141,18 @@ void FileSourceBase::init()
             signal_duration_s /= 2.0;
         }
 
-    DLOG(INFO) << "Total number samples to be processed= " << samples_ << " GNSS signal duration= " << signal_duration_s << " [s]";
+    // D// LOG(INFO) << "Total number samples to be processed= " << samples_ << " GNSS signal duration= " << signal_duration_s << " [s]";
     // std::cout << "GNSS signal recorded time to be processed: " << signal_duration_s << " [s]\n";
 
-    DLOG(INFO) << "File source filename " << filename_;
-    DLOG(INFO) << "Samples " << samples_;
-    DLOG(INFO) << "Sampling frequency " << sampling_frequency_;
-    DLOG(INFO) << "Item type " << item_type_;
-    DLOG(INFO) << "Item size " << item_size_;
-    DLOG(INFO) << "Repeat " << repeat_;
+    // D// LOG(INFO) << "File source filename " << filename_;
+    // D// LOG(INFO) << "Samples " << samples_;
+    // D// LOG(INFO) << "Sampling frequency " << sampling_frequency_;
+    // D// LOG(INFO) << "Item type " << item_type_;
+    // D// LOG(INFO) << "Item size " << item_size_;
+    // D// LOG(INFO) << "Repeat " << repeat_;
 
-    DLOG(INFO) << "Dump " << dump_;
-    DLOG(INFO) << "Dump filename " << dump_filename_;
+    // D// LOG(INFO) << "Dump " << dump_;
+    // D// LOG(INFO) << "Dump filename " << dump_filename_;
 
     create_throttle();
     create_valve();
@@ -173,7 +173,7 @@ void FileSourceBase::connect(gr::top_block_sptr top_block)
         {
             // if we are throttling...
             top_block->connect(source(), 0, throttle(), 0);
-            DLOG(INFO) << "connected file source to throttle";
+            // D// LOG(INFO) << "connected file source to throttle";
 
             input = throttle();
         }
@@ -187,7 +187,7 @@ void FileSourceBase::connect(gr::top_block_sptr top_block)
     if (valve())
         {
             top_block->connect(std::move(input), 0, valve(), 0);
-            DLOG(INFO) << "connected source to valve";
+            // D// LOG(INFO) << "connected source to valve";
 
             output = valve();
         }
@@ -202,7 +202,7 @@ void FileSourceBase::connect(gr::top_block_sptr top_block)
     if (sink())
         {
             top_block->connect(std::move(output), 0, sink(), 0);
-            DLOG(INFO) << "connected output to file sink";
+            // D// LOG(INFO) << "connected output to file sink";
         }
 
     post_connect_hook(std::move(top_block));
@@ -221,7 +221,7 @@ void FileSourceBase::disconnect(gr::top_block_sptr top_block)
         {
             // if we are throttling...
             top_block->disconnect(source(), 0, throttle(), 0);
-            DLOG(INFO) << "disconnected file source from throttle";
+            // D// LOG(INFO) << "disconnected file source from throttle";
 
             input = throttle();
         }
@@ -235,7 +235,7 @@ void FileSourceBase::disconnect(gr::top_block_sptr top_block)
     if (valve())
         {
             top_block->disconnect(std::move(input), 0, valve(), 0);
-            DLOG(INFO) << "disconnected source to valve";
+            // D// LOG(INFO) << "disconnected source to valve";
 
             output = valve();
         }
@@ -250,7 +250,7 @@ void FileSourceBase::disconnect(gr::top_block_sptr top_block)
     if (sink())
         {
             top_block->disconnect(std::move(output), 0, sink(), 0);
-            DLOG(INFO) << "disconnected output to file sink";
+            // D// LOG(INFO) << "disconnected output to file sink";
         }
 
     post_disconnect_hook(std::move(top_block));
@@ -260,7 +260,7 @@ void FileSourceBase::disconnect(gr::top_block_sptr top_block)
 gr::basic_block_sptr FileSourceBase::get_left_block()
 {
     // TODO: is this right? Shouldn't the left block be a nullptr?
-    LOG(WARNING) << "Left block of a signal source should not be retrieved";
+    // // LOG(WARNING) << "Left block of a signal source should not be retrieved";
     return gr::blocks::file_source::sptr();
 }
 
@@ -352,8 +352,8 @@ std::tuple<size_t, bool> FileSourceBase::itemTypeToSize()
         }
     else
         {
-            LOG(WARNING) << item_type_
-                         << " unrecognized item type. Using gr_complex.";
+            // // LOG(WARNING) << item_type_
+                        //  << " unrecognized item type. Using gr_complex.";
             item_size = sizeof(gr_complex);
         }
 
@@ -429,7 +429,7 @@ size_t FileSourceBase::computeSamplesInFile() const
             // if there is some kind of compression/encoding, figure out the uncompressed number of samples
             n_samples = std::floor(packetsPerSample() * size / item_size());
 
-            DLOG(INFO) << "Total samples in the file= " << n_samples;
+            // D// LOG(INFO) << "Total samples in the file= " << n_samples;
             // std::cout << "Processing file " << filename() << ", which contains " << n_samples << " samples (" << size << " bytes)\n";
 
             if (n_samples > (to_skip + tail))
@@ -464,7 +464,7 @@ size_t FileSourceBase::computeSamplesInFile() const
 size_t FileSourceBase::source_item_size() const
 {
     // delegate the size of the source to the source() object, so sub-classes have less work to do
-    DLOG(INFO) << "source_item_size is " << source()->output_signature()->sizeof_stream_item(0);
+    // D// LOG(INFO) << "source_item_size is " << source()->output_signature()->sizeof_stream_item(0);
     return source()->output_signature()->sizeof_stream_item(0);
 }
 
@@ -495,7 +495,7 @@ gr::blocks::file_source::sptr FileSourceBase::create_file_source()
 
             if (samples_to_skip > 0)
                 {
-                    LOG(INFO) << "Skipping " << samples_to_skip << " samples of the input file";
+                    // LOG(INFO) << "Skipping " << samples_to_skip << " samples of the input file";
                     if (!file_source_->seek(samples_to_skip, SEEK_SET))
                         {
                             LOG(ERROR) << "Error skipping bytes!";
@@ -521,7 +521,7 @@ gr::blocks::file_source::sptr FileSourceBase::create_file_source()
             throw;
         }
 
-    DLOG(INFO) << implementation() << "(" << file_source_->unique_id() << ")";
+    // D// LOG(INFO) << implementation() << "(" << file_source_->unique_id() << ")";
 
     // enable subclass hooks
     create_file_source_hook();
@@ -536,7 +536,7 @@ gr::blocks::throttle::sptr FileSourceBase::create_throttle()
         {
             // if we are throttling...
             throttle_ = gr::blocks::throttle::make(source_item_size(), sampling_frequency());
-            DLOG(INFO) << "throttle(" << throttle_->unique_id() << ")";
+            // D// LOG(INFO) << "throttle(" << throttle_->unique_id() << ")";
 
             // enable subclass hooks
             create_throttle_hook();
@@ -552,7 +552,7 @@ gnss_shared_ptr<gr::block> FileSourceBase::create_valve()
             // if a number of samples is specified, honor it by creating a valve
             // in practice, this is always true
             valve_ = gnss_sdr_make_valve(source_item_size(), samples(), queue_);
-            DLOG(INFO) << "valve(" << valve_->unique_id() << ")";
+            // D// LOG(INFO) << "valve(" << valve_->unique_id() << ")";
 
             // enable subclass hooks
             create_valve_hook();
@@ -566,7 +566,7 @@ gr::blocks::file_sink::sptr FileSourceBase::create_sink()
     if (dump_)
         {
             sink_ = gr::blocks::file_sink::make(source_item_size(), dump_filename_.c_str());
-            DLOG(INFO) << "file_sink(" << sink_->unique_id() << ")";
+            // D// LOG(INFO) << "file_sink(" << sink_->unique_id() << ")";
 
             // enable subclass hooks
             create_sink_hook();

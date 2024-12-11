@@ -38,6 +38,14 @@
 #include <utility>   // for pair
 #include <vector>    // for vector
 
+#include <map>
+#include <mutex>
+#include "HEtechSerial.h"
+#include "gnss_synchro.h"
+#include "gps_ephemeris.h"
+#include <gpiod.h>
+#include "rtklib_solver.h"
+
 #ifdef ENABLE_FPGA
 #include <boost/thread.hpp>  // for boost::thread
 #endif
@@ -122,6 +130,11 @@ public:
     {
         return flowgraph_;
     }
+    //Caio- mudei de lugar.
+    std::string temper{0};
+    std::ifstream thermal;
+    std::shared_ptr<ConfigurationInterface> configuration_;
+
 
 private:
     /*
@@ -138,6 +151,44 @@ private:
      * New receiver event dispatcher
      */
     void event_dispatcher(bool &valid_event, pmt::pmt_t &msg);
+
+    // Caio
+    void storePVT(void);
+    void storeSAT(void);
+    void storeStatus(void);
+    void sendHealthStatus(void);
+    void sendQualiStatus(void);
+    int msg_parser(uint8_t *cmd);
+
+
+    int contt{0}; int cont{0}; int tickcount{100};
+    int tickss;
+    serial_s_t comms;
+    int index{0};
+    uint8_t msgOutput[12 * 53 + 46]{0};
+    uint8_t msgHealth[500]{0};
+    std::mutex mtx;
+    std::map<int,Gps_Ephemeris> gps_ephem;
+    std::map<int,Gnss_Synchro> sync;
+    std::shared_ptr<Rtklib_Solver> rtk_ptr_;
+    bool gpio_enabled_;
+    bool thermal_enabled_;
+    //
+
+
+    typedef struct gpiod_line gpiod_pin;
+    typedef struct gpiod_line_event gpiod_pin_event;
+    struct gpiod_chip *chip;
+    gpiod_pin *pin;
+    // std::string bank = "gpiochip2";
+    // int SODIMM_55 = 18;
+    // unsigned int line = SODIMM_55;
+    gpiod_pin_event event;
+    int ret;
+    int count{};
+    //
+
+
 
     // Read {ephemeris, iono, utc, ref loc, ref time} assistance from a local XML file previously recorded
     bool read_assistance_from_XML();
@@ -182,7 +233,6 @@ private:
     const size_t channel_event_type_hash_code_ = typeid(channel_event_sptr).hash_code();
     const size_t command_event_type_hash_code_ = typeid(command_event_sptr).hash_code();
 
-    std::shared_ptr<ConfigurationInterface> configuration_;
     std::shared_ptr<Concurrent_Queue<pmt::pmt_t>> control_queue_;
     std::shared_ptr<GNSSFlowgraph> flowgraph_;
 
@@ -223,6 +273,9 @@ private:
     bool restart_;
     bool telecommand_enabled_;
     bool pre_2009_file_;  // to override the system time to postprocess old gnss records and avoid wrong week rollover
+    std::shared_ptr<PvtInterface> pvt_ptr_;
+
+
 };
 
 

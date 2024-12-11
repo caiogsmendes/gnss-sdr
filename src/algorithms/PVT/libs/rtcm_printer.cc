@@ -143,7 +143,7 @@ Rtcm_Printer::Rtcm_Printer(const std::string& filename,
             rtcm_file_descriptor.open(rtcm_filename.c_str(), std::ios::out);
             if (rtcm_file_descriptor.is_open())
                 {
-                    DLOG(INFO) << "RTCM printer writing on " << rtcm_filename.c_str();
+                    // D// LOG(INFO) << "RTCM printer writing on " << rtcm_filename.c_str();
                 }
             else
                 {
@@ -156,7 +156,7 @@ Rtcm_Printer::Rtcm_Printer(const std::string& filename,
             rtcm_dev_descriptor = init_serial(rtcm_devname.c_str());
             if (rtcm_dev_descriptor != -1)
                 {
-                    DLOG(INFO) << "RTCM printer writing on " << rtcm_devname.c_str();
+                    // D// LOG(INFO) << "RTCM printer writing on " << rtcm_devname.c_str();
                 }
         }
     else
@@ -175,7 +175,7 @@ Rtcm_Printer::Rtcm_Printer(const std::string& filename,
 
 Rtcm_Printer::~Rtcm_Printer()
 {
-    DLOG(INFO) << "RTCM printer destructor called.";
+    // D// LOG(INFO) << "RTCM printer destructor called.";
     if (rtcm->is_server_running())
         {
             try
@@ -184,11 +184,11 @@ Rtcm_Printer::~Rtcm_Printer()
                 }
             catch (const boost::exception& e)
                 {
-                    LOG(WARNING) << "Boost exception: " << boost::diagnostic_information(e);
+                    // // LOG(WARNING) << "Boost exception: " << boost::diagnostic_information(e);
                 }
             catch (const std::exception& ex)
                 {
-                    LOG(WARNING) << "STD exception: " << ex.what();
+                    // // LOG(WARNING) << "STD exception: " << ex.what();
                 }
         }
     if (rtcm_file_descriptor.is_open())
@@ -207,7 +207,7 @@ Rtcm_Printer::~Rtcm_Printer()
                     errorlib::error_code ec;
                     if (!fs::remove(fs::path(rtcm_filename), ec))
                         {
-                            LOG(INFO) << "Error deleting temporary RTCM file";
+                            // LOG(INFO) << "Error deleting temporary RTCM file";
                         }
                 }
         }
@@ -1774,7 +1774,7 @@ int Rtcm_Printer::init_serial(const std::string& serial_device)
 
     if (fcntl(fd, F_SETFL, 0) == -1)
         {
-            LOG(INFO) << "Error enabling direct I/O";  // clear all flags on descriptor, enable direct I/O
+            // LOG(INFO) << "Error enabling direct I/O";  // clear all flags on descriptor, enable direct I/O
         }
     tcgetattr(fd, &options);  // read serial port options
 
@@ -1809,7 +1809,7 @@ bool Rtcm_Printer::Print_Message(const std::string& message)
                 }
             catch (const std::exception& ex)
                 {
-                    DLOG(INFO) << "RTCM printer cannot write on the output file " << rtcm_filename.c_str();
+                    // D// LOG(INFO) << "RTCM printer cannot write on the output file " << rtcm_filename.c_str();
                     return false;
                 }
         }
@@ -1819,7 +1819,7 @@ bool Rtcm_Printer::Print_Message(const std::string& message)
         {
             if (write(rtcm_dev_descriptor, message.c_str(), message.length()) == -1)
                 {
-                    DLOG(INFO) << "RTCM printer cannot write on serial device " << rtcm_devname.c_str();
+                    // D// LOG(INFO) << "RTCM printer cannot write on serial device " << rtcm_devname.c_str();
                     // std::cout << "RTCM printer cannot write on serial device " << rtcm_devname.c_str() << '\n';
                     return false;
                 }

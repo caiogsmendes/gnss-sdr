@@ -188,7 +188,7 @@ UhdSignalSource::UhdSignalSource(const ConfigurationInterface* configuration,
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unrecognized item type. Using cshort.";
+            // // LOG(WARNING) << item_type_ << " unrecognized item type. Using cshort.";
             item_size_ = sizeof(lv_16sc_t);
             uhd_stream_args_ = uhd::stream_args_t("sc16", otw_format_);
         }
@@ -222,7 +222,7 @@ UhdSignalSource::UhdSignalSource(const ConfigurationInterface* configuration,
     uhd_source_->set_samp_rate(sample_rate_);
     // the actual sample rate may differ from the rate set
     // std::cout << "Sampling Rate for the USRP device: " << uhd_source_->get_samp_rate() << " [sps]...\n";
-    LOG(INFO) << "Sampling Rate for the USRP device: " << uhd_source_->get_samp_rate() << " [sps]...";
+    // LOG(INFO) << "Sampling Rate for the USRP device: " << uhd_source_->get_samp_rate() << " [sps]...";
 
     std::vector<std::string> sensor_names;
 
@@ -232,16 +232,16 @@ UhdSignalSource::UhdSignalSource(const ConfigurationInterface* configuration,
             // 3. Tune the usrp device to the desired center frequency
             uhd_source_->set_center_freq(freq_.at(i), i);
             // std::cout << "Actual USRP center freq.: " << uhd_source_->get_center_freq(i) << " [Hz]...\n";
-            LOG(INFO) << "Actual USRP center freq. set to: " << uhd_source_->get_center_freq(i) << " [Hz]...";
+            // LOG(INFO) << "Actual USRP center freq. set to: " << uhd_source_->get_center_freq(i) << " [Hz]...";
 
             // TODO: Assign the remnant IF from the PLL tune error
             // std::cout << "PLL Frequency tune error: " << uhd_source_->get_center_freq(i) - freq_.at(i) << " [Hz]...\n";
-            LOG(INFO) << "PLL Frequency tune error: " << uhd_source_->get_center_freq(i) - freq_.at(i) << " [Hz]...";
+            // LOG(INFO) << "PLL Frequency tune error: " << uhd_source_->get_center_freq(i) - freq_.at(i) << " [Hz]...";
 
             // 4. set the gain for the daughterboard
             uhd_source_->set_gain(gain_.at(i), i);
             // std::cout << "Actual daughterboard gain set to: " << uhd_source_->get_gain(i) << " dB...\n";
-            LOG(INFO) << "Actual daughterboard gain set to: " << uhd_source_->get_gain(i) << " dB...";
+            // LOG(INFO) << "Actual daughterboard gain set to: " << uhd_source_->get_gain(i) << " dB...";
 
             // 5.  Set the bandpass filter on the RF frontend
             // std::cout << "Setting RF bandpass filter bandwidth to: " << IF_bandwidth_hz_.at(i) << " [Hz]...\n";
@@ -275,16 +275,16 @@ UhdSignalSource::UhdSignalSource(const ConfigurationInterface* configuration,
         {
             if (samples_.at(i) != 0ULL)
                 {
-                    LOG(INFO) << "RF_channel " << i << " Send STOP signal after " << samples_.at(i) << " samples";
+                    // LOG(INFO) << "RF_channel " << i << " Send STOP signal after " << samples_.at(i) << " samples";
                     valve_.emplace_back(gnss_sdr_make_valve(item_size_, samples_.at(i), queue));
-                    DLOG(INFO) << "valve(" << valve_.at(i)->unique_id() << ")";
+                    // D// LOG(INFO) << "valve(" << valve_.at(i)->unique_id() << ")";
                 }
 
             if (dump_.at(i))
                 {
-                    LOG(INFO) << "RF_channel " << i << "Dumping output into file " << dump_filename_.at(i);
+                    // LOG(INFO) << "RF_channel " << i << "Dumping output into file " << dump_filename_.at(i);
                     file_sink_.push_back(gr::blocks::file_sink::make(item_size_, dump_filename_.at(i).c_str()));
-                    DLOG(INFO) << "file_sink(" << file_sink_.at(i)->unique_id() << ")";
+                    // D// LOG(INFO) << "file_sink(" << file_sink_.at(i)->unique_id() << ")";
                 }
         }
     if (in_stream_ > 0)
@@ -305,11 +305,11 @@ void UhdSignalSource::connect(gr::top_block_sptr top_block)
             if (samples_.at(i) != 0ULL)
                 {
                     top_block->connect(uhd_source_, i, valve_.at(i), 0);
-                    DLOG(INFO) << "connected usrp source to valve RF Channel " << i;
+                    // D// LOG(INFO) << "connected usrp source to valve RF Channel " << i;
                     if (dump_.at(i))
                         {
                             top_block->connect(valve_.at(i), 0, file_sink_.at(i), 0);
-                            DLOG(INFO) << "connected valve to file sink RF Channel " << i;
+                            // D// LOG(INFO) << "connected valve to file sink RF Channel " << i;
                         }
                 }
             else
@@ -317,7 +317,7 @@ void UhdSignalSource::connect(gr::top_block_sptr top_block)
                     if (dump_.at(i))
                         {
                             top_block->connect(uhd_source_, i, file_sink_.at(i), 0);
-                            DLOG(INFO) << "connected usrp source to file sink RF Channel " << i;
+                            // D// LOG(INFO) << "connected usrp source to file sink RF Channel " << i;
                         }
                 }
         }
@@ -332,7 +332,7 @@ void UhdSignalSource::disconnect(gr::top_block_sptr top_block)
             if (samples_.at(i) != 0ULL)
                 {
                     top_block->disconnect(uhd_source_, i, valve_.at(i), 0);
-                    LOG(INFO) << "UHD source disconnected";
+                    // LOG(INFO) << "UHD source disconnected";
                     if (dump_.at(i))
                         {
                             top_block->disconnect(valve_.at(i), 0, file_sink_.at(i), 0);
@@ -351,7 +351,7 @@ void UhdSignalSource::disconnect(gr::top_block_sptr top_block)
 
 gr::basic_block_sptr UhdSignalSource::get_left_block()
 {
-    LOG(WARNING) << "Trying to get signal source left block.";
+    // // LOG(WARNING) << "Trying to get signal source left block.";
     // return gr_basic_block_sptr();
     return gr::uhd::usrp_source::sptr();
 }

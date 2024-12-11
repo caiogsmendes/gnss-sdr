@@ -84,17 +84,17 @@ GalileoE5aNoncoherentIQAcquisitionCaf::GalileoE5aNoncoherentIQAcquisitionCaf(
         }
 #endif
 
-    DLOG(INFO) << "role " << role_;
+    // D// LOG(INFO) << "role " << role_;
     if (sampled_ms_ > 3)
         {
             sampled_ms_ = 3;
-            DLOG(INFO) << "Coherent integration time should be 3 ms or less. Changing to 3ms ";
+            // D// LOG(INFO) << "Coherent integration time should be 3 ms or less. Changing to 3ms ";
             // std::cout << "Too high coherent integration time. Changing to 3ms\n";
         }
     if (Zero_padding > 0)
         {
             sampled_ms_ = 2;
-            DLOG(INFO) << "Zero padding activated. Changing to 1ms code + 1ms zero padding ";
+            // D// LOG(INFO) << "Zero padding activated. Changing to 1ms code + 1ms zero padding ";
             // std::cout << "Zero padding activated. Changing to 1ms code + 1ms zero padding\n";
         }
 
@@ -124,7 +124,7 @@ GalileoE5aNoncoherentIQAcquisitionCaf::GalileoE5aNoncoherentIQAcquisitionCaf(
         {
             item_size_ = 0;
             acquisition_cc_ = nullptr;
-            LOG(WARNING) << item_type_ << " unknown acquisition item type";
+            // // LOG(WARNING) << item_type_ << " unknown acquisition item type";
         }
 
     if (in_streams_ > 1)
@@ -163,7 +163,7 @@ void GalileoE5aNoncoherentIQAcquisitionCaf::set_threshold(float threshold)
             threshold_ = calculate_threshold(pfa);
         }
 
-    DLOG(INFO) << "Channel " << channel_ << " Threshold = " << threshold_;
+    // D// LOG(INFO) << "Channel " << channel_ << " Threshold = " << threshold_;
 
     if (item_type_ == "gr_complex")
         {
@@ -290,7 +290,7 @@ float GalileoE5aNoncoherentIQAcquisitionCaf::calculate_threshold(float pfa) cons
         {
             frequency_bins++;
         }
-    DLOG(INFO) << "Channel " << channel_ << "  Pfa = " << pfa;
+    // D// LOG(INFO) << "Channel " << channel_ << "  Pfa = " << pfa;
     unsigned int ncells = vector_length_ * frequency_bins;
     double exponent = 1 / static_cast<double>(ncells);
     double val = pow(1.0 - pfa, exponent);

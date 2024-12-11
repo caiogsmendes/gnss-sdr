@@ -359,7 +359,7 @@ void pcps_opencl_acquisition_cc::acquisition_core_volk()
 
     d_well_count++;
 
-    DLOG(INFO) << "Channel: " << d_channel
+    // D// LOG(INFO) << "Channel: " << d_channel
                << " , doing acquisition of satellite: " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
                << " ,sample stamp: " << d_sample_counter << ", threshold: "
                << d_threshold << ", doppler_max: " << d_doppler_max
@@ -492,7 +492,7 @@ void pcps_opencl_acquisition_cc::acquisition_core_opencl()
     //    gettimeofday(&tv, NULL);
     //    begin = tv.tv_sec *1e6 + tv.tv_usec;
 
-    DLOG(INFO) << "Channel: " << d_channel
+    // D// LOG(INFO) << "Channel: " << d_channel
                << " , doing acquisition of satellite: " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
                << " ,sample stamp: " << d_sample_counter << ", threshold: "
                << d_threshold << ", doppler_max: " << d_doppler_max
@@ -746,15 +746,15 @@ int pcps_opencl_acquisition_cc::general_work(int noutput_items,
         case 2:
             {
                 // Declare positive acquisition using a message port
-                DLOG(INFO) << "positive acquisition";
-                DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
-                DLOG(INFO) << "sample_stamp " << d_sample_counter;
-                DLOG(INFO) << "test statistics value " << d_test_statistics;
-                DLOG(INFO) << "test statistics threshold " << d_threshold;
-                DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
-                DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
-                DLOG(INFO) << "magnitude " << d_mag;
-                DLOG(INFO) << "input signal power " << d_input_power;
+                // D// LOG(INFO) << "positive acquisition";
+                // D// LOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
+                // D// LOG(INFO) << "sample_stamp " << d_sample_counter;
+                // D// LOG(INFO) << "test statistics value " << d_test_statistics;
+                // D// LOG(INFO) << "test statistics threshold " << d_threshold;
+                // D// LOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
+                // D// LOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
+                // D// LOG(INFO) << "magnitude " << d_mag;
+                // D// LOG(INFO) << "input signal power " << d_input_power;
 
                 d_active = false;
                 d_state = 0;
@@ -780,15 +780,15 @@ int pcps_opencl_acquisition_cc::general_work(int noutput_items,
         case 3:
             {
                 // Declare negative acquisition using a message port
-                DLOG(INFO) << "negative acquisition";
-                DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
-                DLOG(INFO) << "sample_stamp " << d_sample_counter;
-                DLOG(INFO) << "test statistics value " << d_test_statistics;
-                DLOG(INFO) << "test statistics threshold " << d_threshold;
-                DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
-                DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
-                DLOG(INFO) << "magnitude " << d_mag;
-                DLOG(INFO) << "input signal power " << d_input_power;
+                // D// LOG(INFO) << "negative acquisition";
+                // D// LOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
+                // D// LOG(INFO) << "sample_stamp " << d_sample_counter;
+                // D// LOG(INFO) << "test statistics value " << d_test_statistics;
+                // D// LOG(INFO) << "test statistics threshold " << d_threshold;
+                // D// LOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
+                // D// LOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
+                // D// LOG(INFO) << "magnitude " << d_mag;
+                // D// LOG(INFO) << "input signal power " << d_input_power;
 
                 d_active = false;
                 d_state = 0;

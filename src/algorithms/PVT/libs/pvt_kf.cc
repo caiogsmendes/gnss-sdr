@@ -74,13 +74,13 @@ void Pvt_Kf::init_Kf(const arma::vec& p,
 
     d_initialized = true;
 
-    DLOG(INFO) << "Ti: " << Ti;
-    DLOG(INFO) << "F: " << d_F;
-    DLOG(INFO) << "H: " << d_H;
-    DLOG(INFO) << "R: " << d_R;
-    DLOG(INFO) << "Q: " << d_Q;
-    DLOG(INFO) << "P: " << d_P_old_old;
-    DLOG(INFO) << "x: " << d_x_old_old;
+    // D// LOG(INFO) << "Ti: " << Ti;
+    // D// LOG(INFO) << "F: " << d_F;
+    // D// LOG(INFO) << "H: " << d_H;
+    // D// LOG(INFO) << "R: " << d_R;
+    // D// LOG(INFO) << "Q: " << d_Q;
+    // D// LOG(INFO) << "P: " << d_P_old_old;
+    // D// LOG(INFO) << "x: " << d_x_old_old;
 }
 
 

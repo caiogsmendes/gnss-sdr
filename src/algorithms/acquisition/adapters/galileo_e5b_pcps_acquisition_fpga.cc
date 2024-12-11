@@ -169,7 +169,7 @@ void GalileoE5bPcpsAcquisitionFpga::stop_acquisition()
 
 void GalileoE5bPcpsAcquisitionFpga::set_threshold(float threshold)
 {
-    DLOG(INFO) << "Channel " << channel_ << " Threshold = " << threshold;
+    // D// LOG(INFO) << "Channel " << channel_ << " Threshold = " << threshold;
     acquisition_fpga_->set_threshold(threshold);
 }
 

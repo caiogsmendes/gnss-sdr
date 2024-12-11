@@ -728,10 +728,10 @@ private:
                                 {
                                     if (first == true)
                                         {
-                                            DLOG(INFO) << "Client says:";
+                                            // D// LOG(INFO) << "Client says:";
                                             first = false;
                                         }
-                                    DLOG(INFO) << client_says;
+                                    // D// LOG(INFO) << client_says;
                                     client_says = client_says.substr(80, client_says.length() - 80);
                                 }
                             do_read_message_header();
@@ -962,14 +962,14 @@ private:
                                     {
                                         // Error creating remote_endpoint
                                         // std::cout << "Error getting remote IP address, closing session.\n";
-                                        LOG(INFO) << "Error getting remote IP address";
+                                        // LOG(INFO) << "Error getting remote IP address";
                                         start_session = false;
                                     }
                                 else
                                     {
                                         std::string remote_addr = endpoint.address().to_string();
                                         // std::cout << "Serving client from " << remote_addr << '\n';
-                                        LOG(INFO) << "Serving client from " << remote_addr;
+                                        // LOG(INFO) << "Serving client from " << remote_addr;
                                     }
                             }
                         if (start_session)

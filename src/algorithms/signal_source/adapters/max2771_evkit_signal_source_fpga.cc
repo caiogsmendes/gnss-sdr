@@ -67,7 +67,7 @@ MAX2771EVKITSignalSourceFPGA::MAX2771EVKITSignalSourceFPGA(const ConfigurationIn
             // std::cout << "Configuration parameter freq should take values " << GPS_L1_FREQ_HZ << ", " << GPS_L2_FREQ_HZ << ", or " << GPS_L5_FREQ_HZ << "\n";
             // std::cout << "Error: provided value freq = " << freq_ << " is not among valid values\n";
             // std::cout << " This parameter has been set to its default value freq = " << GPS_L1_FREQ_HZ << '\n';
-            LOG(WARNING) << "Invalid configuration value for freq parameter. Set to freq = " << GPS_L1_FREQ_HZ;
+            // // LOG(WARNING) << "Invalid configuration value for freq parameter. Set to freq = " << GPS_L1_FREQ_HZ;
             freq_ = GPS_L1_FREQ_HZ;
         }
     if (sample_rate_ != 4092000 and sample_rate_ != 8184000 and sample_rate_ != 16368000 and sample_rate_ != 32736000)
@@ -75,7 +75,7 @@ MAX2771EVKITSignalSourceFPGA::MAX2771EVKITSignalSourceFPGA(const ConfigurationIn
             // std::cout << "Configuration parameter sampling_frequency should take values 4092000, 8184000, 16368000, or 32736000\n";
             // std::cout << "Error: provided value sampling_frequency = " << sample_rate_ << " is not among valid values\n";
             // std::cout << " This parameter has been set to its default value sampling_frequency = " << default_sampling_rate << '\n';
-            LOG(WARNING) << "Invalid configuration value for sampling_frequency parameter. Set to sampling_frequency = " << default_sampling_rate;
+            // // LOG(WARNING) << "Invalid configuration value for sampling_frequency parameter. Set to sampling_frequency = " << default_sampling_rate;
             sample_rate_ = default_sampling_rate;
         }
     if (bandwidth_ != 2500000 and bandwidth_ != 4200000 and bandwidth_ != 8700000 and bandwidth_ != 16400000 and bandwidth_ != 23400000 and bandwidth_ != 36000000)
@@ -83,7 +83,7 @@ MAX2771EVKITSignalSourceFPGA::MAX2771EVKITSignalSourceFPGA(const ConfigurationIn
             // std::cout << "Configuration parameter bandwidth can only take the following values: 2500000, 4200000, 8700000, 16400000, 23400000, and 36000000 Hz\n";
             // std::cout << "Error: provided value bandwidth = " << bandwidth_ << " is not among valid values\n";
             // std::cout << " This parameter has been set to its default value bandwidth = " << default_bandwidth << '\n';
-            LOG(WARNING) << "Invalid configuration value for bandwidth parameter. Set to bandwidth = " << default_bandwidth;
+            // // LOG(WARNING) << "Invalid configuration value for bandwidth parameter. Set to bandwidth = " << default_bandwidth;
             bandwidth_ = default_bandwidth;
         }
     if (filter_order_ != 3 and filter_order_ != 5)
@@ -91,7 +91,7 @@ MAX2771EVKITSignalSourceFPGA::MAX2771EVKITSignalSourceFPGA(const ConfigurationIn
             // std::cout << "Configuration parameter filter_order should take values 3 or 5\n";
             // std::cout << "Error: provided value filter_order = " << filter_order_ << " is not among valid values\n";
             // std::cout << " This parameter has been set to its default value filter_order = " << default_filter_order << '\n';
-            LOG(WARNING) << "Invalid configuration value for filter_order parameter. Set to filter_order = " << default_filter_order;
+            // // LOG(WARNING) << "Invalid configuration value for filter_order parameter. Set to filter_order = " << default_filter_order;
             filter_order_ = default_filter_order;
         }
     if (gain_in_ > max_PGA_gain_value)
@@ -99,7 +99,7 @@ MAX2771EVKITSignalSourceFPGA::MAX2771EVKITSignalSourceFPGA(const ConfigurationIn
             // std::cout << "Configuration parameter PGA_gain should be up to " << max_PGA_gain_value << "\n";
             // std::cout << "Error: provided value PGA_gain = " << gain_in_ << " is not among valid values\n";
             // std::cout << " This parameter has been set to its default value PGA_gain = " << default_PGA_gain_value << '\n';
-            LOG(WARNING) << "Invalid configuration value for PGA_gain parameter. Set to PGA_gain = " << default_PGA_gain_value;
+            // // LOG(WARNING) << "Invalid configuration value for PGA_gain parameter. Set to PGA_gain = " << default_PGA_gain_value;
             gain_in_ = default_PGA_gain_value;
         }
 
@@ -438,7 +438,7 @@ void MAX2771EVKITSignalSourceFPGA::connect(gr::top_block_sptr top_block)
     if (top_block)
         { /* top_block is not null */
         };
-    DLOG(INFO) << "AD9361 FPGA source nothing to connect";
+    // D// LOG(INFO) << "AD9361 FPGA source nothing to connect";
 }
 
 
@@ -447,13 +447,13 @@ void MAX2771EVKITSignalSourceFPGA::disconnect(gr::top_block_sptr top_block)
     if (top_block)
         { /* top_block is not null */
         };
-    DLOG(INFO) << "AD9361 FPGA source nothing to disconnect";
+    // D// LOG(INFO) << "AD9361 FPGA source nothing to disconnect";
 }
 
 
 gr::basic_block_sptr MAX2771EVKITSignalSourceFPGA::get_left_block()
 {
-    LOG(WARNING) << "Trying to get signal source left block.";
+    // // LOG(WARNING) << "Trying to get signal source left block.";
     return {};
 }
 

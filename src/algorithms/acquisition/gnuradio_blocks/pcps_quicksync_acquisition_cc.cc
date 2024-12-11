@@ -239,13 +239,13 @@ int pcps_quicksync_acquisition_cc::general_work(int noutput_items,
      * 5. Compute the test statistics and compare to the threshold
      * 6. Declare positive or negative acquisition using a message queue
      */
-    // DLOG(INFO) << "START GENERAL WORK";
+    // // D// LOG(INFO) << "START GENERAL WORK";
     int32_t acquisition_message = -1;  // 0=STOP_CHANNEL 1=ACQ_SUCCEES 2=ACQ_FAIL
     switch (d_state)
         {
         case 0:
             {
-                // DLOG(INFO) << "START CASE 0";
+                // // D// LOG(INFO) << "START CASE 0";
                 if (d_active)
                     {
                         // restart acquisition variables
@@ -263,14 +263,14 @@ int pcps_quicksync_acquisition_cc::general_work(int noutput_items,
 
                 d_sample_counter += static_cast<uint64_t>(d_sampled_ms) * d_samples_per_ms * ninput_items[0];  // sample counter
                 consume_each(ninput_items[0]);
-                // DLOG(INFO) << "END CASE 0";
+                // // D// LOG(INFO) << "END CASE 0";
                 break;
             }
 
         case 1:
             {
                 // initialize acquisition  implementing the QuickSync algorithm
-                // DLOG(INFO) << "START CASE 1";
+                // // D// LOG(INFO) << "START CASE 1";
                 int32_t doppler;
                 uint32_t indext = 0;
                 float magt = 0.0;
@@ -299,15 +299,15 @@ int pcps_quicksync_acquisition_cc::general_work(int noutput_items,
 
                 d_well_count++;
 
-                DLOG(INFO) << "Channel: " << d_channel
-                           << " , doing acquisition of satellite: "
-                           << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
-                           << " ,algorithm: pcps_quicksync_acquisition"
-                           << " ,folding factor: " << d_folding_factor
-                           << " ,sample stamp: " << d_sample_counter << ", threshold: "
-                           << d_threshold << ", doppler_max: " << d_doppler_max
-                           << ", doppler_step: " << d_doppler_step << ", Signal Size: "
-                           << d_samples_per_code * d_folding_factor;
+                // D// LOG(INFO) << "Channel: " << d_channel
+                        //    << " , doing acquisition of satellite: "
+                        //    << d_gnss_synchro->System << " " << d_gnss_synchro->PRN
+                        //    << " ,algorithm: pcps_quicksync_acquisition"
+                        //    << " ,folding factor: " << d_folding_factor
+                        //    << " ,sample stamp: " << d_sample_counter << ", threshold: "
+                        //    << d_threshold << ", doppler_max: " << d_doppler_max
+                        //    << ", doppler_step: " << d_doppler_step << ", Signal Size: "
+                        //    << d_samples_per_code * d_folding_factor;
 
 
                 // 1- Compute the input signal power estimation. This operation is
@@ -478,23 +478,23 @@ int pcps_quicksync_acquisition_cc::general_work(int noutput_items,
 
         case 2:
             {
-                // DLOG(INFO) << "START CASE 2";
+                // // D// LOG(INFO) << "START CASE 2";
                 // 6.1- Declare positive acquisition using a message port
-                DLOG(INFO) << "positive acquisition";
-                DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
-                DLOG(INFO) << "sample_stamp " << d_sample_counter;
-                DLOG(INFO) << "test statistics value " << d_test_statistics;
-                DLOG(INFO) << "test statistics threshold " << d_threshold;
-                DLOG(INFO) << "folding factor " << d_folding_factor;
-                DLOG(INFO) << "possible delay correlation output";
+                // D// LOG(INFO) << "positive acquisition";
+                // D// LOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
+                // D// LOG(INFO) << "sample_stamp " << d_sample_counter;
+                // D// LOG(INFO) << "test statistics value " << d_test_statistics;
+                // D// LOG(INFO) << "test statistics threshold " << d_threshold;
+                // D// LOG(INFO) << "folding factor " << d_folding_factor;
+                // D// LOG(INFO) << "possible delay correlation output";
                 for (int32_t i = 0; i < static_cast<int32_t>(d_folding_factor); i++)
                     {
-                        DLOG(INFO) << d_possible_delay[i] << "\t\t\t" << d_corr_output_f[i];
+                        // D// LOG(INFO) << d_possible_delay[i] << "\t\t\t" << d_corr_output_f[i];
                     }
-                DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
-                DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
-                DLOG(INFO) << "magnitude folded " << d_mag;
-                DLOG(INFO) << "input signal power " << d_input_power;
+                // D// LOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
+                // D// LOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
+                // D// LOG(INFO) << "magnitude folded " << d_mag;
+                // D// LOG(INFO) << "input signal power " << d_input_power;
 
                 d_active = false;
                 d_state = 0;
@@ -504,7 +504,7 @@ int pcps_quicksync_acquisition_cc::general_work(int noutput_items,
 
                 acquisition_message = 1;
                 this->message_port_pub(pmt::mp("events"), pmt::from_long(acquisition_message));
-                // DLOG(INFO) << "END CASE 2";
+                // // D// LOG(INFO) << "END CASE 2";
 
                 // Copy and push current Gnss_Synchro to monitor queue
                 if (d_enable_monitor_output)
@@ -521,23 +521,23 @@ int pcps_quicksync_acquisition_cc::general_work(int noutput_items,
 
         case 3:
             {
-                // DLOG(INFO) << "START CASE 3";
+                // // D// LOG(INFO) << "START CASE 3";
                 // 6.2- Declare negative acquisition using a message port
-                DLOG(INFO) << "negative acquisition";
-                DLOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
-                DLOG(INFO) << "sample_stamp " << d_sample_counter;
-                DLOG(INFO) << "test statistics value " << d_test_statistics;
-                DLOG(INFO) << "test statistics threshold " << d_threshold;
-                DLOG(INFO) << "folding factor " << d_folding_factor;
-                DLOG(INFO) << "possible delay    corr output";
+                // D// LOG(INFO) << "negative acquisition";
+                // D// LOG(INFO) << "satellite " << d_gnss_synchro->System << " " << d_gnss_synchro->PRN;
+                // D// LOG(INFO) << "sample_stamp " << d_sample_counter;
+                // D// LOG(INFO) << "test statistics value " << d_test_statistics;
+                // D// LOG(INFO) << "test statistics threshold " << d_threshold;
+                // D// LOG(INFO) << "folding factor " << d_folding_factor;
+                // D// LOG(INFO) << "possible delay    corr output";
                 for (int32_t i = 0; i < static_cast<int32_t>(d_folding_factor); i++)
                     {
-                        DLOG(INFO) << d_possible_delay[i] << "\t\t\t" << d_corr_output_f[i];
+                        // D// LOG(INFO) << d_possible_delay[i] << "\t\t\t" << d_corr_output_f[i];
                     }
-                DLOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
-                DLOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
-                DLOG(INFO) << "magnitude folded " << d_mag;
-                DLOG(INFO) << "input signal power " << d_input_power;
+                // D// LOG(INFO) << "code phase " << d_gnss_synchro->Acq_delay_samples;
+                // D// LOG(INFO) << "doppler " << d_gnss_synchro->Acq_doppler_hz;
+                // D// LOG(INFO) << "magnitude folded " << d_mag;
+                // D// LOG(INFO) << "input signal power " << d_input_power;
 
                 d_active = false;
                 d_state = 0;
@@ -547,7 +547,7 @@ int pcps_quicksync_acquisition_cc::general_work(int noutput_items,
 
                 acquisition_message = 2;
                 this->message_port_pub(pmt::mp("events"), pmt::from_long(acquisition_message));
-                // DLOG(INFO) << "END CASE 3";
+                // // D// LOG(INFO) << "END CASE 3";
                 break;
             }
         }

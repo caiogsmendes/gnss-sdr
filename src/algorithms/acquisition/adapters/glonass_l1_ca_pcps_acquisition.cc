@@ -54,7 +54,7 @@ GlonassL1CaPcpsAcquisition::GlonassL1CaPcpsAcquisition(
     acq_parameters_.ms_per_code = 1;
     acq_parameters_.SetFromConfiguration(configuration, role, GLONASS_L1_CA_CODE_RATE_CPS, 100e6);
 
-    DLOG(INFO) << "role " << role;
+    // D// LOG(INFO) << "role " << role;
 
 #if USE_GLOG_AND_GFLAGS
     if (FLAGS_doppler_max != 0)
@@ -80,7 +80,7 @@ GlonassL1CaPcpsAcquisition::GlonassL1CaPcpsAcquisition(
     sampled_ms_ = acq_parameters_.sampled_ms;
 
     acquisition_ = pcps_make_acquisition(acq_parameters_);
-    DLOG(INFO) << "acquisition(" << acquisition_->unique_id() << ")";
+    // D// LOG(INFO) << "acquisition(" << acquisition_->unique_id() << ")";
 
     if (item_type_ == "cbyte")
         {
@@ -193,7 +193,7 @@ void GlonassL1CaPcpsAcquisition::connect(gr::top_block_sptr top_block)
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unknown acquisition item type";
+            // // LOG(WARNING) << item_type_ << " unknown acquisition item type";
         }
 }
 
@@ -214,7 +214,7 @@ void GlonassL1CaPcpsAcquisition::disconnect(gr::top_block_sptr top_block)
         }
     else
         {
-            LOG(WARNING) << item_type_ << " unknown acquisition item type";
+            // // LOG(WARNING) << item_type_ << " unknown acquisition item type";
         }
 }
 
@@ -230,7 +230,7 @@ gr::basic_block_sptr GlonassL1CaPcpsAcquisition::get_left_block()
             return cbyte_to_float_x2_;
         }
 
-    LOG(WARNING) << item_type_ << " unknown acquisition item type";
+    // // LOG(WARNING) << item_type_ << " unknown acquisition item type";
     return nullptr;
 }
 

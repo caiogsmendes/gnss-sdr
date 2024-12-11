@@ -30,6 +30,11 @@
 #include "gps_ephemeris.h"
 #include <map>
 
+#include "HEtechSerial.h"
+#include "rtklib_pvt_gs.h"
+#include "gnss_synchro.h"
+#include "rtklib_solver.h"
+
 /** \addtogroup Core
  * \{ */
 /** \addtogroup GNSS_Block_Interfaces
@@ -61,6 +66,23 @@ public:
         double* ground_speed_kmh,
         double* course_over_ground_deg,
         time_t* UTC_time) = 0;
+
+    // virtual bool get_latest_PVT2(double* longitude_deg,
+    //     double* latitude_deg,
+    //     double* height_m,
+    //     double* ground_speed_kmh,
+    //     double* course_over_ground_deg,
+    //     time_t* UTC_time,
+    //     double ,
+    //     ) = 0;
+
+    // virtual void set_serial_comms(serial_s_t* comms) const = 0;
+    // virtual std::shared_ptr<rtklib_pvt_gs> get_rtk_pvt() const = 0;
+    virtual std::map<int, Gnss_Synchro> get_sync() = 0;
+
+    virtual std::shared_ptr<Rtklib_Solver> get_rtk_ptr() = 0;
+
+    
 };
 
 

@@ -165,7 +165,7 @@ galileo_telemetry_decoder_gs::galileo_telemetry_decoder_gs(
     const std::array<int32_t, 2> g_encoder{{121, 91}};  // Polynomial G1 and G2
     d_mm = KK - 1;
 
-    DLOG(INFO) << "Initializing GALILEO UNIFIED TELEMETRY DECODER";
+    // D// LOG(INFO) << "Initializing GALILEO UNIFIED TELEMETRY DECODER";
 
     if (d_dump_crc_stats)
         {
@@ -288,7 +288,7 @@ galileo_telemetry_decoder_gs::galileo_telemetry_decoder_gs(
 
 galileo_telemetry_decoder_gs::~galileo_telemetry_decoder_gs()
 {
-    DLOG(INFO) << "Galileo Telemetry decoder block (channel " << d_channel << ") destructor called.";
+    // D// LOG(INFO) << "Galileo Telemetry decoder block (channel " << d_channel << ") destructor called.";
     size_t pos = 0;
     if (d_dump_file.is_open() == true)
         {
@@ -299,13 +299,13 @@ galileo_telemetry_decoder_gs::~galileo_telemetry_decoder_gs()
                 }
             catch (const std::exception &ex)
                 {
-                    LOG(WARNING) << "Exception in destructor closing the dump file " << ex.what();
+                    // // LOG(WARNING) << "Exception in destructor closing the dump file " << ex.what();
                 }
             if (pos == 0)
                 {
                     if (!tlm_remove_file(d_dump_filename))
                         {
-                            LOG(WARNING) << "Error deleting temporary file";
+                            // // LOG(WARNING) << "Error deleting temporary file";
                         }
                 }
         }
@@ -316,7 +316,7 @@ galileo_telemetry_decoder_gs::~galileo_telemetry_decoder_gs()
                 {
                     if (!tlm_remove_file(d_dump_filename))
                         {
-                            LOG(WARNING) << "Error deleting temporary file";
+                            // // LOG(WARNING) << "Error deleting temporary file";
                         }
                 }
         }
@@ -343,11 +343,11 @@ void galileo_telemetry_decoder_gs::msg_handler_read_galileo_tow_map(const pmt::p
                 }
             catch (const wht::bad_any_cast &e)
                 {
-                    LOG(WARNING) << "msg_handler_read_galileo_tow_map Bad any_cast: " << e.what();
+                    // // LOG(WARNING) << "msg_handler_read_galileo_tow_map Bad any_cast: " << e.what();
                 }
             catch (const std::out_of_range &oor)
                 {
-                    LOG(WARNING) << "msg_handler_read_galileo_tow_map Out of Range error: " << oor.what();
+                    // // LOG(WARNING) << "msg_handler_read_galileo_tow_map Out of Range error: " << oor.what();
                 }
         }
 }
@@ -411,22 +411,22 @@ void galileo_telemetry_decoder_gs::decode_INAV_word(float *page_part_symbols, in
                 {
                     if (d_band == '1')
                         {
-                            DLOG(INFO) << "Galileo E1 CRC correct in channel " << d_channel << " from satellite " << d_satellite;
+                            // D// LOG(INFO) << "Galileo E1 CRC correct in channel " << d_channel << " from satellite " << d_satellite;
                         }
                     else if (d_band == '7')
                         {
-                            DLOG(INFO) << "Galileo E5b CRC correct in channel " << d_channel << " from satellite " << d_satellite;
+                            // D// LOG(INFO) << "Galileo E5b CRC correct in channel " << d_channel << " from satellite " << d_satellite;
                         }
                 }
             else
                 {
                     if (d_band == '1')
                         {
-                            DLOG(INFO) << "Galileo E1 CRC error in channel " << d_channel << " from satellite " << d_satellite;
+                            // D// LOG(INFO) << "Galileo E1 CRC error in channel " << d_channel << " from satellite " << d_satellite;
                         }
                     else if (d_band == '7')
                         {
-                            DLOG(INFO) << "Galileo E5b CRC error in channel " << d_channel << " from satellite " << d_satellite;
+                            // D// LOG(INFO) << "Galileo E5b CRC error in channel " << d_channel << " from satellite " << d_satellite;
                         }
                 }
             d_flag_even_word_arrived = 0;
@@ -442,7 +442,7 @@ void galileo_telemetry_decoder_gs::decode_INAV_word(float *page_part_symbols, in
     // extract OSNMA bits, reset container.
     if (d_inav_nav.get_osnma_adkd_0_12_nav_bits().size() == 549)
         {
-            DLOG(INFO) << "Galileo OSNMA: new ADKD=0/12 navData from " << d_satellite << " at TOW_sf=" << d_inav_nav.get_TOW5() - 25;
+            // D// LOG(INFO) << "Galileo OSNMA: new ADKD=0/12 navData from " << d_satellite << " at TOW_sf=" << d_inav_nav.get_TOW5() - 25;
             const auto tmp_obj_osnma = std::make_shared<std::tuple<uint32_t, std::string, uint32_t>>(  // < PRNd , navDataBits, TOW_Sosf>
                 d_satellite.get_PRN(),
                 d_inav_nav.get_osnma_adkd_0_12_nav_bits(),
@@ -452,7 +452,7 @@ void galileo_telemetry_decoder_gs::decode_INAV_word(float *page_part_symbols, in
         }
     if (d_inav_nav.get_osnma_adkd_4_nav_bits().size() == 141)
         {
-            DLOG(INFO) << "Galileo OSNMA: new ADKD=4 navData from " << d_satellite << " at TOW_sf=" << d_inav_nav.get_TOW6() - 5;
+            // D// LOG(INFO) << "Galileo OSNMA: new ADKD=4 navData from " << d_satellite << " at TOW_sf=" << d_inav_nav.get_TOW6() - 5;
             const auto tmp_obj = std::make_shared<std::tuple<uint32_t, std::string, uint32_t>>(  // < PRNd , navDataBits, TOW_Sosf> // TODO conversion from W6 to W_Start_of_subframe
                 d_satellite.get_PRN(),
                 d_inav_nav.get_osnma_adkd_4_nav_bits(),
@@ -575,7 +575,7 @@ void galileo_telemetry_decoder_gs::decode_INAV_word(float *page_part_symbols, in
                 }
 
             d_delta_t = tmp_obj->A_0G + tmp_obj->A_1G * (static_cast<double>(d_TOW_at_current_symbol_ms) / 1000.0 - tmp_obj->t_0G + 604800 * (std::fmod(static_cast<float>(d_inav_nav.get_Galileo_week() - tmp_obj->WN_0G), 64.0)));
-            DLOG(INFO) << "delta_t=" << d_delta_t << "[s]";
+            // D// LOG(INFO) << "delta_t=" << d_delta_t << "[s]";
         }
 
     if (d_inav_nav.have_new_almanac() == true)  // flag_almanac_4 tells if W10 available.
@@ -606,9 +606,9 @@ void galileo_telemetry_decoder_gs::decode_INAV_word(float *page_part_symbols, in
                             //   << std::setprecision(2) << cn0 << std::setprecision(default_precision)
                             //   << " dB-Hz" << TEXT_RESET << std::endl;
                 }
-            DLOG(INFO) << "Current parameters:";
-            DLOG(INFO) << "d_TOW_at_current_symbol_ms=" << d_TOW_at_current_symbol_ms;
-            DLOG(INFO) << "d_nav.WN_0=" << d_inav_nav.get_Galileo_week();
+            // D// LOG(INFO) << "Current parameters:";
+            // D// LOG(INFO) << "d_TOW_at_current_symbol_ms=" << d_TOW_at_current_symbol_ms;
+            // D// LOG(INFO) << "d_nav.WN_0=" << d_inav_nav.get_Galileo_week();
         }
     auto newOSNMA = d_inav_nav.have_new_nma();
     if (d_band == '1' && newOSNMA)
@@ -663,11 +663,11 @@ void galileo_telemetry_decoder_gs::decode_FNAV_word(float *page_symbols, int32_t
     d_fnav_nav.split_page(page_String);
     if (d_fnav_nav.get_flag_CRC_test() == true)
         {
-            DLOG(INFO) << "Galileo E5a CRC correct in channel " << d_channel << " from satellite " << d_satellite << " with CN0=" << cn0 << " dB-Hz";
+            // D// LOG(INFO) << "Galileo E5a CRC correct in channel " << d_channel << " from satellite " << d_satellite << " with CN0=" << cn0 << " dB-Hz";
         }
     else
         {
-            DLOG(INFO) << "Galileo E5a CRC error in channel " << d_channel << " from satellite " << d_satellite << " with CN0=" << cn0 << " dB-Hz";
+            // D// LOG(INFO) << "Galileo E5a CRC error in channel " << d_channel << " from satellite " << d_satellite << " with CN0=" << cn0 << " dB-Hz";
         }
 
     // 4. Push the new navigation data to the queues
@@ -825,8 +825,8 @@ void galileo_telemetry_decoder_gs::set_satellite(const Gnss_Satellite &satellite
             const auto tmp_obj = std::make_shared<std::pair<uint32_t, std::pair<uint32_t, uint64_t>>>(d_satellite.get_PRN(), tow_and_sample);
             this->message_port_pub(pmt::mp("TOW_from_TLM"), pmt::make_any(tmp_obj));
         }
-    DLOG(INFO) << "Setting decoder Finite State Machine to satellite " << d_satellite;
-    DLOG(INFO) << "Navigation Satellite set to " << d_satellite;
+    // D// LOG(INFO) << "Setting decoder Finite State Machine to satellite " << d_satellite;
+    // D// LOG(INFO) << "Navigation Satellite set to " << d_satellite;
 }
 
 
@@ -857,14 +857,14 @@ void galileo_telemetry_decoder_gs::reset()
         {
             d_inav_nav.enable_reed_solomon();
         }
-    DLOG(INFO) << "Telemetry decoder reset for satellite " << d_satellite;
+    // D// LOG(INFO) << "Telemetry decoder reset for satellite " << d_satellite;
 }
 
 
 void galileo_telemetry_decoder_gs::set_channel(int32_t channel)
 {
     d_channel = channel;
-    DLOG(INFO) << "Navigation channel set to " << channel;
+    // D// LOG(INFO) << "Navigation channel set to " << channel;
     // ############# ENABLE DATA FILE LOG #################
     if (d_dump == true)
         {
@@ -876,11 +876,11 @@ void galileo_telemetry_decoder_gs::set_channel(int32_t channel)
                             d_dump_filename.append(".dat");
                             d_dump_file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
                             d_dump_file.open(d_dump_filename.c_str(), std::ios::out | std::ios::binary);
-                            LOG(INFO) << "Telemetry decoder dump enabled on channel " << d_channel << " Log file: " << d_dump_filename.c_str();
+                            // LOG(INFO) << "Telemetry decoder dump enabled on channel " << d_channel << " Log file: " << d_dump_filename.c_str();
                         }
                     catch (const std::ofstream::failure &e)
                         {
-                            LOG(WARNING) << "channel " << d_channel << " Exception opening trk dump file " << e.what();
+                            // // LOG(WARNING) << "channel " << d_channel << " Exception opening trk dump file " << e.what();
                         }
                 }
         }
@@ -902,7 +902,7 @@ void galileo_telemetry_decoder_gs::check_tlm_separation()
             if ((d_symbol_counter - d_last_valid_preamble) > d_max_symbols_without_valid_frame)
                 {
                     const int message = 1;  // bad telemetry
-                    DLOG(INFO) << "Wrong tlm sync in sat " << this->d_satellite;
+                    // D// LOG(INFO) << "Wrong tlm sync in sat " << this->d_satellite;
                     this->message_port_pub(pmt::mp("telemetry_to_trk"), pmt::make_any(message));
                     d_sent_tlm_failed_msg = true;
                 }
@@ -998,7 +998,7 @@ int galileo_telemetry_decoder_gs::general_work(int noutput_items __attribute__((
                     if (std::abs(corr_value) >= d_samples_per_preamble)
                         {
                             d_preamble_index = d_symbol_counter;  // record the preamble sample stamp
-                            LOG(INFO) << "Preamble detection for Galileo satellite " << this->d_satellite << " in channel " << this->d_channel;
+                            // LOG(INFO) << "Preamble detection for Galileo satellite " << this->d_satellite << " in channel " << this->d_channel;
                             d_stat = 1;  // enter into frame pre-detection status
                         }
                 }
@@ -1026,7 +1026,7 @@ int galileo_telemetry_decoder_gs::general_work(int noutput_items __attribute__((
                             if (std::abs(preamble_diff - d_preamble_period_symbols) == 0)
                                 {
                                     // try to decode frame
-                                    DLOG(INFO) << "Starting page decoder for Galileo satellite " << this->d_satellite;
+                                    // D// LOG(INFO) << "Starting page decoder for Galileo satellite " << this->d_satellite;
                                     d_preamble_index = d_symbol_counter;  // record the preamble sample stamp
                                     d_CRC_error_counter = 0;
                                     if (corr_value < 0)
@@ -1104,7 +1104,7 @@ int galileo_telemetry_decoder_gs::general_work(int noutput_items __attribute__((
                             if (!d_flag_frame_sync)
                                 {
                                     d_flag_frame_sync = true;
-                                    DLOG(INFO) << " Frame sync SAT " << this->d_satellite;
+                                    // D// LOG(INFO) << " Frame sync SAT " << this->d_satellite;
                                 }
                         }
                     else
@@ -1112,7 +1112,7 @@ int galileo_telemetry_decoder_gs::general_work(int noutput_items __attribute__((
                             d_CRC_error_counter++;
                             if (d_CRC_error_counter > CRC_ERROR_LIMIT)
                                 {
-                                    DLOG(INFO) << "Lost of frame sync SAT " << this->d_satellite;
+                                    // D// LOG(INFO) << "Lost of frame sync SAT " << this->d_satellite;
                                     gr::thread::scoped_lock lock(d_setlock);
                                     d_flag_frame_sync = false;
                                     d_stat = 0;
@@ -1444,7 +1444,7 @@ int galileo_telemetry_decoder_gs::general_work(int noutput_items __attribute__((
                         }
                     catch (const std::ofstream::failure &e)
                         {
-                            LOG(WARNING) << "Exception writing navigation data dump file " << e.what();
+                            // // LOG(WARNING) << "Exception writing navigation data dump file " << e.what();
                         }
                 }
             // 3. Make the output (move the object contents to the GNURadio reserved memory)

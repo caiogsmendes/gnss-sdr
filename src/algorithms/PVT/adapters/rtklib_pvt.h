@@ -29,6 +29,8 @@
 #include <map>                       // for map
 #include <string>                    // for string
 
+#include "HEtechSerial.h"
+
 /** \addtogroup PVT
  * Computation of Position, Velocity and Time from GNSS observables.
  * \{ */
@@ -220,8 +222,14 @@ public:
         double* course_over_ground_deg,
         time_t* UTC_time) override;
 
+    // void set_serial_comms(serial_s_t* comms);
+    // std::shared_ptr<rtklib_pvt_gs> get_rtk_pvt(void);
+    std::map<int, Gnss_Synchro> get_sync(void);
+    std::shared_ptr<Rtklib_Solver> get_rtk_ptr(void);
+
 private:
     rtklib_pvt_gs_sptr pvt_;
+    
     rtk_t rtk{};
     std::string role_;
     unsigned int in_streams_;

@@ -149,11 +149,11 @@ Rtklib_Solver::Rtklib_Solver(const rtk_t &rtk,
                         {
                             d_dump_file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
                             d_dump_file.open(d_dump_filename.c_str(), std::ios::out | std::ios::binary);
-                            LOG(INFO) << "PVT lib dump enabled Log file: " << d_dump_filename.c_str();
+                            // LOG(INFO) << "PVT lib dump enabled Log file: " << d_dump_filename.c_str();
                         }
                     catch (const std::ofstream::failure &e)
                         {
-                            LOG(WARNING) << "Exception opening RTKLIB dump file " << e.what();
+                            // // LOG(WARNING) << "Exception opening RTKLIB dump file " << e.what();
                         }
                 }
         }
@@ -162,7 +162,7 @@ Rtklib_Solver::Rtklib_Solver(const rtk_t &rtk,
 
 Rtklib_Solver::~Rtklib_Solver()
 {
-    DLOG(INFO) << "Rtklib_Solver destructor called.";
+    // D// LOG(INFO) << "Rtklib_Solver destructor called.";
     if (d_dump_file.is_open() == true)
         {
             const auto pos = d_dump_file.tellp();
@@ -172,7 +172,7 @@ Rtklib_Solver::~Rtklib_Solver()
                 }
             catch (const std::exception &ex)
                 {
-                    LOG(WARNING) << "Exception in destructor closing the RTKLIB dump file " << ex.what();
+                    // // LOG(WARNING) << "Exception in destructor closing the RTKLIB dump file " << ex.what();
                 }
             if (pos == 0)
                 {
@@ -192,7 +192,7 @@ Rtklib_Solver::~Rtklib_Solver()
                 }
             catch (const std::exception &ex)
                 {
-                    LOG(WARNING) << "Exception in destructor saving the PVT .mat dump file " << ex.what();
+                    // // LOG(WARNING) << "Exception in destructor saving the PVT .mat dump file " << ex.what();
                 }
         }
 }
@@ -485,7 +485,7 @@ void Rtklib_Solver::store_has_data(const Galileo_HAS_data &new_has_data)
     const std::string gal_str("Galileo");
     if (new_has_data.header.orbit_correction_flag)
         {
-            LOG(INFO) << "Received HAS orbit corrections";
+            // LOG(INFO) << "Received HAS orbit corrections";
             // for each satellite in GPS ephemeris
             for (const auto &gpseph : gps_ephemeris_map)
                 {
@@ -554,7 +554,7 @@ void Rtklib_Solver::store_has_data(const Galileo_HAS_data &new_has_data)
         }
     if (new_has_data.header.clock_fullset_flag)
         {
-            LOG(INFO) << "Received HAS clock fullset corrections";
+            // LOG(INFO) << "Received HAS clock fullset corrections";
             for (const auto &gpseph : gps_ephemeris_map)
                 {
                     int prn = gpseph.second.PRN;
@@ -621,7 +621,7 @@ void Rtklib_Solver::store_has_data(const Galileo_HAS_data &new_has_data)
         }
     if (new_has_data.header.clock_subset_flag)
         {
-            LOG(INFO) << "Received HAS clock subset corrections";
+            // LOG(INFO) << "Received HAS clock subset corrections";
             for (const auto &gpseph : gps_ephemeris_map)
                 {
                     int prn = gpseph.second.PRN;
@@ -637,7 +637,7 @@ void Rtklib_Solver::store_has_data(const Galileo_HAS_data &new_has_data)
         }
     if (new_has_data.header.code_bias_flag)
         {
-            LOG(INFO) << "Received HAS code bias corrections";
+            // LOG(INFO) << "Received HAS code bias corrections";
             uint32_t valid_until = tmt +
                                    new_has_data.get_validity_interval_s(new_has_data.validity_interval_index_code_bias_corrections);
             auto signals_gal = new_has_data.get_signals_in_mask(gal_str);
@@ -671,7 +671,7 @@ void Rtklib_Solver::store_has_data(const Galileo_HAS_data &new_has_data)
         }
     if (new_has_data.header.phase_bias_flag)
         {
-            LOG(INFO) << "Received HAS phase bias corrections";
+            // LOG(INFO) << "Received HAS phase bias corrections";
             uint32_t valid_until = tmt +
                                    new_has_data.get_validity_interval_s(new_has_data.validity_interval_index_phase_bias_corrections);
 
@@ -993,7 +993,7 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
                                     }
                                 else  // the ephemeris are not available for this SV
                                     {
-                                        DLOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->second.PRN;
+                                        // D// LOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->second.PRN;
                                     }
                             }
 
@@ -1040,7 +1040,7 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
                                     }
                                 else  // the ephemeris are not available for this SV
                                     {
-                                        DLOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->second.PRN;
+                                        // D// LOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->second.PRN;
                                     }
                             }
                         if (sig_ == "E6" && d_conf.use_e6_for_pvt)
@@ -1084,7 +1084,7 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
                                     }
                                 else  // the ephemeris are not available for this SV
                                     {
-                                        DLOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->second.PRN;
+                                        // D// LOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->second.PRN;
                                     }
                             }
                         if (sig_ == "E6")
@@ -1125,7 +1125,7 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
                                     }
                                 else  // the ephemeris are not available for this SV
                                     {
-                                        DLOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->second.PRN;
+                                        // D// LOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->second.PRN;
                                     }
                             }
                         break;
@@ -1158,7 +1158,7 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
                                     }
                                 else  // the ephemeris are not available for this SV
                                     {
-                                        DLOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->first;
+                                        // D// LOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->first;
                                     }
                             }
                         // GPS L2 (todo: solve NAV/CNAV clash)
@@ -1207,7 +1207,7 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
                                     }
                                 else  // the ephemeris are not available for this SV
                                     {
-                                        DLOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->second.PRN;
+                                        // D// LOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->second.PRN;
                                     }
                             }
                         // GPS L5
@@ -1255,7 +1255,7 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
                                     }
                                 else  // the ephemeris are not available for this SV
                                     {
-                                        DLOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->second.PRN;
+                                        // D// LOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->second.PRN;
                                     }
                             }
                         break;
@@ -1282,7 +1282,7 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
                                     }
                                 else  // the ephemeris are not available for this SV
                                     {
-                                        DLOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->second.PRN;
+                                        // D// LOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->second.PRN;
                                     }
                             }
                         // GLONASS GNAV L2
@@ -1321,7 +1321,7 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
                                     }
                                 else  // the ephemeris are not available for this SV
                                     {
-                                        DLOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->second.PRN;
+                                        // D// LOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->second.PRN;
                                     }
                             }
                         break;
@@ -1348,7 +1348,7 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
                                     }
                                 else  // the ephemeris are not available for this SV
                                     {
-                                        DLOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->first;
+                                        // D// LOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->first;
                                     }
                             }
                         // BeiDou B3
@@ -1389,14 +1389,14 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
                                     }
                                 else  // the ephemeris are not available for this SV
                                     {
-                                        DLOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->second.PRN;
+                                        // D// LOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->second.PRN;
                                     }
                             }
                         break;
                     }
 
                 default:
-                    DLOG(INFO) << "Hybrid observables: Unknown GNSS";
+                    // D// LOG(INFO) << "Hybrid observables: Unknown GNSS";
                     break;
                 }
         }
@@ -1509,7 +1509,7 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
 
             if (result == 0)
                 {
-                    LOG(INFO) << "RTKLIB rtkpos error: " << d_rtk.errbuf;
+                    // LOG(INFO) << "RTKLIB rtkpos error: " << d_rtk.errbuf;
                     d_rtk.neb = 0;                 // clear error buffer to avoid repeating the error message
                     this->set_time_offset_s(0.0);  // reset rx time estimation
                     this->set_num_valid_observations(0);
@@ -1621,8 +1621,8 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
 
                     this->set_time_offset_s(rx_position_and_time[3]);
 
-                    DLOG(INFO) << "RTKLIB Position at RX TOW = " << gnss_observables_map.cbegin()->second.RX_time
-                               << " in ECEF (X,Y,Z,t[meters]) = " << rx_position_and_time[0] << ", " << rx_position_and_time[1] << ", " << rx_position_and_time[2] << ", " << rx_position_and_time[3];
+                    // D// LOG(INFO) << "RTKLIB Position at RX TOW = " << gnss_observables_map.cbegin()->second.RX_time
+                            //    << " in ECEF (X,Y,Z,t[meters]) = " << rx_position_and_time[0] << ", " << rx_position_and_time[1] << ", " << rx_position_and_time[2] << ", " << rx_position_and_time[3];
 
                     // gtime_t rtklib_utc_time = gpst2utc(pvt_sol.time); // Corrected RX Time (Non integer multiply of 1 ms of granularity)
                     // Uncorrected RX Time (integer multiply of 1 ms and the same observables time reported in RTCM and RINEX)
@@ -1634,10 +1634,10 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
 
                     this->set_position_UTC_time(p_time);
 
-                    DLOG(INFO) << "RTKLIB Position at " << boost::posix_time::to_simple_string(p_time)
-                               << " is Lat = " << this->get_latitude() << " [deg], Long = " << this->get_longitude()
-                               << " [deg], Height= " << this->get_height() << " [m]"
-                               << " RX time offset= " << this->get_time_offset_s() << " [s]";
+                    // D// LOG(INFO) << "RTKLIB Position at " << boost::posix_time::to_simple_string(p_time)
+                            //    << " is Lat = " << this->get_latitude() << " [deg], Long = " << this->get_longitude()
+                            //    << " [deg], Height= " << this->get_height() << " [m]"
+                            //    << " RX time offset= " << this->get_time_offset_s() << " [s]";
 
                     // ######## PVT MONITOR #########
                     // TOW
@@ -1689,7 +1689,8 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
                     d_monitor_pvt.hdop = d_dop[2];
                     d_monitor_pvt.vdop = d_dop[3];
 
-                    this->set_rx_vel({enuv[0], enuv[1], enuv[2]});
+                    // this->set_rx_vel({enuv[0], enuv[1], enuv[2]});
+                    this->set_rx_vel({pvt_sol.rr[3],pvt_sol.rr[4],pvt_sol.rr[5]}); //Caio
 
                     // ENU vel [m/s]
                     d_monitor_pvt.vel_e = enuv[0];
@@ -1804,7 +1805,7 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
                                 }
                             catch (const std::ofstream::failure &e)
                                 {
-                                    LOG(WARNING) << "Exception writing RTKLIB dump file " << e.what();
+                                    // // LOG(WARNING) << "Exception writing RTKLIB dump file " << e.what();
                                 }
                         }
                 }

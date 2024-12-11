@@ -37,18 +37,18 @@ ByteToShort::ByteToShort(const ConfigurationInterface* configuration,
     const std::string default_output_item_type("short");
     const std::string default_dump_filename("../data/input_filter.dat");
 
-    DLOG(INFO) << "role " << role_;
+    // D// LOG(INFO) << "role " << role_;
 
     input_item_type_ = configuration->property(role_ + ".input_item_type", default_input_item_type);
     dump_filename_ = configuration->property(role_ + ".dump_filename", default_dump_filename);
 
     gr_char_to_short_ = gr::blocks::char_to_short::make();
 
-    DLOG(INFO) << "data_type_adapter_(" << gr_char_to_short_->unique_id() << ")";
+    // D// LOG(INFO) << "data_type_adapter_(" << gr_char_to_short_->unique_id() << ")";
 
     if (dump_)
         {
-            DLOG(INFO) << "Dumping output into file " << dump_filename_;
+            // D// LOG(INFO) << "Dumping output into file " << dump_filename_;
             const size_t item_size = sizeof(int16_t);
             file_sink_ = gr::blocks::file_sink::make(item_size, dump_filename_.c_str());
         }
@@ -71,7 +71,7 @@ void ByteToShort::connect(gr::top_block_sptr top_block)
         }
     else
         {
-            DLOG(INFO) << "Nothing to connect internally";
+            // D// LOG(INFO) << "Nothing to connect internally";
         }
 }
 

@@ -1216,7 +1216,7 @@ int main(int argc, char** argv)
         }
     catch (...)
         {
-            LOG(WARNING) << "Unexpected catch";
+            // // LOG(WARNING) << "Unexpected catch";
         }
 #if USE_GLOG_AND_GFLAGS
     gflags::ShutDownCommandLineFlags();

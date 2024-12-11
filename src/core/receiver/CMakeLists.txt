@@ -175,6 +175,8 @@ endif()
 target_link_libraries(core_receiver
     PUBLIC
         core_libs
+        pvt_libs
+        gpiod
     PRIVATE
         algorithms_libs
         core_monitor

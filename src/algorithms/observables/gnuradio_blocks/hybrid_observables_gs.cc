@@ -149,7 +149,7 @@ hybrid_observables_gs::hybrid_observables_gs(const Obs_Conf &conf_)
             try
                 {
                     d_dump_file.open(d_dump_filename.c_str(), std::ios::out | std::ios::binary);
-                    LOG(INFO) << "Observables dump enabled Log file: " << d_dump_filename.c_str();
+                    // LOG(INFO) << "Observables dump enabled Log file: " << d_dump_filename.c_str();
                 }
             catch (const std::ofstream::failure &e)
                 {
@@ -162,7 +162,7 @@ hybrid_observables_gs::hybrid_observables_gs(const Obs_Conf &conf_)
 
 hybrid_observables_gs::~hybrid_observables_gs()
 {
-    DLOG(INFO) << "Observables block destructor called.";
+    // D// LOG(INFO) << "Observables block destructor called.";
     if (d_dump_file.is_open())
         {
             const auto pos = d_dump_file.tellp();
@@ -220,7 +220,7 @@ void hybrid_observables_gs::msg_handler_pvt_to_observables(const pmt::pmt_t &msg
                             d_gnss_synchro_history->clear(n);
                         }
 
-                    LOG(INFO) << "Corrected new RX Time offset: " << static_cast<int>(round(new_rx_clock_offset_s * 1000.0)) << "[ms]";
+                    // LOG(INFO) << "Corrected new RX Time offset: " << static_cast<int>(round(new_rx_clock_offset_s * 1000.0)) << "[ms]";
                 }
             if (pmt::any_ref(msg).type().hash_code() == d_int_type_hash_code)
                 {
@@ -235,12 +235,16 @@ void hybrid_observables_gs::msg_handler_pvt_to_observables(const pmt::pmt_t &msg
                                 {
                                     d_gnss_synchro_history->clear(n);
                                 }
-                            LOG(INFO) << "Received reset observables TOW command from PVT";
+                            // LOG(INFO) << "Received reset observables TOW command from PVT";
                             break;
                         default:
                             break;
                         }
                 }
+            if(pmt::any_ref(msg).type().hash_code() == d_bool_type_hash_code)
+            {
+                flag_status_pvt = wht::any_cast<bool>(pmt::any_ref(msg));
+            }
         }
     catch (const wht::bad_any_cast &e)
         {
@@ -468,7 +472,7 @@ bool hybrid_observables_gs::interp_trk_obs(Gnss_Synchro &interpolated_obs, uint3
                                     interpolated_obs.interp_TOW_ms = static_cast<double>(d_gnss_synchro_history->get(ch, t1_idx).TOW_at_current_symbol_ms) + (static_cast<double>(d_gnss_synchro_history->get(ch, t2_idx).TOW_at_current_symbol_ms + 604800000) - static_cast<double>(d_gnss_synchro_history->get(ch, t1_idx).TOW_at_current_symbol_ms)) * time_factor;
                                 }
 
-                            // LOG(INFO) << "Channel " << ch << " int idx: " << t1_idx << " TOW Int: " << interpolated_obs.interp_TOW_ms
+                            // // LOG(INFO) << "Channel " << ch << " int idx: " << t1_idx << " TOW Int: " << interpolated_obs.interp_TOW_ms
                             //           << " TOW p1 : " << d_gnss_synchro_history->get(ch, t1_idx).TOW_at_current_symbol_ms
                             //           << " TOW p2: "
                             //           << d_gnss_synchro_history->get(ch, t2_idx).TOW_at_current_symbol_ms
@@ -523,6 +527,8 @@ void hybrid_observables_gs::update_TOW(const std::vector<Gnss_Synchro> &data)
                                 }
                         }
                 }
+
+
             d_T_rx_TOW_ms = TOW_ref;
             // align the receiver clock to integer multiple of d_T_rx_step_ms
             if (d_T_rx_TOW_ms % d_T_rx_step_ms)
@@ -535,7 +541,7 @@ void hybrid_observables_gs::update_TOW(const std::vector<Gnss_Synchro> &data)
             d_T_rx_TOW_ms += d_T_rx_step_ms;  // the tow time step increment must match the ref time channel step
             if (d_T_rx_TOW_ms >= 604800000)
                 {
-                    DLOG(INFO) << "TOW RX TIME rollover!";
+                    // D// LOG(INFO) << "TOW RX TIME rollover!";
                     d_T_rx_TOW_ms = d_T_rx_TOW_ms % 604800000;
                 }
         }
@@ -569,6 +575,7 @@ void hybrid_observables_gs::compute_pranges(std::vector<Gnss_Synchro> &data) con
                 {
                     it->RX_time = current_T_rx_TOW_s;
                 }
+                it->Flag_valid_pvt = flag_status_pvt;
         }
 }
 
@@ -746,7 +753,7 @@ int hybrid_observables_gs::general_work(int noutput_items __attribute__((unused)
                                     if (d_gnss_synchro_history->front(n).PRN != in[n][m].PRN)
                                         {
                                             d_gnss_synchro_history->clear(n);
-                                            // LOG(INFO) << "Channel " << d_gnss_synchro_history->front(n).Channel_ID << " changed satellite to PRN " << in[n][m].PRN;
+                                            // // LOG(INFO) << "Channel " << d_gnss_synchro_history->front(n).Channel_ID << " changed satellite to PRN " << in[n][m].PRN;
                                         }
                                 }
                             d_gnss_synchro_history->push_back(n, in[n][m]);
@@ -857,7 +864,7 @@ int hybrid_observables_gs::general_work(int noutput_items __attribute__((unused)
 
             if (n_valid > 0)
                 {
-                    // LOG(INFO) << "OBS: diff time: " << out[0][0].RX_time * 1000.0 - old_time_debug;
+                    // // LOG(INFO) << "OBS: diff time: " << out[0][0].RX_time * 1000.0 - old_time_debug;
                     // old_time_debug = out[0][0].RX_time * 1000.0;
                     return 1;
                 }

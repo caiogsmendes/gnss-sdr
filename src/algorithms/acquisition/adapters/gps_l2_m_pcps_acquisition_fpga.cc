@@ -50,7 +50,7 @@ GpsL2MPcpsAcquisitionFpga::GpsL2MPcpsAcquisitionFpga(
 {
     acq_parameters_.SetFromConfiguration(configuration, role, fpga_buff_num, fpga_blk_exp, downsampling_factor_default, GPS_L2_M_CODE_RATE_CPS, GPS_L2_M_CODE_LENGTH_CHIPS);
 
-    LOG(INFO) << "role " << role;
+    // LOG(INFO) << "role " << role;
 
 #if USE_GLOG_AND_GFLAGS
     if (FLAGS_doppler_max != 0)
@@ -147,7 +147,7 @@ void GpsL2MPcpsAcquisitionFpga::stop_acquisition()
 void GpsL2MPcpsAcquisitionFpga::set_threshold(float threshold)
 {
     threshold_ = threshold;
-    DLOG(INFO) << "Channel " << channel_ << " Threshold = " << threshold_;
+    // D// LOG(INFO) << "Channel " << channel_ << " Threshold = " << threshold_;
     acquisition_fpga_->set_threshold(threshold_);
 }
 

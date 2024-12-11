@@ -51,7 +51,7 @@ FourBitCpxFileSignalSource::FourBitCpxFileSignalSource(
     else
         {
             reverse_interleaving_ = false;
-            LOG(WARNING) << sample_type_ << " unrecognized sample type. Assuming: iq";
+            // // LOG(WARNING) << sample_type_ << " unrecognized sample type. Assuming: iq";
         }
 
     if (in_streams > 0)
@@ -89,7 +89,7 @@ std::tuple<size_t, bool> FourBitCpxFileSignalSource::itemTypeToSize()
         }
     else
         {
-            LOG(WARNING) << item_type() << " unrecognized item type. Using byte.";
+            // // LOG(WARNING) << item_type() << " unrecognized item type. Using byte.";
         }
 
     return std::make_tuple(item_size, is_complex);
@@ -116,16 +116,16 @@ gnss_shared_ptr<gr::block> FourBitCpxFileSignalSource::source() const
 void FourBitCpxFileSignalSource::create_file_source_hook()
 {
     unpack_byte_ = make_unpack_byte_4bit_samples();
-    DLOG(INFO) << "unpack_byte_2bit_cpx_samples(" << unpack_byte_->unique_id() << ")";
+    // D// LOG(INFO) << "unpack_byte_2bit_cpx_samples(" << unpack_byte_->unique_id() << ")";
     inter_shorts_to_cpx_ = gr::blocks::interleaved_short_to_complex::make(false, reverse_interleaving_);  // I/Q swap enabled
-    DLOG(INFO) << "interleaved_short_to_complex(" << inter_shorts_to_cpx_->unique_id() << ")";
+    // D// LOG(INFO) << "interleaved_short_to_complex(" << inter_shorts_to_cpx_->unique_id() << ")";
     if (timestamp_file_.size() > 1)
         {
             timestamp_block_ = gnss_sdr_make_Timestamp(sizeof(gr_complex),
                 timestamp_file_,
                 timestamp_clock_offset_ms_,
                 1);
-            DLOG(INFO) << "timestamp_block_(" << timestamp_block_->unique_id() << ")";
+            // D// LOG(INFO) << "timestamp_block_(" << timestamp_block_->unique_id() << ")";
         }
 }
 
@@ -134,11 +134,11 @@ void FourBitCpxFileSignalSource::pre_connect_hook(gr::top_block_sptr top_block)
 {
     top_block->connect(file_source(), 0, unpack_byte_, 0);
     top_block->connect(unpack_byte_, 0, inter_shorts_to_cpx_, 0);
-    DLOG(INFO) << "connected file_source to unpacker";
+    // D// LOG(INFO) << "connected file_source to unpacker";
     if (timestamp_file_.size() > 1)
         {
             top_block->connect(inter_shorts_to_cpx_, 0, timestamp_block_, 0);
-            DLOG(INFO) << "connected file_source to timestamp_block_";
+            // D// LOG(INFO) << "connected file_source to timestamp_block_";
         }
 }
 
@@ -148,9 +148,9 @@ void FourBitCpxFileSignalSource::pre_disconnect_hook(gr::top_block_sptr top_bloc
     if (timestamp_file_.size() > 1)
         {
             top_block->disconnect(inter_shorts_to_cpx_, 0, timestamp_block_, 0);
-            DLOG(INFO) << "disconnected file_source from timestamp_block_";
+            // D// LOG(INFO) << "disconnected file_source from timestamp_block_";
         }
     top_block->disconnect(file_source(), 0, unpack_byte_, 0);
     top_block->disconnect(unpack_byte_, 0, inter_shorts_to_cpx_, 0);
-    DLOG(INFO) << "disconnected file_source from unpacker";
+    // D// LOG(INFO) << "disconnected file_source from unpacker";
 }

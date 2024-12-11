@@ -56,7 +56,7 @@ PulseBlankingFilter::PulseBlankingFilter(const ConfigurationInterface* configura
     item_type_ = configuration->property(role_ + ".item_type", default_item_type);
     dump_ = configuration->property(role_ + ".dump", false);
 
-    DLOG(INFO) << "role " << role_;
+    // D// LOG(INFO) << "role " << role_;
     size_t item_size;
     if (item_type_ == "gr_complex")
         {
@@ -88,7 +88,7 @@ PulseBlankingFilter::PulseBlankingFilter(const ConfigurationInterface* configura
         }
     if (dump_)
         {
-            DLOG(INFO) << "Dumping output into file " << dump_filename_;
+            // D// LOG(INFO) << "Dumping output into file " << dump_filename_;
             // std::cout << "Dumping output into file " << dump_filename_ << '\n';
             file_sink_ = gr::blocks::file_sink::make(item_size, dump_filename_.c_str());
         }

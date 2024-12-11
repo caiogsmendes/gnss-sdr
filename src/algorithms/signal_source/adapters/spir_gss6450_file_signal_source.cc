@@ -64,7 +64,7 @@ SpirGSS6450FileSignalSource::SpirGSS6450FileSignalSource(const ConfigurationInte
 
     if (sel_ch_ > n_channels_)
         {
-            LOG(WARNING) << "Invalid RF channel selection";
+            // // LOG(WARNING) << "Invalid RF channel selection";
         }
     if (n_channels_ > 1)
         {
@@ -104,11 +104,11 @@ SpirGSS6450FileSignalSource::SpirGSS6450FileSignalSource(const ConfigurationInte
                 << GNSSSDR_INSTALL_DIR "/share/gnss-sdr/conf/"
                 << '\n';
 
-            LOG(WARNING) << "file_signal_source: Unable to open the samples file "
-                         << filename_.c_str() << ", exiting the program.";
+            // // LOG(WARNING) << "file_signal_source: Unable to open the samples file "
+                        //  << filename_.c_str() << ", exiting the program.";
             throw(e);
         }
-    DLOG(INFO) << "file_source(" << file_source_->unique_id() << ")";
+    // D// LOG(INFO) << "file_source(" << file_source_->unique_id() << ")";
 
     if (samples_ == 0)  // read all file
         {
@@ -123,7 +123,7 @@ SpirGSS6450FileSignalSource::SpirGSS6450FileSignalSource(const ConfigurationInte
             if (file.is_open())
                 {
                     size = file.tellg();
-                    LOG(INFO) << "Total samples in the file= " << floor(static_cast<double>(size) / static_cast<double>(item_size_));
+                    // LOG(INFO) << "Total samples in the file= " << floor(static_cast<double>(size) / static_cast<double>(item_size_));
                 }
             else
                 {
@@ -144,7 +144,7 @@ SpirGSS6450FileSignalSource::SpirGSS6450FileSignalSource(const ConfigurationInte
 
     CHECK(samples_ > 0) << "File does not contain enough samples to process.";
     double signal_duration_s = static_cast<double>(samples_) / sampling_frequency_;
-    LOG(INFO) << "Total number samples to be processed= " << samples_ << " GNSS signal duration= " << signal_duration_s << " [s]";
+    // LOG(INFO) << "Total number samples to be processed= " << samples_ << " GNSS signal duration= " << signal_duration_s << " [s]";
     // std::cout << "GNSS signal recorded time to be processed: " << signal_duration_s << " [s]\n";
 
     for (int32_t i = 0; i < n_channels_; i++)
@@ -161,14 +161,14 @@ SpirGSS6450FileSignalSource::SpirGSS6450FileSignalSource(const ConfigurationInte
                 }
         }
 
-    DLOG(INFO) << "File source filename " << filename_;
-    DLOG(INFO) << "Samples " << samples_;
-    DLOG(INFO) << "Sampling frequency " << sampling_frequency_;
-    DLOG(INFO) << "Item type " << item_type_;
-    DLOG(INFO) << "Item size " << item_size_;
-    DLOG(INFO) << "Repeat " << repeat_;
-    DLOG(INFO) << "Dump " << dump_;
-    DLOG(INFO) << "Dump filename " << dump_filename_;
+    // D// LOG(INFO) << "File source filename " << filename_;
+    // D// LOG(INFO) << "Samples " << samples_;
+    // D// LOG(INFO) << "Sampling frequency " << sampling_frequency_;
+    // D// LOG(INFO) << "Item type " << item_type_;
+    // D// LOG(INFO) << "Item size " << item_size_;
+    // D// LOG(INFO) << "Repeat " << repeat_;
+    // D// LOG(INFO) << "Dump " << dump_;
+    // D// LOG(INFO) << "Dump filename " << dump_filename_;
     if (in_streams_ > 0)
         {
             LOG(ERROR) << "A signal source does not have an input stream";
@@ -235,7 +235,7 @@ void SpirGSS6450FileSignalSource::connect(gr::top_block_sptr top_block)
         }
     else
         {
-            LOG(WARNING) << "0 samples to read";
+            // // LOG(WARNING) << "0 samples to read";
         }
 }
 
@@ -294,14 +294,14 @@ void SpirGSS6450FileSignalSource::disconnect(gr::top_block_sptr top_block)
         }
     else
         {
-            LOG(WARNING) << "Nothing to disconnect";
+            // // LOG(WARNING) << "Nothing to disconnect";
         }
 }
 
 
 gr::basic_block_sptr SpirGSS6450FileSignalSource::get_left_block()
 {
-    LOG(WARNING) << "Left block of a signal source should not be retrieved";
+    // // LOG(WARNING) << "Left block of a signal source should not be retrieved";
     return gr::blocks::file_source::sptr();
 }
 
