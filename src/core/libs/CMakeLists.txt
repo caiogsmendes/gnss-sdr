@@ -14,16 +14,16 @@ set(CORE_LIBS_SOURCES
     command_event.cc
     galileo_e6_has_msg_receiver.cc
     galileo_tow_map.cc
-    gnss_crypto.cc
+    # gnss_crypto.cc
     gnss_sdr_sample_counter.cc
     gnss_sdr_supl_client.cc
     ini.cc
     INIReader.cc
     nav_message_monitor.cc
     nav_message_udp_sink.cc
-    osnma_helper.cc
-    osnma_msg_receiver.cc
-    osnma_nav_data_manager.cc
+    # osnma_helper.cc
+    # osnma_msg_receiver.cc
+    # osnma_nav_data_manager.cc
     string_converter.cc
 )
 
@@ -32,7 +32,7 @@ set(CORE_LIBS_HEADERS
     channel_status_msg_receiver.h
     command_event.h
     galileo_tow_map.h
-    gnss_crypto.h
+    # gnss_crypto.h
     gnss_sdr_sample_counter.h
     gnss_sdr_supl_client.h
     ini.h
@@ -40,9 +40,9 @@ set(CORE_LIBS_HEADERS
     nav_message_monitor.h
     nav_message_packet.h
     nav_message_udp_sink.h
-    osnma_helper.h
-    osnma_msg_receiver.h
-    osnma_nav_data_manager.h
+    # osnma_helper.h
+    # osnma_msg_receiver.h
+    # osnma_nav_data_manager.h
     serdes_nav_message.h
     string_converter.h
 )
