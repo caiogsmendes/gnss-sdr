@@ -111,7 +111,7 @@ void GNSSFlowgraph::init()
     auto block_factory = std::make_unique<GNSSBlockFactory>();
 
     //Caio - Serial
-    std::string serial_default = "/dev/ttyUSB0";
+    std::string serial_default = "/dev/ttyLP2";
     comms_flow = HEserial_connect(serial_default.c_str(), B921600, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
     //
 
