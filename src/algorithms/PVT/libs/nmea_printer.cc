@@ -244,9 +244,9 @@ bool Nmea_Printer::Print_Nmea_Line(const Rtklib_Solver* const pvt_data, serial_s
             // int resultt = write(comms.fd, &msgvec_test[0], 357);
             // int resultt = write(nmea_dev_descriptor, &msgvec[0], bytes);
             // tcdrain(commsS2->fd);
-            tcflush(commsS2.fd, TCIOFLUSH);
+            // tcflush(commsS2.fd, TCIOFLUSH);
             int resultt = write(commsS2.fd, &msgvec[0], bytes);
-            tcdrain(commsS2.fd);
+            // tcdrain(commsS2.fd);
             if (resultt == -1)
                 {
                     // // D// LOG(INFO) << "NMEA printer cannot write on serial device" << nmea_devname.c_str();
@@ -462,6 +462,7 @@ std::string Nmea_Printer::get_GPGGA() const
 
 int Nmea_Printer::get_msgvec_w_GAL(const Rtklib_Solver* const pvt_data)
 {
+    mtx.lock();
     msgvec[0]=0xd4;
     msgvec[1]=0x4f;
     msgvec[2]=4;
@@ -543,5 +544,6 @@ int Nmea_Printer::get_msgvec_w_GAL(const Rtklib_Solver* const pvt_data)
             checks ^= msgvec[i];
         }
     msgvec[index-1] = checks;
+    mtx.unlock();
     return index;
 }

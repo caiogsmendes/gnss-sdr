@@ -27,6 +27,7 @@
 #include <memory>                                // for shared_ptr
 #include <string>                                // for string
 
+#include <mutex>
 #include <vector>
 #include <unistd.h>
 #include "HEtechSerial.h"
@@ -69,6 +70,7 @@ public:
     serial_s_t comms;
     bool Print_Nmea_Line(const Rtklib_Solver* const pvt_data, serial_s_t);
     // bool Print_Nmea_Line2(const Rtklib_Solver* const pvt_data, serial_s_t);
+    std::mutex mtx;
 
 private:
     int init_serial(const std::string& serial_device);  // serial port control
