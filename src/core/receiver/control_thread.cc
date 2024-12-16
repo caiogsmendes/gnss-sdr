@@ -514,10 +514,10 @@ int ControlThread::run()
             if (read_serial_enabled_)
                 {
                     int result = read(flowgraph_->comms_flow.fd, &bufcmd[0], 8);
-                    tcflush(flowgraph_->comms_flow.fd, TCIOFLUSH);
+                    // tcflush(flowgraph_->comms_flow.fd, TCIOFLUSH);
                     if (result != -1 && checkCRC(&bufcmd[0], 8))
                         {
-                            // std::cout << "Trigged: " << ++contt << " " << valid_event << /*" " << tickcount<<*/ "\n";
+                            std::cout << "Trigged: " << ++contt << " " << valid_event << /*" " << tickcount<<*/ "\n";
                             int cmd = msg_parser(&bufcmd[0]);
                             apply_action(cmd);
                             // tickcount = 0;
@@ -1516,7 +1516,7 @@ void ControlThread::sendHealthStatus(void)
     msgHealth[index] = checks;
 
     // tcdrain(comms.fd);
-    tcflush(flowgraph_->comms_flow.fd, TCIOFLUSH);
+    // tcflush(flowgraph_->comms_flow.fd, TCIOFLUSH);
     int byte = write(flowgraph_->comms_flow.fd, &msgHealth[0], tamo);
 }
 
@@ -1560,7 +1560,7 @@ void ControlThread::sendQualiStatus(void)
     msgHealth[26] = checks;
 
     // tcdrain(comms.fd);
-    tcflush(flowgraph_->comms_flow.fd, TCIOFLUSH);
+    // tcflush(flowgraph_->comms_flow.fd, TCIOFLUSH);
     int byte = write(flowgraph_->comms_flow.fd, &msgHealth[0], 27);
 }
 
