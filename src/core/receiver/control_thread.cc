@@ -517,7 +517,7 @@ int ControlThread::run()
                     // tcflush(flowgraph_->comms_flow.fd, TCIOFLUSH);
                     if (result != -1 && checkCRC(&bufcmd[0], 8))
                         {
-                            std::cout << "Trigged: " << ++contt << " " << valid_event << /*" " << tickcount<<*/ "\n";
+                            // std::cout << "Trigged: " << ++contt << " " << valid_event << /*" " << tickcount<<*/ "\n";
                             int cmd = msg_parser(&bufcmd[0]);
                             apply_action(cmd);
                             // tickcount = 0;
