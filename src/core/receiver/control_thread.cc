@@ -278,6 +278,7 @@ void ControlThread::init()
     gpio_enabled_ = flowgraph_->configuration_->property("GNSS-SDR.gpio_enabled_", false);
     thermal_enabled_ = flowgraph_->configuration_->property("GNSS-SDR.thermal_enabled_", false);
     tickss = flowgraph_->configuration_->property("GNSS-SDR.tickcounter",1);
+    read_serial_enabled_ = flowgraph_->configuration_->property("GNSS-SDR.read_serial_enabled_",false);
     // sync = pvt_ptr_->get_sync();
     // gps_ephem = pvt_ptr_->get_gps_ephemeris();
     if (gpio_enabled_)
@@ -510,14 +511,17 @@ int ControlThread::run()
                 }
 
             // Input Serial
-            int result = read(flowgraph_->comms_flow.fd, &bufcmd[0], 8);
-            tcflush(flowgraph_->comms_flow.fd, TCIOFLUSH);
-            if (result != -1 && checkCRC(&bufcmd[0],8))
+            if (read_serial_enabled_)
                 {
-                    // std::cout << "Trigged: " << ++contt << " " << valid_event << /*" " << tickcount<<*/ "\n";
-                    int cmd = msg_parser(&bufcmd[0]);
-                    apply_action(cmd);
-                    // tickcount = 0;
+                    int result = read(flowgraph_->comms_flow.fd, &bufcmd[0], 8);
+                    tcflush(flowgraph_->comms_flow.fd, TCIOFLUSH);
+                    if (result != -1 && checkCRC(&bufcmd[0], 8))
+                        {
+                            // std::cout << "Trigged: " << ++contt << " " << valid_event << /*" " << tickcount<<*/ "\n";
+                            int cmd = msg_parser(&bufcmd[0]);
+                            apply_action(cmd);
+                            // tickcount = 0;
+                        }
                 }
         }
     // #####################################################
@@ -1438,7 +1442,7 @@ void ControlThread::storePVT(void)
     sync = pvt_ptr_->get_sync();
     // gps_ephem = pvt_ptr_->get_gps_ephemeris();
     // gps_ephem.begin()->second.commS1.fd = comms.fd;
-    flowgraph_->send_telemetry_msg(pmt::make_any(comms.fd));
+    // flowgraph_->send_telemetry_msg(pmt::make_any(comms.fd));
     // Double2Hex(&msgOutput[6],&pvt_data->pvt_sol.rr[0]);
     // Double2Hex(&msgOutput[14],&pvt_data->pvt_sol.rr[1]);
     // Double2Hex(&msgOutput[22],&pvt_data->pvt_sol.rr[2]);

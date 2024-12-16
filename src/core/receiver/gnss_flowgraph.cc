@@ -112,7 +112,8 @@ void GNSSFlowgraph::init()
 
     //Caio - Serial
     std::string serial_default = "/dev/ttyLP2";
-    comms_flow = HEserial_connect(serial_default.c_str(), B921600, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
+    std::string serial_device = configuration_->property("GNSS-SDR.serial_device",serial_default);
+    comms_flow = HEserial_connect(serial_device.c_str(), B921600, O_RDWR | O_NDELAY | O_NOCTTY | O_NONBLOCK);
     //
 
     channels_status_ = channel_status_msg_receiver_make();
