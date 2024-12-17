@@ -1465,7 +1465,7 @@ void ControlThread::sendHealthStatus(void)
     std::map<int, Gnss_Synchro>syncro = rtk_ptr_->c_gnss_observables_map;
     // sync=pvt_ptr_->get_sync();
     msgHealth[0] = 0xd4;
-    msgHealth[1] = 0xdf;
+    msgHealth[1] = 0x4f;
     msgHealth[2] = syncro.begin()->second.Flag_valid_pvt? 4 : 3;
     msgHealth[3] = 0;
     int index = 10;
@@ -1527,7 +1527,7 @@ void ControlThread::sendQualiStatus(void)
     sync = pvt_ptr_->get_sync();
     // sync = rtk_ptr_->c_gnss_observables_map;
     msgHealth[0] = 0xd4;
-    msgHealth[1] = 0xf4;
+    msgHealth[1] = 0x4f;
     msgHealth[2] = sync.begin()->second.Flag_valid_pvt ? 4 : 3;
     msgHealth[3] = 0;
     pvt_ptr_ = flowgraph_->get_pvt();
