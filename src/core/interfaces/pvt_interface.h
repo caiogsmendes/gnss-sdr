@@ -82,6 +82,8 @@ public:
 
     virtual std::shared_ptr<Rtklib_Solver> get_rtk_ptr() = 0;
 
+    virtual bool get_flag_msg_pvt() = 0;
+
     
 };
 

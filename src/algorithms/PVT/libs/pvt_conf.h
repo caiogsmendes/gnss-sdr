@@ -105,6 +105,9 @@ public:
     double system_ecef_vel_sd_ms = 0.001;
 
     float elevation_mask = 10;
+
+    //Caio
+    bool thermal_enabled_=false;
 };
 
 

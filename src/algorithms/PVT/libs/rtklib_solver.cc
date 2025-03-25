@@ -1601,6 +1601,10 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
                         }
                     this->set_rx_pos({rx_position_and_time[0], rx_position_and_time[1], rx_position_and_time[2]});  // save ECEF position for the next iteration
 
+                        //Caio
+                        usr_clk_offset = rx_position_and_time[3];
+                        //
+
                     // compute Ground speed and COG
                     double ground_speed_ms = 0.0;
                     std::array<double, 3> pos{};

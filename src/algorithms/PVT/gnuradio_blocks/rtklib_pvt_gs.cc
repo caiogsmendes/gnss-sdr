@@ -186,7 +186,8 @@ rtklib_pvt_gs::rtklib_pvt_gs(uint32_t nchannels,
       d_log_timetag(conf_.log_source_timetag),
       d_use_has_corrections(conf_.use_has_corrections),
       d_use_unhealthy_sats(conf_.use_unhealthy_sats),
-      d_osnma_strict(conf_.osnma_strict)
+      d_osnma_strict(conf_.osnma_strict),
+      d_thermal_enabled_(conf_.thermal_enabled_)
 {
     // Send feedback message to observables block with the receiver clock offset
     this->message_port_register_out(pmt::mp("pvt_to_observables"));
@@ -1819,6 +1820,9 @@ bool rtklib_pvt_gs::load_gnss_synchro_map_xml(const std::string& file_name)
             ifs.open(file_name.c_str(), std::ifstream::binary | std::ifstream::in);
             boost::archive::xml_iarchive xml(ifs);
             d_gnss_observables_map.clear();
+            //Caio
+             d_user_pvt_solver->c_gnss_observables_map.clear();
+            //
             xml >> boost::serialization::make_nvp("GNSS-SDR_gnss_synchro_map", d_gnss_observables_map);
             // // std::cout << "Loaded gnss_synchro map data with " << gnss_synchro_map.size() << " pseudoranges\n";
         }
@@ -2182,9 +2186,9 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                 {
                     this->update_HAS_corrections();
                 }
-
+            d_user_pvt_solver->c_gnss_observables_map = d_gnss_observables_map;
             // ############ 2 COMPUTE THE PVT ################################
-            bool flag_pvt_valid = false; 
+            bool flag_pvt_valid = false;
             if (d_gnss_observables_map.empty() == false)
                 {
                     // // LOG(INFO) << "diff raw obs time: " << d_gnss_observables_map.cbegin()->second.RX_time * 1000.0 - old_time_debug;
@@ -2287,6 +2291,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                     // // std::cout << "current_RX_time: " << current_RX_time_ms << " map time: " << d_gnss_observables_map.begin()->second.RX_time << '\n';
                                                 }
                                             flag_pvt_valid = true;
+                                            for(auto &i:d_gnss_observables_map){ i.second.Flag_valid_pvt=flag_pvt_valid;}
                                         }
                                 }
                         }
@@ -2307,7 +2312,12 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                     if (flag_compute_pvt_output == true)
                         {
                             flag_pvt_valid = d_user_pvt_solver->get_PVT(d_gnss_observables_map, d_output_rate_ms / 1000.0);
-                            d_user_pvt_solver->c_gnss_observables_map = d_gnss_observables_map;  // Caio mod
+                            d_user_pvt_solver->c_gnss_observables_map = d_gnss_observables_map;
+
+                            for (auto& i : d_user_pvt_solver->c_gnss_observables_map)
+                                {
+                                    i.second.Flag_valid_pvt = true;
+                                }
                         }
 
                     if (flag_pvt_valid == true)
@@ -2441,7 +2451,8 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                             // if (current_RX_time_ms % d_output_rate_ms == 0)
                                             if (current_RX_time_ms % d_display_rate_ms == 0)
                                                 {
-                                                    d_nmea_printer->Print_Nmea_Line(d_user_pvt_solver.get(),commsS2);
+                                                    flag_msg_pvt_valid=true;
+                                                    d_nmea_printer->Print_Nmea_Line(d_user_pvt_solver.get(),commsS2, d_thermal_enabled_);                                                    
                                                 }
                                         }
 
@@ -2467,6 +2478,14 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                                 flag_write_RTCM_1045_output,
                                                 d_enable_rx_clock_correction);
                                         }
+                                }
+                        }
+                    // else{for(auto &i:d_user_pvt_solver->c_gnss_observables_map){i.second.Flag_valid_pvt=false;}}
+                    else
+                        {
+                            if (current_RX_time_ms % d_display_rate_ms == 0)
+                                {
+                                    flag_msg_pvt_valid = false;
                                 }
                         }
                     // else

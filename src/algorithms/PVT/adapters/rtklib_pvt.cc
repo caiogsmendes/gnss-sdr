@@ -90,6 +90,9 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
     pvt_output_parameters.nmea_dump_filename = configuration->property(role + ".nmea_dump_filename", default_nmea_dump_filename);
     pvt_output_parameters.nmea_dump_devname = configuration->property(role + ".nmea_dump_devname", default_nmea_dump_devname);
 
+    //Caio
+    pvt_output_parameters.thermal_enabled_ = configuration->property(role + ".thermal_enabled_", false);
+
     // RINEX version
     pvt_output_parameters.rinex_version = configuration->property(role + ".rinex_version", 3);
 #if USE_GLOG_AND_GFLAGS
@@ -886,6 +889,7 @@ Rtklib_Pvt::Rtklib_Pvt(const ConfigurationInterface* configuration,
 
     //Caio
     pvt_output_parameters.elevation_mask = elevation_mask;
+    pvt_output_parameters.thermal_enabled_=configuration->property(role+".thermal_enabled_", false);
 
     // Read PVT MONITOR Configuration
     pvt_output_parameters.monitor_enabled = configuration->property(role + ".enable_monitor", false);
@@ -981,10 +985,14 @@ std::map<int, Gnss_Synchro> Rtklib_Pvt::get_sync(void)
 
 std::shared_ptr<Rtklib_Solver> Rtklib_Pvt::get_rtk_ptr(void)
 {
-    return pvt_->d_internal_pvt_solver;
+    return pvt_->d_user_pvt_solver;
 }
 // //
 
+bool Rtklib_Pvt::get_flag_msg_pvt(void)
+{
+    return pvt_->flag_msg_pvt_valid;
+}
 
 
 void Rtklib_Pvt::clear_ephemeris()

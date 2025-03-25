@@ -88,7 +88,7 @@ public:
     bool Flag_PLL_180_deg_phase_locked{};  //!< Set by Telemetry Decoder processing block
     
     // Caio
-    bool Flag_valid_pvt{}; //piggybacking
+    bool Flag_valid_pvt; //piggybacking
     //
 
 

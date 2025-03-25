@@ -1462,11 +1462,12 @@ void ControlThread::sendHealthStatus(void)
 {
     pvt_ptr_ = flowgraph_->get_pvt();
     rtk_ptr_ = pvt_ptr_->get_rtk_ptr();
+    // sync = pvt_ptr_->get_sync();
     std::map<int, Gnss_Synchro>syncro = rtk_ptr_->c_gnss_observables_map;
     // sync=pvt_ptr_->get_sync();
     msgHealth[0] = 0xd4;
     msgHealth[1] = 0x4f;
-    msgHealth[2] = syncro.begin()->second.Flag_valid_pvt? 4 : 3;
+    msgHealth[2] = (pvt_ptr_->get_flag_msg_pvt()) ? 4 : 3;
     msgHealth[3] = 0;
     int index = 10;
     cont = 0;
@@ -1524,14 +1525,17 @@ void ControlThread::sendQualiStatus(void)
 {
     mtx.lock();
     pvt_ptr_ = flowgraph_->get_pvt();
-    sync = pvt_ptr_->get_sync();
+    rtk_ptr_ = pvt_ptr_->get_rtk_ptr();
+    // sync = pvt_ptr_->get_sync();
     // sync = rtk_ptr_->c_gnss_observables_map;
+    std::map<int, Gnss_Synchro>syncro = rtk_ptr_->c_gnss_observables_map;
     msgHealth[0] = 0xd4;
     msgHealth[1] = 0x4f;
-    msgHealth[2] = sync.begin()->second.Flag_valid_pvt ? 4 : 3;
+    // if(syncro.empty()){msgHealth[2] = 3;}else if(syncro.begin()->second.Flag_valid_pvt){msgHealth[2] = 4;}else{msgHealth[2]=3;}
+    // msgHealth[2] = (syncro.begin()->second.Flag_valid_pvt) ? 4 : 3;
+    msgHealth[2] = (pvt_ptr_->get_flag_msg_pvt()) ? 4 : 3;
     msgHealth[3] = 0;
-    pvt_ptr_ = flowgraph_->get_pvt();
-    rtk_ptr_ = pvt_ptr_->get_rtk_ptr();
+
     float gdop = rtk_ptr_->get_gdop();
     float hdop = rtk_ptr_->get_hdop();
     float vdop = rtk_ptr_->get_vdop();

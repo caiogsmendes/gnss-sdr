@@ -69,6 +69,7 @@ void Hex2Double(double*, uint8_t*);
 void Hex2Float(float *, uint8_t *);
 void Float2Hex(uint8_t *, const float *);
 void Float2Hexx(uint8_t *, float);
+void Float2Hexxx(float*, float*, const double*);
 void Hex2Integer(uint32_t *, uint8_t *);
 void Int2Hex(uint8_t *, const int *);
 void Integer2Hex(uint8_t *, const uint32_t *);

@@ -544,6 +544,30 @@ extern "C"
             }
     }
 
+
+    void Float2Hexxx(float* output1, float* output2, const double* input)
+    {
+        // Output -> vetor de msg
+        // Input -> valor a ser compactado
+        // for (int i = 0; i < 2; i++)
+        //     {
+                *output1 = *((float *)&input);
+                *output2 = *((float *)(&input+4));
+            // }
+    }
+
+    void Hexxx2Float(double* input,float* output1, float* output2)
+    {
+        // Output -> vetor de msg
+        // Input -> valor a ser compactado
+        // for (int i = 0; i < 2; i++)
+        //     {
+                // *output1 = *((float *)&input);
+                // *output2 = *((float *)(&input+4));
+            // }
+        // *input = (*((double*)&output1))<<(4*8);
+    }
+
     void Hex2Float(float *output, uint8_t *input)
     {
         for (int i = 0; i < 4; i++)

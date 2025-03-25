@@ -135,6 +135,7 @@ public:
 
     //Caio
     // void set_serial_comms(serial_s_t* comms_);
+    bool flag_msg_pvt_valid;
     serial_s_t* comms;
     // std::shared_ptr<rtklib_pvt_gs> get_rtk_pvt(void);
     std::map<int, Gnss_Synchro> get_sync(void);
@@ -277,6 +278,9 @@ private:
     uint32_t d_type_of_rx;
     uint32_t d_observable_interval_ms;
     uint32_t d_pvt_errors_counter;
+
+    bool d_thermal_enabled_;
+
 
     bool d_dump;
     bool d_dump_mat;

@@ -133,6 +133,9 @@ public:
     //Caio
     gtime_t rtklib_pvt_sol_time{};
     Pvt_Conf d_conf;
+    bool flag_msg_pvt_valid;
+
+        double usr_clk_offset{};
 
 private:
     bool save_matfile() const;

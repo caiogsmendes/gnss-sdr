@@ -227,6 +227,8 @@ public:
     std::map<int, Gnss_Synchro> get_sync(void);
     std::shared_ptr<Rtklib_Solver> get_rtk_ptr(void);
 
+    bool get_flag_msg_pvt(void);
+
 private:
     rtklib_pvt_gs_sptr pvt_;
     
