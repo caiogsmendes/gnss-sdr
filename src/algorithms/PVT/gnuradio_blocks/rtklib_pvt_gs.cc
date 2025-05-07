@@ -1192,8 +1192,13 @@ void rtklib_pvt_gs::msg_handler_telemetry(const pmt::pmt_t& msg)
                     
                     // CAIO
                     // Logic lock
-                    if(commsS2.fd == 0 && serial_fd_check == false)
-                    {commsS2 = *gps_eph->commS1; serial_fd_check=~serial_fd_check;}
+                    if (commsS2.fd == 0 && serial_fd_check == false)
+                        {
+                            commsS2 = *gps_eph->commS1;
+                            ModoHIL = gps_eph->HIL;
+                            serial_fd_check = ~serial_fd_check;
+                        }
+                    //
                     if (d_flag_monitor_ephemeris_enabled)
                         {
                             d_eph_udp_sink_ptr->write_gps_ephemeris(gps_eph);
@@ -2452,7 +2457,7 @@ int rtklib_pvt_gs::work(int noutput_items, gr_vector_const_void_star& input_item
                                             if (current_RX_time_ms % d_display_rate_ms == 0)
                                                 {
                                                     flag_msg_pvt_valid=true;
-                                                    d_nmea_printer->Print_Nmea_Line(d_user_pvt_solver.get(),commsS2, d_thermal_enabled_);                                                    
+                                                    d_nmea_printer->Print_Nmea_Line(d_user_pvt_solver.get(),commsS2, d_thermal_enabled_, ModoHIL);                                                    
                                                 }
                                         }
 

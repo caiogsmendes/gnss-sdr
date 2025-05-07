@@ -174,6 +174,7 @@ private:
     bool gpio_enabled_;
     bool thermal_enabled_;
     bool read_serial_enabled_;
+    int HIL_mode;
     //
 
 

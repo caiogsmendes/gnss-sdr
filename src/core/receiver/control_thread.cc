@@ -292,10 +292,9 @@ void ControlThread::init()
             chip = gpiod_chip_open_by_name(&bank4[0]);
             pin = gpiod_chip_get_line(chip, line);
         }
-
-            
-        
-
+    
+    //Caio        
+    HIL_mode = flowgraph_->configuration_->property("GNSS-SDR.HIL_mode",0);
     //
 
     receiver_on_standby_ = false;
@@ -523,6 +522,7 @@ int ControlThread::run()
                             // tickcount = 0;
                         }
                 }
+
         }
     // #####################################################
 
@@ -1044,6 +1044,10 @@ void ControlThread::assist_GNSS()
             flowgraph_->priorize_satellites(visible_sats);
             // Hot Start
             flowgraph_->apply_action(0, 12);
+        }
+
+        if(HIL_mode!=0){
+            supl_client_ephemeris_.gps_ephemeris_map.begin()->second.HIL = HIL_mode;
         }
 
     // for(auto& i:supl_client_ephemeris_.gps_ephemeris_map)

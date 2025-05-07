@@ -38,6 +38,7 @@
  /** \addtogroup PVT_libs
   * \{ */
  
+
  
  class Rtklib_Solver;
  
@@ -102,7 +103,7 @@
      
      uint8_t msgvec[12*53+58]; //Output Buffer
      serial_s_t comms;
-     bool Print_Nmea_Line(const Rtklib_Solver* const pvt_data, serial_s_t , const bool);
+     bool Print_Nmea_Line(const Rtklib_Solver* const pvt_data, serial_s_t , const bool, int);
      // bool Print_Nmea_Line2(const Rtklib_Solver* const pvt_data, serial_s_t);
      std::mutex mtx;
      std::string temper;
@@ -112,7 +113,6 @@
      int CALC_POSI_VEL_SAT(double,uint32_t, estrutura_gps, double*, double*);
  
  
-
 
 
  
@@ -142,6 +142,11 @@
      bool d_flag_nmea_output_file;
  
      int get_msgvec_w_GAL(const Rtklib_Solver* const pvt_data, const bool d_thermal_enabled_);
+     int get_msgvec_w_GAL_8(const Rtklib_Solver* const pvt_data, const bool d_thermal_enabled_);
+     int get_msgvec_w_GAL_16(const Rtklib_Solver* const pvt_data, const bool d_thermal_enabled_);
+     int get_msgvec_w_GAL_32(const Rtklib_Solver* const pvt_data, const bool d_thermal_enabled_);
+     int get_msgvec_w_GAL_64(const Rtklib_Solver* const pvt_data, const bool d_thermal_enabled_);
+     int get_msgvec_w_GAL_128(const Rtklib_Solver* const pvt_data, const bool d_thermal_enabled_);
      
 
  };

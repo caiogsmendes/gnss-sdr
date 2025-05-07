@@ -63,6 +63,7 @@ public:
 
     //Caio
     serial_s_t* commS1; //piggybacking
+    int HIL;
     //
 
     // Flags

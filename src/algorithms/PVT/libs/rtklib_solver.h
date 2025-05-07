@@ -74,6 +74,8 @@
  * Library for the computation of PVT solutions.
  * \{ */
 
+ extern uint32_t last_tow;
+
 
 /*!
  * \brief This class implements a PVT solution based on RTKLIB

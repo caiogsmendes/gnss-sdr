@@ -49,6 +49,8 @@
  * \{ */
 
 
+
+
 class Beidou_Dnav_Almanac;
 class Beidou_Dnav_Ephemeris;
 class Galileo_Almanac;
@@ -140,6 +142,7 @@ public:
     // std::shared_ptr<rtklib_pvt_gs> get_rtk_pvt(void);
     std::map<int, Gnss_Synchro> get_sync(void);
     serial_s_t commsS2;
+    int ModoHIL;
     bool serial_fd_check = false;
     std::shared_ptr<Rtklib_Solver> d_internal_pvt_solver;
     std::shared_ptr<Rtklib_Solver> d_user_pvt_solver;
